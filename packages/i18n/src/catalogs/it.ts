@@ -298,8 +298,6 @@ export const it: Record<MessageKey, string> = {
   'cli.value.leapMonth': 'mese intercalare',
   'cli.value.minutes': '{value} min',
 
-  'cli.note.notInterpreted':
-    'Queste sono le disposizioni che l\'istante produce. Che cosa significhino non spetta al motore dirlo.',
   'cli.note.methodOnly':
     'Posta con il metodo chaibu. Altre scuole dispongono altre carte dallo stesso istante.',
 

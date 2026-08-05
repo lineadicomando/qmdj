@@ -330,7 +330,6 @@ export function registerDrawQimenChart(server: McpServer, context: ToolContext):
             pillars: PILLARS,
             chief: `${t('cli.field.chief')} ${labels.star[chart.chief.star.id]}`,
             chiefGate: `${t('cli.field.chiefGate')} ${labels.gate[chart.chiefGate.gate.id]}`,
-            note: t('cli.note.notInterpreted'),
           },
         });
 

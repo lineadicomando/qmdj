@@ -56,11 +56,10 @@ describe('chart', () => {
     }
   });
 
-  it('says which method it used, and that it does not interpret', async () => {
+  it('says which method it used', async () => {
     await run(['chart', ...MOMENT, '--lang', 'en']);
 
     expect(out).toContain('chaibu');
-    expect(out.toLowerCase()).toContain('what they mean');
   });
 });
 

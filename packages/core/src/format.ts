@@ -142,7 +142,6 @@ export function formatQimenChart(chart: QimenChart, t: Translator): string {
     '',
     `  ${t('cli.column.season')} ${t(`label.element.${chart.season}` as MessageKey)}`,
     `  ${t('cli.note.methodOnly')}`,
-    `  ${t('cli.note.notInterpreted')}`,
   );
   return lines.join('\n');
 }
@@ -186,7 +185,6 @@ export function formatBazi(bazi: Bazi, t: Translator): string {
     );
   }
 
-  lines.push('', `  ${t('cli.note.notInterpreted')}`);
   return lines.join('\n');
 }
 

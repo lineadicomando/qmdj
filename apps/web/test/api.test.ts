@@ -235,11 +235,4 @@ describe('GET /api/chart/plate', () => {
     expect(auto.text).toContain('prefers-color-scheme');
     expect(dark.text).not.toContain('prefers-color-scheme');
   });
-
-  it('carries the note that it is not a reading', async () => {
-    // A picture travels further than the page it was made on.
-    const { text } = await call(plate, MOMENT);
-
-    expect(text).toMatch(/not the engine/i);
-  });
 });

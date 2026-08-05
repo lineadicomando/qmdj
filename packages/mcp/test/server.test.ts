@@ -199,7 +199,5 @@ describe('the other tools', () => {
 
     expect(text.startsWith('<svg')).toBe(true);
     expect(text).toContain('viewBox="0 0 400 400"');
-    // The picture carries the note that it is not a reading.
-    expect(text).toMatch(/not the engine/i);
   });
 });

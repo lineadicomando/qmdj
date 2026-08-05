@@ -318,8 +318,6 @@ export const en = {
   'cli.value.leapMonth': 'leap month',
   'cli.value.minutes': '{value} min',
 
-  'cli.note.notInterpreted':
-    'These are the arrangements the moment produces. What they mean is not the engine\'s to say.',
   'cli.note.methodOnly':
     'Cast by the chaibu method. Other schools lay out other charts from the same instant.',
 
