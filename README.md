@@ -88,6 +88,10 @@ locationId=1816670` is a chart, a link, and the same query string the API
 takes. Which is also how the moment follows a reader from the chart to the
 four pillars and back.
 
+One exception, and it is the same rule read carefully: an address that does
+not say *when* means now, and now is a different answer every hour. Those are
+`no-store`; only an address that fixes the instant is cacheable.
+
 ## Docker
 
 ```sh

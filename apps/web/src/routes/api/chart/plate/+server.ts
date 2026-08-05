@@ -1,7 +1,7 @@
 import { chartLabels, computeQimenChart, sayGanzhi } from '@qimendunjia/core';
 import { createTranslator } from '@qimendunjia/i18n';
 import { renderChartSvg } from '@qimendunjia/plate';
-import { readLocale, readMoment } from '$lib/server/params';
+import { momentIsFixed, readLocale, readMoment } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
@@ -52,7 +52,9 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
       },
     });
 
-    setHeaders({ 'cache-control': 'private, max-age=86400' });
+    setHeaders({
+      'cache-control': momentIsFixed(url.searchParams) ? 'private, max-age=86400' : 'no-store',
+    });
     return new Response(svg, { headers: { 'content-type': 'image/svg+xml; charset=utf-8' } });
   } catch (cause) {
     if (isHttpError(cause)) throw cause;

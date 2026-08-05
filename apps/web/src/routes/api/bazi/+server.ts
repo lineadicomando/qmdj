@@ -1,6 +1,6 @@
 import { computeBazi } from '@qimendunjia/core';
 import { json } from '@sveltejs/kit';
-import { ephemerisContext, readMoment } from '$lib/server/params';
+import { ephemerisContext, momentIsFixed, readMoment } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
@@ -23,7 +23,9 @@ export const GET: RequestHandler = ({ url, setHeaders }) => {
 
     const bazi = computeBazi(moment, options, ephemerisContext());
 
-    setHeaders({ 'cache-control': 'private, max-age=86400' });
+    setHeaders({
+      'cache-control': momentIsFixed(url.searchParams) ? 'private, max-age=86400' : 'no-store',
+    });
     return json({ moment, bazi, place: label ?? null });
   } catch (cause) {
     if (isHttpError(cause)) throw cause;

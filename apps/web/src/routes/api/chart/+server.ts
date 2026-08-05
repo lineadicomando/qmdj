@@ -1,6 +1,6 @@
 import { computeQimenChart } from '@qimendunjia/core';
 import { json } from '@sveltejs/kit';
-import { readMoment } from '$lib/server/params';
+import { momentIsFixed, readMoment } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
@@ -22,7 +22,12 @@ export const GET: RequestHandler = ({ url, setHeaders }) => {
     // function of the URL — but only by the browser that asked. `public`
     // would let a shared cache keep it, and the key of that cache is an
     // address holding somebody's date, time and place of birth.
-    setHeaders({ 'cache-control': 'private, max-age=86400' });
+    //
+    // And cacheable only where the URL fixes the instant. Without a date the
+    // question is "now", which is a different question every hour.
+    setHeaders({
+      'cache-control': momentIsFixed(url.searchParams) ? 'private, max-age=86400' : 'no-store',
+    });
     return json({ chart, place: label ?? null });
   } catch (cause) {
     if (isHttpError(cause)) throw cause;

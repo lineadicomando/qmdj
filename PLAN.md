@@ -509,6 +509,29 @@ than the one already published.
 `/api/locations?id=` exists for the way back — an address carries an
 identifier and a form reopening from one needs the name again.
 
+The chart alone is stepped, by the double hour, the day, the month and the
+year from the closed panel. The Four Pillars are not: a moment of birth is one
+moment. Four findings:
+
+- **The step that matters is the double hour.** A 時家 chart changes with it
+  and with nothing smaller — day, month and year at a fixed clock time all
+  leave the chart in the same 時辰. Two hours on the wall clock is one branch
+  on, because the branches are two hours wide and the step keeps its place
+  inside one.
+- **The step starts from the moment the engine resolved, not from the
+  browser's clock.** An empty address means now, and the server worked that
+  out in the *place's* zone. Stepping a Beijing chart from a clock in Rome
+  jumps by the offset between them.
+- **A chart of "now" is not cacheable, and was marked cacheable for a day.**
+  "A pure function of its URL" holds only where the URL says when.
+  `momentIsFixed` decides it now, and without a date and a time the answer is
+  `no-store`.
+- **An unresolvable place must be a refusal.** Building the API query from the
+  *resolved* place meant an identifier that matched nothing simply vanished
+  from it, and the chart came back cast for the server's own zone — looking
+  exactly like a chart, of somewhere else. Found by driving the browser, not
+  by a test; there is a test now.
+
 ### Phase 7 — Distribution and documentation
 
 Multi-stage `Dockerfile` and `compose.yaml` on the reference's model: a single

@@ -24,9 +24,16 @@
     fields: Snippet;
     /** What stays visible when it is closed. */
     summary?: Snippet;
+    /**
+     * What can still be done with the fields closed.
+     *
+     * Not every section has any: a moment of birth is one moment, and only a
+     * chart of the present is worth moving.
+     */
+    controls?: Snippet;
   }
 
-  let { t, closable = false, onsubmit, fields, summary }: Props = $props();
+  let { t, closable = false, onsubmit, fields, summary, controls }: Props = $props();
 
   // Open unless there is already an answer, which there is when the address
   // carried one: someone who followed a link to a chart came for the chart,
@@ -54,8 +61,11 @@
         <button type="button" onclick={() => (open = false)} aria-label={t('form.close')}>×</button>
       {/if}
     {:else}
-      <button type="button" class="reopen" onclick={reopen}>{t('form.open')}</button>
-      {#if summary}<p class="summary">{@render summary()}</p>{/if}
+      <div class="said">
+        <button type="button" class="reopen" onclick={reopen}>{t('form.open')}</button>
+        {#if summary}<p class="summary">{@render summary()}</p>{/if}
+      </div>
+      {#if controls}{@render controls()}{/if}
     {/if}
   </div>
 
@@ -76,7 +86,14 @@
     max-width: 34rem;
   }
   .panel.closed { padding: 0.5rem 0.8rem; max-width: none; }
-  .bar { display: flex; align-items: baseline; gap: 1rem; justify-content: space-between; }
+  .bar {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem 1rem;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .said { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
   h2 { font-size: 0.9rem; font-weight: 400; color: var(--faint); margin: 0 0 0.2rem; }
   .bar button {
     border: 0;

@@ -208,6 +208,27 @@ export const en = {
   'form.close': 'Close',
   'form.legend': 'The moment and the place',
 
+  // The face of each step is the word, in the reader's language: these are
+  // controls, and a control nobody can read is a control nobody can press.
+  // Only 時辰 keeps its hanzi beside the word, because only it names
+  // something Chinese — a day, a month and a year do not.
+  'step.shichen': 'double hour',
+  'step.day': 'day',
+  'step.month': 'month',
+  'step.year': 'year',
+  'step.now': 'now',
+
+  // What a screen reader says, and what the arrows would say if they could.
+  'step.now.title': 'Back to the present moment',
+  'step.shichen.back': 'The previous double hour',
+  'step.shichen.forward': 'The next double hour',
+  'step.day.back': 'The day before',
+  'step.day.forward': 'The day after',
+  'step.month.back': 'The month before',
+  'step.month.forward': 'The month after',
+  'step.year.back': 'The year before',
+  'step.year.forward': 'The year after',
+
   'footer.data': 'Astronomical data {ephemeris} · places {geonames} (CC BY 4.0)',
   'footer.licence': 'Source code under AGPL-3.0',
   'footer.privacy': 'Privacy',

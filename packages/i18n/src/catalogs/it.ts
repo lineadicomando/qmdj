@@ -197,6 +197,22 @@ export const it: Record<MessageKey, string> = {
   'form.close': 'Chiudi',
   'form.legend': 'L\'istante e il luogo',
 
+  'step.shichen': 'doppia ora',
+  'step.day': 'giorno',
+  'step.month': 'mese',
+  'step.year': 'anno',
+  'step.now': 'adesso',
+
+  'step.now.title': 'Torna all\'istante presente',
+  'step.shichen.back': 'La doppia ora precedente',
+  'step.shichen.forward': 'La doppia ora successiva',
+  'step.day.back': 'Il giorno prima',
+  'step.day.forward': 'Il giorno dopo',
+  'step.month.back': 'Il mese prima',
+  'step.month.forward': 'Il mese dopo',
+  'step.year.back': 'L\'anno prima',
+  'step.year.forward': 'L\'anno dopo',
+
   'footer.data': 'Dati astronomici {ephemeris} · località {geonames} (CC BY 4.0)',
   'footer.licence': 'Codice sorgente sotto licenza AGPL-3.0',
   'footer.privacy': 'Privacy',

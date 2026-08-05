@@ -1,11 +1,13 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
+  import { goto, invalidateAll } from '$app/navigation';
   import { page } from '$app/state';
   import type { MessageKey } from '@qimendunjia/i18n';
   import { appearance } from '$lib/appearance.svelte';
   import { momentQuery, sayFailure, type MomentInput } from '$lib/moment';
+  import { step, type Unit, type Wall } from '$lib/step';
   import FormPanel from '$lib/components/FormPanel.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
+  import MomentSteps from '$lib/components/MomentSteps.svelte';
   import PalaceTable from '$lib/components/PalaceTable.svelte';
 
   let { data } = $props();
@@ -24,10 +26,22 @@
   const chart = $derived(data.chart);
   const failure = $derived(data.failure ? sayFailure(t, data.failure) : '');
 
-  // The picture answers for the moment that was cast, not for the one being
-  // typed: it is the same address the data came from.
+  /**
+   * The instant the answer was actually computed for.
+   *
+   * An address that says nothing means now, and the server resolved that now
+   * **in the place's own zone**. Stepping from the browser's clock instead
+   * would jump by hours for a chart cast in Beijing and read in Rome.
+   */
+  const cast = $derived<Wall | undefined>(
+    data.chart && { date: data.chart.moment.input.date, time: data.chart.moment.input.time },
+  );
+
+  // The picture answers for the moment the data answers for — pinned to the
+  // instant, so that "now" is a new address every time and not one image
+  // cached over a day of different charts.
   const plate = $derived(
-    `/api/chart/plate?${momentQuery(data.moment, { lang: t.locale, scheme: appearance.current })}`,
+    `/api/chart/plate?${momentQuery({ ...data.moment, ...cast }, { lang: t.locale, scheme: appearance.current })}`,
   );
 
   let busy = $state(false);
@@ -41,13 +55,13 @@
    */
   async function show(next: MomentInput): Promise<void> {
     const query = momentQuery(next);
+    const target = `${page.url.pathname}${query ? `?${query}` : ''}`;
     busy = true;
     try {
-      await goto(`${page.url.pathname}${query ? `?${query}` : ''}`, {
-        replaceState: true,
-        noScroll: true,
-        keepFocus: true,
-      });
+      // Asking the present for the present again is not a navigation, and
+      // SvelteKit would rightly do nothing with it. It is still a new chart.
+      if (target === `${page.url.pathname}${page.url.search}`) await invalidateAll();
+      else await goto(target, { replaceState: true, noScroll: true, keepFocus: true });
     } finally {
       busy = false;
     }
@@ -56,6 +70,15 @@
   function submit(event: SubmitEvent): void {
     event.preventDefault();
     void show(asked);
+  }
+
+  function moved(unit: Unit, by: number): void {
+    if (cast) void show({ ...data.moment, ...step(cast, unit, by) });
+  }
+
+  /** The present is what the address says by not saying a date. */
+  function now(): void {
+    void show({ ...data.moment, date: '', time: '' });
   }
 </script>
 
@@ -76,9 +99,14 @@
     <button type="submit" disabled={busy}>{t('cli.heading.chart')}</button>
   {/snippet}
   {#snippet summary()}
-    {data.moment.date || '—'}
-    {data.moment.time}
+    <!-- The instant it was cast for, not the one that was asked: an empty
+         form means now, and the reader should be told which now. -->
+    {cast?.date ?? '—'}
+    {cast?.time ?? ''}
     {data.moment.place ? `· ${data.moment.place.name}` : ''}
+  {/snippet}
+  {#snippet controls()}
+    <MomentSteps {t} disabled={busy} onstep={moved} onnow={now} />
   {/snippet}
 </FormPanel>
 

@@ -79,6 +79,13 @@ describe('GET /api/chart', () => {
     expect((await call(chart, '')).status).toBe(200);
   });
 
+  it('is not cacheable at all when the address does not say when', async () => {
+    // Without a date the question is "now", which is a different question
+    // every hour: an answer kept for a day would be yesterday's chart.
+    expect((await call(chart, 'timezone=Asia/Shanghai')).headers['cache-control']).toBe('no-store');
+    expect((await call(chart, 'date=2024-06-15')).headers['cache-control']).toBe('no-store');
+  });
+
   it('leaves the longitude correction at zero when given only a timezone', async () => {
     // The stand-in meridian must come from the offset at the chart's moment:
     // read from today's clock, a winter chart requested in summer would carry

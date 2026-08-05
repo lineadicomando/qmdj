@@ -78,6 +78,18 @@ export function readPlace(params: URLSearchParams): {
   return { place: { latitude: 0, longitude: 0, timezone }, meridianAssumed: true };
 }
 
+/**
+ * Whether the address fixes the instant.
+ *
+ * Cacheability rests on this and not on the endpoint: a chart is a pure
+ * function of its URL only where the URL says when. `?locationId=1816670`
+ * alone means now, and an answer to that kept for a day is yesterday's chart
+ * offered as today's.
+ */
+export function momentIsFixed(params: URLSearchParams): boolean {
+  return params.has('date') && params.has('time');
+}
+
 export function readOptions(params: URLSearchParams): ChartOptions {
   const options: ChartOptions = { ...DEFAULT_OPTIONS };
 
