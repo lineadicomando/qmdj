@@ -30,6 +30,8 @@ export const it: Record<MessageKey, string> = {
     "L'intervallo dal {from} al {to} non contiene tempo: deve finire dopo che è cominciato.",
   'core.error.INTERVAL_TOO_LONG':
     'Un intervallo di {days} giorni supera i {maximum} giorni che si possono scandire in una volta.',
+  'core.error.UNKNOWN_IDENTIFIER':
+    '"{value}" non è un {parameter} che il motore conosce. Non controllato non corrisponderebbe a nulla, che si legge esattamente come una disposizione che non si è mai presentata.',
 
   'core.warning.AMBIGUOUS_LOCAL_TIME':
     'L\'ora locale {time} del {date} ricorre due volte in {timezone} (ritorno all\'ora solare). È stata usata la prima occorrenza, quella ancora in ora legale.',
@@ -185,6 +187,7 @@ export const it: Record<MessageKey, string> = {
 
   'nav.chart': 'Qi Men',
   'nav.bazi': 'Quattro pilastri',
+  'nav.moments': 'Scegliere il momento',
   'nav.sections': 'Sezioni',
 
   'scheme.label': 'Aspetto',
@@ -210,6 +213,21 @@ export const it: Record<MessageKey, string> = {
   'form.gender.unset': 'non indicato',
   'form.gender.male': 'maschile',
   'form.gender.female': 'femminile',
+
+  'form.interval': "L'intervallo e il luogo",
+  'form.openInterval': "Cambia l'intervallo",
+  'form.from': 'Dal',
+  'form.to': 'Al',
+  'form.looking': 'Che cosa cercare',
+  'form.any': 'qualsiasi',
+  'form.towards': 'Verso',
+  'form.minStrength': 'Forza almeno',
+  'form.without': 'Escludendo',
+  'form.criteriaNote':
+    'Sono disposizioni, non raccomandazioni. Il motore riferisce dove ciascuna si trova; se sia un buon momento per agire è una lettura, e spetta a te farla.',
+  'form.scan': "Scandisci l'intervallo",
+  'form.scanned': '{runs} carte nell\'intervallo, {matched} con un palazzo che risponde.',
+  'form.openChart': 'la scacchiera intera',
 
   'step.shichen': 'doppia ora',
   'step.day': 'giorno',

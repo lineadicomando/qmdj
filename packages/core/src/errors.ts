@@ -14,7 +14,8 @@ export type ChartErrorCode =
   | 'EPHEMERIS_FAILURE'
   | 'METHOD_NOT_IMPLEMENTED'
   | 'EMPTY_INTERVAL'
-  | 'INTERVAL_TOO_LONG';
+  | 'INTERVAL_TOO_LONG'
+  | 'UNKNOWN_IDENTIFIER';
 
 /**
  * A usage error of the engine: malformed input, or a condition under which

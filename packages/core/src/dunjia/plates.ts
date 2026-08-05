@@ -108,6 +108,28 @@ export const SPIRITS_YIN: readonly Spirit[] = [
 ];
 
 /**
+ * Every spirit a chart can show, which is ten and not eight.
+ *
+ * A chart shows eight, but *which* eight depends on the dun: 勾陳 and 朱雀
+ * stand in a yang chart and never in a yin one, 白虎 and 玄武 the other way
+ * about. A surface offering only the yang list makes 白虎 unaskable for half
+ * the charts of the year, which is why this list exists rather than either
+ * plate serving as one.
+ */
+export const SPIRIT_IDS: readonly SpiritId[] = [
+  'zhifu',
+  'tengshe',
+  'taiyin',
+  'liuhe',
+  'gouchen',
+  'zhuque',
+  'baihu',
+  'xuanwu',
+  'jiudi',
+  'jiutian',
+];
+
+/**
  * The order the stems are laid down on the earth plate: the six instruments,
  * then the three marvels in reverse.
  *

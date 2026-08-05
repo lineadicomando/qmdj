@@ -57,6 +57,7 @@ describe('what the server offers', () => {
       'compute_qimen_chart',
       'draw_qimen_chart',
       'lunar_date',
+      'scan_moments',
       'search_location',
       'solar_terms',
     ]);
@@ -72,6 +73,10 @@ describe('what the server offers', () => {
     expect(byName.get('search_location')).toMatch(/do not invent/i);
     expect(byName.get('draw_qimen_chart')).toMatch(/not instead of it/);
     expect(byName.get('compute_bazi')).toMatch(/do not guess/i);
+    // The two ways an agent turns a scan into something it is not: dropping
+    // the direction, and answering a question that was not asked.
+    expect(byName.get('scan_moments')).toMatch(/never the hour alone/i);
+    expect(byName.get('scan_moments')).toMatch(/rather than loosening the question/i);
   });
 
   it('says it does not interpret, where an agent will read it', async () => {
@@ -199,5 +204,81 @@ describe('the other tools', () => {
 
     expect(text.startsWith('<svg')).toBe(true);
     expect(text).toContain('viewBox="0 0 400 400"');
+  });
+});
+
+
+describe('scan_moments', () => {
+  const INTERVAL = {
+    latitude: BEIJING.latitude,
+    longitude: BEIJING.longitude,
+    timezone: BEIJING.timezone,
+    true_solar_time: false,
+    day_boundary: 'midnight' as const,
+    from: '2026-09-01',
+    to: '2026-09-03',
+  };
+
+  it('answers with the hour and the way to face, never the hour alone', async () => {
+    const text = await call('scan_moments', { ...INTERVAL, gate: 'kaimen' });
+
+    expect(text).toContain('2026-09-01');
+    expect(text).toContain('Open');
+    // The palace names itself by its direction, which is half the answer.
+    expect(text).toMatch(/\d (north|northeast|east|southeast|south|southwest|west|northwest)/);
+  });
+
+  it('keeps the name beside the word where the table has room for it', async () => {
+    const text = await call('scan_moments', { ...INTERVAL, gate: 'kaimen' });
+
+    // The hour pillar and the palace carry theirs, as the palace table of
+    // compute_qimen_chart does. The gate, star and spirit columns are glossed
+    // alone there too: four more pairs of hanzi would put this table past any
+    // terminal, and an agent that needs the name has compute_qimen_chart.
+    expect(text).toMatch(/· (Rat|Ox|Tiger|Rabbit|Dragon)\s+[甲乙丙丁戊己庚辛壬癸]/);
+    expect(text).toMatch(/\d (north|south|east|west|northeast|northwest|southeast|southwest) [坎坤震巽乾兌艮離]/);
+  });
+
+  it('offers every spirit a chart can show, not one plate of them', async () => {
+    const { tools } = await client.listTools();
+    const scan = tools.find((tool) => tool.name === 'scan_moments');
+    const spirit = (scan?.inputSchema as { properties: Record<string, { enum?: string[] }> })
+      .properties['spirit'];
+
+    // baihu stands only in a yin chart. A schema built from the yang plate
+    // would make it unaskable for half the charts of the year.
+    expect(spirit?.enum).toContain('baihu');
+    expect(spirit?.enum).toContain('gouchen');
+    expect(spirit?.enum).toHaveLength(10);
+  });
+
+  it('says that nothing answered rather than returning an empty table', async () => {
+    const text = await call('scan_moments', {
+      ...INTERVAL,
+      gate: 'kaimen',
+      star: 'tianpeng',
+      spirit: 'zhifu',
+      min_strength: 'wang',
+    });
+
+    if (!text.includes('Open')) expect(text).toMatch(/No palace/i);
+  });
+
+  it('refuses an interval the engine will not walk', async () => {
+    const text = await failing('scan_moments', {
+      ...INTERVAL,
+      from: '2026-01-01',
+      to: '2028-01-01',
+    });
+
+    expect(text).toMatch(/longer than/i);
+  });
+
+  it('carries no verdict about any hour it reports', async () => {
+    const text = (await call('scan_moments', { ...INTERVAL, gate: 'kaimen' })).toLowerCase();
+
+    for (const word of ['lucky', 'favourable', 'auspicious', 'best', 'avoid', 'recommend']) {
+      expect(text).not.toContain(word);
+    }
   });
 });

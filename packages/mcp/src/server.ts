@@ -5,6 +5,7 @@ import {
   registerComputeQimenChart,
   registerDrawQimenChart,
   registerLunarDate,
+  registerScanMoments,
   registerSearchLocation,
   registerSolarTerms,
 } from './tools.js';
@@ -35,6 +36,9 @@ export function createServer(context: ToolContext = {}): McpServer {
         'To SHOW a chart rather than read it there is draw_qimen_chart, which is called after ' +
         'compute_qimen_chart and never instead of it: a picture carries the glyphs but not the ' +
         'warnings. ' +
+        'To CHOOSE a time rather than read one there is scan_moments, which walks an interval ' +
+        'and reports where in it a thing stands. Its answers carry a direction as well as an ' +
+        'hour, and the direction is half of the answer: never report the hour alone. ' +
         'The server returns arrangements and relations only. It will tell you that a gate ' +
         'stands over a palace whose element it controls, and it will not tell you what that ' +
         'means. Interpretation, if the person asks for one, is yours — and so is the ' +
@@ -51,6 +55,7 @@ export function createServer(context: ToolContext = {}): McpServer {
   registerDrawQimenChart(server, context);
   registerSolarTerms(server, context);
   registerLunarDate(server, context);
+  registerScanMoments(server, context);
   registerReferences(server);
 
   return server;

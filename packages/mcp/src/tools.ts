@@ -1,17 +1,27 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import {
+  GATES,
+  PATTERN_IDS,
+  SPIRITS_YANG,
+  SPIRIT_IDS,
+  STARS,
+  STEMS,
   chartLabels,
   computeBazi,
   computeQimenChart,
   formatBazi,
   formatMoment,
   formatQimenChart,
+  formatScan,
   formatSolarTerms,
   formatWarnings,
   lunarDate,
+  matchRuns,
   sayGanzhi,
+  scanCharts,
   solarTermsOfYear,
   systemTimezone,
+  type ScanCriteria,
 } from '@qimendunjia/core';
 import { searchLocations } from '@qimendunjia/geo';
 import { renderChartSvg } from '@qimendunjia/plate';
@@ -335,6 +345,121 @@ export function registerDrawQimenChart(server: McpServer, context: ToolContext):
         });
 
         return ok(svg);
+      } catch (error) {
+        return fail(describeError(error, t));
+      }
+    },
+  );
+}
+
+/**
+ * Choosing a time, which is the oldest thing the art was used for.
+ *
+ * The other tools answer *what stands now*. This one answers *when, in a
+ * stretch of days, does something stand — and which way is it*. The direction
+ * is half the answer and is never dropped: an interval does not hold a good
+ * hour, it holds an hour in which something stands to the southeast.
+ */
+export function registerScanMoments(server: McpServer, context: ToolContext): void {
+  const ids = (entries: readonly { id: string }[]): [string, ...string[]] =>
+    entries.map((entry) => entry.id) as [string, ...string[]];
+
+  server.registerTool(
+    'scan_moments',
+    {
+      title: 'Scan an interval for the charts standing over it',
+      description:
+        'Walks an interval and reports every chart that stands over part of it, narrowed to the ' +
+        'palaces answering what you asked for. Use it when someone wants to CHOOSE a time — ' +
+        'when to sign, to travel, to ask — rather than to read one. ' +
+        'Give from and to as dates; both are required, and the interval cannot exceed a year. ' +
+        'Narrow it with gate, star, spirit, stem, towards, min_strength and without. Naming ' +
+        'nothing returns every palace of every hour, which is a great deal of output and rarely ' +
+        'what is wanted. ' +
+        'Each answer carries the direction of the palace, and the direction is half of it: report ' +
+        'both the hour and the way to face, never the hour alone. ' +
+        'It ranks nothing and recommends nothing. There is no score in the output and no order ' +
+        'but time, because a palace answering a question is a fact and a palace being a good ' +
+        'place to be is a reading — yours to make if the person wants one, and yours to own. ' +
+        'An empty answer means the arrangement did not occur in that interval; say so plainly ' +
+        'rather than loosening the question and presenting the result as what was asked. ' +
+        'Which gate suits which undertaking is NOT in this server: that mapping varies by ' +
+        'school, and the engine takes no position on it. If you supply one, say it is yours. ' +
+        'Call compute_qimen_chart for the whole board of any hour this returns.',
+      inputSchema: {
+        from: z
+          .string()
+          .regex(/^\d{4}-\d{2}-\d{2}$/)
+          .describe('First day of the interval, YYYY-MM-DD, local at the place. Required.'),
+        to: z
+          .string()
+          .regex(/^\d{4}-\d{2}-\d{2}$/)
+          .describe('Day the interval ends, exclusive. Required.'),
+        gate: z.enum(ids(GATES)).optional().describe('One of the eight gates, e.g. kaimen 開門.'),
+        star: z.enum(ids(STARS)).optional().describe('One of the nine stars, e.g. tianxin 天心.'),
+        spirit: z
+          .enum(SPIRIT_IDS as unknown as [string, ...string[]])
+          .optional()
+          .describe(
+            'One of the spirits. A chart shows eight, but which eight depends on the dun: gouchen and zhuque stand in a yang chart, baihu and xuanwu in a yin one.',
+          ),
+        stem: z.enum(ids(STEMS)).optional().describe('A stem on either plate of the palace.'),
+        towards: z
+          .array(z.enum(['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']))
+          .optional()
+          .describe('Directions the palace may face. The centre faces none and never answers.'),
+        min_strength: z
+          .enum(['wang', 'xiang', 'xiu', 'qiu', 'si'])
+          .optional()
+          .describe(
+            'The weakest seasonal state admitted, strongest first (旺相休囚死). Filters the star and the gate of the palace.',
+          ),
+        without: z
+          .array(z.enum(PATTERN_IDS as unknown as [string, ...string[]]))
+          .optional()
+          .describe(
+            'Configurations that rule a palace out — or the whole hour, for fuyin and fanyin, which belong to the board.',
+          ),
+        ...placeSchema,
+        ...optionSchema,
+        lang: langSchema,
+      },
+    },
+    async (args) => {
+      const t = translatorFor(args.lang);
+      try {
+        // The place and the options are resolved by the same code every other
+        // tool uses; only the interval is this tool's own.
+        const { moment, place, label } = resolveInput({ ...args, date: args.from, time: '00:00' }, context);
+        const zone = moment.input.timezone;
+
+        const runs = scanCharts(
+          { date: args.from, time: '00:00', timezone: zone },
+          { date: args.to, time: '00:00', timezone: zone },
+          place,
+          moment.options,
+          ephemerisOf(context),
+        );
+
+        const criteria: ScanCriteria = {};
+        if (args.gate) criteria.gate = args.gate as ScanCriteria['gate'];
+        if (args.star) criteria.star = args.star as ScanCriteria['star'];
+        if (args.spirit) criteria.spirit = args.spirit as ScanCriteria['spirit'];
+        if (args.stem) criteria.stem = args.stem as ScanCriteria['stem'];
+        if (args.towards?.length) criteria.directions = args.towards;
+        if (args.min_strength) criteria.minStrength = args.min_strength;
+        if (args.without?.length) criteria.excludes = args.without as ScanCriteria['excludes'];
+
+        const matches = matchRuns(runs, criteria);
+
+        return ok(
+          [
+            `${t('cli.field.place')}: ${label}`,
+            t('cli.heading.scan', { from: args.from, to: args.to }),
+            '',
+            formatScan(matches, t),
+          ].join('\n'),
+        );
       } catch (error) {
         return fail(describeError(error, t));
       }

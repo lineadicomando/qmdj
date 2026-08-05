@@ -4,6 +4,7 @@ import { GET as plate } from '../src/routes/api/chart/plate/+server';
 import { GET as bazi } from '../src/routes/api/bazi/+server';
 import { GET as terms } from '../src/routes/api/terms/+server';
 import { GET as locations } from '../src/routes/api/locations/+server';
+import { GET as moments } from '../src/routes/api/moments/+server';
 
 /**
  * The endpoints are called as SvelteKit calls them, with a URL and a request.
@@ -237,5 +238,104 @@ describe('GET /api/chart/plate', () => {
 
     expect(auto.text).toContain('prefers-color-scheme');
     expect(dark.text).not.toContain('prefers-color-scheme');
+  });
+});
+
+
+describe('GET /api/moments', () => {
+  const INTERVAL =
+    'from=2026-09-01&to=2026-09-03&latitude=39.9075&longitude=116.3972&timezone=Asia/Shanghai&trueSolarTime=false&dayBoundary=midnight';
+
+  it('narrows the palaces of an hour, not the hours themselves, when given a gate', async () => {
+    const { status, body } = await call(moments, `${INTERVAL}&gate=kaimen`);
+    const answer = body as { scanned: number; moments: { start: string; palaces: unknown[] }[] };
+
+    expect(status).toBe(200);
+    expect(answer.scanned).toBeGreaterThan(20);
+
+    // Naming a gate removes no hour: the open gate stands somewhere in every
+    // chart. What it does is say where — one palace of the nine.
+    expect(answer.moments).toHaveLength(answer.scanned);
+    for (const moment of answer.moments) {
+      expect(moment.start).toMatch(/^2026-09-0[12]T/);
+      expect(moment.palaces).toHaveLength(1);
+    }
+  });
+
+  it('removes hours only when what is asked can be absent from one', async () => {
+    const { body: all } = await call(moments, `${INTERVAL}&gate=kaimen`);
+    const { body: south } = await call(moments, `${INTERVAL}&gate=kaimen&towards=se,s`);
+
+    const count = (answer: unknown): number => (answer as { moments: unknown[] }).moments.length;
+    expect(count(south)).toBeGreaterThan(0);
+    expect(count(south)).toBeLessThan(count(all));
+  });
+
+  it('carries the direction, which is half the answer', async () => {
+    const { body } = await call(moments, `${INTERVAL}&gate=kaimen`);
+    const [first] = (body as { moments: { palaces: { palace: { direction: string } }[] }[] }).moments;
+
+    expect(first?.palaces[0]?.palace.direction).toMatch(/^(n|ne|e|se|s|sw|w|nw)$/);
+  });
+
+  it('cuts the chart down to what was asked about, and says nothing of the rest', async () => {
+    const { body } = await call(moments, `${INTERVAL}&gate=kaimen`);
+    const [first] = (body as { moments: { palaces: unknown[]; patterns: { palace?: number }[] }[] })
+      .moments;
+    const number = (first?.palaces[0] as { palace: { number: number } }).palace.number;
+
+    // Configurations of the palace that answered, or of the whole board.
+    for (const pattern of first?.patterns ?? []) {
+      if (pattern.palace !== undefined) expect(pattern.palace).toBe(number);
+    }
+  });
+
+  it('is private and never public: the address holds a place and a calendar', async () => {
+    const { headers } = await call(moments, INTERVAL);
+
+    expect(headers['cache-control']).toContain('private');
+    expect(headers['cache-control']).not.toContain('public');
+  });
+
+  it('refuses an interval longer than it will walk', async () => {
+    const { status, body } = await call(
+      moments,
+      'from=2026-01-01&to=2026-12-01&timezone=Asia/Shanghai',
+    );
+
+    expect(status).toBe(400);
+    expect((body as { code: string }).code).toBe('INTERVAL_TOO_LONG');
+  });
+
+  it('refuses an identifier the engine has never heard of', async () => {
+    // Left unchecked it would match nothing, which reads exactly like an
+    // arrangement that never occurred.
+    const { status, body } = await call(moments, `${INTERVAL}&gate=kaimen1`);
+
+    expect(status).toBe(400);
+    expect((body as { code: string; params: { value: string } }).code).toBe('UNKNOWN_IDENTIFIER');
+    expect((body as { params: { value: string } }).params.value).toBe('kaimen1');
+  });
+
+  it('answers with nothing rather than with the nearest thing', async () => {
+    const { status, body } = await call(
+      moments,
+      `${INTERVAL}&gate=kaimen&star=tianpeng&spirit=zhifu&minStrength=wang`,
+    );
+
+    expect(status).toBe(200);
+    // Whatever it found, it found by the question as asked.
+    for (const moment of (body as { moments: { palaces: any[] }[] }).moments) {
+      expect(moment.palaces[0].gate.id).toBe('kaimen');
+      expect(moment.palaces[0].star.id).toBe('tianpeng');
+    }
+  });
+
+  it('carries no verdict about any hour it reports', async () => {
+    const { text } = await call(moments, `${INTERVAL}&gate=kaimen`);
+
+    for (const word of ['lucky', 'favourable', 'auspicious', 'best', 'avoid', 'score']) {
+      expect(text.toLowerCase()).not.toContain(word);
+    }
   });
 });

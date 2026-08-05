@@ -40,6 +40,8 @@ export const en = {
   'core.error.EMPTY_INTERVAL': 'The interval from {from} to {to} contains no time: it must end after it begins.',
   'core.error.INTERVAL_TOO_LONG':
     'An interval of {days} days is longer than the {maximum} days that can be scanned at once.',
+  'core.error.UNKNOWN_IDENTIFIER':
+    '"{value}" is not a {parameter} the engine knows. Left unchecked it would match nothing, which reads exactly like an arrangement that never occurred.',
 
   'core.warning.AMBIGUOUS_LOCAL_TIME':
     'Local time {time} on {date} occurs twice in {timezone} (clocks went back). The first occurrence was used, the one still on summer time.',
@@ -195,6 +197,7 @@ export const en = {
 
   'nav.chart': 'Qi Men',
   'nav.bazi': 'Four Pillars',
+  'nav.moments': 'Choosing a time',
   'nav.sections': 'Sections',
 
   'scheme.label': 'Appearance',
@@ -224,6 +227,25 @@ export const en = {
   'form.gender.unset': 'not given',
   'form.gender.male': 'male',
   'form.gender.female': 'female',
+
+  // The scan asks for an interval and for what to look for in it. The
+  // criteria are named by what they are — a gate, a direction — and offered
+  // as words, because they are what the reader chooses from. The engine's
+  // identifiers stay in the address, where they belong.
+  'form.interval': 'The interval and the place',
+  'form.openInterval': 'Change the interval',
+  'form.from': 'From',
+  'form.to': 'Until',
+  'form.looking': 'What to look for',
+  'form.any': 'any',
+  'form.towards': 'Facing',
+  'form.minStrength': 'At least as strong as',
+  'form.without': 'Ruling out',
+  'form.criteriaNote':
+    'These are arrangements, not recommendations. The engine reports where each one stands; whether it is a good hour to act is a reading, and it is yours to make.',
+  'form.scan': 'Scan the interval',
+  'form.scanned': '{runs} charts in the interval, {matched} of them with a palace that answers.',
+  'form.openChart': 'the whole board',
 
   // The face of each step is the word, in the reader's language: these are
   // controls, and a control nobody can read is a control nobody can press.

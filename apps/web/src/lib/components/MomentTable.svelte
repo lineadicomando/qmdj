@@ -1,0 +1,110 @@
+<script lang="ts">
+  import type { MessageKey, Translator } from '@qimendunjia/i18n';
+
+  /**
+   * The answer to *when*, and to *which way*.
+   *
+   * Takes the rows, not the scan: the same table serves an interval, a day,
+   * or whatever a run is compared against next.
+   *
+   * The direction is a column and not a footnote. An interval does not hold a
+   * good hour, it holds an hour in which something stands to the southeast,
+   * and a table of times alone would have thrown away the half of this
+   * tradition that no other art has.
+   */
+  let {
+    moments,
+    t,
+    href,
+  }: {
+    moments: readonly any[];
+    t: Translator;
+    /** Where the whole board for a row lives. */
+    href: (start: string) => string;
+  } = $props();
+
+  const gloss = (prefix: string, id: string): string => t(`label.${prefix}.${id}` as MessageKey);
+
+  /** `2026-09-01 08:41` — local at the place already, so it is only trimmed. */
+  const clock = (iso: string): string => `${iso.slice(0, 10)} ${iso.slice(11, 16)}`;
+  const hour = (iso: string): string => iso.slice(11, 16);
+
+  /** The date is written once a day: a column repeating it reads as noise. */
+  function opensADay(index: number): boolean {
+    return index === 0 || moments[index - 1].start.slice(0, 10) !== moments[index].start.slice(0, 10);
+  }
+</script>
+
+<table>
+  <thead>
+    <tr>
+      <th>{t('cli.column.from')}</th>
+      <th>{t('cli.column.to')}</th>
+      <th>{t('cli.column.hour')}</th>
+      <th>{t('cli.column.palace')}</th>
+      <th>{t('cli.column.gate')}</th>
+      <th>{t('cli.column.star')}</th>
+      <th>{t('cli.column.spirit')}</th>
+      <th><span class="hidden">{t('form.openChart')}</span></th>
+    </tr>
+  </thead>
+  <tbody>
+    {#each moments as moment, index (moment.start)}
+      {#each moment.palaces as cell, palace (cell.palace.number)}
+        <tr class:day={palace === 0 && opensADay(index)}>
+          {#if palace === 0}
+            <th scope="row" rowspan={moment.palaces.length}>
+              {opensADay(index) ? clock(moment.start) : hour(moment.start)}
+            </th>
+            <td rowspan={moment.palaces.length}>{hour(moment.end)}</td>
+            <!-- The whole pillar in words: the name below is 壬子, and a word
+                 that said only "Rat" would say less than the name it glosses. -->
+            <td rowspan={moment.palaces.length}>
+              <span>{gloss('stem', moment.hour.stem.id)} · {gloss('branch', moment.hour.branch.id)}</span>
+              <span class="glyph">{moment.hour.hanzi}</span>
+            </td>
+          {/if}
+          <td>
+            <span>{cell.palace.number} {gloss('palace', cell.palace.id)}</span>
+            <span class="glyph">{cell.palace.hanzi}</span>
+          </td>
+          <td>
+            {#if cell.gate}
+              <span>{gloss('gate', cell.gate.id)}</span>
+              <span class="glyph">{cell.gate.hanzi}{#if cell.gateStrength}&nbsp;· {gloss('strength', cell.gateStrength.id)}{/if}</span>
+            {:else}<span class="gloss">—</span>{/if}
+          </td>
+          <td>
+            <span>{gloss('star', cell.star.id)}</span>
+            <span class="glyph">{cell.star.hanzi} · {gloss('strength', cell.starStrength.id)}</span>
+          </td>
+          <td>
+            {#if cell.spirit}
+              <span>{gloss('spirit', cell.spirit.id)}</span>
+              <span class="glyph">{cell.spirit.hanzi}</span>
+            {:else}<span class="gloss">—</span>{/if}
+          </td>
+          {#if palace === 0}
+            <td rowspan={moment.palaces.length}>
+              <a href={href(moment.start)}>{t('form.openChart')}</a>
+            </td>
+          {/if}
+        </tr>
+      {/each}
+    {/each}
+  </tbody>
+</table>
+
+<style>
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--rule); vertical-align: baseline; }
+  thead th { color: var(--faint); font-weight: 400; font-size: 0.85em; }
+  tbody th { font-weight: 400; white-space: nowrap; }
+  /* A heavier rule where the day turns, so a week can be read down. */
+  .day th, .day td { border-top: 1px solid var(--rule); }
+  th span:first-child, td span:first-child { display: block; }
+  .glyph { display: block; color: var(--faint); font-size: 0.8em; }
+  .gloss { display: block; color: var(--faint); font-size: 0.8em; }
+  a { color: var(--faint); font-size: 0.85em; }
+  .hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+</style>

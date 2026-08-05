@@ -187,6 +187,7 @@ export {
   GATES,
   SPIRITS_YANG,
   SPIRITS_YIN,
+  SPIRIT_IDS,
   STARS,
   earthPlate,
   palaceOf,

@@ -8,10 +8,19 @@
 -->
 <script lang="ts">
   import { tick, type Snippet } from 'svelte';
-  import type { Translator } from '@qimendunjia/i18n';
+  import type { MessageKey, Translator } from '@qimendunjia/i18n';
 
   interface Props {
     t: Translator;
+    /**
+     * What the panel holds, and what reopening it offers.
+     *
+     * Two sections ask for a moment and one asks for an interval, and
+     * "Change the moment" over a pair of dates names the wrong thing. A
+     * disclosure has to say what opening it gives you.
+     */
+    legend?: MessageKey;
+    reopenLabel?: MessageKey;
     /**
      * Whether there is anything below for a closed panel to make room for.
      *
@@ -33,7 +42,16 @@
     controls?: Snippet;
   }
 
-  let { t, closable = false, onsubmit, fields, summary, controls }: Props = $props();
+  let {
+    t,
+    legend = 'form.legend',
+    reopenLabel = 'form.open',
+    closable = false,
+    onsubmit,
+    fields,
+    summary,
+    controls,
+  }: Props = $props();
 
   // Open unless there is already an answer, which there is when the address
   // carried one: someone who followed a link to a chart came for the chart,
@@ -56,13 +74,13 @@
 <section class="panel" class:closed={!open} bind:this={panel}>
   <div class="bar">
     {#if open}
-      <h2>{t('form.legend')}</h2>
+      <h2>{t(legend)}</h2>
       {#if closable}
         <button type="button" onclick={() => (open = false)} aria-label={t('form.close')}>×</button>
       {/if}
     {:else}
       <div class="said">
-        <button type="button" class="reopen" onclick={reopen}>{t('form.open')}</button>
+        <button type="button" class="reopen" onclick={reopen}>{t(reopenLabel)}</button>
         {#if summary}<p class="summary">{@render summary()}</p>{/if}
       </div>
       {#if controls}{@render controls()}{/if}
