@@ -185,6 +185,19 @@ export const en = {
   'label.pattern.qinglongfanshou': 'the dragon turns its head',
   'label.pattern.feiniaodiexue': 'the bird falls to the nest',
 
+  // What somebody is choosing a time for. These are not names of gates: they
+  // are the errands the transmitted lists put under each one, phrased as the
+  // thing a reader recognises as their own. "Open" says a door is open and
+  // tells nobody which line to pick; this says which.
+  'label.purpose.opening': 'Opening, starting, dealing with an office, travelling',
+  'label.purpose.meeting': 'Meeting somebody, marriage, asking a favour, resting',
+  'label.purpose.wealth': 'Money, trade, treatment, building',
+  'label.purpose.documents': 'Documents, examinations, plans, making a thing known',
+  'label.purpose.concealment': 'Keeping out of sight, avoiding, work of the hands',
+  'label.purpose.pursuit': 'Recovering a debt, competing, going after somebody',
+  'label.purpose.ending': 'A funeral, a burial, closing a thing',
+  'label.purpose.dispute': 'Litigation, a dispute, finding what is lost',
+
   'label.strength.wang': 'prospering',
   'label.strength.xiang': 'supported',
   'label.strength.xiu': 'resting',

@@ -86,6 +86,14 @@ export {
 export { resolveMoment, type Moment, type Pillars } from './pillars.js';
 
 export {
+  PURPOSES,
+  purposeCriteria,
+  purposeOfGate,
+  type Purpose,
+  type PurposeId,
+} from './purposes.js';
+
+export {
   MAX_SCAN_DAYS,
   matchRuns,
   scanCharts,

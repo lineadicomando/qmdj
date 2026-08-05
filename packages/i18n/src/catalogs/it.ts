@@ -175,6 +175,15 @@ export const it: Record<MessageKey, string> = {
   'label.pattern.qinglongfanshou': 'il drago volge il capo',
   'label.pattern.feiniaodiexue': 'l\'uccello cade nel nido',
 
+  'label.purpose.opening': 'Aprire, cominciare, trattare con un ufficio, viaggiare',
+  'label.purpose.meeting': 'Incontrare qualcuno, matrimonio, chiedere un favore, riposare',
+  'label.purpose.wealth': 'Denaro, commercio, cure, costruire',
+  'label.purpose.documents': 'Documenti, esami, progetti, far sapere una cosa',
+  'label.purpose.concealment': 'Restare defilati, evitare, lavoro delle mani',
+  'label.purpose.pursuit': 'Riscuotere un credito, competere, incalzare qualcuno',
+  'label.purpose.ending': 'Un funerale, una sepoltura, chiudere una cosa',
+  'label.purpose.dispute': 'Una causa, una lite, ritrovare ciò che è perduto',
+
   'label.strength.wang': 'prospera',
   'label.strength.xiang': 'sostenuto',
   'label.strength.xiu': 'a riposo',
