@@ -62,7 +62,7 @@
   {#if selected}
     <p class="chosen">
       <strong>{selected.name}</strong>
-      {#if selected.region}, {selected.region}{/if}, {selected.country}
+      <span>{#if selected.region}{`${selected.region}, `}{/if}{selected.country}</span>
       <span class="zone">{selected.timezone}</span>
       <button type="button" onclick={() => (selected = undefined)}>×</button>
     </p>
@@ -72,12 +72,23 @@
     <ul>
       {#each candidates as candidate (candidate.id)}
         <li>
+          <!--
+            The name, and under it everything that tells two of them apart.
+
+            Three columns read well across a panel and not at all down one
+            third of it, which is the width this field now has: the zone was
+            cut off by the edge of the list, and the zone is the whole reason
+            a row of identical names is worth reading.
+          -->
           <button type="button" onclick={() => choose(candidate)}>
             <span>{candidate.name}</span>
             <span class="where">
-              {#if candidate.region}{candidate.region}, {/if}{candidate.country}
+              <!-- The separator is written into the expression: a space
+                   against the edge of a block is one Svelte trims, and
+                   "Lazio,Italia" is not how either word is spelled. -->
+              {#if candidate.region}{`${candidate.region}, `}{/if}{candidate.country}
+              <span class="zone">· {candidate.timezone}</span>
             </span>
-            <span class="zone">{candidate.timezone}</span>
           </button>
         </li>
       {/each}
@@ -88,8 +99,27 @@
 </div>
 
 <style>
+  /* The same label as the fields it stands beside: this one is a component
+     of its own, so it says so itself. */
+  label { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); }
   .search { position: relative; }
   input { width: 100%; }
+  /*
+   * The candidates hang over the form rather than pushing it down.
+   *
+   * In the flow they made the row they sit in taller with every keystroke —
+   * the fields beside them jumped, and everything below moved by the height
+   * of a list that is gone a moment later. A list of candidates is a thing
+   * offered over the page, not a part of it; `.search` has been positioned
+   * for this all along.
+   */
+  ul, .quiet {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 20;
+  }
   ul {
     list-style: none;
     margin: 0.25rem 0 0;
@@ -99,12 +129,13 @@
     background: var(--ground);
     max-height: 16rem;
     overflow-y: auto;
+    /* Something has to say it is above what it covers, in either scheme. */
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.22);
   }
   li + li { border-top: 1px solid var(--rule); }
   li button {
     display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 0.6rem;
+    gap: 0.05rem;
     width: 100%;
     padding: 0.45rem 0.6rem;
     border: 0;
@@ -115,8 +146,17 @@
     color: inherit;
   }
   li button:hover, li button:focus-visible { background: var(--tint); }
-  .where, .zone { color: var(--faint); font-size: 0.85em; }
-  .chosen { display: flex; gap: 0.5rem; align-items: baseline; margin: 0.4rem 0 0; }
+  .where {
+    color: var(--faint);
+    font-size: 0.85em;
+    /* `Europe/Rome` has nowhere to break: told to, it breaks anywhere rather
+       than running under the scrollbar. */
+    overflow-wrap: anywhere;
+  }
+  .chosen { display: flex; gap: 0.2rem 0.5rem; align-items: baseline; margin: 0.4rem 0 0; flex-wrap: wrap; }
+  /* In the list the zone sits inside `.where` and takes its size from it;
+     beside the chosen place it stands on its own and asks for its own. */
+  .chosen .zone { color: var(--faint); font-size: 0.85em; }
   .chosen button { border: 0; background: none; cursor: pointer; color: var(--faint); font-size: 1.1em; }
-  .quiet { color: var(--faint); margin: 0.4rem 0 0; }
+  .quiet { color: var(--faint); margin: 0.25rem 0 0; }
 </style>

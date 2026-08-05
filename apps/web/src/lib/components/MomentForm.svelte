@@ -20,6 +20,8 @@
   } = $props();
 </script>
 
+  <!-- The three things asked of every moment, side by side where there is
+       room for three and stacked where there is not. -->
   <div class="row">
     <label>
       {t('cli.column.day')}
@@ -30,9 +32,8 @@
       {t('cli.column.hour')}
       <input type="time" bind:value={time} />
     </label>
+    <LocationSearch {t} bind:selected={place} />
   </div>
-
-  <LocationSearch {t} bind:selected={place} />
 
   <details>
     <!-- A label, not the note: what a disclosure is called has to say what
@@ -56,11 +57,26 @@
   </details>
 
 <style>
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+  /*
+   * As many columns as there is room for, and no breakpoint anywhere.
+   *
+   * `auto-fit` asks the row how much room it was given rather than asking the
+   * screen how wide it is: the same three fields come out in three columns on
+   * a page, in two on a tablet and in one on a phone, and the panel they sit
+   * in is free to be any width without this having to know.
+   */
+  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.9rem; }
+  /* Each field keeps its own height and hangs from the top of the row: a
+     chosen place makes the row taller, and stretching would push the fields
+     beside it down along with it. */
+  .row > :global(*) { align-self: start; }
   label { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); }
-  label :global(input), label :global(select) { font: inherit; color: var(--ink); }
+  label :global(input), label :global(select) { color: var(--ink); }
   .check { display: flex; gap: 0.45rem; align-items: center; }
   summary { cursor: pointer; color: var(--faint); font-size: 0.85em; }
   details { display: grid; gap: 0.6rem; }
-  .note { margin: 0; color: var(--faint); font-size: 0.8em; }
+  /* The options are read, not filled in: a line of prose stays a line the eye
+     can come back from, however wide the panel is. */
+  details label:not(.check) { max-width: 26rem; }
+  .note { margin: 0; color: var(--faint); font-size: 0.8em; max-width: 42rem; }
 </style>

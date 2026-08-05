@@ -89,11 +89,44 @@ body {
 .glyph { font-family: 'Noto Serif CJK SC', 'Songti SC', 'PingFang SC', serif; }
 
 a { color: inherit; }
-input, select, button {
+input, select, button, textarea {
   border: 1px solid var(--rule);
   border-radius: 4px;
   background: var(--ground);
   color: inherit;
   padding: 0.3rem 0.45rem;
+  /*
+   * The page's face, at the page's size.
+   *
+   * A field does not inherit either on its own, and the labels are set
+   * smaller than the body: left to themselves the fields came out in the
+   * browser's own sans-serif, and — under 16px — Safari on iOS zooms the page
+   * in on the one being filled and never zooms back out. One rem here settles
+   * both. What wants to be smaller is a button, and says so where it lives.
+   */
+  font-family: inherit;
+  font-size: 1rem;
+  /*
+   * A field is laid out at whatever width it is given, never at the width of
+   * its own content. A `select` holding a sentence is otherwise as wide as
+   * the sentence, and inside a grid column — where `min-width` is `auto` —
+   * that width pushes the whole page sideways on a narrow screen.
+   */
+  min-width: 0;
+  max-width: 100%;
 }
 button:hover { background: var(--tint); }
+
+/*
+ * A table wider than the screen scrolls inside its own frame.
+ *
+ * The alternative is the page scrolling sideways, which moves the heading and
+ * the drawing along with it and leaves no way back to the left edge but the
+ * one that hides the column just read.
+ */
+.scroller {
+  overflow-x: auto;
+  /* The frame is only visible once there is something outside it. */
+  scrollbar-width: thin;
+  overscroll-behavior-x: contain;
+}

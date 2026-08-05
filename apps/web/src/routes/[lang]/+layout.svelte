@@ -53,14 +53,31 @@
 </div>
 
 <style>
-  .shell { max-width: 72rem; margin: 0 auto; padding: 1rem 1.25rem 3rem; }
+  /* The gutter narrows with the screen: at 1.25rem a side, a phone spends a
+     tenth of its width on margins. */
+  .shell { max-width: 72rem; margin: 0 auto; padding: 1rem clamp(0.75rem, 4vw, 1.25rem) 3rem; }
 
   header { margin-bottom: 2rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--rule); }
-  .top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem 1rem;
+    flex-wrap: wrap;
+  }
   .mark { font-size: 1.05rem; letter-spacing: 0.02em; text-decoration: none; }
-  .controls { display: flex; align-items: center; gap: 1rem; }
+  .controls { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
 
-  nav ul { display: flex; gap: 1.4rem; list-style: none; margin: 0.9rem 0 0; padding: 0; }
+  /* Three sections and two words apiece: on a narrow screen they wrap rather
+     than scroll off the edge. */
+  nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.4rem;
+    list-style: none;
+    margin: 0.9rem 0 0;
+    padding: 0;
+  }
   nav a { color: var(--faint); text-decoration: none; padding-bottom: 0.35rem; }
   nav a:hover { color: var(--ink); }
   nav a.current { color: var(--ink); border-bottom: 2px solid var(--ink); }
