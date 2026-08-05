@@ -9,23 +9,47 @@
  */
 import { createTranslator, resolveLocale, type Locale } from '@qimendunjia/i18n';
 import { computeBazi, type Gender } from './bazi/index.js';
-import { computeQimenChart } from './dunjia/index.js';
+import {
+  GATES,
+  PATTERN_IDS,
+  SPIRITS_YANG,
+  STARS,
+  computeQimenChart,
+  type Direction,
+  type GateId,
+  type PatternId,
+  type SpiritId,
+  type StarId,
+  type StrengthId,
+} from './dunjia/index.js';
 import { initEphemeris } from './ephemeris.js';
 import { ChartError } from './errors.js';
+import { STEMS, type StemId } from './ganzhi.js';
 import {
   formatBazi,
   formatMoment,
   formatQimenChart,
+  formatScan,
   formatSolarTerms,
   formatWarnings,
 } from './format.js';
 import { lunarDate } from './lunar.js';
 import { resolveMoment } from './pillars.js';
+import { matchRuns, scanCharts, type ScanCriteria } from './scan.js';
 import { solarTermsOfYear } from './solar-terms.js';
 import { currentMoment, systemTimezone, zoneMeridian, type LocalMoment } from './time.js';
 import { DEFAULT_OPTIONS, type ChartOptions, type Place } from './types.js';
 
-const COMMANDS = ['chart', 'bazi', 'terms', 'calendar'] as const;
+/**
+ * A mistake in how the command was called.
+ *
+ * Its message is already translated and already meant for whoever typed it,
+ * so `run` prints it and stops. Anything else thrown out of `execute` is a
+ * fault in the engine, and a fault deserves its stack trace.
+ */
+class UsageError extends Error {}
+
+const COMMANDS = ['chart', 'bazi', 'terms', 'calendar', 'scan'] as const;
 type Command = (typeof COMMANDS)[number];
 
 interface Options {
@@ -41,6 +65,14 @@ interface Options {
   help: boolean;
   trueSolar?: boolean;
   dayBoundary?: string;
+  until?: string;
+  gate?: string;
+  star?: string;
+  spirit?: string;
+  stem?: string;
+  towards?: string;
+  minStrength?: string;
+  without?: string;
 }
 
 const HELP = `qimen — Qi Men Dun Jia charts and Four Pillars
@@ -50,6 +82,7 @@ Usage
   qimen bazi      [options]     the four pillars, read out
   qimen terms     [options]     the twenty-four solar terms of a year
   qimen calendar  [options]     the lunar date of a moment
+  qimen scan      [options]     every chart between two moments
 
 Options
   --date YYYY-MM-DD      default: today
@@ -58,6 +91,13 @@ Options
   --lat, --lon degrees   default: the meridian the zone is named for
   --year N               for \`terms\`; default: the year of --date
   --gender male|female   for \`bazi\`; only the luck cycles need it
+
+Narrowing a scan
+  --until YYYY-MM-DD     the end of the interval; --date opens it
+  --gate, --star, --spirit, --stem   by identifier, e.g. kaimen, tianxin
+  --towards n,ne,e,se,s,sw,w,nw      one or more; the centre faces none
+  --min-strength wang|xiang|xiu|qiu|si   the weakest state admitted
+  --without id,id        configurations that rule a palace out, e.g. kongwang
   --true-solar, --no-true-solar   default: on
   --day-boundary zishi|midnight   default: zishi
   --lang en|it           default: the environment, then English
@@ -67,7 +107,8 @@ Options
 A note on what this prints
   The engine reports arrangements — which gate stands over which palace, how
   a stem stands to the day master. What they mean belongs to whoever reads
-  them, and nothing here will tell you.
+  them, and nothing here will tell you. A scan is the same: it answers the
+  question you asked it, and calls no hour good.
 `;
 
 export async function run(argv: string[]): Promise<number> {
@@ -96,6 +137,10 @@ export async function run(argv: string[]): Promise<number> {
     if (error instanceof ChartError) {
       process.stderr.write(`${t(error.messageKey, error.params)}\n`);
       return 1;
+    }
+    if (error instanceof UsageError) {
+      process.stderr.write(`${error.message}\n`);
+      return 2;
     }
     throw error;
   }
@@ -126,6 +171,26 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
   const chartOptions = resolveOptions(options);
   const moment = resolveMoment(input, place, chartOptions, context);
 
+  if (command === 'scan') {
+    if (!options.until) throw new UsageError(t('cli.error.missingValue', { option: '--until' }));
+
+    // `--date 2026-09-01 --until 2026-09-03` names two days and means all of
+    // them. Falling back to the present hour, as a single chart does, would
+    // open the interval wherever the command happened to be typed.
+    const opens = { ...input, time: options.time ?? '00:00' };
+    const runs = scanCharts(opens, { ...opens, date: options.until }, place, chartOptions, context);
+    const criteria = resolveCriteria(options, t);
+    const matches = matchRuns(runs, criteria);
+
+    if (options.json) return JSON.stringify({ criteria, matches }, null, 2);
+    return [
+      `${t('cli.heading.scan', { from: input.date, to: options.until })}`,
+      '',
+      formatScan(matches, t),
+      warningsOf(moment, t),
+    ].join('\n');
+  }
+
   if (command === 'calendar') {
     const date = lunarDate(moment.julianDayUT, context);
     if (options.json) return JSON.stringify({ moment, lunar: date }, null, 2);
@@ -141,7 +206,7 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
   if (command === 'bazi') {
     const gender = options.gender as Gender | undefined;
     if (gender && gender !== 'male' && gender !== 'female') {
-      throw new Error(t('cli.error.missingValue', { option: '--gender' }));
+      throw new UsageError(t('cli.error.missingValue', { option: '--gender' }));
     }
     const bazi = computeBazi(moment, gender ? { gender } : {}, context);
     if (options.json) return JSON.stringify({ moment, bazi }, null, 2);
@@ -192,6 +257,62 @@ function resolvePlace(options: Options, input: LocalMoment): Place {
   };
 }
 
+const DIRECTIONS = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'] as const;
+const STRENGTHS = ['wang', 'xiang', 'xiu', 'qiu', 'si'] as const;
+
+/**
+ * What the scan was asked for.
+ *
+ * Every value is checked against the identifiers the engine actually knows.
+ * An unchecked one would not fail: it would match nothing, and the scan would
+ * report that the arrangement never occurred — which is the same answer a
+ * correct question can get, and indistinguishable from it.
+ */
+function resolveCriteria(options: Options, t: ReturnType<typeof createTranslator>): ScanCriteria {
+  const one = <T extends string>(
+    value: string | undefined,
+    known: readonly { id: string }[] | readonly string[],
+    flag: string,
+  ): T | undefined => {
+    if (value === undefined) return undefined;
+    const ids = known.map((entry) => (typeof entry === 'string' ? entry : entry.id));
+    if (!ids.includes(value)) {
+      throw new UsageError(t('cli.error.unknownValue', { option: flag, value }));
+    }
+    return value as T;
+  };
+
+  const many = <T extends string>(
+    value: string | undefined,
+    known: readonly string[],
+    flag: string,
+  ): T[] | undefined =>
+    value
+      ?.split(',')
+      .map((entry) => entry.trim())
+      .filter(Boolean)
+      .map((entry) => one<T>(entry, known, flag) as T);
+
+  const criteria: ScanCriteria = {};
+  const gate = one<GateId>(options.gate, GATES, '--gate');
+  const star = one<StarId>(options.star, STARS, '--star');
+  const spirit = one<SpiritId>(options.spirit, SPIRITS_YANG, '--spirit');
+  const stem = one<StemId>(options.stem, STEMS, '--stem');
+  const directions = many<Direction>(options.towards, DIRECTIONS, '--towards');
+  const minStrength = one<StrengthId>(options.minStrength, STRENGTHS, '--min-strength');
+  const excludes = many<PatternId>(options.without, PATTERN_IDS, '--without');
+
+  if (gate) criteria.gate = gate;
+  if (star) criteria.star = star;
+  if (spirit) criteria.spirit = spirit;
+  if (stem) criteria.stem = stem;
+  if (directions?.length) criteria.directions = directions;
+  if (minStrength) criteria.minStrength = minStrength;
+  if (excludes?.length) criteria.excludes = excludes;
+
+  return criteria;
+}
+
 function resolveOptions(options: Options): ChartOptions {
   const chartOptions: ChartOptions = { ...DEFAULT_OPTIONS };
   if (options.trueSolar !== undefined) chartOptions.trueSolarTime = options.trueSolar;
@@ -212,6 +333,14 @@ const FLAGS: Record<string, keyof Options> = {
   '--gender': 'gender',
   '--lang': 'lang',
   '--day-boundary': 'dayBoundary',
+  '--until': 'until',
+  '--gate': 'gate',
+  '--star': 'star',
+  '--spirit': 'spirit',
+  '--stem': 'stem',
+  '--towards': 'towards',
+  '--min-strength': 'minStrength',
+  '--without': 'without',
 };
 
 function parse(argv: string[]): { command?: Command; options: Options } {

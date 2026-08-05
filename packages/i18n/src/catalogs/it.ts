@@ -318,6 +318,8 @@ export const it: Record<MessageKey, string> = {
   'cli.error.unknownCommand': 'Comando "{command}" sconosciuto. Prova `qimen --help`.',
   'cli.error.unknownOption': 'Opzione "{option}" sconosciuta. Prova `qimen --help`.',
   'cli.error.missingValue': 'L\'opzione "{option}" richiede un valore.',
+  'cli.error.unknownValue':
+    'L\'opzione "{option}" non accetta il valore "{value}". Non controllato non corrisponderebbe a nulla, che si legge esattamente come una disposizione che non si è mai presentata.',
   'cli.error.genderRequired':
     'I cicli decennali richiedono --gender, perché la tradizione ne trae la direzione. Senza, i pilastri restano comunque completi.',
 };

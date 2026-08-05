@@ -15,6 +15,25 @@ export type PatternId =
   | 'feiniaodiexue';
 
 /**
+ * The same list at runtime, for the surfaces that have to offer it.
+ *
+ * A form cannot enumerate a union type, and neither can a command line
+ * checking what it was handed. Declared beside the type so that the two
+ * cannot drift apart without the compiler noticing.
+ */
+export const PATTERN_IDS: readonly PatternId[] = [
+  'kongwang',
+  'rumu',
+  'menpo',
+  'jixing',
+  'fuyin',
+  'fanyin',
+  'wubuyu',
+  'qinglongfanshou',
+  'feiniaodiexue',
+];
+
+/**
  * A configuration the chart has fallen into.
  *
  * These are **structural facts**. That a gate stands in a palace whose

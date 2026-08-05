@@ -153,6 +153,7 @@ function decadeInstrumentOf(ganzhiIndex: number): Stem {
 
 export { determineJu, YUAN_HANZI, type Ju, type Yuan } from './ju.js';
 export {
+  PATTERN_IDS,
   branchesOf,
   findPatterns,
   opposite,

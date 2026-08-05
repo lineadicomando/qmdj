@@ -154,6 +154,73 @@ describe('the locale', () => {
   });
 });
 
+describe('scan', () => {
+  const INTERVAL = [
+    'scan',
+    '--date', '2026-09-01',
+    '--until', '2026-09-02',
+    '--tz', 'Asia/Shanghai',
+    '--lon', '116.4',
+    '--no-true-solar',
+    '--day-boundary', 'midnight',
+    // Stated, as everywhere else here: the environment's locale is not the
+    // test's, and a suite that reads differently on another machine is not a
+    // suite.
+    '--lang', 'en',
+  ];
+
+  it('walks the interval and names the palace of every line', async () => {
+    expect(await run([...INTERVAL, '--gate', 'kaimen'])).toBe(0);
+
+    expect(out).toContain('2026-09-01');
+    expect(out).toContain('2026-09-02');
+    // The word for the gate, the name beside it, and where to face.
+    expect(out).toContain('Open');
+    expect(out).toMatch(/\d southeast 巽|\d north 坎|\d west 兌/);
+  });
+
+  it('opens the interval at midnight, not at the hour it was typed', async () => {
+    expect(await run(INTERVAL)).toBe(0);
+    expect(out).toContain('2026-09-01 00:00');
+  });
+
+  it('narrows as more is asked of it, and never widens', async () => {
+    await run([...INTERVAL, '--gate', 'kaimen']);
+    const loose = out.split('\n').length;
+
+    out = '';
+    await run([...INTERVAL, '--gate', 'kaimen', '--towards', 'se,s']);
+    expect(out.split('\n').length).toBeLessThan(loose);
+  });
+
+  it('says that nothing answered rather than printing an empty table', async () => {
+    expect(await run([...INTERVAL, '--gate', 'kaimen', '--star', 'tianpeng', '--spirit', 'zhifu'])).toBe(0);
+    // Either something did answer, or it said so in words.
+    if (!out.includes('Open')) expect(out).toContain('No palace');
+  });
+
+  it('refuses an interval with no end', async () => {
+    expect(await run(['scan', '--date', '2026-09-01'])).toBe(2);
+    expect(err).toContain('--until');
+  });
+
+  it('refuses a value the engine has no identifier for', async () => {
+    // Left unchecked it would match nothing, which reads exactly like an
+    // arrangement that never occurred.
+    expect(await run([...INTERVAL, '--gate', 'kaimen1'])).toBe(2);
+    expect(err).toContain('kaimen1');
+    expect(out).toBe('');
+  });
+
+  it('carries no verdict about any hour it reports', async () => {
+    await run(INTERVAL);
+
+    for (const word of ['lucky', 'favourable', 'auspicious', 'best', 'avoid']) {
+      expect(out.toLowerCase()).not.toContain(word);
+    }
+  });
+});
+
 describe('failing', () => {
   it('reports an unknown command and asks for nothing', async () => {
     expect(await run(['horoscope'])).toBe(2);
@@ -170,6 +237,14 @@ describe('failing', () => {
     expect(await run(['chart', '--date', '15/06/2024', '--lang', 'it'])).toBe(1);
 
     expect(err).toContain('non è valida');
+    expect(out).toBe('');
+  });
+
+  it('renders a mistake in the call rather than throwing it at the reader', async () => {
+    expect(await run(['bazi', '--date', '1990-01-01', '--gender', 'neither'])).toBe(2);
+
+    expect(err).toContain('--gender');
+    expect(err).not.toContain('at ');
     expect(out).toBe('');
   });
 

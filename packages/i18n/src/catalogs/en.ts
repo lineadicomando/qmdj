@@ -337,6 +337,8 @@ export const en = {
   'cli.error.unknownCommand': 'Unknown command "{command}". Try `qimen --help`.',
   'cli.error.unknownOption': 'Unknown option "{option}". Try `qimen --help`.',
   'cli.error.missingValue': 'Option "{option}" needs a value.',
+  'cli.error.unknownValue':
+    'Option "{option}" does not take the value "{value}". Left unchecked it would match nothing, which reads exactly like an arrangement that never occurred.',
   'cli.error.genderRequired':
     'The luck cycles need --gender, since the tradition takes their direction from it. Without it the pillars are still complete.',
 };
