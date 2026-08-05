@@ -63,7 +63,9 @@
 </table>
 
 <style>
-  table { width: 100%; border-collapse: collapse; }
+  /* As wide as its content asks for inside a scrolling frame, and no
+     narrower: six columns squeezed into a phone break every name in two. */
+  table { width: 100%; min-width: max-content; border-collapse: collapse; }
   th, td { text-align: left; padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--rule); vertical-align: baseline; }
   thead th { color: var(--faint); font-weight: 400; font-size: 0.85em; }
   /* The word leads; the name it renders sits under it, small. */

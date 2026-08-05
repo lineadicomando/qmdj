@@ -11,11 +11,17 @@
   nothing smaller: day, month and year at a fixed clock time all leave the
   chart in the same 時辰.
 
-  Each step is named by its word, in the reader's language. These are controls
-  and not output: a button whose face is a glyph asks the reader to already
-  know what it does, and the person this is for is learning the subject, not
-  reciting it. 時辰 keeps its hanzi beside the word because it is the one unit
-  here that names something Chinese — a day, a month and a year are the civil
+  Each step shows the value it stands at, with its name under it. The value
+  alone would be a row of bare numbers, and nothing would say what the `+`
+  next to a 5 adds; the name alone was what this said before, and it left the
+  reader to hold the date in their head while stepping it. Both, and the row
+  reads as the moment it is stepping — which is why they run from the year
+  down to the hour, the order a date is written in.
+
+  The names are in the reader's language: these are controls and not output,
+  and a button whose face is a glyph asks the reader to already know what it
+  does. 時辰 keeps its hanzi beside the word because it is the one unit here
+  that names something Chinese — a day, a month and a year are the civil
   calendar's, and each already has a word in every language this speaks.
 -->
 <script lang="ts">
@@ -27,16 +33,23 @@
     onstep: (unit: Unit, by: number) => void;
     /** Back to the present, which the address says by saying nothing. */
     onnow: () => void;
+    /**
+     * Where each unit stands, as it is written.
+     *
+     * The value, not a rendering of it: `2026`, `08`, `14:30`. Absent before
+     * there is a moment to be at, and then the names stand alone.
+     */
+    values?: Partial<Record<Unit, string>>;
     disabled?: boolean;
   }
 
-  let { t, onstep, onnow, disabled = false }: Props = $props();
+  let { t, onstep, onnow, values, disabled = false }: Props = $props();
 
   const UNITS: readonly { unit: Unit; hanzi?: string }[] = [
-    { unit: 'shichen', hanzi: '時辰' },
-    { unit: 'day' },
-    { unit: 'month' },
     { unit: 'year' },
+    { unit: 'month' },
+    { unit: 'day' },
+    { unit: 'shichen', hanzi: '時辰' },
   ];
 </script>
 
@@ -50,9 +63,12 @@
         title={t(`step.${unit}.back` as MessageKey)}
         onclick={() => onstep(unit, -1)}>−</button
       >
-      <span class="name">
-        {t(`step.${unit}` as MessageKey)}
-        {#if hanzi}<span class="glyph" aria-hidden="true">{hanzi}</span>{/if}
+      <span class="at">
+        {#if values?.[unit]}<span class="value">{values[unit]}</span>{/if}
+        <span class="name">
+          {t(`step.${unit}` as MessageKey)}
+          {#if hanzi}<span class="glyph" aria-hidden="true">{hanzi}</span>{/if}
+        </span>
       </span>
       <button
         type="button"
@@ -74,25 +90,33 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.15rem 0.9rem;
+    gap: 0.3rem 0.8rem;
     font-size: 0.85em;
   }
-  .unit {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.15rem;
+  .unit { display: inline-flex; align-items: center; gap: 0.1rem; }
+  /* The value leads and the name explains it, so they stack rather than run
+     on: a name beside a number would read as part of it. */
+  .at {
+    display: grid;
+    justify-items: center;
+    line-height: 1.15;
+    /* The row must not shift sideways as the numbers under it change. */
+    min-width: 3.4em;
+    padding-inline: 0.15rem;
   }
-  .name { color: var(--faint); white-space: nowrap; }
-  .glyph { font-size: 0.9em; opacity: 0.75; }
+  .value { color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .name { color: var(--faint); font-size: 0.78em; white-space: nowrap; }
+  .glyph { opacity: 0.75; }
   button {
     border: 0;
     background: none;
     color: var(--faint);
     cursor: pointer;
     font: inherit;
-    /* Wide enough to hit on a touch screen, where these are the whole point. */
-    min-width: 1.9em;
-    padding: 0.2rem 0.2rem;
+    /* A target a thumb can find, where these are the whole point. */
+    min-width: 2.5rem;
+    min-height: 2.25rem;
+    padding: 0.2rem;
     line-height: 1.2;
     border-radius: 4px;
   }
@@ -100,5 +124,5 @@
      usual hover would be invisible exactly where these buttons live. */
   button:hover:not(:disabled), button:focus-visible { color: var(--ink); background: var(--ground); }
   button:disabled { cursor: default; opacity: 0.5; }
-  .now { color: var(--ink); min-width: 0; padding-inline: 0.5rem; }
+  .now { color: var(--ink); min-width: 0; padding-inline: 0.6rem; }
 </style>
