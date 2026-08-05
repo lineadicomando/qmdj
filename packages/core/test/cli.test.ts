@@ -199,6 +199,38 @@ describe('scan', () => {
     if (!out.includes('Open')) expect(out).toContain('No palace');
   });
 
+  it('expands an errand into a gate and says which', async () => {
+    expect(await run([...INTERVAL, '--for', 'wealth'])).toBe(0);
+
+    // Said out loud: a shorthand that worked silently would leave the reader
+    // unable to check it or to vary it.
+    expect(out).toMatch(/Money.*→.*Life 生門/);
+    expect(out).toContain('Life');
+  });
+
+  it('answers an errand exactly as the gate it stands for', async () => {
+    // Compared as data. The printed forms differ by one line — the errand
+    // says what it expanded into — and that line is the point of it.
+    await run([...INTERVAL, '--for', 'wealth', '--json']);
+    const errand = out;
+
+    out = '';
+    await run([...INTERVAL, '--gate', 'shengmen', '--json']);
+    expect(JSON.parse(out)).toEqual(JSON.parse(errand));
+  });
+
+  it('refuses an errand and a gate that name different things', async () => {
+    expect(await run([...INTERVAL, '--for', 'wealth', '--gate', 'kaimen'])).toBe(2);
+
+    expect(err).toContain('--for');
+    expect(err).toContain('--gate');
+    expect(out).toBe('');
+  });
+
+  it('takes an errand and the gate it stands for together, being the same thing', async () => {
+    expect(await run([...INTERVAL, '--for', 'wealth', '--gate', 'shengmen'])).toBe(0);
+  });
+
   it('refuses an interval with no end', async () => {
     expect(await run(['scan', '--date', '2026-09-01'])).toBe(2);
     expect(err).toContain('--until');

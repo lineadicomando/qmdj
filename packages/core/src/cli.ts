@@ -7,7 +7,7 @@
  * also a real surface, so it obeys the same rules as the others — it resolves
  * a locale, it translates by code, and it never interprets.
  */
-import { createTranslator, resolveLocale, type Locale } from '@qimendunjia/i18n';
+import { createTranslator, resolveLocale, type Locale, type MessageKey } from '@qimendunjia/i18n';
 import { computeBazi, type Gender } from './bazi/index.js';
 import {
   GATES,
@@ -35,6 +35,7 @@ import {
 } from './format.js';
 import { lunarDate } from './lunar.js';
 import { resolveMoment } from './pillars.js';
+import { PURPOSES, purposeCriteria, type PurposeId } from './purposes.js';
 import { matchRuns, scanCharts, type ScanCriteria } from './scan.js';
 import { solarTermsOfYear } from './solar-terms.js';
 import { currentMoment, systemTimezone, zoneMeridian, type LocalMoment } from './time.js';
@@ -73,6 +74,7 @@ interface Options {
   towards?: string;
   minStrength?: string;
   without?: string;
+  for?: string;
 }
 
 const HELP = `qimen — Qi Men Dun Jia charts and Four Pillars
@@ -94,6 +96,8 @@ Options
 
 Narrowing a scan
   --until YYYY-MM-DD     the end of the interval; --date opens it
+  --for opening|meeting|wealth|documents|concealment|pursuit|ending|dispute
+                         the errand, which stands for a gate and says which
   --gate, --star, --spirit, --stem   by identifier, e.g. kaimen, tianxin
   --towards n,ne,e,se,s,sw,w,nw      one or more; the centre faces none
   --min-strength wang|xiang|xiu|qiu|si   the weakest state admitted
@@ -185,10 +189,15 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
     if (options.json) return JSON.stringify({ criteria, matches }, null, 2);
     return [
       `${t('cli.heading.scan', { from: input.date, to: options.until })}`,
+      // What an errand expanded into, said out loud. A shorthand that worked
+      // silently would leave the reader unable to check it or to vary it.
+      expansionOf(options, t),
       '',
       formatScan(matches, t),
       warningsOf(moment, t),
-    ].join('\n');
+    ]
+      .filter((part) => part !== '')
+      .join('\n');
   }
 
   if (command === 'calendar') {
@@ -257,6 +266,15 @@ function resolvePlace(options: Options, input: LocalMoment): Place {
   };
 }
 
+/** `Asked for  Opening, starting … → Open 開門`, or nothing if no errand. */
+function expansionOf(options: Options, t: ReturnType<typeof createTranslator>): string {
+  if (!options.for) return '';
+  const gate = purposeCriteria(options.for as PurposeId).gate as string;
+  const named = GATES.find((candidate) => candidate.id === gate) as (typeof GATES)[number];
+
+  return `  ${t('cli.heading.criteria')}: ${t(`label.purpose.${options.for}` as MessageKey)} → ${t(`label.gate.${gate}` as MessageKey)} ${named.hanzi}`;
+}
+
 const DIRECTIONS = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'] as const;
 const STRENGTHS = ['wang', 'xiang', 'xiu', 'qiu', 'si'] as const;
 
@@ -294,7 +312,16 @@ function resolveCriteria(options: Options, t: ReturnType<typeof createTranslator
       .map((entry) => one<T>(entry, known, flag) as T);
 
   const criteria: ScanCriteria = {};
-  const gate = one<GateId>(options.gate, GATES, '--gate');
+
+  // An errand stands for a gate, so naming both is either a repetition or a
+  // contradiction. Neither is worth guessing at.
+  const errand = one<PurposeId>(options.for, PURPOSES, '--for');
+  const fromErrand = errand ? purposeCriteria(errand).gate : undefined;
+  if (fromErrand && options.gate && options.gate !== fromErrand) {
+    throw new UsageError(t('cli.error.contradiction', { option: '--for', other: '--gate' }));
+  }
+
+  const gate = one<GateId>(options.gate ?? fromErrand, GATES, '--gate');
   const star = one<StarId>(options.star, STARS, '--star');
   const spirit = one<SpiritId>(options.spirit, SPIRITS_YANG, '--spirit');
   const stem = one<StemId>(options.stem, STEMS, '--stem');
@@ -341,6 +368,7 @@ const FLAGS: Record<string, keyof Options> = {
   '--towards': 'towards',
   '--min-strength': 'minStrength',
   '--without': 'without',
+  '--for': 'for',
 };
 
 function parse(argv: string[]): { command?: Command; options: Options } {

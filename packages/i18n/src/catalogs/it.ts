@@ -228,6 +228,9 @@ export const it: Record<MessageKey, string> = {
   'form.from': 'Dal',
   'form.to': 'Al',
   'form.looking': 'Che cosa cercare',
+  'form.purpose': 'Per che cosa stai scegliendo il momento?',
+  'form.purposeNote':
+    "Sceglierne uno compila la porta qui sotto, che puoi poi cambiare. È l'associazione che la tradizione fa fra un'impresa e una porta — le sole otto porte, e nulla oltre: sul resto di quella dottrina le scuole non concordano, e qui non si prende partito.",
   'form.any': 'qualsiasi',
   'form.towards': 'Verso',
   'form.minStrength': 'Forza almeno',
@@ -345,6 +348,8 @@ export const it: Record<MessageKey, string> = {
   'cli.error.unknownCommand': 'Comando "{command}" sconosciuto. Prova `qimen --help`.',
   'cli.error.unknownOption': 'Opzione "{option}" sconosciuta. Prova `qimen --help`.',
   'cli.error.missingValue': 'L\'opzione "{option}" richiede un valore.',
+  'cli.error.contradiction':
+    'L\'opzione "{option}" dice già quale porta cercare, e "{other}" ne dice un\'altra. Togline una.',
   'cli.error.unknownValue':
     'L\'opzione "{option}" non accetta il valore "{value}". Non controllato non corrisponderebbe a nulla, che si legge esattamente come una disposizione che non si è mai presentata.',
   'cli.error.genderRequired':

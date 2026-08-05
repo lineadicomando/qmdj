@@ -1,9 +1,18 @@
-import { GATES, PATTERN_IDS, SPIRITS_YANG, SPIRITS_YIN, SPIRIT_IDS as ENGINE_SPIRIT_IDS, STARS } from '@qimendunjia/core';
+import {
+  GATES,
+  PATTERN_IDS,
+  PURPOSES as ENGINE_PURPOSES,
+  SPIRITS_YANG,
+  SPIRITS_YIN,
+  SPIRIT_IDS as ENGINE_SPIRIT_IDS,
+  STARS,
+} from '@qimendunjia/core';
 import { describe, expect, it } from 'vitest';
 import {
   DIRECTIONS,
   GATE_IDS,
   PATTERN_IDS as FORM_PATTERN_IDS,
+  PURPOSES,
   SPIRIT_IDS,
   STAR_IDS,
 } from '../src/lib/vocabulary';
@@ -41,6 +50,15 @@ describe('the identifiers a form offers', () => {
 
   it('are the configurations the engine can report', () => {
     expect([...FORM_PATTERN_IDS]).toEqual([...PATTERN_IDS]);
+  });
+
+  it('pair each purpose with the gate the engine gives it', () => {
+    // The form fills the gate field from the purpose, so it needs the pair
+    // and not just the name. A pair that drifted would quietly scan for the
+    // wrong gate — an answer, and the wrong one.
+    expect(PURPOSES.map((purpose) => ({ ...purpose }))).toEqual(
+      ENGINE_PURPOSES.map((purpose) => ({ ...purpose })),
+    );
   });
 
   it('leave the centre out, which faces nowhere and can never answer', () => {

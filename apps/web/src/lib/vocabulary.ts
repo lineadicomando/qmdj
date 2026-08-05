@@ -74,3 +74,21 @@ export const DIRECTIONS = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'] as const;
 
 /** Strongest first, which is the order a floor is chosen from. */
 export const STRENGTHS = ['wang', 'xiang', 'xiu', 'qiu', 'si'] as const;
+
+/**
+ * What somebody is choosing a time for, and the gate the tradition gives it.
+ *
+ * Redeclared like the rest, and paired: the form needs the gate a purpose
+ * stands for in order to fill the field with it, and that pairing is engine
+ * data. `test/vocabulary.test.ts` asserts it against `PURPOSES`.
+ */
+export const PURPOSES = [
+  { id: 'opening', gate: 'kaimen' },
+  { id: 'meeting', gate: 'xiumen' },
+  { id: 'wealth', gate: 'shengmen' },
+  { id: 'documents', gate: 'jing3men' },
+  { id: 'concealment', gate: 'dumen' },
+  { id: 'pursuit', gate: 'shangmen' },
+  { id: 'ending', gate: 'simen' },
+  { id: 'dispute', gate: 'jing1men' },
+] as const;

@@ -9,7 +9,15 @@
     type IntervalInput,
   } from '$lib/interval';
   import { sayFailure } from '$lib/moment';
-  import { DIRECTIONS, GATE_IDS, PATTERN_IDS, SPIRIT_IDS, STAR_IDS, STRENGTHS } from '$lib/vocabulary';
+  import {
+    DIRECTIONS,
+    GATE_IDS,
+    PATTERN_IDS,
+    PURPOSES,
+    SPIRIT_IDS,
+    STAR_IDS,
+    STRENGTHS,
+  } from '$lib/vocabulary';
   import FormPanel from '$lib/components/FormPanel.svelte';
   import LocationSearch from '$lib/components/LocationSearch.svelte';
   import MomentTable from '$lib/components/MomentTable.svelte';
@@ -50,6 +58,26 @@
     void show();
   }
 
+  /**
+   * The errand, which is a second view of the gate rather than a state of its
+   * own.
+   *
+   * Derived from `looking.gate` and writing back to it, so there is exactly
+   * one thing to be in: a preset that kept its own value could say "opening"
+   * over a gate somebody had since changed by hand. It also teaches in both
+   * directions — choose 開門 in the gate field and this says what it is for.
+   *
+   * It does not travel in the address. The address carries criteria; the
+   * errand is a way of filling them in.
+   */
+  const purpose = $derived(
+    PURPOSES.find((entry) => entry.gate === looking.gate)?.id ?? '',
+  );
+
+  function choosePurpose(id: string): void {
+    looking.gate = PURPOSES.find((entry) => entry.id === id)?.gate ?? '';
+  }
+
   /** A checkbox group binds to an array; this is what a checkbox does to one. */
   function toggle(list: string[], id: string, on: boolean): string[] {
     return on ? [...list, id] : list.filter((entry) => entry !== id);
@@ -83,6 +111,17 @@
 
     <fieldset>
       <legend>{t('form.looking')}</legend>
+
+      <label class="purpose">
+        {t('form.purpose')}
+        <select value={purpose} onchange={(event) => choosePurpose(event.currentTarget.value)}>
+          <option value="">{t('form.any')}</option>
+          {#each PURPOSES as entry}
+            <option value={entry.id}>{gloss('purpose', entry.id)}</option>
+          {/each}
+        </select>
+      </label>
+      <p class="note">{t('form.purposeNote')}</p>
 
       <div class="row">
         <label>
@@ -218,6 +257,9 @@
   fieldset { border: 1px solid var(--rule); padding: 0.9rem; display: grid; gap: 0.7rem; }
   legend { font-size: 0.85em; color: var(--faint); padding: 0 0.35rem; }
   .group { margin: 0.3rem 0 0; font-size: 0.9em; color: var(--faint); }
+  /* Above the fields it fills, and wide: these are sentences, not words. */
+  .purpose { font-size: 0.95em; }
+  .purpose :global(select) { max-width: 100%; }
   .checks { display: flex; flex-wrap: wrap; gap: 0.35rem 1rem; }
   .check { display: flex; gap: 0.4rem; align-items: center; color: var(--ink); }
   .note { margin: 0; color: var(--faint); font-size: 0.8em; }

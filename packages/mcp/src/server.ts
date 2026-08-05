@@ -1,5 +1,14 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { GATES, PALACES, SOLAR_TERMS, SPIRITS_YANG, SPIRITS_YIN, STARS } from '@qimendunjia/core';
+import {
+  GATES,
+  PALACES,
+  PURPOSES,
+  SOLAR_TERMS,
+  SPIRITS_YANG,
+  SPIRITS_YIN,
+  STARS,
+} from '@qimendunjia/core';
+import { createTranslator, type MessageKey } from '@qimendunjia/i18n';
 import {
   registerComputeBazi,
   registerComputeQimenChart,
@@ -88,6 +97,12 @@ function registerReferences(server: McpServer): void {
       'The terms with their solar longitudes, and which of them open a month. Consult it to explain why a month or a year pillar changed when it did.',
       termReference,
     ],
+    [
+      'purposes',
+      'What each gate is chosen for',
+      'The undertakings the tradition puts under each of the eight gates. Read it BEFORE scan_moments when somebody names an errand rather than an arrangement — the tool takes a gate, and this is what turns "I want to open a shop" into one. It is a reference and not a rule: the server does not apply it, you do, and you say that you did.',
+      purposeReference,
+    ],
   ];
 
   for (const [slug, title, description, render] of resources) {
@@ -147,6 +162,47 @@ function layerReference(): string {
     '',
     `- yang dun: ${SPIRITS_YANG.map((spirit) => spirit.hanzi).join(' ')}`,
     `- yin dun: ${SPIRITS_YIN.map((spirit) => spirit.hanzi).join(' ')}`,
+  ].join('\n');
+}
+
+/**
+ * The errands, as a document rather than as an argument of the tool.
+ *
+ * `scan_moments` deliberately takes the arrangement and never the errand.
+ * Putting the mapping here instead of in the schema keeps the server from
+ * applying a doctrine silently: an agent reads it, chooses, and is told to
+ * say that the choice was its own.
+ */
+function purposeReference(): string {
+  const t = createTranslator('en');
+  const gateOf = (id: string): (typeof GATES)[number] =>
+    GATES.find((gate) => gate.id === id) as (typeof GATES)[number];
+
+  return [
+    '# What each gate is chosen for',
+    '',
+    'The eight gates and the undertakings the transmitted lists put under them.',
+    'Pass the gate to `scan_moments`; this table is how an errand becomes one.',
+    '',
+    '**Eight entries, because there are eight gates.** This is the gates read from',
+    'the other side, not a list of good things to do — which is why 死門 and 傷門',
+    'are here with their own uses. A gate being right for an errand is not the same',
+    'as an hour being a good one, and this table says nothing about the second.',
+    '',
+    '**How sure this is**: transmitted from Chinese-language sources, with no',
+    'runnable reference and no authority publishing the answer. It is shippable',
+    'where the rest of the 用神 doctrine is not because the functional domains of',
+    'the eight gates come down alike from the classical literature to the modern',
+    'manuals. The stems as significators of people, the nine stars and the eight',
+    'spirits are **not** here: there the schools genuinely diverge. If you supply a',
+    'mapping from those, say plainly that it is yours and not this server\'s.',
+    '',
+    '| Errand | Gate |',
+    '|---|---|',
+    ...PURPOSES.map((purpose) => {
+      const gate = gateOf(purpose.gate);
+      return `| ${t(`label.purpose.${purpose.id}` as MessageKey)} | ${gate.hanzi} \`${gate.id}\` |`;
+    }),
   ].join('\n');
 }
 

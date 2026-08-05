@@ -93,6 +93,7 @@ describe('what the server offers', () => {
     expect(resources.map((resource) => resource.uri).sort()).toEqual([
       'qimendunjia://reference/gates-stars-spirits',
       'qimendunjia://reference/palaces',
+      'qimendunjia://reference/purposes',
       'qimendunjia://reference/solar-terms',
     ]);
   });
@@ -280,5 +281,51 @@ describe('scan_moments', () => {
     for (const word of ['lucky', 'favourable', 'auspicious', 'best', 'avoid', 'recommend']) {
       expect(text).not.toContain(word);
     }
+  });
+});
+
+
+describe('the errands', () => {
+  it('are a resource an agent reads, not an argument the server applies', async () => {
+    const { tools } = await client.listTools();
+    const scan = tools.find((tool) => tool.name === 'scan_moments');
+    const properties = (scan?.inputSchema as { properties: Record<string, unknown> }).properties;
+
+    // The tool takes the arrangement and never the errand. Were it otherwise
+    // the server would be applying a doctrine where nobody could see it.
+    expect(Object.keys(properties)).not.toContain('purpose');
+    expect(Object.keys(properties)).not.toContain('for');
+    expect(properties['gate']).toBeDefined();
+  });
+
+  it('name an errand and the gate it stands for, both ways round', async () => {
+    const { contents } = await client.readResource({
+      uri: 'qimendunjia://reference/purposes',
+    });
+    const text = String(contents[0]?.text ?? '');
+
+    expect(text).toMatch(/Opening[^|]*\|[^|]*開門/);
+    expect(text).toContain('`kaimen`');
+    // Eight, because there are eight gates.
+    expect(text.match(/^\| .+ \| .+ \|$/gm)).toHaveLength(9); // the header row too
+  });
+
+  it('keeps the gates nobody calls auspicious, with their own uses', async () => {
+    const { contents } = await client.readResource({
+      uri: 'qimendunjia://reference/purposes',
+    });
+    const text = String(contents[0]?.text ?? '');
+
+    // Their absence would turn a table of associations into a list of good
+    // things to do, which is the thing this server does not produce.
+    expect(text).toContain('死門');
+    expect(text).toContain('傷門');
+  });
+
+  it('tells an agent whose the choice is', async () => {
+    const { resources } = await client.listResources();
+    const purposes = resources.find((resource) => resource.uri.endsWith('/purposes'));
+
+    expect(purposes?.description).toMatch(/the server does not apply it/i);
   });
 });

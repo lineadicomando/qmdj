@@ -250,6 +250,9 @@ export const en = {
   'form.from': 'From',
   'form.to': 'Until',
   'form.looking': 'What to look for',
+  'form.purpose': 'What are you choosing a time for?',
+  'form.purposeNote':
+    'Choosing one fills in the gate below, which you can then change. It is the association the tradition makes between an undertaking and a gate — the eight gates only, and nothing further: where the rest of that doctrine is concerned the schools disagree, and this takes no side.',
   'form.any': 'any',
   'form.towards': 'Facing',
   'form.minStrength': 'At least as strong as',
@@ -372,6 +375,8 @@ export const en = {
   'cli.error.unknownCommand': 'Unknown command "{command}". Try `qimen --help`.',
   'cli.error.unknownOption': 'Unknown option "{option}". Try `qimen --help`.',
   'cli.error.missingValue': 'Option "{option}" needs a value.',
+  'cli.error.contradiction':
+    'Option "{option}" already says which gate to look for, and "{other}" says a different one. Drop one of them.',
   'cli.error.unknownValue':
     'Option "{option}" does not take the value "{value}". Left unchecked it would match nothing, which reads exactly like an arrangement that never occurred.',
   'cli.error.genderRequired':
