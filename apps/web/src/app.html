@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="%lang%">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:," />
+    <!-- The browser bar on mobile has to be told twice, because the page has
+         two grounds: declaring one leaves a pale strip above a dark page. -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdfcfa" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#16150f" />
+    <!--
+      The chosen appearance has to be applied before the page paints. Deciding
+      it from a component would mean a flash of white in the face of anyone
+      who chose dark, on every load. A few lines with no dependencies, running
+      while the rest of the JavaScript is still on its way; the key and the
+      attribute are the ones in `lib/color-scheme.ts`.
+    -->
+    <script>
+      try {
+        const chosen = localStorage.getItem('qimendunjia:color-scheme');
+        if (chosen === 'light' || chosen === 'dark') {
+          document.documentElement.setAttribute('data-color-scheme', chosen);
+        }
+      } catch {
+        // Storage refused: the system's appearance stands.
+      }
+    </script>
+    %sveltekit.head%
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents">%sveltekit.body%</div>
+  </body>
+</html>

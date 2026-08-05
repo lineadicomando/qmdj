@@ -1,0 +1,64 @@
+name: qimendunjia
+
+# The three surfaces share one image: the command changes, the code does not.
+# The anchor saves repeating the build and the environment three times.
+x-runtime: &runtime
+  build:
+    context: .
+    target: runtime
+  image: qimendunjia:latest
+  environment:
+    GEONAMES_DB_PATH: /data/geonames.db
+
+services:
+  # The interface and the REST API. http://localhost:3000
+  web:
+    <<: *runtime
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    volumes:
+      # `z` relabels for SELinux (Fedora, RHEL), where a bind mount from the
+      # host would otherwise be unreachable from inside. On systems without
+      # SELinux the option does nothing.
+      - "${GEONAMES_DATA:-geonames}:/data:ro,z"
+    healthcheck:
+      # No curl in a slim image, and not worth adding: Node can make a request
+      # by itself. Written as a string because the list form is not honoured
+      # by every implementation.
+      test: node -e 'fetch("http://127.0.0.1:3000/en").then((r)=>process.exit(r.ok?0:1),()=>process.exit(1))'
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    restart: unless-stopped
+
+  # The MCP server speaks on the process, not on the network, so it is not
+  # started by `up`. A client runs it:
+  #   docker compose run --rm -T mcp
+  mcp:
+    <<: *runtime
+    profiles: [mcp]
+    command: [node, packages/mcp/dist/stdio.js]
+    volumes:
+      - "${GEONAMES_DATA:-geonames}:/data:ro,z"
+    stdin_open: true
+    tty: false
+
+  # Builds the location database. Not a service but a one-off, to be run once
+  # before the first start. The profile keeps it out of `docker compose up`,
+  # and it has to be named because podman-compose will not infer it:
+  #   docker compose --profile setup run --rm geo-import
+  geo-import:
+    <<: *runtime
+    profiles: [setup]
+    user: root
+    command: [node, packages/geo/scripts/import-geonames.mjs]
+    volumes:
+      - "${GEONAMES_DATA:-geonames}:/data:z"
+      # The downloaded dumps (~215 MB) outlive the container, so a second
+      # import starts from the cache instead of from the network.
+      - geonames-cache:/app/packages/geo/data/cache
+
+volumes:
+  geonames:
+  geonames-cache:

@@ -1,0 +1,26 @@
+{
+  "name": "qimendunjia",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Qi Men Dun Jia and Four Pillars charts: calculation engine, REST API and MCP server",
+  "license": "AGPL-3.0-or-later",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w @qimendunjia/i18n -w @qimendunjia/plate -w @qimendunjia/geo -w @qimendunjia/core && npm run build -w @qimendunjia/mcp -w @qimendunjia/web",
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run build -w @qimendunjia/i18n && npm run typecheck --workspaces --if-present",
+    "prepare": "npm run build -w @qimendunjia/i18n -w @qimendunjia/plate -w @qimendunjia/geo -w @qimendunjia/core && npm run build -w @qimendunjia/mcp -w @qimendunjia/web"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

@@ -1,0 +1,116 @@
+/**
+ * What the drawing needs to know about a chart — and no more.
+ *
+ * These types are **redeclared here rather than imported from `core`**, which
+ * looks like duplication and is not. The CLI lives in `core` and draws, so a
+ * dependency the other way would close a cycle; and a drawing that could
+ * reach into the engine would sooner or later compute something instead of
+ * rendering what it was handed.
+ *
+ * They are deliberately looser than the engine's: every field the drawing
+ * reads, nothing it does not. Structural typing then does the work — a real
+ * `QimenChart` satisfies this without being converted — and `test/types.test.ts`
+ * asserts that it still does.
+ */
+
+export interface PlateChart {
+  ju: { yang: boolean; number: number };
+  chief: { star: { hanzi: string }; palace: { number: number } };
+  chiefGate: { gate: { hanzi: string }; palace: { number: number } };
+  palaces: readonly PlatePalace[];
+  patterns: readonly PlatePattern[];
+  moment: {
+    local: string;
+    pillars: {
+      year: { hanzi: string };
+      month: { hanzi: string };
+      day: { hanzi: string };
+      hour: { hanzi: string };
+    };
+  };
+}
+
+export interface PlatePalace {
+  palace: { number: number; hanzi: string; id: string; element: string };
+  earth: Named;
+  heaven: Named;
+  star: Named;
+  starStrength: Named;
+  gate?: Named | undefined;
+  gateStrength?: Named | undefined;
+  spirit?: Named | undefined;
+}
+
+/**
+ * Everything on a plate has both: the hanzi is the name, the identifier is
+ * how a caller finds a label for it.
+ */
+export interface Named {
+  hanzi: string;
+  id: string;
+}
+
+export interface PlatePattern {
+  id: string;
+  hanzi: string;
+  palace?: number | undefined;
+}
+
+/**
+ * What to write in the palaces, keyed by the engine's identifiers.
+ *
+ * The package still has no catalog and still knows no language: the caller
+ * hands it the words. What it decides is only the layout.
+ *
+ * Anything absent falls back to the hanzi, so a caller that passes nothing
+ * gets the glyphs — which is what a reader who reads them wants, and what the
+ * drawing did before there was any way to ask for anything else.
+ */
+export interface PlateLabels {
+  palace?: Record<string, string>;
+  star?: Record<string, string>;
+  gate?: Record<string, string>;
+  spirit?: Record<string, string>;
+  stem?: Record<string, string>;
+  pattern?: Record<string, string>;
+}
+
+/**
+ * The text around the grid, supplied whole.
+ *
+ * Where a caption names something the chart contains, the caller writes the
+ * name as well as the word for it: this package holds no catalog and cannot
+ * know whether the reader wants 天蓬 or "Canopy".
+ */
+export interface PlateCaptions {
+  /** e.g. `yang dun 9`. Absent leaves the line out. */
+  ju?: string;
+  /** The four pillars, said however the caller wants. Defaults to the hanzi. */
+  pillars?: string;
+  /** e.g. `chief Canopy`. Written whole, name included. */
+  chief?: string;
+  /** e.g. `chief gate Rest`. */
+  chiefGate?: string;
+  /** What the drawing is not, said where it will be read. */
+  note?: string;
+}
+
+export interface PlateOptions {
+  /** Side of the square, in pixels. Default 640. */
+  size?: number;
+  /**
+   * `light`, `dark`, or `auto` — which emits both and lets the page choose.
+   *
+   * `auto` is the default because an SVG dropped into a page has no idea
+   * which it will be read in, and a chart that turns invisible at night is a
+   * chart nobody uses.
+   */
+  scheme?: 'light' | 'dark' | 'auto';
+  /** Text around the grid. Left out entirely when absent. */
+  captions?: PlateCaptions;
+  /**
+   * Words for what stands in the palaces. Without it the drawing carries
+   * hanzi and no language at all.
+   */
+  labels?: PlateLabels;
+}

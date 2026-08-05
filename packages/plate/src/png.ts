@@ -1,0 +1,113 @@
+import { Resvg } from '@resvg/resvg-js';
+import { FONT_STACK, PALETTES, type Scheme } from './palette.js';
+import { renderChartSvg } from './svg.js';
+import type { PlateChart, PlateOptions } from './types.js';
+
+/**
+ * PNG rendering, behind its own entry point.
+ *
+ * `@resvg/resvg-js` is a native module. Importing it from the package index
+ * would drag it into every bundle that so much as wanted an SVG, including
+ * the browser's, where it cannot run at all. Anything that needs a raster
+ * imports `@qimendunjia/plate/png` and knows it is asking for a native
+ * dependency.
+ */
+
+export interface PngOptions extends Omit<PlateOptions, 'scheme'> {
+  /**
+   * A raster cannot ask the page what it prefers, so it has to be told. There
+   * is no `auto` here for that reason.
+   */
+  scheme?: Scheme;
+  /** Width in pixels. The drawing is square, so this is also the height. */
+  width?: number;
+}
+
+/**
+ * Draws a chart as a PNG.
+ *
+ * **The glyphs are the drawing.** resvg rasterises with the fonts it finds on
+ * the machine, and a machine with no Chinese font draws an empty grid: a
+ * picture that looks like a chart and says nothing. Nothing about that
+ * failure is visible from the calling code — the buffer is a valid PNG of the
+ * right size — so it is checked for here rather than discovered by whoever
+ * opens the file.
+ */
+export function renderChartPng(chart: PlateChart, options: PngOptions = {}): Buffer {
+  assertGlyphsRender();
+  const scheme = options.scheme ?? 'light';
+  const svg = renderChartSvg(chart, {
+    ...options,
+    // The stylesheet resolves to one scheme: custom properties survive
+    // rasterisation, media queries do not.
+    scheme,
+  });
+
+  const renderer = new Resvg(inlineColours(svg, scheme), {
+    fitTo: { mode: 'width', value: options.width ?? options.size ?? 640 },
+    font: { loadSystemFonts: true },
+  });
+
+  return Buffer.from(renderer.render().asPng());
+}
+
+let glyphsChecked: boolean | undefined;
+
+/**
+ * Refuses to draw where the glyphs would not appear.
+ *
+ * There is no way to ask resvg which fonts it loaded, so the question is put
+ * to it directly: the same tiny image is rasterised twice, once holding a
+ * Chinese character and once holding nothing. If the two come out identical,
+ * the character drew no pixels and every chart from this process would be an
+ * empty grid.
+ *
+ * Checked once per process — fonts do not appear while a program runs — and
+ * the message names the fix rather than the symptom.
+ */
+function assertGlyphsRender(): void {
+  if (glyphsChecked) return;
+
+  const probe = (content: string): Buffer => {
+    const svg =
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">` +
+      `<text x="16" y="26" font-size="28" font-family="${FONT_STACK.replace(/"/g, '&quot;')}" ` +
+      `text-anchor="middle">${content}</text></svg>`;
+    return Buffer.from(
+      new Resvg(svg, { font: { loadSystemFonts: true } }).render().asPng(),
+    );
+  };
+
+  if (probe('休').equals(probe(''))) {
+    throw new Error(
+      'No font on this system can draw Chinese characters, so every palace of the chart would come out empty. ' +
+        'Install one — on Debian and Ubuntu, `fonts-noto-cjk`; on Alpine, `font-noto-cjk`; on macOS one is present already. ' +
+        'SVG output is unaffected: it names the fonts and lets whoever displays it resolve them.',
+    );
+  }
+
+  glyphsChecked = true;
+}
+
+/**
+ * Replaces the custom properties with their values.
+ *
+ * resvg does not resolve `var()`, so a drawing handed to it unchanged comes
+ * out with every fill missing. Substituting here keeps one stylesheet for
+ * both outputs instead of two that drift apart.
+ */
+function inlineColours(svg: string, scheme: Scheme): string {
+  const palette = PALETTES[scheme];
+  const values: Record<string, string> = {
+    '--qmdj-ink': palette.ink,
+    '--qmdj-faint': palette.faint,
+    '--qmdj-rule': palette.rule,
+    '--qmdj-ground': palette.ground,
+    '--qmdj-mark': palette.mark,
+  };
+  for (const [element, colour] of Object.entries(palette.element)) {
+    values[`--qmdj-element-${element}`] = colour;
+  }
+
+  return svg.replace(/var\((--qmdj-[a-z-]+)\)/g, (whole, name: string) => values[name] ?? whole);
+}

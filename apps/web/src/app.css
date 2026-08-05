@@ -1,0 +1,72 @@
+/*
+ * One sheet, three appearances.
+ *
+ * The media query is the default and answers for everyone who never touches
+ * the button. The attribute overrides it for whoever did — and `auto` removes
+ * the attribute rather than setting a third value, so returning to it leaves
+ * nothing written anywhere.
+ */
+:root {
+  --ink: #1a1a1a;
+  --faint: #7a7a7a;
+  --rule: #d8d3ca;
+  --ground: #fdfcfa;
+  --tint: #f4f1eb;
+  --alarm: #9a3b2d;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #e8e4dd;
+    --faint: #8f8a82;
+    --rule: #3a3833;
+    --ground: #16150f;
+    --tint: #201e18;
+    --alarm: #d98a76;
+    color-scheme: dark;
+  }
+}
+
+:root[data-color-scheme='light'] {
+  --ink: #1a1a1a;
+  --faint: #7a7a7a;
+  --rule: #d8d3ca;
+  --ground: #fdfcfa;
+  --tint: #f4f1eb;
+  --alarm: #9a3b2d;
+  color-scheme: light;
+}
+
+:root[data-color-scheme='dark'] {
+  --ink: #e8e4dd;
+  --faint: #8f8a82;
+  --rule: #3a3833;
+  --ground: #16150f;
+  --tint: #201e18;
+  --alarm: #d98a76;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  line-height: 1.5;
+}
+
+/* The glyphs are content: they get the face that renders them best. */
+.glyph { font-family: 'Noto Serif CJK SC', 'Songti SC', 'PingFang SC', serif; }
+
+a { color: inherit; }
+input, select, button {
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--ground);
+  color: inherit;
+  padding: 0.3rem 0.45rem;
+}
+button:hover { background: var(--tint); }

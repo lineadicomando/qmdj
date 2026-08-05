@@ -1,0 +1,30 @@
+{
+  "name": "@qimendunjia/geo",
+  "version": "0.0.0",
+  "description": "Location lookup with coordinates and timezone, from a local GeoNames dataset",
+  "license": "AGPL-3.0-or-later",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "scripts",
+    "schema.sql"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "geo:import": "node scripts/import-geonames.mjs"
+  },
+  "dependencies": {
+    "@qimendunjia/i18n": "*"
+  }
+}

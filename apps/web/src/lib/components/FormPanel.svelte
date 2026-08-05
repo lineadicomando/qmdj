@@ -1,0 +1,87 @@
+<!--
+  The panel of fields, which withdraws once it has done its job.
+
+  A chart wants the whole width and the fields are read once; leaving them
+  open pushes the thing the person came for below the fold. So the panel is a
+  box of its own — ruled, tinted, clearly not part of the answer — and it
+  folds away as soon as there is an answer to make room for.
+-->
+<script lang="ts">
+  import { tick, type Snippet } from 'svelte';
+  import type { Translator } from '@qimendunjia/i18n';
+
+  interface Props {
+    t: Translator;
+    /**
+     * Whether there is anything below for a closed panel to make room for.
+     *
+     * False before the first result: folding away would leave a strip hanging
+     * over an empty page.
+     */
+    closable?: boolean;
+    onsubmit: (event: SubmitEvent) => void;
+    /** The fields, which withdraw. */
+    fields: Snippet;
+    /** What stays visible when it is closed. */
+    summary?: Snippet;
+  }
+
+  let { t, closable = false, onsubmit, fields, summary }: Props = $props();
+
+  let open = $state(true);
+  let panel: HTMLElement | undefined = $state();
+
+  async function reopen(): Promise<void> {
+    open = true;
+    // Bring the fields back into view: a panel that reopens above the fold
+    // looks to the reader as though the button did nothing.
+    await tick();
+    panel?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+</script>
+
+<section class="panel" class:closed={!open} bind:this={panel}>
+  <div class="bar">
+    {#if open}
+      <h2>{t('form.legend')}</h2>
+      {#if closable}
+        <button type="button" onclick={() => (open = false)} aria-label={t('form.close')}>×</button>
+      {/if}
+    {:else}
+      <button type="button" class="reopen" onclick={reopen}>{t('form.open')}</button>
+      {#if summary}<p class="summary">{@render summary()}</p>{/if}
+    {/if}
+  </div>
+
+  {#if open}
+    <form {onsubmit}>
+      {@render fields()}
+    </form>
+  {/if}
+</section>
+
+<style>
+  .panel {
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    background: var(--tint);
+    padding: 1rem 1.1rem 1.2rem;
+    margin-bottom: 2rem;
+    max-width: 34rem;
+  }
+  .panel.closed { padding: 0.5rem 0.8rem; max-width: none; }
+  .bar { display: flex; align-items: baseline; gap: 1rem; justify-content: space-between; }
+  h2 { font-size: 0.9rem; font-weight: 400; color: var(--faint); margin: 0 0 0.2rem; }
+  .bar button {
+    border: 0;
+    background: none;
+    color: var(--faint);
+    cursor: pointer;
+    font: inherit;
+    padding: 0 0.2rem;
+  }
+  .bar button:hover { color: var(--ink); background: none; }
+  .reopen { text-decoration: underline; text-underline-offset: 0.2em; }
+  .summary { margin: 0; color: var(--faint); font-size: 0.85em; }
+  form { display: grid; gap: 0.9rem; margin-top: 0.6rem; }
+</style>
