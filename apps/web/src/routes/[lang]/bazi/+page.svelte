@@ -5,6 +5,7 @@
   import { momentQuery, sayFailure, type MomentInput } from '$lib/moment';
   import FormPanel from '$lib/components/FormPanel.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
+  import PillarPlate from '$lib/components/PillarPlate.svelte';
 
   let { data } = $props();
   const t = $derived(data.t);
@@ -85,6 +86,9 @@
     {t('cli.field.dayMaster')}: {t(`label.stem.${result.bazi.dayMaster.id}` as MessageKey)}
     <span class="glyph">{result.bazi.dayMaster.hanzi}</span>
   </p>
+
+  <!-- The four pillars at a glance, then the same four read out in full. -->
+  <PillarPlate pillars={result.bazi.pillars} {t} />
 
   <table>
     <thead>

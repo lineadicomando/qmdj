@@ -6,6 +6,13 @@
  * the attribute rather than setting a third value, so returning to it leaves
  * nothing written anywhere.
  */
+/*
+ * The five phases are the plate's tints, repeated here rather than imported.
+ * `@qimendunjia/plate` hands them out inside an SVG it carries with it, and
+ * that copy answers to a media query alone — which is one appearance short of
+ * what this page offers. Same values, so a square drawn in the page and a
+ * palace drawn in the picture are the same colour.
+ */
 :root {
   --ink: #1a1a1a;
   --faint: #7a7a7a;
@@ -13,6 +20,11 @@
   --ground: #fdfcfa;
   --tint: #f4f1eb;
   --alarm: #9a3b2d;
+  --element-mu: #eef4ea;
+  --element-huo: #faeeea;
+  --element-tu: #f6f1e6;
+  --element-jin: #eff1f4;
+  --element-shui: #e9eef3;
   color-scheme: light;
 }
 
@@ -24,6 +36,11 @@
     --ground: #16150f;
     --tint: #201e18;
     --alarm: #d98a76;
+    --element-mu: #1a2118;
+    --element-huo: #241a17;
+    --element-tu: #211d15;
+    --element-jin: #191c20;
+    --element-shui: #161d24;
     color-scheme: dark;
   }
 }
@@ -35,6 +52,11 @@
   --ground: #fdfcfa;
   --tint: #f4f1eb;
   --alarm: #9a3b2d;
+  --element-mu: #eef4ea;
+  --element-huo: #faeeea;
+  --element-tu: #f6f1e6;
+  --element-jin: #eff1f4;
+  --element-shui: #e9eef3;
   color-scheme: light;
 }
 
@@ -45,6 +67,11 @@
   --ground: #16150f;
   --tint: #201e18;
   --alarm: #d98a76;
+  --element-mu: #1a2118;
+  --element-huo: #241a17;
+  --element-tu: #211d15;
+  --element-jin: #191c20;
+  --element-shui: #161d24;
   color-scheme: dark;
 }
 
