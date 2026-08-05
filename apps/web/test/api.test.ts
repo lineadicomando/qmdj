@@ -218,11 +218,14 @@ describe('GET /api/chart/plate', () => {
     const english = await call(plate, `${MOMENT}&lang=en`);
     const italian = await call(plate, `${MOMENT}&lang=it`);
 
-    // The drawing is where the Chinese gives way: someone who cannot read it
-    // has nothing to hold on to in a picture, where a table can carry both.
+    // The word leads, in the reader's own language — but the drawing carries
+    // both, as the table does: 休門 is what the gate is called, and a reader
+    // who knows the subject looks for it in the picture too.
     expect(english.text).toContain('Rest');
     expect(italian.text).toContain('Riposo');
-    expect(english.text).not.toContain('休門');
+    expect(english.text).toContain('休門');
+    // Down to the pillars along the top and the chief along the foot.
+    expect(english.text).toMatch(/chief Canopy 天蓬 — chief gate Rest 休門/);
   });
 
   it('resolves to one appearance when asked, and carries both when not', async () => {

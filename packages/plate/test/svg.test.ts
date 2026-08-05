@@ -126,7 +126,7 @@ describe('renderChartSvg', () => {
     expect(svg).not.toContain('伏吟');
   });
 
-  it('writes words where it is given them', () => {
+  it('writes a word beside the name it renders, never instead of it', () => {
     const worded = renderChartSvg(CHART, {
       labels: {
         palace: { kan: 'north' },
@@ -138,9 +138,12 @@ describe('renderChartSvg', () => {
 
     expect(worded).toContain('Rest');
     expect(worded).toContain('Yin Earth');
-    // What it was given a word for stops appearing as a glyph.
-    expect(worded).not.toContain('休門');
-    // What it was not given a word for keeps its name.
+    // 休門 is not the Chinese for "Rest": it is what the gate is called, and
+    // it stays on the board whatever language the reader is given.
+    expect(worded).toMatch(/>Rest<tspan[^>]*>[\s\S]?休門/);
+    // The name is set smaller than the word, and fainter.
+    expect(worded).toMatch(/<tspan class="faint" font-size="[\d.]+">[\s\S]?休門/);
+    // What it was not given a word for stands as its name alone.
     expect(worded).toContain('值符');
   });
 
@@ -168,6 +171,38 @@ describe('renderChartSvg', () => {
     expect(captioned).toContain('not an interpretation');
     // The pillars ride along with the caption line.
     expect(captioned).toContain('甲辰');
+  });
+
+  it('writes a palace name from its corner, and says so on the line', () => {
+    const svg = renderChartSvg(CHART, { size: 600, labels: { palace: { qian: 'northwest' } } });
+    const sheet = svg.slice(0, svg.indexOf('</style>'));
+
+    expect(svg).toMatch(/<text[^>]*text-anchor="start"[^>]*>6\s?northwest/);
+    // And nothing in the sheet may anchor anything: a declaration outranks a
+    // presentation attribute, so a rule here would centre the name on the
+    // corner it starts from and hang half of it in the palace next door.
+    expect(sheet).not.toContain('text-anchor');
+  });
+
+  it('shrinks a name too long for the corner it starts from', () => {
+    const size = (svg: string): number =>
+      Number(/<text[^>]*font-size="([\d.]+)"[^>]*>6\s/.exec(svg)?.[1]);
+    const short = renderChartSvg(CHART, { size: 600, labels: { palace: { qian: 'nw' } } });
+    const long = renderChartSvg(CHART, {
+      size: 600,
+      labels: { palace: { qian: 'north-west by west and a little further' } },
+    });
+
+    expect(size(long)).toBeLessThan(size(short));
+  });
+
+  it('holds two captions apart with a mark, not with spaces', () => {
+    const svg = renderChartSvg(CHART, {
+      captions: { chief: 'chief Canopy 天蓬', chiefGate: 'chief gate Rest 休門' },
+    });
+
+    // SVG collapses a run of spaces, and the two halves would arrive touching.
+    expect(svg).toContain('chief Canopy 天蓬 — chief gate Rest 休門');
   });
 
   it('carries both colour schemes by default', () => {

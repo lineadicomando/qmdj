@@ -315,21 +315,22 @@ export function registerDrawQimenChart(server: McpServer, context: ToolContext):
           moment.pillars.day,
           moment.pillars.hour,
         ]
-          .map((pair) => sayGanzhi(pair, t))
+          // The word and the name it renders, as everywhere else on the board.
+          .map((pair) => `${sayGanzhi(pair, t)} ${pair.hanzi}`)
           // A visible separator, not spaces: SVG collapses runs of whitespace,
           // so four pillars set three spaces apart arrive as one long phrase.
           .join(' / ');
 
         const svg = renderChartSvg(chart, {
           size: args.size ?? 640,
-          // The palaces are written in words. The data the agent reads comes
-          // from compute_qimen_chart and carries the hanzi alongside.
+          // The palaces are written in words, each beside the name it
+          // renders — the same drawing the web surface serves.
           labels,
           captions: {
             ju: `${chart.ju.yang ? t('cli.value.yangDun') : t('cli.value.yinDun')} ${chart.ju.number}`,
             pillars: PILLARS,
-            chief: `${t('cli.field.chief')} ${labels.star[chart.chief.star.id]}`,
-            chiefGate: `${t('cli.field.chiefGate')} ${labels.gate[chart.chiefGate.gate.id]}`,
+            chief: `${t('cli.field.chief')} ${labels.star[chart.chief.star.id]} ${chart.chief.star.hanzi}`,
+            chiefGate: `${t('cli.field.chiefGate')} ${labels.gate[chart.chiefGate.gate.id]} ${chart.chiefGate.gate.hanzi}`,
           },
         });
 

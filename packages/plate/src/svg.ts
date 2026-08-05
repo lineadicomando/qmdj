@@ -44,9 +44,13 @@ export function renderChartSvg(chart: PlateChart, options: PlateOptions = {}): s
 
   const parts = [
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="${escape(ariaLabel(chart))}">`,
+    // Anchoring stays out of the sheet: a rule here would outrank the
+    // `text-anchor` each line carries — a declaration beats a presentation
+    // attribute — and every line would centre, including the one written
+    // from the corner, which would then hang half outside its palace.
     `<style>${styleSheet(options.scheme ?? 'auto')}
       .qmdj { font-family: ${FONT_STACK}; }
-      .qmdj text { fill: var(--qmdj-ink); text-anchor: middle; }
+      .qmdj text { fill: var(--qmdj-ink); }
       .qmdj .faint { fill: var(--qmdj-faint); }
       .qmdj .mark { fill: var(--qmdj-mark); }
       .qmdj .rule { stroke: var(--qmdj-rule); fill: none; }
@@ -82,9 +86,40 @@ function markedPalaces(chart: PlateChart): Map<number, PlatePattern[]> {
   return marks;
 }
 
-/** The word for a thing, or its hanzi where the caller supplied none. */
-function word(named: Named, from: Record<string, string> | undefined): string {
-  return from?.[named.id] ?? named.hanzi;
+/**
+ * How much smaller the name is set than the word that renders it.
+ *
+ * A hanzi is square where a letter is half as wide, so the same nominal size
+ * already reads as larger. Set at three quarters it sits beside the word
+ * without competing with it.
+ */
+const HANZI_SCALE = 0.75;
+
+/** A hair space, which no renderer collapses the way it collapses a space. */
+const GAP = ' ';
+
+/**
+ * A thing said twice: the word for it, and the name it renders.
+ *
+ * 天蓬 is not the Chinese for "Canopy", it is what the star is called, and a
+ * reader who knows the subject looks for it. So the word leads — the drawing
+ * has to be usable by someone who reads no Chinese — and the name follows it
+ * smaller and fainter, exactly as the tables do it.
+ *
+ * A caller who supplied no words gets the name alone, which is what this
+ * drew before there was any way to ask for anything else.
+ */
+function named(
+  thing: Named,
+  from: Record<string, string> | undefined,
+  tail = '',
+  /** Empty leaves the name the colour of its line, for a line already tinted. */
+  className = 'faint',
+): Run[] {
+  const word = from?.[thing.id];
+  if (!word) return [{ text: `${thing.hanzi}${tail}` }];
+
+  return [{ text: word }, { text: `${GAP}${thing.hanzi}${tail}`, scale: HANZI_SCALE, className }];
 }
 
 function drawCell(
@@ -111,35 +146,47 @@ function drawCell(
     text(
       middle,
       at(geometry.line.spirit),
-      palace.spirit ? word(palace.spirit, labels.spirit) : '',
+      palace.spirit ? named(palace.spirit, labels.spirit) : [],
       geometry.font.small,
-      'faint',
-      inner,
+      { className: 'faint', maxWidth: inner },
     ),
     text(
       middle,
       at(geometry.line.star),
-      `${word(palace.star, labels.star)}${strength(palace.starStrength)}`,
+      named(palace.star, labels.star, strength(palace.starStrength)),
       geometry.font.small,
-      undefined,
-      inner,
+      { maxWidth: inner },
     ),
     text(
       middle,
       at(geometry.line.gate),
-      palace.gate ? `${word(palace.gate, labels.gate)}${strength(palace.gateStrength)}` : '',
+      palace.gate ? named(palace.gate, labels.gate, strength(palace.gateStrength)) : [],
       geometry.font.small,
-      undefined,
-      inner,
+      { maxWidth: inner },
     ),
-    text(middle, at(geometry.line.heaven), word(palace.heaven, labels.stem), geometry.font.glyph, undefined, inner),
-    text(middle, at(geometry.line.earth), word(palace.earth, labels.stem), geometry.font.glyph, undefined, inner),
+    text(middle, at(geometry.line.heaven), named(palace.heaven, labels.stem), geometry.font.glyph, {
+      maxWidth: inner,
+    }),
+    text(middle, at(geometry.line.earth), named(palace.earth, labels.stem), geometry.font.glyph, {
+      maxWidth: inner,
+    }),
   ];
 
   // The palace names itself in the corner, small: the reader who needs it
   // looks for it, and the reader who does not is not interrupted by it.
+  //
+  // Written from the left edge inwards, so the width left to it is what
+  // remains to the far side of the palace — a name set from the corner has
+  // the inset against it, not half of it as a centred line would.
+  const inset = side * 0.06;
   parts.push(
-    `<text x="${round(x + side * 0.06)}" y="${round(y + side * geometry.line.name)}" class="faint" font-size="${round(geometry.font.small * 0.8)}" text-anchor="start">${palace.palace.number} ${escape(labels.palace?.[palace.palace.id] ?? palace.palace.hanzi)}</text>`,
+    text(
+      x + inset,
+      at(geometry.line.name),
+      [{ text: `${palace.palace.number}${GAP}` }, ...named(palace.palace, labels.palace)],
+      geometry.font.small * 0.8,
+      { className: 'faint', maxWidth: side - inset * 2, anchor: 'start' },
+    ),
   );
 
   // On a line of their own along the foot, centred and small. Anywhere in a
@@ -149,10 +196,14 @@ function drawCell(
       text(
         middle,
         at(geometry.line.marks),
-        marks.map((mark) => labels.pattern?.[mark.id] ?? mark.hanzi).join(' · '),
+        // The whole line is the mark's colour, names included: two colours
+        // on one foot would read as two different things having happened.
+        marks.flatMap((mark, index) => [
+          ...(index > 0 ? [{ text: ' · ' }] : []),
+          ...named(mark, labels.pattern, '', ''),
+        ]),
         geometry.font.small * 0.8,
-        'mark',
-        inner,
+        { className: 'mark', maxWidth: inner },
       ),
     );
   }
@@ -173,6 +224,15 @@ function drawGrid(geometry: Layout): string {
   return lines.join('\n');
 }
 
+/**
+ * What separates two things on a caption line.
+ *
+ * A visible mark and not a run of spaces: SVG collapses whitespace, so a
+ * caption set three spaces apart arrives with its two halves touching —
+ * `capo Baldacchino porta del capo Riposo`, read as one phrase.
+ */
+const BETWEEN = ' — ';
+
 function drawCaptions(
   chart: PlateChart,
   captions: NonNullable<PlateOptions['captions']>,
@@ -189,32 +249,66 @@ function drawCaptions(
       [pillars.year.hanzi, pillars.month.hanzi, pillars.day.hanzi, pillars.hour.hanzi].join(' '),
   ]
     .filter(Boolean)
-    .join('   ');
-  parts.push(text(middle, margin * 0.45, head, font.caption, undefined, size * 0.94));
+    .join(BETWEEN);
+  parts.push(text(middle, margin * 0.45, head, font.caption, { maxWidth: size * 0.94 }));
 
-  const foot = [captions.chief, captions.chiefGate].filter(Boolean).join('   ');
-  parts.push(text(middle, size - margin * 0.58, foot, font.caption, undefined, size * 0.94));
+  const foot = [captions.chief, captions.chiefGate].filter(Boolean).join(BETWEEN);
+  parts.push(text(middle, size - margin * 0.58, foot, font.caption, { maxWidth: size * 0.94 }));
 
   // The disclaimer travels with the picture, because a picture travels
   // further than the page it was made on.
   if (captions.note) {
-    parts.push(text(middle, size - margin * 0.22, captions.note, font.caption * 0.82, 'faint'));
+    parts.push(text(middle, size - margin * 0.22, captions.note, font.caption * 0.82, { className: 'faint' }));
   }
 
   return parts.filter(Boolean).join('\n');
 }
 
-function text(
-  x: number,
-  y: number,
-  content: string,
-  size: number,
-  className?: string,
-  maxWidth?: number,
-): string {
-  if (!content) return '';
-  const attribute = className ? ` class="${className}"` : '';
-  return `<text x="${round(x)}" y="${round(y)}"${attribute} font-size="${round(fit(content, size, maxWidth))}">${escape(content)}</text>`;
+/** How a line is set, beyond where it goes and what it says. */
+interface Line {
+  className?: string;
+  /** Beyond this the line is shrunk rather than allowed to run over. */
+  maxWidth?: number;
+  /** Default `middle`: everything is centred in its register but the name. */
+  anchor?: 'start' | 'middle';
+}
+
+/**
+ * A stretch of a line, set at its own size and in its own colour.
+ *
+ * One line carries two things at once — a word and the name it renders — and
+ * they are not set alike. Everything else about them is shared, which is why
+ * they are runs of one line rather than two lines that have to be kept level.
+ */
+interface Run {
+  text: string;
+  /** Relative to the size of the line. Default 1. */
+  scale?: number;
+  className?: string;
+}
+
+function text(x: number, y: number, content: string | Run[], size: number, line: Line = {}): string {
+  const runs = (typeof content === 'string' ? [{ text: content }] : content).filter(
+    (run) => run.text,
+  );
+  if (runs.length === 0) return '';
+
+  const fitted = fit(runs, size, line.maxWidth);
+  const attribute = line.className ? ` class="${line.className}"` : '';
+  const anchor = line.anchor ?? 'middle';
+  const body = runs.map((run) => setRun(run, fitted)).join('');
+
+  return `<text x="${round(x)}" y="${round(y)}"${attribute} font-size="${round(fitted)}" text-anchor="${anchor}">${body}</text>`;
+}
+
+/** A run set apart from its line, or plain text where it is set like it. */
+function setRun(run: Run, size: number): string {
+  const scaled = run.scale !== undefined && run.scale !== 1;
+  const attributes =
+    (run.className ? ` class="${run.className}"` : '') +
+    (scaled ? ` font-size="${round(size * (run.scale as number))}"` : '');
+
+  return attributes ? `<tspan${attributes}>${escape(run.text)}</tspan>` : escape(run.text);
 }
 
 /**
@@ -229,11 +323,18 @@ function text(
  * and the estimate only has to be close enough to keep the line inside its
  * palace. A CJK glyph is square; a Latin letter is roughly half as wide.
  */
-function fit(content: string, size: number, maxWidth?: number): number {
+function fit(runs: Run[], size: number, maxWidth?: number): number {
   if (!maxWidth) return size;
 
+  // Each run is measured at its own size, and the whole line is shrunk by
+  // whatever it takes: the word and the name it renders keep their
+  // proportion to one another whatever the line has to come down to.
   let width = 0;
-  for (const character of content) width += /[⺀-鿿＀-｠]/.test(character) ? 1 : 0.54;
+  for (const run of runs) {
+    let ems = 0;
+    for (const character of run.text) ems += /[⺀-鿿＀-｠]/.test(character) ? 1 : 0.54;
+    width += ems * (run.scale ?? 1);
+  }
   const needed = width * size;
 
   return needed > maxWidth ? (size * maxWidth) / needed : size;

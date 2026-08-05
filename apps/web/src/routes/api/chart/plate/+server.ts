@@ -28,7 +28,8 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
       moment.pillars.day,
       moment.pillars.hour,
     ]
-      .map((pair) => sayGanzhi(pair, t))
+      // The word and the name it renders, as everywhere else on the board.
+      .map((pair) => `${sayGanzhi(pair, t)} ${pair.hanzi}`)
       // A visible separator, not spaces: SVG collapses runs of whitespace,
       // so four pillars set three spaces apart arrive as one long phrase.
       .join(' / ');
@@ -46,8 +47,8 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
       captions: {
         ju: `${chart.ju.yang ? t('cli.value.yangDun') : t('cli.value.yinDun')} ${chart.ju.number}`,
         pillars: PILLARS,
-        chief: `${t('cli.field.chief')} ${labels.star[chart.chief.star.id]}`,
-        chiefGate: `${t('cli.field.chiefGate')} ${labels.gate[chart.chiefGate.gate.id]}`,
+        chief: `${t('cli.field.chief')} ${labels.star[chart.chief.star.id]} ${chart.chief.star.hanzi}`,
+        chiefGate: `${t('cli.field.chiefGate')} ${labels.gate[chart.chiefGate.gate.id]} ${chart.chiefGate.gate.hanzi}`,
       },
     });
 

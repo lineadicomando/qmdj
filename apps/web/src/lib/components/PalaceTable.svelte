@@ -46,7 +46,9 @@
         <td>
           {#if cell.gate}
             <span>{gloss('gate', cell.gate.id)}</span>
-            <span class="glyph">{cell.gate.hanzi}{#if cell.gateStrength} · {gloss('strength', cell.gateStrength.id)}{/if}</span>
+            <!-- The space is written out: Svelte trims what sits against the
+                 edge of a block, and the name would touch the separator. -->
+            <span class="glyph">{cell.gate.hanzi}{#if cell.gateStrength}&nbsp;· {gloss('strength', cell.gateStrength.id)}{/if}</span>
           {:else}<span class="gloss">—</span>{/if}
         </td>
         <td>

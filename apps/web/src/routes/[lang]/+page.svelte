@@ -146,9 +146,16 @@
   h2 { font-size: 1em; font-weight: 500; margin: 1.5rem 0 0.5rem; }
   button { justify-self: start; font: inherit; padding: 0.4rem 1.1rem; cursor: pointer; }
   .failure { color: var(--alarm); }
+  /*
+   * One column, and the drawing as large as the reading is wide.
+   *
+   * Beside the table it had to fit in a column of it, and every palace holds
+   * five words, five names and a mark: at that size the board was read with
+   * an effort nobody should be asked for. The table follows it instead —
+   * a picture first, then the same thing said in full.
+   */
   .result { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1fr); }
-  @media (min-width: 62rem) { .result { grid-template-columns: 44% 1fr; } }
-  img { width: 100%; height: auto; }
+  img { display: block; width: 100%; max-width: 46rem; height: auto; }
   .ju { font-size: 1.1em; margin: 0 0 0.75rem; }
   .patterns { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.25rem; }
   .glyph { margin-left: 0.5rem; color: var(--faint); font-size: 0.85em; }
