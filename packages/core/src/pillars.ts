@@ -41,8 +41,15 @@ export interface Moment {
   solarTerm: SolarTerm;
   /** The jie that opened the month. */
   jie: SolarTerm;
-  /** The lunar date, for display and for the methods that count by it. */
-  lunar: LunarDate;
+  /**
+   * The lunar date, for display and for the methods that count by it.
+   *
+   * Computed the first time it is read, and kept thereafter. It is the only
+   * field here that costs anything to produce — the Moon has to be searched
+   * for, where the Sun is nearly free — and scanning an interval reads every
+   * other field of every hour without ever reaching this one.
+   */
+  readonly lunar: LunarDate;
   /** The options this was computed with. A saved result must reproduce. */
   options: ChartOptions;
   warnings: ChartWarning[];
@@ -97,16 +104,22 @@ export function resolveMoment(
 
   const solarTerm = solarTermAt(time.julianDayUT, context);
   const jie = jieAt(time.julianDayUT, context);
-  const lunar = lunarDate(time.julianDayUT, context);
+
+  // Deferred, because it is the one expensive thing here and most callers
+  // never look at it. Finding the Sun's crossings is a matter of microseconds;
+  // finding the Moon's costs around fifty times as much, and a Qi Men chart
+  // cast by 拆補 reads the solar term alone. `chunjie` below is the exception,
+  // and asking for it is what pays for it.
+  const lunar = deferred(() => lunarDate(time.julianDayUT, context));
 
   const year = yearGanzhi(
     options.yearBoundary === 'chunjie'
-      ? lunar.year
+      ? lunar().year
       : fromJulianDay(lastCrossingBefore(315, time.julianDayUT, context), input.timezone).year,
   );
   const month = monthGanzhi(year.stem.index, jie.term.monthBranch as number);
 
-  return {
+  const moment: Moment = {
     input,
     julianDayUT: time.julianDayUT,
     utc: time.utc,
@@ -116,10 +129,21 @@ export function resolveMoment(
     hourBranch: branch,
     solarTerm,
     jie,
-    lunar,
     options,
     warnings,
-  };
+  } as Moment;
+
+  // Enumerable, so a moment still serialises whole: whoever hands one to
+  // `JSON.stringify` gets the lunar date, and pays for it there.
+  Object.defineProperty(moment, 'lunar', { get: lunar, enumerable: true });
+
+  return moment;
+}
+
+/** A value computed at most once, when something first asks for it. */
+function deferred<T>(compute: () => T): () => T {
+  let value: T | undefined;
+  return () => (value ??= compute());
 }
 
 /**

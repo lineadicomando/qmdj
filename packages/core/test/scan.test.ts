@@ -1,0 +1,160 @@
+import { beforeAll, describe, expect, it } from 'vitest';
+import { computeQimenChart } from '../src/dunjia/index.js';
+import { ChartError } from '../src/errors.js';
+import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
+import { resolveMoment } from '../src/pillars.js';
+import { MAX_SCAN_DAYS, scanCharts, type ScanRun } from '../src/scan.js';
+import { solarTermsBetween } from '../src/solar-terms.js';
+import { fromJulianDay } from '../src/time.js';
+import { DEFAULT_OPTIONS, type ChartOptions, type Place } from '../src/types.js';
+
+let context: EphemerisContext;
+
+beforeAll(() => {
+  context = initEphemeris();
+});
+
+const BEIJING: Place = { latitude: 39.9075, longitude: 116.3972, timezone: 'Asia/Shanghai' };
+const ROME: Place = { latitude: 41.9028, longitude: 12.4964, timezone: 'Europe/Rome' };
+const CLOCK: ChartOptions = { ...DEFAULT_OPTIONS, trueSolarTime: false, dayBoundary: 'midnight' };
+
+function scan(
+  from: string,
+  to: string,
+  place: Place = BEIJING,
+  options: ChartOptions = CLOCK,
+): ScanRun[] {
+  const zone = place.timezone;
+  return scanCharts(
+    { date: from.slice(0, 10), time: from.slice(11) || '00:00', timezone: zone },
+    { date: to.slice(0, 10), time: to.slice(11) || '00:00', timezone: zone },
+    place,
+    options,
+    context,
+  );
+}
+
+describe('scanCharts', () => {
+  it('covers the interval without a gap and without an overlap', () => {
+    const runs = scan('2026-09-01', '2026-09-04');
+
+    expect(runs.length).toBeGreaterThan(0);
+    expect(runs[0]?.start).toMatch(/^2026-09-01T00:00/);
+    expect(runs.at(-1)?.end).toMatch(/^2026-09-04T00:00/);
+
+    for (let i = 1; i < runs.length; i++) {
+      expect(runs[i]?.start).toBe(runs[i - 1]?.end);
+    }
+  });
+
+  it('gives a clock day twelve runs, one to a double hour', () => {
+    // From 01:00 so the day opens on a boundary: the hour of the Rat straddles
+    // midnight, and a day counted from 00:00 begins halfway through it.
+    const runs = scan('2026-09-01T01:00', '2026-09-02T01:00');
+
+    expect(runs).toHaveLength(12);
+    for (const run of runs) {
+      const hours = (Date.parse(run.end) - Date.parse(run.start)) / 3_600_000;
+      expect(hours).toBe(2);
+    }
+  });
+
+  it('reports for each run the chart the engine casts for its opening instant', () => {
+    const runs = scan('2026-09-01T01:00', '2026-09-01T09:00');
+
+    for (const run of runs) {
+      const [date, time] = run.start.split('T') as [string, string];
+      const direct = computeQimenChart(
+        resolveMoment({ date, time: time.slice(0, 5), timezone: BEIJING.timezone }, BEIJING, CLOCK, context),
+        CLOCK,
+      );
+
+      expect(run.chart.ju).toEqual(direct.ju);
+      expect(run.chart.moment.pillars.hour.hanzi).toBe(direct.moment.pillars.hour.hanzi);
+      expect(run.chart.palaces).toEqual(direct.palaces);
+    }
+  });
+
+  it('splits a double hour where the yuan turns inside it', () => {
+    // The instant is taken from the engine and not from an almanac: 處暑 2026
+    // opens at some minute of 23 August, and the third yuan opens ten days
+    // after it — which lands inside the double hour of 巳, not on its edge.
+    const term = solarTermsBetween(
+      resolveMoment({ date: '2026-08-01', time: '00:00', timezone: BEIJING.timezone }, BEIJING, CLOCK, context)
+        .julianDayUT,
+      resolveMoment({ date: '2026-09-01', time: '00:00', timezone: BEIJING.timezone }, BEIJING, CLOCK, context)
+        .julianDayUT,
+      context,
+    ).find((found) => found.term.id === 'chushu');
+    const turns = fromJulianDay((term?.julianDayUT as number) + 10, BEIJING.timezone);
+
+    expect(turns.toFormat('yyyy-MM-dd')).toBe('2026-09-02');
+    // A double hour opens on an odd hour exactly. This falls elsewhere, which
+    // is the whole point: the turn is inside one, not on the edge of one.
+    const opensADoubleHour = turns.hour % 2 === 1 && turns.minute === 0 && turns.second === 0;
+    expect(opensADoubleHour).toBe(false);
+
+    const runs = scan('2026-09-02T09:00', '2026-09-02T11:00');
+
+    expect(runs).toHaveLength(2);
+    // The hour pillar holds across the split. The ju is what changed.
+    expect(new Set(runs.map((run) => run.chart.moment.pillars.hour.hanzi)).size).toBe(1);
+    expect(runs[0]?.chart.ju.number).not.toBe(runs[1]?.chart.ju.number);
+
+    // And the split is where the yuan turns, to the minute the bisection promises.
+    const found = Date.parse(runs[1]?.start as string);
+    expect(Math.abs(found - turns.toMillis())).toBeLessThan(60_000);
+  });
+
+  it('walks the instant and not the clock, across a change of summer time', () => {
+    // Clocks go back on 2026-10-25 in Rome: 02:00 to 03:00 happens twice.
+    // Counted on the clock the day has 24 hours; counted on the instant it
+    // has 25, and every one of them must be scanned exactly once.
+    const runs = scan('2026-10-25', '2026-10-26', ROME);
+
+    const covered = runs.reduce(
+      (total, run) => total + (Date.parse(run.end) - Date.parse(run.start)),
+      0,
+    );
+    expect(covered / 3_600_000).toBe(25);
+  });
+
+  it('never reads the lunar date, which is what makes it affordable', () => {
+    // The scan resolves a moment an hour and casts a chart from it. Under
+    // 拆補 nothing in that path wants the Moon, and the Moon is fifty times
+    // dearer than the Sun: were it read here, a month would cost what a year
+    // of it should.
+    const moon: string[] = [];
+    const runs = scan('2026-09-01', '2026-09-08');
+
+    for (const run of runs) {
+      const descriptor = Object.getOwnPropertyDescriptor(run.chart.moment, 'lunar');
+      if (descriptor?.get) moon.push(run.start);
+    }
+
+    // Every moment still offers it, unevaluated.
+    expect(moon).toHaveLength(runs.length);
+    expect(runs[0]?.chart.moment.lunar.year).toBe(2026);
+  });
+
+  it('refuses an interval that ends before it begins, or on the instant it does', () => {
+    expect(() => scan('2026-09-04', '2026-09-01')).toThrow(ChartError);
+    expect(() => scan('2026-09-01', '2026-09-01')).toThrow(
+      expect.objectContaining({ code: 'EMPTY_INTERVAL' }),
+    );
+  });
+
+  it('refuses an interval longer than it will scan at once', () => {
+    expect(() => scan('2026-01-01', '2028-01-01')).toThrow(
+      expect.objectContaining({ code: 'INTERVAL_TOO_LONG', params: { days: 730, maximum: MAX_SCAN_DAYS } }),
+    );
+  });
+
+  it('carries no verdict about any of the hours it reports', () => {
+    const serialised = JSON.stringify(scan('2026-09-01', '2026-09-02').map((run) => run.chart.patterns));
+
+    for (const word of ['lucky', 'unlucky', 'favourable', 'auspicious', 'good', 'bad']) {
+      expect(serialised.toLowerCase()).not.toContain(word);
+    }
+  });
+});

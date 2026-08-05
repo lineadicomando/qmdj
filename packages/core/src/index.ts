@@ -85,6 +85,8 @@ export {
 
 export { resolveMoment, type Moment, type Pillars } from './pillars.js';
 
+export { MAX_SCAN_DAYS, scanCharts, type ScanRun } from './scan.js';
+
 export { chartLabels, sayBranch, sayGanzhi, type ChartLabels } from './labels.js';
 
 export {

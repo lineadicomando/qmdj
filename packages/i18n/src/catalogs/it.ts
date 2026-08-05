@@ -26,6 +26,10 @@ export const it: Record<MessageKey, string> = {
     'Il metodo {method} per la determinazione del ju non è implementato. Lo è soltanto chaibu, e nessun altro metodo gli viene sostituito: una carta posta con il metodo sbagliato sembra corretta e non lo è.',
   'core.error.EPHEMERIS_FAILURE':
     'Calcolo delle effemeridi fallito al giorno giuliano {julianDay}: {reason}',
+  'core.error.EMPTY_INTERVAL':
+    "L'intervallo dal {from} al {to} non contiene tempo: deve finire dopo che è cominciato.",
+  'core.error.INTERVAL_TOO_LONG':
+    'Un intervallo di {days} giorni supera i {maximum} giorni che si possono scandire in una volta.',
 
   'core.warning.AMBIGUOUS_LOCAL_TIME':
     'L\'ora locale {time} del {date} ricorre due volte in {timezone} (ritorno all\'ora solare). È stata usata la prima occorrenza, quella ancora in ora legale.',

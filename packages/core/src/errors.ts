@@ -12,7 +12,9 @@ export type ChartErrorCode =
   | 'INVALID_COORDINATES'
   | 'DATE_OUT_OF_RANGE'
   | 'EPHEMERIS_FAILURE'
-  | 'METHOD_NOT_IMPLEMENTED';
+  | 'METHOD_NOT_IMPLEMENTED'
+  | 'EMPTY_INTERVAL'
+  | 'INTERVAL_TOO_LONG';
 
 /**
  * A usage error of the engine: malformed input, or a condition under which
