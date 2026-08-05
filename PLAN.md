@@ -511,7 +511,18 @@ identifier and a form reopening from one needs the name again.
 
 The chart alone is stepped, by the double hour, the day, the month and the
 year from the closed panel. The Four Pillars are not: a moment of birth is one
-moment. Four findings:
+moment. Five findings:
+
+- **The steps were first drawn as bare glyphs — 時 日 月 年 — with the word
+  only in the `title`.** It reads beautifully to someone who already knows the
+  subject and is unusable to the person the interface exists for, who does not
+  hover what they cannot recognise. The rule that hanzi always travel is about
+  the engine's *output*; a control is not output. The word leads now, and 時辰
+  keeps its hanzi beside it because it alone names something Chinese — a day
+  is the civil calendar's and has a word in every language already. The same
+  pass replaced `zishi — 23:00` in the form's own `select`, which had the
+  identifier where the reader's language belonged. See the constraint in
+  `CLAUDE.md`.
 
 - **The step that matters is the double hour.** A 時家 chart changes with it
   and with nothing smaller — day, month and year at a fixed clock time all

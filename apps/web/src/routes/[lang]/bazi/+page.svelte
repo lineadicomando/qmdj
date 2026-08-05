@@ -60,12 +60,13 @@
       bind:dayBoundary={asked.dayBoundary}
     />
     <label>
-      <!-- Asked for, never assumed: only the direction of the cycles needs it. -->
-      {t('cli.heading.luck')}
+      <!-- Asked for, never assumed: only the direction of the cycles needs
+           it, and the label says so rather than leaving it to be guessed. -->
+      {t('form.gender')}
       <select bind:value={gender}>
-        <option value="">—</option>
-        <option value="male">male</option>
-        <option value="female">female</option>
+        <option value="">{t('form.gender.unset')}</option>
+        <option value="male">{t('form.gender.male')}</option>
+        <option value="female">{t('form.gender.female')}</option>
       </select>
     </label>
     <button type="submit" disabled={busy}>{t('cli.heading.reading')}</button>

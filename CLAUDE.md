@@ -47,6 +47,16 @@ the engine falls back to Moshier, which needs no files.
   "Rest Gate": it is the name of the gate, and every reader expects to see it.
   Hanzi travels in the engine's output at all times; the catalog supplies only
   the gloss beside it. Identifiers are toneless pinyin (`xiumen`, `tianpeng`).
+- **The interface is read by someone who does not read Chinese**, and it must
+  be usable by them without a glossary. This does not contradict the rule
+  above, it bounds it: hanzi accompany the engine's output — the palaces, the
+  tables, the names of things — always beside a gloss, never alone.
+  Everything the reader is expected to *operate* or *decide from* leads in
+  their own language: buttons, labels, options, the choices in a `select`.
+  A control whose face is a glyph, or an option that reads `zishi`, is one
+  nobody can use on purpose; a `title` attribute does not rescue it, since
+  nobody hovers what they cannot recognise. The hanzi stands beside the word
+  only where what is named is Chinese — 時辰 is, a day is not.
 - **Errors carry a `code` and `params`, never a sentence.** `message` is an
   English rendering for logs; a surface translates `messageKey` with `params`.
   See `GeoError`.

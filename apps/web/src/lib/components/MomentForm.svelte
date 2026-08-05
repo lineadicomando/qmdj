@@ -35,18 +35,24 @@
   <LocationSearch {t} bind:selected={place} />
 
   <details>
-    <summary>{t('cli.note.methodOnly')}</summary>
+    <!-- A label, not the note: what a disclosure is called has to say what
+         opening it offers. The note is information, and it belongs inside
+         with the options it is about. -->
+    <summary>{t('form.options')}</summary>
     <label class="check">
       <input type="checkbox" bind:checked={trueSolarTime} />
-      {t('cli.field.solar')}
+      {t('form.trueSolarTime')}
     </label>
     <label>
-      {t('cli.field.local')}
+      {t('form.dayBoundary')}
+      <!-- The values are the engine's and do not change; what is shown says
+           which hour each one is, for a reader who has never met 子時. -->
       <select bind:value={dayBoundary}>
-        <option value="zishi">zishi — 23:00</option>
-        <option value="midnight">midnight — 00:00</option>
+        <option value="zishi">{t('form.dayBoundary.zishi')}</option>
+        <option value="midnight">{t('form.dayBoundary.midnight')}</option>
       </select>
     </label>
+    <p class="note">{t('cli.note.methodOnly')}</p>
   </details>
 
 <style>
@@ -56,4 +62,5 @@
   .check { display: flex; gap: 0.45rem; align-items: center; }
   summary { cursor: pointer; color: var(--faint); font-size: 0.85em; }
   details { display: grid; gap: 0.6rem; }
+  .note { margin: 0; color: var(--faint); font-size: 0.8em; }
 </style>

@@ -208,6 +208,20 @@ export const en = {
   'form.close': 'Close',
   'form.legend': 'The moment and the place',
 
+  // What a form offers has to be readable by whoever has to choose from it.
+  // `zishi` and `midnight` are what the API takes and stay so; what the
+  // reader sees says which hour that is, with the hanzi beside the words
+  // because 子時 is a name and 23:00 is not a translation of it.
+  'form.options': 'Options',
+  'form.trueSolarTime': 'Correct to true solar time',
+  'form.dayBoundary': 'The day begins',
+  'form.dayBoundary.zishi': 'at the hour of the Rat 子時, 23:00',
+  'form.dayBoundary.midnight': 'at midnight, 00:00',
+  'form.gender': 'Sex — only the direction of the luck cycles depends on it',
+  'form.gender.unset': 'not given',
+  'form.gender.male': 'male',
+  'form.gender.female': 'female',
+
   // The face of each step is the word, in the reader's language: these are
   // controls, and a control nobody can read is a control nobody can press.
   // Only 時辰 keeps its hanzi beside the word, because only it names

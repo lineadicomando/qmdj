@@ -197,6 +197,16 @@ export const it: Record<MessageKey, string> = {
   'form.close': 'Chiudi',
   'form.legend': 'L\'istante e il luogo',
 
+  'form.options': 'Opzioni',
+  'form.trueSolarTime': 'Correggi all\'ora solare vera',
+  'form.dayBoundary': 'Il giorno comincia',
+  'form.dayBoundary.zishi': 'all\'ora del Topo 子時, alle 23:00',
+  'form.dayBoundary.midnight': 'a mezzanotte, alle 00:00',
+  'form.gender': 'Sesso — ne dipende solo la direzione dei cicli decennali',
+  'form.gender.unset': 'non indicato',
+  'form.gender.male': 'maschile',
+  'form.gender.female': 'femminile',
+
   'step.shichen': 'doppia ora',
   'step.day': 'giorno',
   'step.month': 'mese',
