@@ -1,6 +1,17 @@
-import { computeQimenChart, type QimenChart } from './dunjia/index.js';
+import {
+  computeQimenChart,
+  type Direction,
+  type GateId,
+  type PalaceContents,
+  type PatternId,
+  type QimenChart,
+  type SpiritId,
+  type StarId,
+  type StrengthId,
+} from './dunjia/index.js';
 import { ChartError } from './errors.js';
 import type { EphemerisContext } from './ephemeris.js';
+import type { StemId } from './ganzhi.js';
 import { resolveMoment } from './pillars.js';
 import { fromJulianDay, resolveTime, type LocalMoment } from './time.js';
 import type { ChartOptions, Place } from './types.js';
@@ -184,4 +195,117 @@ function sameChart(a: QimenChart, b: QimenChart): boolean {
     a.ju.number === b.ju.number &&
     a.ju.yang === b.ju.yang
   );
+}
+
+/**
+ * What a caller is looking for among the palaces of a scan.
+ *
+ * Every field states a **structural** condition — a gate standing somewhere,
+ * a configuration present or absent — and the engine tests it. It does not
+ * hold that a palace answering these is a good place to be, any more than
+ * `findPatterns` holds that 青龍返首 is fortunate. The criteria come from
+ * whoever is asking; the meaning stays with them.
+ *
+ * This is deliberately not a list of purposes. The transmitted mapping from
+ * an undertaking to its 用神 — the open gate for negotiation, the life gate
+ * for money — varies by school, and putting one of them here would make a
+ * school implicit in the engine. It belongs in a table with its sources
+ * declared, and there is no such table yet. 三奇得使 is the precedent.
+ *
+ * An empty criteria object answers with every palace of every run, which is
+ * the scan itself.
+ */
+export interface ScanCriteria {
+  gate?: GateId;
+  star?: StarId;
+  spirit?: SpiritId;
+  /** A stem on either plate of the palace: the heaven one or the earth one. */
+  stem?: StemId;
+  /** Where the palace must lie. The centre has none and answers to none. */
+  directions?: readonly Direction[];
+  /** The weakest state the palace's star and gate may stand in (旺相休囚死). */
+  minStrength?: StrengthId;
+  /** Configurations the palace, or the chart, must have fallen into. */
+  requires?: readonly PatternId[];
+  /** Configurations that rule the palace, or the chart, out. */
+  excludes?: readonly PatternId[];
+}
+
+/** A run, and the palaces of it that answered. */
+export interface ScanMatch {
+  run: ScanRun;
+  /** In Luoshu order, and never empty: a run with none is not a match. */
+  palaces: PalaceContents[];
+}
+
+/** Strongest first. `minStrength` admits a state and everything above it. */
+const STRENGTH_ORDER: readonly StrengthId[] = ['wang', 'xiang', 'xiu', 'qiu', 'si'];
+
+/**
+ * The runs of a scan in which some palace answers, and which palaces do.
+ *
+ * The palace is the answer and not the run, because the answer to *when* is
+ * half an answer. A chart is consulted for a direction as much as for an
+ * hour: an interval does not hold a good hour, it holds an hour in which
+ * something stands to the southeast. A caller shown times alone has been
+ * handed the part of the tradition every other art already has.
+ */
+export function matchRuns(runs: readonly ScanRun[], criteria: ScanCriteria): ScanMatch[] {
+  const matches: ScanMatch[] = [];
+
+  for (const run of runs) {
+    // Configurations belonging to no palace — 伏吟 and 反吟 are of the whole
+    // board — are settled once, for the chart, before any palace is looked at.
+    const overall = new Set(
+      run.chart.patterns.filter((found) => found.palace === undefined).map((found) => found.id),
+    );
+    if (criteria.excludes?.some((id) => overall.has(id))) continue;
+
+    const palaces = run.chart.palaces.filter((cell) => answers(cell, run.chart, criteria, overall));
+    if (palaces.length > 0) matches.push({ run, palaces });
+  }
+
+  return matches;
+}
+
+function answers(
+  cell: PalaceContents,
+  chart: QimenChart,
+  criteria: ScanCriteria,
+  overall: ReadonlySet<PatternId>,
+): boolean {
+  if (criteria.gate && cell.gate?.id !== criteria.gate) return false;
+  if (criteria.star && cell.star.id !== criteria.star) return false;
+  if (criteria.spirit && cell.spirit?.id !== criteria.spirit) return false;
+  if (criteria.stem && cell.heaven.id !== criteria.stem && cell.earth.id !== criteria.stem) {
+    return false;
+  }
+
+  if (criteria.directions) {
+    // The centre faces nowhere, so it answers no question about direction —
+    // and there is nothing to walk towards there in any case.
+    if (!cell.palace.direction) return false;
+    if (!criteria.directions.includes(cell.palace.direction)) return false;
+  }
+
+  if (criteria.minStrength) {
+    const floor = STRENGTH_ORDER.indexOf(criteria.minStrength);
+    if (STRENGTH_ORDER.indexOf(cell.starStrength.id) > floor) return false;
+    // A palace with no gate is not held to a condition on gates.
+    if (cell.gateStrength && STRENGTH_ORDER.indexOf(cell.gateStrength.id) > floor) return false;
+  }
+
+  if (criteria.requires || criteria.excludes) {
+    const here = new Set([
+      ...overall,
+      ...chart.patterns
+        .filter((found) => found.palace === cell.palace.number)
+        .map((found) => found.id),
+    ]);
+
+    if (criteria.requires?.some((id) => !here.has(id))) return false;
+    if (criteria.excludes?.some((id) => here.has(id))) return false;
+  }
+
+  return true;
 }

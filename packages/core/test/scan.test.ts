@@ -1,9 +1,11 @@
 import { beforeAll, describe, expect, it } from 'vitest';
+import { translate, type Translator } from '@qimendunjia/i18n';
 import { computeQimenChart } from '../src/dunjia/index.js';
+import { formatScan } from '../src/format.js';
 import { ChartError } from '../src/errors.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
 import { resolveMoment } from '../src/pillars.js';
-import { MAX_SCAN_DAYS, scanCharts, type ScanRun } from '../src/scan.js';
+import { MAX_SCAN_DAYS, matchRuns, scanCharts, type ScanRun } from '../src/scan.js';
 import { solarTermsBetween } from '../src/solar-terms.js';
 import { fromJulianDay } from '../src/time.js';
 import { DEFAULT_OPTIONS, type ChartOptions, type Place } from '../src/types.js';
@@ -155,6 +157,149 @@ describe('scanCharts', () => {
 
     for (const word of ['lucky', 'unlucky', 'favourable', 'auspicious', 'good', 'bad']) {
       expect(serialised.toLowerCase()).not.toContain(word);
+    }
+  });
+});
+
+describe('matchRuns', () => {
+  // Scanned once and shared. Every test here asks a different question of the
+  // same week, and re-walking it for each would be the slowest thing in the
+  // suite by an order of magnitude.
+  let week: ScanRun[];
+  const WEEK = (): ScanRun[] => (week ??= scan('2026-09-01', '2026-09-08'));
+
+  it('answers with every palace when nothing is asked', () => {
+    const runs = WEEK();
+    const matches = matchRuns(runs, {});
+
+    expect(matches).toHaveLength(runs.length);
+    for (const match of matches) expect(match.palaces).toHaveLength(9);
+  });
+
+  it('answers with the palace holding what was named, and only that one', () => {
+    const matches = matchRuns(WEEK(), { gate: 'kaimen' });
+
+    // The open gate stands in exactly one palace of any chart.
+    expect(matches.length).toBeGreaterThan(0);
+    for (const match of matches) {
+      expect(match.palaces).toHaveLength(1);
+      expect(match.palaces[0]?.gate?.id).toBe('kaimen');
+    }
+  });
+
+  it('takes every named condition together, never one at the expense of another', () => {
+    const criteria = { gate: 'kaimen', directions: ['se', 's'] } as const;
+    const matches = matchRuns(WEEK(), criteria);
+
+    for (const match of matches) {
+      for (const cell of match.palaces) {
+        expect(cell.gate?.id).toBe('kaimen');
+        expect(criteria.directions).toContain(cell.palace.direction);
+      }
+    }
+
+    // And it is a narrowing of the looser question, not a different one.
+    const looser = matchRuns(WEEK(), { gate: 'kaimen' });
+    expect(matches.length).toBeLessThan(looser.length);
+  });
+
+  it('never answers with the centre where a direction was asked for', () => {
+    const matches = matchRuns(WEEK(), { directions: ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'] });
+
+    for (const match of matches) {
+      expect(match.palaces.map((cell) => cell.palace.number)).not.toContain(5);
+      expect(match.palaces).toHaveLength(8);
+    }
+  });
+
+  it('admits a state of strength and everything above it', () => {
+    const matches = matchRuns(WEEK(), { minStrength: 'xiang' });
+
+    for (const match of matches) {
+      for (const cell of match.palaces) {
+        expect(['wang', 'xiang']).toContain(cell.starStrength.id);
+        if (cell.gateStrength) expect(['wang', 'xiang']).toContain(cell.gateStrength.id);
+      }
+    }
+
+    // Weaker floors admit more, and the weakest admits everything.
+    const counted = (id: 'wang' | 'xiang' | 'xiu' | 'qiu' | 'si'): number =>
+      matchRuns(WEEK(), { minStrength: id }).reduce((total, m) => total + m.palaces.length, 0);
+    expect(counted('wang')).toBeLessThan(counted('xiang'));
+    expect(counted('xiang')).toBeLessThan(counted('si'));
+  });
+
+  it('rules out a palace the named configuration fell in', () => {
+    const runs = WEEK();
+    const withEmpty = new Set<string>();
+
+    for (const run of runs) {
+      for (const pattern of run.chart.patterns) {
+        if (pattern.id === 'kongwang' && pattern.palace) withEmpty.add(`${run.start}/${pattern.palace}`);
+      }
+    }
+    expect(withEmpty.size).toBeGreaterThan(0);
+
+    for (const match of matchRuns(runs, { excludes: ['kongwang'] })) {
+      for (const cell of match.palaces) {
+        expect(withEmpty.has(`${match.run.start}/${cell.palace.number}`)).toBe(false);
+      }
+    }
+  });
+
+  it('rules out the whole run where the configuration belongs to no palace', () => {
+    const runs = scan('2026-01-01', '2026-02-01');
+    const boards = runs.filter((run) =>
+      run.chart.patterns.some((found) => found.id === 'fuyin' && found.palace === undefined),
+    );
+    expect(boards.length).toBeGreaterThan(0);
+
+    const kept = new Set(matchRuns(runs, { excludes: ['fuyin'] }).map((match) => match.run.start));
+    for (const run of boards) expect(kept.has(run.start)).toBe(false);
+  });
+
+  it('answers with nothing rather than with the nearest thing', () => {
+    // 開門 and 休門 never stand in one palace, so nothing can answer this.
+    // An empty answer is an answer: it says the arrangement did not occur.
+    const impossible = matchRuns(WEEK(), { gate: 'kaimen', star: 'tianpeng', spirit: 'zhifu' });
+    const all = matchRuns(WEEK(), {});
+
+    expect(all.length).toBeGreaterThan(0);
+    expect(impossible.length).toBeLessThan(all.length);
+    for (const match of impossible) {
+      expect(match.palaces[0]?.gate?.id).toBe('kaimen');
+      expect(match.palaces[0]?.star.id).toBe('tianpeng');
+      expect(match.palaces[0]?.spirit?.id).toBe('zhifu');
+    }
+  });
+});
+
+describe('formatScan', () => {
+  const t: Translator = (key, params) => translate('en', key, params);
+
+  it('writes the palace on every line and the hour only on the first of a run', () => {
+    const text = formatScan(matchRuns(scan('2026-09-01', '2026-09-02'), { minStrength: 'xiang' }), t);
+    const rows = text.split('\n').slice(1);
+
+    expect(rows.length).toBeGreaterThan(1);
+    // Every row names a palace by its direction; only some carry a date.
+    const dated = rows.filter((row) => /^\s{2}\d{4}-\d{2}-\d{2}/.test(row));
+    expect(dated.length).toBeGreaterThan(0);
+    expect(dated.length).toBeLessThan(rows.length);
+  });
+
+  it('says that nothing answered rather than printing an empty table', () => {
+    const text = formatScan([], t);
+
+    expect(text).toContain('No palace');
+    expect(text).not.toContain('until');
+  });
+
+  it('carries no verdict about anything it reports', () => {
+    const text = formatScan(matchRuns(scan('2026-09-01', '2026-09-02'), {}), t).toLowerCase();
+
+    for (const word of ['lucky', 'unlucky', 'favourable', 'auspicious', 'best', 'avoid']) {
+      expect(text).not.toContain(word);
     }
   });
 });

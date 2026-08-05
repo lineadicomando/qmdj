@@ -85,7 +85,14 @@ export {
 
 export { resolveMoment, type Moment, type Pillars } from './pillars.js';
 
-export { MAX_SCAN_DAYS, scanCharts, type ScanRun } from './scan.js';
+export {
+  MAX_SCAN_DAYS,
+  matchRuns,
+  scanCharts,
+  type ScanCriteria,
+  type ScanMatch,
+  type ScanRun,
+} from './scan.js';
 
 export { chartLabels, sayBranch, sayGanzhi, type ChartLabels } from './labels.js';
 
@@ -93,6 +100,7 @@ export {
   formatBazi,
   formatMoment,
   formatQimenChart,
+  formatScan,
   formatSolarTerms,
   formatWarnings,
 } from './format.js';

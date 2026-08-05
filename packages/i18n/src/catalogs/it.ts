@@ -260,6 +260,8 @@ export const it: Record<MessageKey, string> = {
   'cli.heading.terms': 'Termini solari del {year}',
   'cli.heading.calendar': 'Data lunare',
   'cli.heading.patterns': 'Configurazioni',
+  'cli.heading.scan': 'Carte dal {from} al {to}',
+  'cli.heading.criteria': 'Richiesto',
   'cli.heading.warnings': 'Avvertenze',
 
   'cli.field.local': 'locale',
@@ -294,6 +296,11 @@ export const it: Record<MessageKey, string> = {
   'cli.column.strength': 'stagione',
   'cli.column.season': 'stagione di',
   'cli.column.age': 'dall\'età',
+  // Il palazzo si nomina con la propria direzione — `label.palace.xun` è
+  // «sudest» — quindi una scansione non ha bisogno di una colonna a parte.
+  'cli.column.from': 'dalle',
+  'cli.column.to': 'fino alle',
+  'cli.column.ju': 'ju',
 
   'cli.value.yangDun': 'dun yang',
   'cli.value.yinDun': 'dun yin',
@@ -301,6 +308,9 @@ export const it: Record<MessageKey, string> = {
   'cli.value.backward': 'all\'indietro',
   'cli.value.leapMonth': 'mese intercalare',
   'cli.value.minutes': '{value} min',
+  'cli.value.nothingAnswered':
+    "Nessun palazzo dell'intervallo risponde a quanto è stato chiesto. Questo dice che la disposizione non si è presentata, e nient'altro.",
+  'cli.value.everyPalace': 'ogni palazzo, nessuna richiesta particolare',
 
   'cli.note.methodOnly':
     'Posta con il metodo chaibu. Altre scuole dispongono altre carte dallo stesso istante.',

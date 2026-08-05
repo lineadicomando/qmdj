@@ -4,6 +4,7 @@ import type { QimenChart } from './dunjia/index.js';
 import type { Ganzhi } from './ganzhi.js';
 import type { LunarDate } from './lunar.js';
 import type { Moment } from './pillars.js';
+import type { ScanMatch } from './scan.js';
 import type { SolarTerm } from './solar-terms.js';
 import { sayGanzhi } from './labels.js';
 import { fromJulianDay } from './time.js';
@@ -212,5 +213,55 @@ export function formatWarnings(moment: Moment, t: Translator): string {
   for (const warning of moment.warnings) {
     lines.push(`  ${t(`core.warning.${warning.code}` as MessageKey, warning.params)}`);
   }
+  return lines.join('\n');
+}
+
+/**
+ * A scan, read out: when each chart holds and which palaces answered.
+ *
+ * The palace leads the line and not the hour, because the answer to *when* is
+ * half an answer. A chart is consulted for a direction as much as for a time,
+ * and a reader handed times alone has been given the part of this tradition
+ * that every other art already has.
+ */
+export function formatScan(matches: readonly ScanMatch[], t: Translator): string {
+  if (matches.length === 0) return `  ${t('cli.value.nothingAnswered')}`;
+
+  // Already local clock time at the place, and already ISO: the date and the
+  // hour are read off it rather than converted through a zone a second time.
+  const clock = (iso: string): string => `${iso.slice(0, 10)} ${iso.slice(11, 16)}`;
+
+  const lines = [
+    `  ${pad(t('cli.column.from'), 18)}${pad(t('cli.column.to'), 18)}${pad(t('cli.column.hour'), 30)}` +
+      `${pad(t('cli.column.ju'), 12)}${pad(t('cli.column.palace'), 22)}${pad(t('cli.column.gate'), 24)}` +
+      `${pad(t('cli.column.star'), 26)}${t('cli.column.spirit')}`,
+  ];
+
+  for (const { run, palaces } of matches) {
+    const dun = run.chart.ju.yang ? t('cli.value.yangDun') : t('cli.value.yinDun');
+    const strong = (state: { id: string } | undefined): string =>
+      state ? ` ${t(`label.strength.${state.id}` as MessageKey)}` : '';
+
+    for (const [index, cell] of palaces.entries()) {
+      // The hour is written once for the run and left blank under itself:
+      // repeating it down the column turns three palaces of one hour into
+      // what reads as three hours.
+      const opens = index === 0 ? clock(run.start) : '';
+      const closes = index === 0 ? clock(run.end) : '';
+      // The pillar in words and then as the pair it is, as every other table
+      // here sets it: 甲寅 alone is a line most readers of this skip.
+      const hour = index === 0 ? ganzhi(run.chart.moment.pillars.hour, t) : '';
+      const ju = index === 0 ? `${dun} ${run.chart.ju.number}` : '';
+
+      lines.push(
+        `  ${pad(opens, 18)}${pad(closes, 18)}${pad(hour, 30)}${pad(ju, 12)}` +
+          `${pad(`${cell.palace.number} ${t(`label.palace.${cell.palace.id}` as MessageKey)} ${cell.palace.hanzi}`, 22)}` +
+          `${pad(cell.gate ? `${t(`label.gate.${cell.gate.id}` as MessageKey)}${strong(cell.gateStrength)}` : '—', 24)}` +
+          `${pad(`${t(`label.star.${cell.star.id}` as MessageKey)}${strong(cell.starStrength)}`, 26)}` +
+          `${cell.spirit ? t(`label.spirit.${cell.spirit.id}` as MessageKey) : '—'}`,
+      );
+    }
+  }
+
   return lines.join('\n');
 }

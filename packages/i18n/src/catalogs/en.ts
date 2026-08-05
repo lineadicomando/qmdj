@@ -279,6 +279,8 @@ export const en = {
   'cli.heading.terms': 'Solar terms of {year}',
   'cli.heading.calendar': 'Lunar date',
   'cli.heading.patterns': 'Configurations',
+  'cli.heading.scan': 'Charts from {from} to {to}',
+  'cli.heading.criteria': 'Asked for',
   'cli.heading.warnings': 'Warnings',
 
   'cli.field.local': 'local',
@@ -313,6 +315,11 @@ export const en = {
   'cli.column.strength': 'season',
   'cli.column.season': 'season of',
   'cli.column.age': 'from age',
+  // The palace names itself by its direction — `label.palace.xun` is
+  // "southeast" — so a scan needs no column of its own for where to face.
+  'cli.column.from': 'from',
+  'cli.column.to': 'until',
+  'cli.column.ju': 'ju',
 
   'cli.value.yangDun': 'yang dun',
   'cli.value.yinDun': 'yin dun',
@@ -320,6 +327,9 @@ export const en = {
   'cli.value.backward': 'running backward',
   'cli.value.leapMonth': 'leap month',
   'cli.value.minutes': '{value} min',
+  'cli.value.nothingAnswered':
+    'No palace in the interval answers what was asked. This says the arrangement did not occur, and nothing else.',
+  'cli.value.everyPalace': 'every palace, nothing asked for in particular',
 
   'cli.note.methodOnly':
     'Cast by the chaibu method. Other schools lay out other charts from the same instant.',
