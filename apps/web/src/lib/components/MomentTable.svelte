@@ -96,7 +96,15 @@
 </table>
 
 <style>
-  table { width: 100%; border-collapse: collapse; }
+  /*
+   * As wide as it needs, never narrower.
+   *
+   * Squeezed into a phone the columns did fit, by breaking "Legno yin · Capra"
+   * over three lines apiece and turning eight rows into a page of confetti.
+   * Inside a scrolling frame the table keeps the width its content asks for
+   * and the reader moves along it; where there is room, it fills it.
+   */
+  table { width: 100%; min-width: max-content; border-collapse: collapse; }
   th, td { text-align: left; padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--rule); vertical-align: baseline; }
   thead th { color: var(--faint); font-weight: 400; font-size: 0.85em; }
   tbody th { font-weight: 400; white-space: nowrap; }

@@ -263,6 +263,21 @@ export const en = {
   'form.scanned': '{runs} charts in the interval, {matched} of them with a palace that answers.',
   'form.openChart': 'the whole board',
 
+  // What the button says about its own state. A form still missing something
+  // says what, in words: a button greyed out with no reason given is a dead
+  // end, and a colour on its own is not a message — it is invisible to a
+  // screen reader and to a good part of the people who can see it.
+  'form.working': 'Working…',
+  'form.needed.date': 'A date is still needed.',
+  'form.needed.interval': 'Both dates of the interval are still needed.',
+  // The same thing `cli.error.genderRequired` says, without naming a command
+  // line option to somebody looking at a form.
+  'form.needed.gender':
+    'The luck cycles need the sex, since the tradition takes their direction from it. Without it the pillars are still complete.',
+  // The date stays operable with the fields closed, so it needs a name of its
+  // own: beside the steps there is no label above it to say what it sets.
+  'form.jumpDate': 'The day the chart is cast for',
+
   // The face of each step is the word, in the reader's language: these are
   // controls, and a control nobody can read is a control nobody can press.
   // Only 時辰 keeps its hanzi beside the word, because only it names

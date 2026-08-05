@@ -55,12 +55,40 @@
 
   // Open unless there is already an answer, which there is when the address
   // carried one: someone who followed a link to a chart came for the chart,
-  // not for the fields that produced it. The initial value is the whole
-  // point — a panel that closed itself on every answer would fight whoever
-  // was still editing.
+  // not for the fields that produced it.
   // svelte-ignore state_referenced_locally
   let open = $state(!closable);
   let panel: HTMLElement | undefined = $state();
+  let reopenButton: HTMLButtonElement | undefined = $state();
+
+  /**
+   * Withdrawing once the question has been asked.
+   *
+   * Called by the page on a submit that answered, and on nothing else. The
+   * distinction is the whole of it: a panel that closed itself on every
+   * *answer* would fight whoever was still editing, since stepping the moment
+   * is an answer too. Closing on the *submit* follows the one gesture that
+   * says the fields are done with.
+   *
+   * A submit that failed leaves it open, because what needs correcting is
+   * inside — and the reader is not asked to reopen a panel to find out why
+   * the page went red.
+   *
+   * Nothing is lost by closing: the fields are refilled from the address, so
+   * reopening finds them exactly as they were sent.
+   */
+  export async function close(): Promise<void> {
+    if (!closable || !open) return;
+
+    open = false;
+    await tick();
+    // The fields are unmounted with the panel, and the focus was on the
+    // button that submitted them: left alone it falls to the body, where a
+    // screen reader loses its place and the keyboard starts again from the
+    // top of the page. It moves to what replaced the fields — which is not
+    // taking a focus from anywhere, since only a submit gets this far.
+    reopenButton?.focus();
+  }
 
   async function reopen(): Promise<void> {
     open = true;
@@ -80,8 +108,10 @@
       {/if}
     {:else}
       <div class="said">
-        <button type="button" class="reopen" onclick={reopen}>{t(reopenLabel)}</button>
-        {#if summary}<p class="summary">{@render summary()}</p>{/if}
+        <button type="button" class="reopen" bind:this={reopenButton} onclick={reopen}>
+          {t(reopenLabel)}
+        </button>
+        {#if summary}<div class="summary">{@render summary()}</div>{/if}
       </div>
       {#if controls}{@render controls()}{/if}
     {/if}
@@ -95,15 +125,24 @@
 </section>
 
 <style>
+  /*
+   * The panel is as wide as what it sits on, open or shut.
+   *
+   * It used to stop at 34rem while open and run the full width once closed,
+   * which made the same box two different objects depending on its state —
+   * and left the fields in a column while the answer under them used
+   * everything. The width is the page's to decide; how the fields fill it is
+   * theirs, and each of them lays out in as many columns as it is given room
+   * for.
+   */
   .panel {
     border: 1px solid var(--rule);
     border-radius: 8px;
     background: var(--tint);
     padding: 1rem 1.1rem 1.2rem;
     margin-bottom: 2rem;
-    max-width: 34rem;
   }
-  .panel.closed { padding: 0.5rem 0.8rem; max-width: none; }
+  .panel.closed { padding: 0.5rem 0.8rem; }
   .bar {
     display: flex;
     align-items: baseline;
@@ -111,7 +150,7 @@
     justify-content: space-between;
     flex-wrap: wrap;
   }
-  .said { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+  .said { display: flex; align-items: center; gap: 0.5rem 1rem; flex-wrap: wrap; }
   h2 { font-size: 0.9rem; font-weight: 400; color: var(--faint); margin: 0 0 0.2rem; }
   .bar button {
     border: 0;
@@ -123,6 +162,23 @@
   }
   .bar button:hover { color: var(--ink); background: none; }
   .reopen { text-decoration: underline; text-underline-offset: 0.2em; }
-  .summary { margin: 0; color: var(--faint); font-size: 0.85em; }
+  .summary {
+    margin: 0;
+    color: var(--faint);
+    font-size: 0.85em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
   form { display: grid; gap: 0.9rem; margin-top: 0.6rem; }
+
+  /*
+   * On a narrow screen the panel is most of the page: the rule and the inset
+   * that separate it from the answer cost more width than they are worth.
+   */
+  @media (max-width: 30rem) {
+    .panel { padding: 0.8rem 0.7rem 0.9rem; margin-bottom: 1.4rem; }
+    .panel.closed { padding: 0.5rem 0.6rem; }
+  }
 </style>

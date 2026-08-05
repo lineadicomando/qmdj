@@ -241,6 +241,13 @@ export const it: Record<MessageKey, string> = {
   'form.scanned': '{runs} carte nell\'intervallo, {matched} con un palazzo che risponde.',
   'form.openChart': 'la scacchiera intera',
 
+  'form.working': 'Calcolo in corso…',
+  'form.needed.date': 'Manca ancora una data.',
+  'form.needed.interval': "Mancano ancora le due date dell'intervallo.",
+  'form.needed.gender':
+    'I cicli decennali richiedono il sesso, perché la tradizione ne trae la direzione. Senza, i pilastri restano comunque completi.',
+  'form.jumpDate': 'Il giorno per cui la carta è posta',
+
   'step.shichen': 'doppia ora',
   'step.day': 'giorno',
   'step.month': 'mese',
