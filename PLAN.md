@@ -445,8 +445,9 @@ never instead of it.
 
 **MCP done; the web application is not yet started.**
 
-`packages/mcp` exposes six tools — `search_location`, `compute_qimen_chart`,
-`compute_bazi`, `draw_qimen_chart`, `solar_terms`, `lunar_date` — and three
+`packages/mcp` exposes seven tools — `search_location`, `compute_qimen_chart`,
+`compute_bazi`, `draw_qimen_chart`, `solar_terms`, `lunar_date`,
+`scan_moments` — and three
 reference resources rendered from the engine's own tables rather than from a
 copy. Tested through a real client over an in-memory transport, so the schemas
 and descriptions asserted are the ones a client actually receives.
@@ -470,8 +471,9 @@ Two findings:
 
 **The web application is done too.**
 
-`apps/web` serves five GET endpoints — `/api/chart`, `/api/bazi`, `/api/terms`,
-`/api/locations`, `/api/chart/plate` — and an interface at `/en` and `/it`.
+`apps/web` serves six GET endpoints — `/api/chart`, `/api/bazi`, `/api/terms`,
+`/api/locations`, `/api/chart/plate`, `/api/moments` — and an interface at
+`/en` and `/it`.
 Every parameter travels in the query string, so a chart is a shareable address
 and the interface and the API read exactly the same one.
 
@@ -574,6 +576,61 @@ the check and never became true. The check exists now — it rasterises the same
 tiny image twice, once holding 休 and once holding nothing, and refuses to
 draw if they come out identical — and it is what turned a silent empty grid
 into a message naming the package to install.
+
+### Phase 8 — Choosing a time
+
+The engine casts a chart for an instant. 擇時擇方 is the other question, and
+the older one: which instants, in a stretch of days, hold which chart, and
+which way to face in them. `scan.ts` walks an interval; `matchRuns` narrows
+it to the palaces answering stated criteria; `qimen scan`, `/api/moments`,
+`/[lang]/moments` and `scan_moments` are the four surfaces of it.
+
+**The palace is the answer, not the run.** An interval does not hold a good
+hour, it holds an hour in which something stands to the southeast. Every
+surface carries the direction, and the MCP description forbids reporting the
+hour alone: drop it and what is left is an almanac that any other art already
+provides.
+
+**Done.** Four findings, the first two of which changed the design:
+
+- **The Moon costs fifty times what the Sun does.** Measured before building:
+  resolving a moment took 2.19 ms, of which the lunar date was 1.61 ms — three
+  quarters of it, for a value no chart cast by 拆補 ever reads. `Moment.lunar`
+  is now computed the first time it is read. A resolve fell to 0.558 ms and a
+  month scans in 1.7 s instead of seven. The memoisation this plan expected to
+  need — caching the solar terms across the interval — would have saved
+  nothing: `sunCrossing` costs 0.035 ms.
+- **A run is not a double hour.** Under 拆補 the yuan turns five days into the
+  term counted from the *instant* the term began, which is not midnight: the
+  third yuan of 處暑 2026 opens on 2 September at 10:18:48, inside the double
+  hour of 巳. So a double hour can open under one ju and close under the next.
+  Probing hourly would have placed that change at 11:00 and claimed for the
+  preceding run forty-two minutes it does not hold; every disagreement between
+  two probes is now bisected to the minute.
+- **A chart shows eight spirits, but which eight depends on the dun.** 勾陳
+  and 朱雀 stand in a yang chart, 白虎 and 玄武 in a yin one — ten in all. Both
+  the web form and the MCP schema were built from `SPIRITS_YANG`, which made
+  白虎 unaskable for half the charts of the year. Caught by the test that keeps
+  `$lib/vocabulary` honest, within a minute of writing it. Hence `SPIRIT_IDS`.
+- **Naming a gate removes no hour.** The open gate stands somewhere in every
+  chart, so a criterion on it narrows the palaces of an hour from nine to one
+  and leaves the hours alone. Hours go only when what is asked can be absent
+  from one: a direction, a floor under the strength, an exclusion. A test
+  asserted the opposite before the engine corrected it.
+
+**No table of purposes**, deliberately. The transmitted mapping from an
+undertaking to its 用神 — the open gate for negotiation, the life gate for
+money — varies by school, and putting one in the engine would make a school
+implicit in it. It belongs in a table with its sources declared and there is
+no such table yet; 三奇得使 is the precedent for saying so rather than
+guessing. The criteria are the layer underneath, so it can be added later
+without moving anything.
+
+**The natal question is not answered here and was never meant to be.**
+Comparing a birth chart against the chart of a moment is a modern and
+minority practice, and where it is done the bridge is the ganzhi rather than
+any geometry between two plates. The scan stands on its own; a natal filter,
+if it ever comes, is a criterion like the others.
 
 ---
 

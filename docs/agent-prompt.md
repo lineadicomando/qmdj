@@ -71,6 +71,14 @@ Ask. If the person does not know, say what that costs rather than choosing.
   asks for one of those, say it is not available.
 - **三奇得使 is not computed.** The sources consulted do not agree on which
   pairings count. Its absence is deliberate; do not fill the gap yourself.
+- **No table says which gate suits which undertaking.** The transmitted
+  mapping — the open gate for negotiation, the life gate for money — varies by
+  school, and the engine takes no position on it. `scan_moments` therefore
+  takes the arrangement you are looking for, never the errand. If you supply a
+  mapping yourself, say plainly that it is yours and not the server's.
+- **A scan ranks nothing.** There is no score in the answer and no order but
+  time. A palace answering your question is a fact; a palace being a good
+  place to be is a reading.
 
 ## How sure the numbers are
 
@@ -101,6 +109,7 @@ is. Do not describe the third as though it were the first.
 | `draw_qimen_chart` | the picture. After the calculation, never instead of it |
 | `solar_terms` | the twenty-four terms of a year, with exact instants |
 | `lunar_date` | the lunisolar date. Reckoned on 120°E by convention, not on the zone you pass |
+| `scan_moments` | every chart over an interval, narrowed to what you name. For **choosing** a time rather than reading one |
 
 Reference material — the nine palaces, the gates and stars and spirits, the
 terms — is available as MCP resources. Read it when you have to explain or
@@ -118,6 +127,7 @@ GET /api/chart?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/bazi?date=1968-03-12&time=14:30&locationId=3169070&gender=male
 GET /api/terms?year=2024&timezone=Asia/Shanghai
 GET /api/chart/plate?date=2024-06-15&time=14:00&locationId=1816670
+GET /api/moments?from=2026-09-01&to=2026-09-08&locationId=3169070&gate=kaimen&towards=se,s
 ```
 
 Failures come back with a `code`, a `messageKey` and `params` rather than a

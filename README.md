@@ -34,6 +34,7 @@ compatible with it. The GeoNames data is CC BY 4.0.
 | Lunar calendar | months, intercalary months, lunar dates, reckoned on 120°E |
 | Four pillars | 四柱 with 藏干, 十神, 納音, 十二長生, 空亡, 大運 |
 | Qi Men charts | 時家 by the 拆補 method: four plates, configurations, seasonal states |
+| Choosing a time | 擇時擇方: every chart over an interval, narrowed to the palaces answering stated criteria |
 
 It does **not** interpret. It reports that a gate stands over a palace whose
 phase it controls and that the configuration is called 門迫; what that means
@@ -47,8 +48,8 @@ belongs to whoever reads it. See [`docs/agent-prompt.md`](docs/agent-prompt.md).
 | `packages/geo` | location lookup over a local GeoNames dataset (SQLite) |
 | `packages/core` | the engine, and the `qimen` command |
 | `packages/plate` | the drawing: nine palaces, SVG and PNG |
-| `packages/mcp` | MCP server, six tools, stdio |
-| `apps/web` | SvelteKit: interface at `/en` and `/it`, five endpoints under `/api` |
+| `packages/mcp` | MCP server, seven tools, stdio |
+| `apps/web` | SvelteKit: interface at `/en` and `/it`, six endpoints under `/api` |
 
 npm workspaces, Node ≥ 22, ESM, TypeScript.
 
@@ -75,6 +76,7 @@ qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lang en
 qimen bazi  --date 1968-03-12 --time 14:30 --tz Europe/Rome --gender male
 qimen terms --year 2024 --tz Asia/Shanghai
 qimen calendar --date 2023-04-01
+qimen scan  --date 2026-09-01 --until 2026-09-08 --tz Europe/Rome --gate kaimen --towards se,s
 
 npm run dev -w @qimendunjia/web    # http://localhost:5173
 npm start   -w @qimendunjia/web    # http://localhost:3000, after build
@@ -87,6 +89,13 @@ reproducible — the interface included: `/it?date=1984-03-12&time=07:30&
 locationId=1816670` is a chart, a link, and the same query string the API
 takes. Which is also how the moment follows a reader from the chart to the
 four pillars and back.
+
+The third section is the other question. The chart and the pillars ask what
+stands *now*; `/it/moments` asks *when, in a stretch of days, does a thing
+stand — and which way is it*. That second half is not decoration: a chart is
+consulted for a direction as much as for an hour, and an answer of times
+alone would have thrown away what this art has and the others do not. Each
+row links back to the whole board for its hour.
 
 One exception, and it is the same rule read carefully: an address that does
 not say *when* means now, and now is a different answer every hour. Those are
