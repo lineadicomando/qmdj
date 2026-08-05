@@ -34,6 +34,8 @@ export const it: Record<MessageKey, string> = {
   'core.warning.MOSHIER_FALLBACK':
     'File di effemeridi non trovati in {path}: uso le effemeridi Moshier, che non richiedono file e sono accurate a circa un decimo di secondo d\'arco. Esegui `npm run ephe:download -w @qimendunjia/core` per i file completi.',
 
+  'web.error.UNKNOWN_LOCATION': 'Nessun luogo ha l\'identificatore {id}.',
+
   'label.stem.jia': 'Legno yang',
   'label.stem.yi': 'Legno yin',
   'label.stem.bing': 'Fuoco yang',

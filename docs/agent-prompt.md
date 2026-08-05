@@ -113,6 +113,7 @@ a shareable address.
 
 ```
 GET /api/locations?q=Beijing&lang=en
+GET /api/locations?id=1816670&lang=en          # the way back from an address
 GET /api/chart?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/bazi?date=1968-03-12&time=14:30&locationId=3169070&gender=male
 GET /api/terms?year=2024&timezone=Asia/Shanghai

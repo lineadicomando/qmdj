@@ -161,6 +161,41 @@ describe('GET /api/locations', () => {
     expect(status).toBe(400);
     expect(body).toMatchObject({ code: 'EMPTY_QUERY' });
   });
+
+  it('finds a place by identifier, in the shape a search answers in', async () => {
+    // An address carries the identifier and not the name: this is what lets a
+    // form reopen with the place still chosen.
+    const { body } = await call(locations, 'q=Rome');
+    const rome = (body as { results: { id: number; name: string }[] }).results[0];
+
+    const again = await call(locations, `id=${rome.id}`);
+    const results = (again.body as { results: { id: number; name: string }[] }).results;
+
+    expect(results).toHaveLength(1);
+    expect(results[0]).toMatchObject({ id: rome.id, name: rome.name });
+  });
+
+  it('answers an identifier in the language asked for', async () => {
+    const { body } = await call(locations, 'q=Munich&lang=it');
+    const munich = (body as { results: { id: number }[] }).results[0];
+
+    const { body: italian } = await call(locations, `id=${munich.id}&lang=it`);
+
+    expect((italian as { results: { name: string }[] }).results[0]?.name).toBe(
+      'Monaco di Baviera',
+    );
+  });
+
+  it('says a place is unknown with a code, not with an empty list', async () => {
+    const { status, body } = await call(locations, 'id=0');
+
+    expect(status).toBe(404);
+    expect(body).toMatchObject({
+      code: 'UNKNOWN_LOCATION',
+      messageKey: 'web.error.UNKNOWN_LOCATION',
+      params: { id: '0' },
+    });
+  });
 });
 
 describe('GET /api/chart/plate', () => {

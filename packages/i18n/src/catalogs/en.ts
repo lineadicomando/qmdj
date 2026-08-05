@@ -45,6 +45,8 @@ export const en = {
   'core.warning.MOSHIER_FALLBACK':
     'Ephemeris files not found in {path}: using the Moshier ephemeris, which needs no files and is accurate to about a tenth of an arc second. Run `npm run ephe:download -w @qimendunjia/core` for the full files.',
 
+  'web.error.UNKNOWN_LOCATION': 'No place has the identifier {id}.',
+
   'label.stem.jia': 'Yang Wood',
   'label.stem.yi': 'Yin Wood',
   'label.stem.bing': 'Yang Fire',
