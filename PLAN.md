@@ -493,6 +493,22 @@ Three things worth keeping:
   404 rather than a silent fallback — which would make `/fr` and `/en` the
   same page under two names.
 
+**The address is the chart — now for the interface too.**
+
+The claim above was true of the API and false of the pages: the parameters
+went into the `fetch` and the address stayed `/it`. So a link was not a chart,
+a reload lost the moment, and the two sections could not hand one to each
+other. The load functions now read the address and casting is navigating, so
+all three come from the same code — and the privacy note, which said the
+parameters travel in the address, describes what happens.
+
+That is also why the moment is not kept in `localStorage`: the note says
+nothing typed is stored, and a birth date on disk would be a different promise
+than the one already published.
+
+`/api/locations?id=` exists for the way back — an address carries an
+identifier and a form reopening from one needs the name again.
+
 ### Phase 7 — Distribution and documentation
 
 Multi-stage `Dockerfile` and `compose.yaml` on the reference's model: a single

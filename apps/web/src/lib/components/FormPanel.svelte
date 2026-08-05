@@ -28,7 +28,13 @@
 
   let { t, closable = false, onsubmit, fields, summary }: Props = $props();
 
-  let open = $state(true);
+  // Open unless there is already an answer, which there is when the address
+  // carried one: someone who followed a link to a chart came for the chart,
+  // not for the fields that produced it. The initial value is the whole
+  // point — a panel that closed itself on every answer would fight whoever
+  // was still editing.
+  // svelte-ignore state_referenced_locally
+  let open = $state(!closable);
   let panel: HTMLElement | undefined = $state();
 
   async function reopen(): Promise<void> {

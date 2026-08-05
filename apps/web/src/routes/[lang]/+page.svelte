@@ -1,6 +1,9 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
+  import { page } from '$app/state';
   import type { MessageKey } from '@qimendunjia/i18n';
   import { appearance } from '$lib/appearance.svelte';
+  import { momentQuery, sayFailure, type MomentInput } from '$lib/moment';
   import FormPanel from '$lib/components/FormPanel.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
   import PalaceTable from '$lib/components/PalaceTable.svelte';
@@ -8,52 +11,51 @@
   let { data } = $props();
   const t = $derived(data.t);
 
-  let date = $state('');
-  let time = $state('');
-  let place = $state<any>(undefined);
-  let trueSolarTime = $state(true);
-  let dayBoundary = $state('zishi');
+  /**
+   * The fields are edited, so they are state; the address is what they were
+   * last asked as, so arriving at one puts them back.
+   */
+  // svelte-ignore state_referenced_locally
+  let asked = $state<MomentInput>({ ...data.moment });
+  $effect(() => {
+    asked = { ...data.moment };
+  });
 
-  let chart = $state<any>(undefined);
-  let failure = $state('');
+  const chart = $derived(data.chart);
+  const failure = $derived(data.failure ? sayFailure(t, data.failure) : '');
+
+  // The picture answers for the moment that was cast, not for the one being
+  // typed: it is the same address the data came from.
+  const plate = $derived(
+    `/api/chart/plate?${momentQuery(data.moment, { lang: t.locale, scheme: appearance.current })}`,
+  );
+
   let busy = $state(false);
 
   /**
-   * The address is the chart.
+   * Asking is navigating, and the answer arrives as the page's own data.
    *
-   * Every parameter goes in the query string, so a chart can be linked and
-   * reopened. It is also exactly what the API takes, which is why there is no
-   * second shape to keep in step.
+   * `replaceState`: a moment gets stepped a dozen times in a row, and a back
+   * button that has to walk back through every one of them is a back button
+   * nobody can use. Back leaves the chart, which is what a reader means by it.
    */
-  function query(): string {
-    const params = new URLSearchParams({ lang: t.locale });
-    if (date) params.set('date', date);
-    if (time) params.set('time', time);
-    if (place) params.set('locationId', String(place.id));
-    if (!trueSolarTime) params.set('trueSolarTime', 'false');
-    if (dayBoundary !== 'zishi') params.set('dayBoundary', dayBoundary);
-    return params.toString();
-  }
-
-  async function cast(event: SubmitEvent): Promise<void> {
-    event.preventDefault();
+  async function show(next: MomentInput): Promise<void> {
+    const query = momentQuery(next);
     busy = true;
-    failure = '';
     try {
-      const response = await fetch(`/api/chart?${query()}`);
-      const body = await response.json();
-      if (!response.ok) {
-        // The engine sent a code; translating it is what the catalog is for.
-        failure = body.messageKey ? t(body.messageKey as MessageKey, body.params ?? {}) : body.message;
-        chart = undefined;
-        return;
-      }
-      chart = body.chart;
-    } catch (error) {
-      failure = error instanceof Error ? error.message : String(error);
+      await goto(`${page.url.pathname}${query ? `?${query}` : ''}`, {
+        replaceState: true,
+        noScroll: true,
+        keepFocus: true,
+      });
     } finally {
       busy = false;
     }
+  }
+
+  function submit(event: SubmitEvent): void {
+    event.preventDefault();
+    void show(asked);
   }
 </script>
 
@@ -61,13 +63,22 @@
 
 <h1>{t('cli.heading.chart')}</h1>
 
-<FormPanel {t} closable={chart !== undefined} onsubmit={cast}>
+<FormPanel {t} closable={chart !== undefined} onsubmit={submit}>
   {#snippet fields()}
-    <MomentForm {t} bind:date bind:time bind:place bind:trueSolarTime bind:dayBoundary />
+    <MomentForm
+      {t}
+      bind:date={asked.date}
+      bind:time={asked.time}
+      bind:place={asked.place}
+      bind:trueSolarTime={asked.trueSolarTime}
+      bind:dayBoundary={asked.dayBoundary}
+    />
     <button type="submit" disabled={busy}>{t('cli.heading.chart')}</button>
   {/snippet}
   {#snippet summary()}
-    {date || '—'} {time} {place ? `· ${place.name}` : ''}
+    {data.moment.date || '—'}
+    {data.moment.time}
+    {data.moment.place ? `· ${data.moment.place.name}` : ''}
   {/snippet}
 </FormPanel>
 
@@ -77,12 +88,7 @@
   <section class="result">
     <!-- The picture and the data together: a drawing carries the glyphs but
          not the warnings, so it is never shown on its own. -->
-    <img
-      src="/api/chart/plate?{query()}&scheme={appearance.current}"
-      alt=""
-      width="640"
-      height="640"
-    />
+    <img src={plate} alt="" width="640" height="640" />
 
     <div>
       <p class="ju">

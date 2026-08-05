@@ -6,8 +6,16 @@ export const SECTIONS: readonly { slug: string; label: MessageKey }[] = [
   { slug: 'bazi', label: 'nav.bazi' },
 ];
 
-export function href(locale: string, slug: string): string {
-  return slug ? `/${locale}/${slug}` : `/${locale}`;
+/**
+ * `search` carries the moment across.
+ *
+ * The two sections ask different questions of the same instant, and someone
+ * who has just cast a chart and wants the pillars of it should not have to
+ * type the date, the time and the place again. Parameters the other section
+ * has no use for are harmless: an endpoint reads what it knows.
+ */
+export function href(locale: string, slug: string, search = ''): string {
+  return `${slug ? `/${locale}/${slug}` : `/${locale}`}${search}`;
 }
 
 /**

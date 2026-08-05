@@ -1,40 +1,44 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
+  import { page } from '$app/state';
   import type { MessageKey } from '@qimendunjia/i18n';
+  import { momentQuery, sayFailure, type MomentInput } from '$lib/moment';
   import FormPanel from '$lib/components/FormPanel.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
 
   let { data } = $props();
   const t = $derived(data.t);
 
-  let date = $state('');
-  let time = $state('');
-  let place = $state<any>(undefined);
-  let gender = $state('');
-  let trueSolarTime = $state(true);
-  let dayBoundary = $state('zishi');
+  // The fields are edited, so they are state; the address is what they were
+  // last asked as, so arriving at one puts them back.
+  // svelte-ignore state_referenced_locally
+  let asked = $state<MomentInput>({ ...data.moment });
+  // svelte-ignore state_referenced_locally
+  let gender = $state(data.gender);
+  $effect(() => {
+    asked = { ...data.moment };
+    gender = data.gender;
+  });
 
-  let result = $state<any>(undefined);
-  let failure = $state('');
+  const result = $derived(data.result);
+  const failure = $derived(data.failure ? sayFailure(t, data.failure) : '');
 
-  async function compute(event: SubmitEvent): Promise<void> {
+  let busy = $state(false);
+
+  /** Reading is navigating: the address holds the moment, here and on the chart. */
+  async function submit(event: SubmitEvent): Promise<void> {
     event.preventDefault();
-    const params = new URLSearchParams({ lang: t.locale });
-    if (date) params.set('date', date);
-    if (time) params.set('time', time);
-    if (place) params.set('locationId', String(place.id));
-    if (gender) params.set('gender', gender);
-    if (!trueSolarTime) params.set('trueSolarTime', 'false');
-    if (dayBoundary !== 'zishi') params.set('dayBoundary', dayBoundary);
-
-    failure = '';
-    const response = await fetch(`/api/bazi?${params}`);
-    const body = await response.json();
-    if (!response.ok) {
-      failure = body.messageKey ? t(body.messageKey as MessageKey, body.params ?? {}) : body.message;
-      result = undefined;
-      return;
+    busy = true;
+    try {
+      const query = momentQuery(asked, { gender });
+      await goto(`${page.url.pathname}${query ? `?${query}` : ''}`, {
+        replaceState: true,
+        noScroll: true,
+        keepFocus: true,
+      });
+    } finally {
+      busy = false;
     }
-    result = body;
   }
 
   const say = (pair: any): string =>
@@ -45,9 +49,16 @@
 
 <h1>{t('cli.heading.pillars')}</h1>
 
-<FormPanel {t} closable={result !== undefined} onsubmit={compute}>
+<FormPanel {t} closable={result !== undefined} onsubmit={submit}>
   {#snippet fields()}
-    <MomentForm {t} bind:date bind:time bind:place bind:trueSolarTime bind:dayBoundary />
+    <MomentForm
+      {t}
+      bind:date={asked.date}
+      bind:time={asked.time}
+      bind:place={asked.place}
+      bind:trueSolarTime={asked.trueSolarTime}
+      bind:dayBoundary={asked.dayBoundary}
+    />
     <label>
       <!-- Asked for, never assumed: only the direction of the cycles needs it. -->
       {t('cli.heading.luck')}
@@ -57,10 +68,12 @@
         <option value="female">female</option>
       </select>
     </label>
-    <button type="submit">{t('cli.heading.reading')}</button>
+    <button type="submit" disabled={busy}>{t('cli.heading.reading')}</button>
   {/snippet}
   {#snippet summary()}
-    {date || '—'} {time} {place ? `· ${place.name}` : ''}
+    {data.moment.date || '—'}
+    {data.moment.time}
+    {data.moment.place ? `· ${data.moment.place.name}` : ''}
   {/snippet}
 </FormPanel>
 

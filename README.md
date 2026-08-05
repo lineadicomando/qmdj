@@ -83,7 +83,10 @@ npm start   -w @qimendunjia/mcp    # MCP on stdio
 
 Every surface takes the same parameters and answers the same way. A chart is a
 pure function of its input, so the web address of one is shareable and
-reproducible.
+reproducible — the interface included: `/it?date=1984-03-12&time=07:30&
+locationId=1816670` is a chart, a link, and the same query string the API
+takes. Which is also how the moment follows a reader from the chart to the
+four pillars and back.
 
 ## Docker
 

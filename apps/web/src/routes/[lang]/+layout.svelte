@@ -26,7 +26,7 @@
           {@const current = isCurrent(t.locale, section.slug, page.url.pathname)}
           <li>
             <a
-              href={href(t.locale, section.slug)}
+              href={href(t.locale, section.slug, page.url.search)}
               aria-current={current ? 'page' : undefined}
               class:current
             >

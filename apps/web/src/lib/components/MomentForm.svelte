@@ -1,19 +1,20 @@
 <script lang="ts">
   import type { Translator } from '@qimendunjia/i18n';
+  import type { Location } from '$lib/moment';
   import LocationSearch from './LocationSearch.svelte';
 
   let {
     t,
     date = $bindable(''),
     time = $bindable(''),
-    place = $bindable<any>(undefined),
+    place = $bindable<Location | undefined>(undefined),
     trueSolarTime = $bindable(true),
     dayBoundary = $bindable('zishi'),
   }: {
     t: Translator;
     date?: string;
     time?: string;
-    place?: any;
+    place?: Location | undefined;
     trueSolarTime?: boolean;
     dayBoundary?: string;
   } = $props();

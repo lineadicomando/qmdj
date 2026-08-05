@@ -1,22 +1,14 @@
 <script lang="ts">
   import type { Translator } from '@qimendunjia/i18n';
-
-  interface Candidate {
-    id: number;
-    name: string;
-    region?: string;
-    country: string;
-    timezone: string;
-    population: number;
-  }
+  import type { Location } from '$lib/moment';
 
   let {
     t,
-    selected = $bindable<Candidate | undefined>(undefined),
-  }: { t: Translator; selected?: Candidate | undefined } = $props();
+    selected = $bindable<Location | undefined>(undefined),
+  }: { t: Translator; selected?: Location | undefined } = $props();
 
   let query = $state('');
-  let candidates = $state<Candidate[]>([]);
+  let candidates = $state<Location[]>([]);
   let searching = $state(false);
   let timer: ReturnType<typeof setTimeout> | undefined;
 
@@ -41,14 +33,14 @@
         const response = await fetch(
           `/api/locations?q=${encodeURIComponent(text)}&lang=${t.locale}`,
         );
-        candidates = response.ok ? ((await response.json()).results as Candidate[]) : [];
+        candidates = response.ok ? ((await response.json()).results as Location[]) : [];
       } finally {
         searching = false;
       }
     }, 180);
   }
 
-  function choose(candidate: Candidate): void {
+  function choose(candidate: Location): void {
     selected = candidate;
     candidates = [];
     query = '';
