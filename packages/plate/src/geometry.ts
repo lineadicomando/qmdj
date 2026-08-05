@@ -25,23 +25,41 @@ export function cells(): Cell[] {
   }));
 }
 
+/**
+ * One thing standing in a palace: the name, and the word that renders it.
+ *
+ * Two baselines rather than one line carrying both. Set side by side they
+ * compete for a width that is half a palace wide, and the longer word wins by
+ * shrinking the glyph it was supposed to gloss; stacked, each gets the whole
+ * column and the glyph keeps its size whatever language the reader asked for.
+ */
+export interface Register {
+  /** Baseline of the name, set large. */
+  glyph: number;
+  /** Baseline of the word under it, set small. */
+  word: number;
+}
+
 export interface Layout {
   size: number;
   /** Space around the grid, which the captions live in. */
   margin: number;
   /** Side of one palace. */
   cell: number;
+  /** Centres of the two columns, as fractions of the side. */
+  column: { left: number; right: number };
+  /** Widest a line inside a column may be, as a fraction of the side. */
+  columnWidth: number;
   /** Baselines within a cell, as fractions of its side. */
   line: {
-    name: number;
-    spirit: number;
-    star: number;
-    gate: number;
-    heaven: number;
-    earth: number;
+    /** The Luoshu number, in the corner. */
+    number: number;
+    /** Three registers to a column, read top to bottom. */
+    row: readonly [Register, Register, Register];
+    /** Whatever configurations fell here, along the foot. */
     marks: number;
   };
-  font: { glyph: number; small: number; caption: number };
+  font: { glyph: number; word: number; number: number; caption: number };
 }
 
 /**
@@ -49,22 +67,41 @@ export interface Layout {
  * drawing and nothing has to be re-tuned.
  */
 export function layout(size: number, hasCaptions: boolean): Layout {
-  const margin = hasCaptions ? size * 0.11 : size * 0.03;
+  const margin = hasCaptions ? size * 0.085 : size * 0.03;
   const cell = (size - margin * 2) / 3;
 
   return {
     size,
     margin,
     cell,
-    // Seven registers, read top to bottom: the palace names itself, then the
-    // spirit, the star, the gate, and the two plates with heaven always above
-    // earth. The last is for whatever configurations fell here.
-    //
-    // The spacing has to hold a word, not two hanzi. Two glyphs sit in a
-    // quarter of the width and a word can fill it, so the rows are further
-    // apart and the corner label is clear of the row below it.
-    line: { name: 0.13, spirit: 0.27, star: 0.43, gate: 0.575, heaven: 0.735, earth: 0.875, marks: 0.965 },
-    font: { glyph: cell * 0.135, small: cell * 0.105, caption: size * 0.026 },
+    // Two columns, three registers each. On the left the board as it was
+    // dealt — the two plates, then the palace itself; on the right what came
+    // to stand over it — the spirit, the star, the gate. Every palace puts
+    // the same thing in the same place, so the reader stops reading labels
+    // and starts reading positions.
+    column: { left: 0.27, right: 0.73 },
+    columnWidth: 0.42,
+    // The registers are spaced for the worst case, which is a word that went
+    // to a second line: 巽 has one word under it and 坤 has "Guerriero
+    // Oscuro", and the two have to be laid out alike or the palaces stop
+    // lining up. Two lines under every name, then, whether or not the word
+    // takes them — the air is what the crowded palace needs, and the empty
+    // one does not mind having it.
+    line: {
+      number: 0.07,
+      row: [
+        { glyph: 0.23, word: 0.295 },
+        { glyph: 0.485, word: 0.55 },
+        { glyph: 0.74, word: 0.805 },
+      ],
+      marks: 0.95,
+    },
+    font: {
+      glyph: cell * 0.12,
+      word: cell * 0.055,
+      number: cell * 0.07,
+      caption: size * 0.021,
+    },
   };
 }
 

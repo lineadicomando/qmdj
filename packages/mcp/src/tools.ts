@@ -309,7 +309,7 @@ export function registerDrawQimenChart(server: McpServer, context: ToolContext):
         time: timeSchema,
         ...placeSchema,
         ...optionSchema,
-        size: z.number().int().min(240).max(2048).optional().describe('Side in pixels. Default 640.'),
+        size: z.number().int().min(240).max(2048).optional().describe('Side in pixels. Default 900.'),
         lang: langSchema,
       },
     },
@@ -332,7 +332,7 @@ export function registerDrawQimenChart(server: McpServer, context: ToolContext):
           .join(' / ');
 
         const svg = renderChartSvg(chart, {
-          size: args.size ?? 640,
+          size: args.size ?? 900,
           // The palaces are written in words, each beside the name it
           // renders — the same drawing the web surface serves.
           labels,

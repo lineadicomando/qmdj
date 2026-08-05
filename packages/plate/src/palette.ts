@@ -19,6 +19,19 @@ export interface Palette {
   ground: string;
   /** One faint tint per phase, keyed by the engine's identifiers. */
   element: Record<string, string>;
+  /**
+   * The same five phases at ink strength, for the glyphs that *are* a phase.
+   *
+   * A stem is its phase — 丙 is fire, not a thing that happens to be filed
+   * under fire — and the relation between the two stems standing in a palace
+   * is the first thing anyone reads off a chart. Written in the phase's own
+   * colour that relation is visible before a single character is; written in
+   * plain ink it has to be looked up twice and held in the head.
+   *
+   * Only the phases are coloured, and only where the glyph is one. Everything
+   * else stays ink: five colours is a vocabulary, twelve is a decoration.
+   */
+  elementInk: Record<string, string>;
   /** Where a configuration is marked. */
   mark: string;
 }
@@ -36,6 +49,16 @@ export const PALETTES: Record<Scheme, Palette> = {
       jin: '#eff1f4',
       shui: '#e9eef3',
     },
+    // Metal is white and water is black in the tradition, and neither is
+    // legible as ink on paper. They are taken here at the nearest thing the
+    // eye still files under the phase: steel, and deep blue.
+    elementInk: {
+      mu: '#2f6b3a',
+      huo: '#a5372a',
+      tu: '#8a6620',
+      jin: '#556170',
+      shui: '#2a4c7d',
+    },
     mark: '#9a5b3d',
   },
   dark: {
@@ -50,30 +73,27 @@ export const PALETTES: Record<Scheme, Palette> = {
       jin: '#191c20',
       shui: '#161d24',
     },
+    elementInk: {
+      mu: '#87bb8b',
+      huo: '#dd8f80',
+      tu: '#d0af66',
+      jin: '#a6b3c0',
+      shui: '#86a9d6',
+    },
     mark: '#c98a63',
   },
 };
 
-const VARIABLES = [
-  'ink',
-  'faint',
-  'rule',
-  'ground',
-  'mark',
-  'element-mu',
-  'element-huo',
-  'element-tu',
-  'element-jin',
-  'element-shui',
-] as const;
+const PHASES = ['mu', 'huo', 'tu', 'jin', 'shui'] as const;
+
+const FLAT = ['ink', 'faint', 'rule', 'ground', 'mark'] as const;
 
 function declarations(palette: Palette): string {
-  return VARIABLES.map((name) => {
-    const value = name.startsWith('element-')
-      ? (palette.element[name.slice('element-'.length)] as string)
-      : (palette[name as 'ink' | 'faint' | 'rule' | 'ground' | 'mark'] as string);
-    return `--qmdj-${name}: ${value};`;
-  }).join(' ');
+  return [
+    ...FLAT.map((name) => `--qmdj-${name}: ${palette[name]};`),
+    ...PHASES.map((phase) => `--qmdj-element-${phase}: ${palette.element[phase] as string};`),
+    ...PHASES.map((phase) => `--qmdj-ink-${phase}: ${palette.elementInk[phase] as string};`),
+  ].join(' ');
 }
 
 /**

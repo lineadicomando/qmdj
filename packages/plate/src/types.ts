@@ -48,6 +48,12 @@ export interface PlatePalace {
 export interface Named {
   hanzi: string;
   id: string;
+  /**
+   * The phase, where the thing named *is* one — a stem, a trigram. Absent on
+   * a star or a gate, which have a phase only by way of the palace they rest
+   * in, and are drawn in plain ink because of it.
+   */
+  element?: string | undefined;
 }
 
 export interface PlatePattern {
@@ -96,7 +102,13 @@ export interface PlateCaptions {
 }
 
 export interface PlateOptions {
-  /** Side of the square, in pixels. Default 640. */
+  /**
+   * Side of the square, in pixels. Default 900.
+   *
+   * The drawing is proportional throughout, so this settles its intrinsic
+   * size and nothing else: the same words wrap and the same words are shrunk
+   * at every value. Asking for more does not buy a roomier palace.
+   */
   size?: number;
   /**
    * `light`, `dark`, or `auto` — which emits both and lets the page choose.

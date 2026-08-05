@@ -3,6 +3,15 @@ import { WRITTEN_ORDER, cells } from '../src/geometry.js';
 import { renderChartSvg } from '../src/svg.js';
 import type { PlateChart } from '../src/types.js';
 
+/** A stem *is* a phase, and a real `Stem` says which. So does the fixture. */
+const STEM_ELEMENT: Record<string, string> = {
+  jia: 'mu', yi: 'mu',
+  bing: 'huo', ding: 'huo',
+  wu: 'tu', ji: 'tu',
+  geng: 'jin', xin: 'jin',
+  ren: 'shui', gui: 'shui',
+};
+
 /**
  * A chart built by hand rather than computed: this package draws what it is
  * handed and must be testable without the engine anywhere near it.
@@ -66,8 +75,8 @@ function cell(
 ) {
   return {
     palace: { number, hanzi, id: palaceId, element },
-    earth: { hanzi: earth, id: earthId },
-    heaven: { hanzi: heaven, id: heavenId },
+    earth: { hanzi: earth, id: earthId, element: STEM_ELEMENT[earthId] },
+    heaven: { hanzi: heaven, id: heavenId, element: STEM_ELEMENT[heavenId] },
     star: { hanzi: star, id: starId },
     starStrength: { hanzi: starStrength, id: starStrengthId },
     gate: { hanzi: gate, id: gateId },
@@ -126,7 +135,7 @@ describe('renderChartSvg', () => {
     expect(svg).not.toContain('伏吟');
   });
 
-  it('writes a word beside the name it renders, never instead of it', () => {
+  it('writes the word under the name it renders, never instead of it', () => {
     const worded = renderChartSvg(CHART, {
       labels: {
         palace: { kan: 'north' },
@@ -139,12 +148,70 @@ describe('renderChartSvg', () => {
     expect(worded).toContain('Rest');
     expect(worded).toContain('Yin Earth');
     // 休門 is not the Chinese for "Rest": it is what the gate is called, and
-    // it stays on the board whatever language the reader is given.
-    expect(worded).toMatch(/>Rest<tspan[^>]*>[\s\S]?休門/);
-    // The name is set smaller than the word, and fainter.
-    expect(worded).toMatch(/<tspan class="faint" font-size="[\d.]+">[\s\S]?休門/);
+    // it stays on the board whatever language the reader is given. It leads,
+    // set large, and the word sits under it — same column, fainter, smaller.
+    const gate = /<text x="([\d.]+)" y="([\d.]+)" font-size="([\d.]+)"[^>]*>休門/.exec(worded);
+    const word = /<text x="([\d.]+)" y="([\d.]+)" class="faint" font-size="([\d.]+)"[^>]*>Rest/.exec(
+      worded,
+    );
+
+    expect(gate).not.toBeNull();
+    expect(word).not.toBeNull();
+    expect(word?.[1]).toBe(gate?.[1]);
+    expect(Number(word?.[2])).toBeGreaterThan(Number(gate?.[2]));
+    expect(Number(word?.[3])).toBeLessThan(Number(gate?.[3]));
     // What it was not given a word for stands as its name alone.
     expect(worded).toContain('值符');
+  });
+
+  it('lays a palace out in two columns, the plates apart from what stands over them', () => {
+    // One palace on the board, so that a glyph standing in two of them
+    // cannot be mistaken for the one being measured.
+    const alone = CHART.palaces.find((each) => each.palace.number === 6);
+    const svg = renderChartSvg({ ...CHART, palaces: [alone as (typeof CHART.palaces)[number]] });
+    const place = (hanzi: string): { x: number; y: number } => {
+      const found = new RegExp(`<text x="([\\d.]+)" y="([\\d.]+)"[^>]*>(<tspan[^>]*>)?${hanzi}`).exec(svg);
+      return { x: Number(found?.[1]), y: Number(found?.[2]) };
+    };
+
+    // 丁 on the earth plate, 辛 on the heaven plate, 天沖 the star, 開門 the
+    // gate. The two plates share a column, heaven above earth; the star and
+    // the gate share the other; every palace puts them in the same place.
+    expect(place('丁').x).toBe(place('辛').x);
+    expect(place('辛').y).toBeLessThan(place('丁').y);
+    expect(place('天沖').x).toBe(place('開門').x);
+    expect(place('丁').x).toBeLessThan(place('天沖').x);
+    // The trigram closes the plates' column rather than starting a third.
+    expect(place('乾').x).toBe(place('丁').x);
+  });
+
+  it('writes a stem in the colour of its phase, and everything else in ink', () => {
+    const svg = renderChartSvg(CHART, { size: 900 });
+    const sheet = svg.slice(0, svg.indexOf('</style>'));
+
+    // The relation between the two stems standing in a palace is the first
+    // thing read off a chart, and in one colour it has to be looked up twice.
+    expect(svg).toContain('<tspan class="huo">丁</tspan>');
+    expect(svg).toContain('<tspan class="shui">壬</tspan>');
+    expect(sheet).toContain('--qmdj-ink-huo');
+    // A star has a phase only by way of the palace it rests in, so it is not
+    // given one here: five colours is a vocabulary, twelve is a decoration.
+    expect(svg).toMatch(/<text[^>]*>天沖/);
+  });
+
+  it('wraps a word too long for its column instead of shrinking it', () => {
+    const size = (svg: string, word: string): number =>
+      Number(new RegExp(`<text x="[\\d.]+" y="[\\d.]+" class="faint" font-size="([\\d.]+)"[^>]*>${word}<`).exec(svg)?.[1]);
+    const svg = renderChartSvg(CHART, {
+      size: 900,
+      labels: { spirit: { liuhe: 'Assemblea', zhifu: 'Guerriero Oscuro' } },
+    });
+
+    // Both halves are set at the size a word that fitted would have been:
+    // a column half a palace wide holds neither on one line, and shrinking
+    // to fit would leave one palace legible and its neighbour not.
+    expect(size(svg, 'Guerriero')).toBe(size(svg, 'Assemblea'));
+    expect(size(svg, 'Oscuro')).toBe(size(svg, 'Assemblea'));
   });
 
   it('falls back to the glyphs for anything unnamed', () => {
@@ -173,27 +240,32 @@ describe('renderChartSvg', () => {
     expect(captioned).toContain('甲辰');
   });
 
-  it('writes a palace name from its corner, and says so on the line', () => {
-    const svg = renderChartSvg(CHART, { size: 600, labels: { palace: { qian: 'northwest' } } });
+  it('numbers a palace from its corner, and says so on the line', () => {
+    const svg = renderChartSvg(CHART, { size: 900, labels: { palace: { qian: 'northwest' } } });
     const sheet = svg.slice(0, svg.indexOf('</style>'));
 
-    expect(svg).toMatch(/<text[^>]*text-anchor="start"[^>]*>6\s?northwest/);
+    // The Luoshu number alone. The word for the palace is not up here: it
+    // belongs under the trigram, which is the thing it glosses.
+    expect(svg).toMatch(/<text[^>]*text-anchor="start"[^>]*>6</);
+    expect(svg).not.toMatch(/text-anchor="start"[^>]*>6\s?northwest/);
     // And nothing in the sheet may anchor anything: a declaration outranks a
-    // presentation attribute, so a rule here would centre the name on the
+    // presentation attribute, so a rule here would centre the number on the
     // corner it starts from and hang half of it in the palace next door.
     expect(sheet).not.toContain('text-anchor');
   });
 
-  it('shrinks a name too long for the corner it starts from', () => {
-    const size = (svg: string): number =>
-      Number(/<text[^>]*font-size="([\d.]+)"[^>]*>6\s/.exec(svg)?.[1]);
-    const short = renderChartSvg(CHART, { size: 600, labels: { palace: { qian: 'nw' } } });
-    const long = renderChartSvg(CHART, {
-      size: 600,
-      labels: { palace: { qian: 'north-west by west and a little further' } },
+  it('shrinks a word no split can fit in its column', () => {
+    const size = (svg: string, word: string): number =>
+      Number(new RegExp(`font-size="([\\d.]+)"[^>]*>${word}<`).exec(svg)?.[1]);
+    const svg = renderChartSvg(CHART, {
+      size: 900,
+      labels: { palace: { qian: 'nw', kan: 'northwestbywestandalittlefurther' } },
     });
 
-    expect(size(long)).toBeLessThan(size(short));
+    // Wrapping is the first answer and this is the second: one word with
+    // nowhere to break comes down in size rather than crossing into the
+    // palace next door.
+    expect(size(svg, 'northwestbywestandalittlefurther')).toBeLessThan(size(svg, 'nw'));
   });
 
   it('holds two captions apart with a mark, not with spaces', () => {

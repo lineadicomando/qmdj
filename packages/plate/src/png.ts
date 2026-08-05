@@ -1,6 +1,6 @@
 import { Resvg } from '@resvg/resvg-js';
 import { FONT_STACK, PALETTES, type Scheme } from './palette.js';
-import { renderChartSvg } from './svg.js';
+import { DEFAULT_SIZE, renderChartSvg } from './svg.js';
 import type { PlateChart, PlateOptions } from './types.js';
 
 /**
@@ -44,7 +44,7 @@ export function renderChartPng(chart: PlateChart, options: PngOptions = {}): Buf
   });
 
   const renderer = new Resvg(inlineColours(svg, scheme), {
-    fitTo: { mode: 'width', value: options.width ?? options.size ?? 640 },
+    fitTo: { mode: 'width', value: options.width ?? options.size ?? DEFAULT_SIZE },
     font: { loadSystemFonts: true },
   });
 
@@ -95,8 +95,13 @@ function assertGlyphsRender(): void {
  * resvg does not resolve `var()`, so a drawing handed to it unchanged comes
  * out with every fill missing. Substituting here keeps one stylesheet for
  * both outputs instead of two that drift apart.
+ *
+ * Exported for the test that checks nothing was left behind. A property added
+ * to the palette and forgotten here does not throw and does not look wrong in
+ * the browser — it goes missing only in the raster, which is the one output
+ * nobody looks at twice.
  */
-function inlineColours(svg: string, scheme: Scheme): string {
+export function inlineColours(svg: string, scheme: Scheme): string {
   const palette = PALETTES[scheme];
   const values: Record<string, string> = {
     '--qmdj-ink': palette.ink,
@@ -107,6 +112,9 @@ function inlineColours(svg: string, scheme: Scheme): string {
   };
   for (const [element, colour] of Object.entries(palette.element)) {
     values[`--qmdj-element-${element}`] = colour;
+  }
+  for (const [element, colour] of Object.entries(palette.elementInk)) {
+    values[`--qmdj-ink-${element}`] = colour;
   }
 
   return svg.replace(/var\((--qmdj-[a-z-]+)\)/g, (whole, name: string) => values[name] ?? whole);

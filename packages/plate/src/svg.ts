@@ -1,4 +1,4 @@
-import { cells, layout, origin, type Cell, type Layout } from './geometry.js';
+import { cells, layout, origin, type Cell, type Layout, type Register } from './geometry.js';
 import { FONT_STACK, styleSheet } from './palette.js';
 import type {
   Named,
@@ -25,7 +25,23 @@ const STRENGTH_MARK: Record<string, string> = {
   si: '▼',
 };
 
-const DEFAULT_SIZE = 640;
+/**
+ * How big the drawing is unless told otherwise.
+ *
+ * Every measurement below is a fraction of the side, so this changes what the
+ * numbers in the file are and nothing about the layout: what is shrunk at 900
+ * is shrunk at 400, and what fits at 400 fits at 900. It is the intrinsic
+ * size — what the SVG takes up where nobody constrains it, and what the
+ * raster is that many pixels wide by default.
+ *
+ * 900 rather than the old 640 because a palace now holds six names, each with
+ * a word under it, where it used to hold five lines. Dropped into a document
+ * at its intrinsic size, 640 renders that dense enough to need a lens.
+ */
+export const DEFAULT_SIZE = 900;
+
+/** The five phases, as classes the sheet turns into ink colours. */
+const PHASES = ['mu', 'huo', 'tu', 'jin', 'shui'] as const;
 
 /**
  * Draws a chart as SVG.
@@ -54,6 +70,7 @@ export function renderChartSvg(chart: PlateChart, options: PlateOptions = {}): s
       .qmdj .faint { fill: var(--qmdj-faint); }
       .qmdj .mark { fill: var(--qmdj-mark); }
       .qmdj .rule { stroke: var(--qmdj-rule); fill: none; }
+      ${PHASES.map((phase) => `.qmdj .${phase} { fill: var(--qmdj-ink-${phase}); }`).join('\n      ')}
     </style>`,
     // Both as an attribute and in the sheet: rasterisers apply
     // presentation attributes reliably and class selectors not at all.
@@ -99,12 +116,12 @@ const HANZI_SCALE = 0.75;
 const GAP = ' ';
 
 /**
- * A thing said twice: the word for it, and the name it renders.
+ * A thing said twice on one line: the word for it, then the name it renders.
  *
- * 天蓬 is not the Chinese for "Canopy", it is what the star is called, and a
- * reader who knows the subject looks for it. So the word leads — the drawing
- * has to be usable by someone who reads no Chinese — and the name follows it
- * smaller and fainter, exactly as the tables do it.
+ * This is how the foot of a palace is written and not how a palace is — a
+ * configuration is a footnote, and a footnote reads left to right rather than
+ * stacking. In the palace proper the name leads and the word sits under it;
+ * see `register`.
  *
  * A caller who supplied no words gets the name alone, which is what this
  * drew before there was any way to ask for anything else.
@@ -135,62 +152,55 @@ function drawCell(
   const tint = `var(--qmdj-element-${palace.palace.element})`;
   const at = (fraction: number): number => y + side * fraction;
 
-  // Everything in a palace stays inside it, with a little air at the sides.
-  const inner = side * 0.88;
+  const [top, centre, bottom] = geometry.line.row;
+  const left = x + side * geometry.column.left;
+  const right = x + side * geometry.column.right;
+  /** A column is half a palace; a line inside it keeps clear of the seam. */
+  const column = side * geometry.columnWidth;
 
-  const strength = (state: Named | undefined): string =>
-    state ? ` ${STRENGTH_MARK[state.id] ?? state.hanzi}` : '';
+  const entry = (
+    at_: Register,
+    column_: number,
+    thing: Named | undefined,
+    from: Record<string, string> | undefined,
+    strength?: Named | undefined,
+  ): string => register(column_, y + side * at_.glyph, y + side * at_.word, thing, from, strength, geometry, column);
 
   const parts = [
     `<rect x="${x}" y="${y}" width="${side}" height="${side}" fill="${tint}"/>`,
-    text(
-      middle,
-      at(geometry.line.spirit),
-      palace.spirit ? named(palace.spirit, labels.spirit) : [],
-      geometry.font.small,
-      { className: 'faint', maxWidth: inner },
-    ),
-    text(
-      middle,
-      at(geometry.line.star),
-      named(palace.star, labels.star, strength(palace.starStrength)),
-      geometry.font.small,
-      { maxWidth: inner },
-    ),
-    text(
-      middle,
-      at(geometry.line.gate),
-      palace.gate ? named(palace.gate, labels.gate, strength(palace.gateStrength)) : [],
-      geometry.font.small,
-      { maxWidth: inner },
-    ),
-    text(middle, at(geometry.line.heaven), named(palace.heaven, labels.stem), geometry.font.glyph, {
-      maxWidth: inner,
-    }),
-    text(middle, at(geometry.line.earth), named(palace.earth, labels.stem), geometry.font.glyph, {
-      maxWidth: inner,
-    }),
+
+    // Left: the board as it was dealt. Heaven over earth, which is the
+    // convention and the reason neither is labelled, and under them the
+    // palace itself — the one thing here that never moves.
+    entry(top, left, palace.heaven, labels.stem),
+    entry(centre, left, palace.earth, labels.stem),
+    entry(bottom, left, palace.palace, labels.palace),
+
+    // Right: what came to stand over it, in the order it is always recited.
+    entry(top, right, palace.spirit, labels.spirit),
+    entry(centre, right, palace.star, labels.star, palace.starStrength),
+    entry(bottom, right, palace.gate, labels.gate, palace.gateStrength),
   ];
 
-  // The palace names itself in the corner, small: the reader who needs it
-  // looks for it, and the reader who does not is not interrupted by it.
+  // The Luoshu number in the corner, small: it is the palace's identity for
+  // anyone counting with it, and an interruption for everyone else. The word
+  // for the palace is not here — it is under the trigram, where the trigram
+  // can gloss it.
   //
   // Written from the left edge inwards, so the width left to it is what
-  // remains to the far side of the palace — a name set from the corner has
-  // the inset against it, not half of it as a centred line would.
+  // remains to the far side — a line set from the corner has the whole inset
+  // against it, not half of it as a centred line would.
   const inset = side * 0.06;
   parts.push(
-    text(
-      x + inset,
-      at(geometry.line.name),
-      [{ text: `${palace.palace.number}${GAP}` }, ...named(palace.palace, labels.palace)],
-      geometry.font.small * 0.8,
-      { className: 'faint', maxWidth: side - inset * 2, anchor: 'start' },
-    ),
+    text(x + inset, at(geometry.line.number), String(palace.palace.number), geometry.font.number, {
+      className: 'faint',
+      maxWidth: side - inset * 2,
+      anchor: 'start',
+    }),
   );
 
   // On a line of their own along the foot, centred and small. Anywhere in a
-  // corner they meet either the palace's own name or the next palace's.
+  // corner they meet either the palace's own number or the next palace's.
   if (marks.length > 0) {
     parts.push(
       text(
@@ -202,13 +212,98 @@ function drawCell(
           ...(index > 0 ? [{ text: ' · ' }] : []),
           ...named(mark, labels.pattern, '', ''),
         ]),
-        geometry.font.small * 0.8,
-        { className: 'mark', maxWidth: inner },
+        geometry.font.word,
+        { className: 'mark', maxWidth: side * 0.9 },
       ),
     );
   }
 
   return parts.filter(Boolean).join('\n');
+}
+
+/**
+ * One thing in a palace: its name, and the word for it underneath.
+ *
+ * The name is set large and, where the thing named is a phase, in that
+ * phase's colour. The word is set small and faint below it, wrapping onto a
+ * second line rather than shrinking, because a column half a palace wide will
+ * not hold "Guerriero Oscuro" on one line at any size worth reading.
+ *
+ * Nothing is drawn for what is not there. The centre has no gate and no
+ * spirit, and two blank registers are the honest picture of that.
+ */
+function register(
+  x: number,
+  glyphLine: number,
+  wordLine: number,
+  thing: Named | undefined,
+  from: Record<string, string> | undefined,
+  strength: Named | undefined,
+  geometry: Layout,
+  maxWidth: number,
+): string {
+  if (!thing) return '';
+
+  const word = from?.[thing.id];
+  // The state of strength rides at the end of the line under the name, in the
+  // manner of a qualifier: it says something about the star, it is not a
+  // seventh thing standing in the palace. Not on the name itself, because a
+  // mark hanging off 天輔 pushes it off centre, and six names all pushed by a
+  // different amount are what stops a column looking like a column.
+  const mark = strength ? ` ${STRENGTH_MARK[strength.id] ?? strength.hanzi}` : '';
+
+  const lines = [
+    text(x, glyphLine, [{ text: thing.hanzi, className: thing.element }], geometry.font.glyph, {
+      maxWidth,
+    }),
+  ];
+
+  const size = geometry.font.word;
+  // The mark shares the last line, so the width it takes is not the word's
+  // to spend — counted here rather than discovered by `fit`, which would
+  // shrink that one line and leave the palace next door set larger.
+  const room = maxWidth / size - measure([{ text: mark }]);
+  const parts = word ? broken(word, room) : [];
+  // With no word for it the mark has nothing to hang off, and goes on the
+  // line the word would have taken.
+  if (parts.length === 0 && mark) parts.push(mark.trim());
+  else if (mark) parts[parts.length - 1] += mark;
+
+  for (const [index, part] of parts.entries()) {
+    lines.push(text(x, wordLine + index * size * 1.08, part, size, { className: 'faint', maxWidth }));
+  }
+
+  return lines.filter(Boolean).join('\n');
+}
+
+/**
+ * A word split across at most two lines, or left whole where it fits.
+ *
+ * Only ever two: a third line would run into the register below it. Where no
+ * split leaves both halves inside the width — one very long word — it comes
+ * back whole and `fit` shrinks it, which is the old behaviour and the right
+ * one for a case with no better answer.
+ *
+ * The split is the one that leaves the two halves most nearly equal, so a
+ * wrapped word reads as a block rather than as a line with a crumb under it.
+ */
+function broken(word: string, ems: number): string[] {
+  if (measure([{ text: word }]) <= ems) return [word];
+
+  const spaces = [...word].flatMap((character, index) => (character === ' ' ? [index] : []));
+  let best: string[] | undefined;
+  let widest = Infinity;
+
+  for (const index of spaces) {
+    const halves = [word.slice(0, index), word.slice(index + 1)];
+    const width = Math.max(...halves.map((half) => measure([{ text: half }])));
+    if (width < widest) {
+      widest = width;
+      best = halves;
+    }
+  }
+
+  return best && widest <= ems ? best : [word];
 }
 
 function drawGrid(geometry: Layout): string {
@@ -314,14 +409,10 @@ function setRun(run: Run, size: number): string {
 /**
  * Shrinks a line until it fits the width it was given.
  *
- * The registers were proportioned for two hanzi. A word in a European
- * language is several times wider, so a cell that held 天蓬 comfortably will
- * not hold "Canopy" at the same size — and an SVG does not wrap or clip, it
- * simply runs into its neighbours.
- *
- * The width is estimated rather than measured: there is no text engine here,
- * and the estimate only has to be close enough to keep the line inside its
- * palace. A CJK glyph is square; a Latin letter is roughly half as wide.
+ * The last resort, not the first: an over-long word is broken across two
+ * lines before it is shrunk, and only a word with nowhere to break gets here.
+ * An SVG neither wraps nor clips of its own accord, so a line that does
+ * neither simply runs into the palace next door.
  */
 function fit(runs: Run[], size: number, maxWidth?: number): number {
   if (!maxWidth) return size;
@@ -329,15 +420,26 @@ function fit(runs: Run[], size: number, maxWidth?: number): number {
   // Each run is measured at its own size, and the whole line is shrunk by
   // whatever it takes: the word and the name it renders keep their
   // proportion to one another whatever the line has to come down to.
+  const needed = measure(runs) * size;
+
+  return needed > maxWidth ? (size * maxWidth) / needed : size;
+}
+
+/**
+ * How wide a line is, in ems of its own size.
+ *
+ * Estimated rather than measured: there is no text engine here, and the
+ * estimate only has to be close enough to keep the line inside its palace.
+ * A CJK glyph is square; a Latin letter is roughly half as wide.
+ */
+function measure(runs: Run[]): number {
   let width = 0;
   for (const run of runs) {
     let ems = 0;
     for (const character of run.text) ems += /[⺀-鿿＀-｠]/.test(character) ? 1 : 0.54;
     width += ems * (run.scale ?? 1);
   }
-  const needed = width * size;
-
-  return needed > maxWidth ? (size * maxWidth) / needed : size;
+  return width;
 }
 
 /**

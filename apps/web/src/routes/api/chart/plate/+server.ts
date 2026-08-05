@@ -20,7 +20,9 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
     const { moment } = readMoment(url.searchParams);
     const chart = computeQimenChart(moment, moment.options);
 
-    const size = Math.min(2048, Math.max(240, Number(url.searchParams.get('size') ?? 640)));
+    // The intrinsic size, which the page overrides with CSS anyway. It
+    // matters to whoever saves the file or drops it somewhere unstyled.
+    const size = Math.min(2048, Math.max(240, Number(url.searchParams.get('size') ?? 900)));
     const labels = chartLabels(t);
     const PILLARS = [
       moment.pillars.year,

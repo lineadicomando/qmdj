@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { renderChartPng } from '../src/png.js';
+import { inlineColours, renderChartPng } from '../src/png.js';
 import { renderChartSvg } from '../src/svg.js';
 import type { PlateChart } from '../src/types.js';
 
@@ -19,8 +19,8 @@ const CHART: PlateChart = {
   patterns: [],
   palaces: [1, 2, 3, 4, 5, 6, 7, 8, 9].map((number) => ({
     palace: { number, hanzi: '坎', id: 'kan', element: 'shui' },
-    earth: { hanzi: '戊', id: 'wu' },
-    heaven: { hanzi: '己', id: 'ji' },
+    earth: { hanzi: '丙', id: 'bing', element: 'huo' },
+    heaven: { hanzi: '己', id: 'ji', element: 'tu' },
     star: { hanzi: '天蓬', id: 'tianpeng' },
     starStrength: { hanzi: '旺', id: 'wang' },
     gate: number === 5 ? undefined : { hanzi: '休門', id: 'xiumen' },
@@ -61,6 +61,8 @@ describe('renderChartPng', () => {
     const svg = renderChartSvg(CHART, { scheme: 'light' });
 
     expect(svg).toContain('var(--qmdj-ink)');
+    expect(svg).toContain('var(--qmdj-ink-huo)');
+    expect(inlineColours(svg, 'light')).not.toContain('var(');
     expect(renderChartPng(CHART, { width: 200 }).length).toBeGreaterThan(1000);
   });
 });
