@@ -584,7 +584,19 @@
   /* As many per row as the panel has room for, one when it has none: the
      criteria are `select`s holding words of very uneven length, and a fixed
      pair of columns pushed the page sideways on a phone. */
-  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 0.9rem; }
+  /* The bound is on the row, so the columns stay `1fr` and a phone still gets
+     fields the width of the screen — see the same note in `MomentForm`. Wide
+     enough for the four criteria to stay in one row, which is the point of
+     putting them in one. */
+  .row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: 0.9rem;
+    max-width: 60rem;
+    /* Without this the cap above becomes a floor on a narrow screen — see the
+       note in `MomentForm`. */
+    min-inline-size: 0;
+  }
   /* Fields hang from the top of the row, whatever grows below one of them. */
   .row > :global(*) { align-self: start; }
   label { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); }

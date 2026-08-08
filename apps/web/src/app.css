@@ -13,10 +13,35 @@
  * what this page offers. Same values, so a square drawn in the page and a
  * palace drawn in the picture are the same colour.
  */
+/*
+ * `--rule` and `--edge` are both borders and are not interchangeable.
+ *
+ * A rule separates two rows of a table: it is a hairline, it carries no
+ * meaning on its own, and it is meant to be quiet. An edge is the boundary of
+ * something the reader is expected to click into — a field, a button — and a
+ * boundary nobody can see is a field nobody can find. WCAG asks 3:1 of the
+ * second and nothing at all of the first, which is the whole difference
+ * between them: at `--rule` the inputs on this site sat at 1.4:1.
+ */
 :root {
   --ink: #1a1a1a;
-  --faint: #7a7a7a;
+  /*
+   * 8.1:1 on the ground and 7.3:1 on the tint.
+   *
+   * Nothing on this site is set in it that a reader is not meant to read: the
+   * labels over the fields, the notes under them, the strength and the
+   * relation beside a star, the ages down the luck cycles, the four pillars
+   * on the plate. It is the quiet register and not the discardable one, and
+   * 4.5:1 — which is where it started, and where AA stops — is the floor for
+   * text somebody can skip, not for the words that say what a column means.
+   * A reader with no Chinese reads this half of the page and no other.
+   *
+   * Still a clear step under `--ink`, which is 17:1: the difference is a
+   * factor of two, not the factor of four it was.
+   */
+  --faint: #524e47;
   --rule: #d8d3ca;
+  --edge: #8a8378;
   --ground: #fdfcfa;
   --tint: #f4f1eb;
   --alarm: #9a3b2d;
@@ -31,8 +56,11 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --ink: #e8e4dd;
-    --faint: #8f8a82;
+    /* 7.9:1 on the ground and 7.2:1 on the tint — the same reasoning as in
+       the light palette, which is above the media query. */
+    --faint: #b0aaa1;
     --rule: #3a3833;
+    --edge: #6f6a60;
     --ground: #16150f;
     --tint: #201e18;
     --alarm: #d98a76;
@@ -47,8 +75,9 @@
 
 :root[data-color-scheme='light'] {
   --ink: #1a1a1a;
-  --faint: #7a7a7a;
+  --faint: #524e47;
   --rule: #d8d3ca;
+  --edge: #8a8378;
   --ground: #fdfcfa;
   --tint: #f4f1eb;
   --alarm: #9a3b2d;
@@ -62,8 +91,9 @@
 
 :root[data-color-scheme='dark'] {
   --ink: #e8e4dd;
-  --faint: #8f8a82;
+  --faint: #b0aaa1;
   --rule: #3a3833;
+  --edge: #6f6a60;
   --ground: #16150f;
   --tint: #201e18;
   --alarm: #d98a76;
@@ -89,8 +119,23 @@ body {
 .glyph { font-family: 'Noto Serif CJK SC', 'Songti SC', 'PingFang SC', serif; }
 
 a { color: inherit; }
+
+/*
+ * Where the keyboard is, said once for the whole site.
+ *
+ * The browser's own ring is drawn in the browser's own colour, which on this
+ * ground is either invisible or a blue nothing else here is. Two pixels of
+ * `--ink` offset by two reads on both appearances and against every tint a
+ * palace can take. `:focus-visible` and not `:focus`, so a mouse press does
+ * not leave a ring behind on what it clicked.
+ */
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
 input, select, button, textarea {
-  border: 1px solid var(--rule);
+  border: 1px solid var(--edge);
   border-radius: 4px;
   background: var(--ground);
   color: inherit;
@@ -116,6 +161,18 @@ input, select, button, textarea {
   max-width: 100%;
 }
 button:hover { background: var(--tint); }
+
+/*
+ * A ticked box in the page's ink rather than the browser's blue.
+ *
+ * The moments section asks some thirty of these at once, and thirty marks in
+ * a colour that appears nowhere else on the site read as a control panel
+ * bolted to the side of a book. It is the one property that restyles a
+ * checkbox without taking over the drawing of it — `appearance: none` would,
+ * and then the tick, the indeterminate state and the high-contrast rendering
+ * are all mine to get wrong.
+ */
+input[type='checkbox'], input[type='radio'] { accent-color: var(--ink); }
 
 /*
  * Said to whoever cannot see the page, and to nobody else.

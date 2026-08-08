@@ -82,7 +82,33 @@
    * a page, in two on a tablet and in one on a phone, and the panel they sit
    * in is free to be any width without this having to know.
    */
-  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.9rem; }
+  /*
+   * The bound is on the row and not on the column, and it has to be.
+   *
+   * The three of them shared whatever the panel had, so on a wide page a field
+   * for a date came out twenty rems long — a box the width of a sentence
+   * holding eight characters, which reads as a mistake and is one. But capping
+   * the *track* caps it on a phone too, and there a field narrower than the
+   * screen is the mistake in the other direction. Capping the row leaves the
+   * columns at `1fr`: they still divide whatever they are given, and what they
+   * are given stops at a width three fields can honestly use.
+   *
+   * `min-inline-size: 0` is not hygiene here, it is what makes the cap safe.
+   * `auto-fit` counts its repetitions against the available space, and where
+   * that space is indefinite — which is exactly what sizing this row as an
+   * item of the form's own grid asks for — it counts them against the
+   * `max-width` instead. So the row's minimum became three whole columns, and
+   * on a phone it carried the fields off the right of the screen. At zero the
+   * minimum is the container's, and `auto-fit` settles on the one column that
+   * fits.
+   */
+  .row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 0.9rem;
+    max-width: 46rem;
+    min-inline-size: 0;
+  }
   /* Each field keeps its own height and hangs from the top of the row: a
      chosen place makes the row taller, and stretching would push the fields
      beside it down along with it. */

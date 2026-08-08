@@ -90,10 +90,26 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.3rem 0.8rem;
+    gap: 0.3rem 0.45rem;
     font-size: 0.85em;
   }
-  .unit { display: inline-flex; align-items: center; gap: 0.1rem; }
+  /*
+   * Each unit enclosed, so that the minus, the value and the plus read as one
+   * control rather than as three things that happen to be near each other.
+   *
+   * They were borderless on a tinted bar: a row of numbers with a `−` beside
+   * them, which is what a printed date looks like and not what a button looks
+   * like. The hairline is the cheapest thing that says «this is pressable»
+   * without shouting — the value inside stays the loudest thing in the group,
+   * which is right, because it is what the reader is here to read.
+   */
+  .unit {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--edge);
+    border-radius: 6px;
+    background: var(--ground);
+  }
   /* The value leads and the name explains it, so they stack rather than run
      on: a name beside a number would read as part of it. */
   .at {
@@ -120,9 +136,17 @@
     line-height: 1.2;
     border-radius: 4px;
   }
-  /* `--ground` and not `--tint`: the closed panel is already tinted, so the
-     usual hover would be invisible exactly where these buttons live. */
-  button:hover:not(:disabled), button:focus-visible { color: var(--ink); background: var(--ground); }
+  /* `--tint` now that the group under them is `--ground`: the hover has to
+     differ from what it sits on, and what it sits on changed. */
+  button:hover:not(:disabled) { color: var(--ink); background: var(--tint); }
   button:disabled { cursor: default; opacity: 0.5; }
-  .now { color: var(--ink); min-width: 0; padding-inline: 0.6rem; }
+  /* Enclosed like the units beside it, since it does the same kind of thing —
+     it moves the moment. What sets it apart is that it says a word. */
+  .now {
+    color: var(--ink);
+    min-width: 0;
+    padding-inline: 0.7rem;
+    border: 1px solid var(--edge);
+    background: var(--ground);
+  }
 </style>
