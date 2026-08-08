@@ -283,6 +283,11 @@ export const en = {
   // list; the whole section — where the moment can be stepped and changed —
   // is one link further on. Arriving there from a scan leaves a way back,
   // because a scan is an interval somebody typed, not a page one lands on.
+  // The board is square and a screen is not, so a drawing stacked above its
+  // own captions is bounded by a reading measure while a third of the window
+  // goes unused. Enlarging moves the words alongside it.
+  'form.enlarge': 'enlarge',
+  'form.reduce': 'reduce',
   'form.showPlate': 'the board',
   'form.openChart': 'the whole board',
   'form.backToScan': 'Back to the moments',

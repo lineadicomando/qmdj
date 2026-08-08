@@ -253,6 +253,8 @@ export const it: Record<MessageKey, string> = {
     'Sono disposizioni, non raccomandazioni. Il motore riferisce dove ciascuna si trova; se sia un buon momento per agire è una lettura, e spetta a te farla.',
   'form.scan': "Scandisci l'intervallo",
   'form.scanned': '{runs} carte nell\'intervallo, {matched} con un palazzo che risponde.',
+  'form.enlarge': 'ingrandisci',
+  'form.reduce': 'riduci',
   'form.showPlate': 'la scacchiera',
   'form.openChart': 'la scacchiera intera',
   'form.backToScan': 'Torna ai momenti',

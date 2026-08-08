@@ -103,11 +103,40 @@
   let drawn = $state('');
 </script>
 
+<script lang="ts" module>
+  /**
+   * How large the board is asked to be, kept for the page and not the dialog.
+   *
+   * Module scope on purpose. A reader who enlarged the board once did not
+   * decide it about *that hour*; they decided it about their eyes and their
+   * screen, and picking the next hour closes and reopens this component. Held
+   * inside it, the choice would have to be made again at every hour — which
+   * is the reading gesture this whole section is built around.
+   *
+   * Not written to the browser either: the appearance is the one thing this
+   * site stores, the note says so by name, and a second key would be a second
+   * promise for something a reader restates with one click.
+   */
+  let large = $state(false);
+</script>
+
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
-<dialog bind:this={dialog} aria-labelledby={named} onclose={onclosed} onclick={fromBackdrop}>
+<dialog
+  bind:this={dialog}
+  class:large
+  aria-labelledby={named}
+  onclose={onclosed}
+  onclick={fromBackdrop}
+>
   <div class="box">
     <div class="head">
       <h2 id={named}>{heading}</h2>
+      <!-- What the press will do, rather than what the state is: a label that
+           changes says it in the reader's own language, where `aria-pressed`
+           over a fixed word would say it twice and in neither. -->
+      <button type="button" class="size" onclick={() => (large = !large)}>
+        {t(large ? 'form.reduce' : 'form.enlarge')}
+      </button>
       <button type="button" onclick={() => dialog?.close()} aria-label={t('form.close')}>×</button>
     </div>
 
@@ -120,30 +149,32 @@
       onload={() => (drawn = plate)}
     />
 
-    {#await asked}
-      <p class="note">{t('form.working')}</p>
-    {:then found}
-      <p class="ju">
-        {found.ju.yang ? t('cli.value.yangDun') : t('cli.value.yinDun')}
-        {found.ju.number} · {t(`label.yuan.${found.ju.yuan}` as MessageKey)}
-      </p>
+    <div class="said">
+      {#await asked}
+        <p class="note">{t('form.working')}</p>
+      {:then found}
+        <p class="ju">
+          {found.ju.yang ? t('cli.value.yangDun') : t('cli.value.yinDun')}
+          {found.ju.number} · {t(`label.yuan.${found.ju.yuan}` as MessageKey)}
+        </p>
 
-      {#if found.patterns.length > 0}
-        <ul class="patterns">
-          {#each found.patterns as pattern}
-            <li>
-              {t(`label.pattern.${pattern.id}` as MessageKey)}
-              {#if pattern.palace}— {pattern.palace}{/if}
-              <span class="glyph">{pattern.hanzi}</span>
-            </li>
-          {/each}
-        </ul>
-      {/if}
-    {:catch failure}
-      <p class="failure" role="alert">{failure.message}</p>
-    {/await}
+        {#if found.patterns.length > 0}
+          <ul class="patterns">
+            {#each found.patterns as pattern}
+              <li>
+                {t(`label.pattern.${pattern.id}` as MessageKey)}
+                {#if pattern.palace}— {pattern.palace}{/if}
+                <span class="glyph">{pattern.hanzi}</span>
+              </li>
+            {/each}
+          </ul>
+        {/if}
+      {:catch failure}
+        <p class="failure" role="alert">{failure.message}</p>
+      {/await}
 
-    <a class="whole" {href}>{t('form.openChart')}</a>
+      <a class="whole" {href}>{t('form.openChart')}</a>
+    </div>
   </div>
 </dialog>
 
@@ -181,9 +212,46 @@
    */
   :global(html:has(dialog[open])) { overflow: hidden; }
 
+  /*
+   * Larger, which on a landscape screen means beside and not below.
+   *
+   * The board came out at 513 pixels on a window 900 tall, and the height was
+   * not what stopped it: everything was in one column, so the drawing was
+   * bounded by a reading measure while a third of the window went unused. The
+   * height is the budget worth spending on a square, and the way to spend it
+   * is to move the words alongside. Two hundred pixels of chart, which is the
+   * difference between reading 值符 and recognising it.
+   *
+   * The two sizes are declared as the two budgets rather than as a number:
+   * whichever of the window's dimensions runs out first is the one that
+   * decides, and neither of them is knowable from here.
+   */
+  dialog.large { max-inline-size: 96vw; }
+
   .box { display: grid; gap: 0.7rem; padding: 0.8rem 0.9rem 1rem; }
-  .head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
-  h2 { font-size: 0.9rem; font-weight: 400; margin: 0; }
+  .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    /* Two buttons at the right end and the heading at the left, whatever the
+       box does with its columns below. */
+    grid-column: 1 / -1;
+  }
+  h2 { font-size: 0.9rem; font-weight: 400; margin: 0; margin-inline-end: auto; }
+  .said { display: grid; gap: 0.7rem; align-content: start; }
+  /* Where there is room for a column of words beside a square. Below this the
+     enlargement is the width of the window and nothing else, which on a phone
+     the dialog already had. */
+  @media (min-width: 56rem) {
+    dialog.large .box { grid-template-columns: minmax(0, 1fr) minmax(13rem, 17rem); }
+    dialog.large img {
+      inline-size: min(calc(96vw - 21rem), calc(90vh - 5rem));
+      block-size: auto;
+      max-inline-size: 100%;
+      justify-self: center;
+    }
+  }
   .head button {
     border: 0;
     background: none;
@@ -193,6 +261,21 @@
     padding: 0 0.2rem;
   }
   .head button:hover { color: var(--ink); background: none; }
+  /* A word, not a glyph: nobody operates a control whose face they cannot
+     read, and ⤢ is a face. Set as the links are, since that is what it is. */
+  .size { font-size: 0.85em; text-decoration: underline; text-underline-offset: 0.2em; }
+  /*
+   * Where there is nothing left to give, nothing offers to give it.
+   *
+   * The reading measure that bounds the box is 34rem, and below a window of
+   * about forty the 94vw beside it is already the smaller of the two: the
+   * dialog is as wide as the screen allows before anybody asks. A control
+   * that visibly does nothing teaches a reader that it is broken, which is
+   * worse than not having one.
+   */
+  @media (max-width: 42rem) {
+    .size { display: none; }
+  }
   img { display: block; width: 100%; height: auto; transition: opacity 0.15s ease-out; }
   .settling { opacity: 0.35; }
   @media (prefers-reduced-motion: reduce) {
