@@ -16,11 +16,24 @@
     moments,
     t,
     href,
+    picked = '',
+    onpick,
   }: {
     moments: readonly any[];
     t: Translator;
     /** Where the whole board for a row lives. */
     href: (start: string) => string;
+    /** The row whose board is on screen, by its `start`. */
+    picked?: string;
+    /**
+     * Choosing a row without leaving the page.
+     *
+     * The cell stays a link whatever this does with it. `href` is the whole
+     * section and remains what a middle click, a new tab, a saved bookmark
+     * and a page without scripts all get; only a plain click is taken over.
+     * A button here would have thrown those away to gain nothing.
+     */
+    onpick?: (start: string) => void;
   } = $props();
 
   const gloss = (prefix: string, id: string): string => t(`label.${prefix}.${id}` as MessageKey);
@@ -32,6 +45,20 @@
   /** The date is written once a day: a column repeating it reads as noise. */
   function opensADay(index: number): boolean {
     return index === 0 || moments[index - 1].start.slice(0, 10) !== moments[index].start.slice(0, 10);
+  }
+
+  /**
+   * A plain click stays on the page; every other kind means somewhere else.
+   *
+   * A modifier, or any button but the first, is how a person says "open this
+   * apart from what I am reading". Preventing those would be taking away the
+   * one thing they asked for.
+   */
+  function choose(event: MouseEvent, start: string): void {
+    if (!onpick) return;
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    onpick(start);
   }
 </script>
 
@@ -45,13 +72,13 @@
       <th>{t('cli.column.gate')}</th>
       <th>{t('cli.column.star')}</th>
       <th>{t('cli.column.spirit')}</th>
-      <th><span class="hidden">{t('form.openChart')}</span></th>
+      <th><span class="hidden">{t('form.showPlate')}</span></th>
     </tr>
   </thead>
   <tbody>
     {#each moments as moment, index (moment.start)}
       {#each moment.palaces as cell, palace (cell.palace.number)}
-        <tr class:day={palace === 0 && opensADay(index)}>
+        <tr class:day={palace === 0 && opensADay(index)} class:picked={moment.start === picked}>
           {#if palace === 0}
             <th scope="row" rowspan={moment.palaces.length}>
               {opensADay(index) ? clock(moment.start) : hour(moment.start)}
@@ -86,7 +113,13 @@
           </td>
           {#if palace === 0}
             <td rowspan={moment.palaces.length}>
-              <a href={href(moment.start)}>{t('form.openChart')}</a>
+              <a
+                href={href(moment.start)}
+                aria-current={moment.start === picked ? 'true' : undefined}
+                onclick={(event) => choose(event, moment.start)}
+              >
+                {t(onpick ? 'form.showPlate' : 'form.openChart')}
+              </a>
             </td>
           {/if}
         </tr>
@@ -110,6 +143,11 @@
   tbody th { font-weight: 400; white-space: nowrap; }
   /* A heavier rule where the day turns, so a week can be read down. */
   .day th, .day td { border-top: 1px solid var(--rule); }
+  /* The hour whose board is open, marked in the list it was chosen from.
+     Tinted and ruled at the edge both: a tint alone is a colour, and a
+     colour alone is not a message — hence `aria-current` on the link too. */
+  .picked th, .picked td { background: var(--tint); }
+  .picked th:first-child { box-shadow: inset 2px 0 0 var(--ink); }
   th span:first-child, td span:first-child { display: block; }
   .glyph { display: block; color: var(--faint); font-size: 0.8em; }
   .gloss { display: block; color: var(--faint); font-size: 0.8em; }

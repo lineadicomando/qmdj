@@ -77,6 +77,18 @@ export function readInterval(url: URL): {
   };
 }
 
+/** The criteria as plain address fields. Empty ones are dropped by the caller. */
+function criteriaFields(criteria: CriteriaInput): Record<string, string | undefined> {
+  return {
+    gate: criteria.gate,
+    star: criteria.star,
+    spirit: criteria.spirit,
+    minStrength: criteria.minStrength,
+    towards: criteria.towards.join(','),
+    without: criteria.without.join(','),
+  };
+}
+
 /**
  * The address of a scan.
  *
@@ -95,14 +107,7 @@ export function intervalQuery(
   if (!input.trueSolarTime) params.set('trueSolarTime', 'false');
   if (input.dayBoundary !== 'zishi') params.set('dayBoundary', input.dayBoundary);
 
-  if (criteria.gate) params.set('gate', criteria.gate);
-  if (criteria.star) params.set('star', criteria.star);
-  if (criteria.spirit) params.set('spirit', criteria.spirit);
-  if (criteria.minStrength) params.set('minStrength', criteria.minStrength);
-  if (criteria.towards.length) params.set('towards', criteria.towards.join(','));
-  if (criteria.without.length) params.set('without', criteria.without.join(','));
-
-  for (const [key, value] of Object.entries(extra)) {
+  for (const [key, value] of Object.entries({ ...criteriaFields(criteria), ...extra })) {
     if (value) params.set(key, value);
   }
   return params.toString();
@@ -114,6 +119,10 @@ export function intervalQuery(
  * The scan says when and which way; the chart section says everything else,
  * and a reader who has found an hour wants the whole board for it without
  * typing the date again.
+ *
+ * `extra` is where the scan itself rides along — see `criteriaFields` and
+ * `scanQuery`. The chart page ignores those parameters when it casts, and
+ * uses them for one thing only: knowing there is a scan to go back to.
  */
 export function chartQuery(
   start: string,
@@ -132,6 +141,74 @@ export function chartQuery(
   }
   return params.toString();
 }
+
+/**
+ * The scan, as another address carries it.
+ *
+ * Made out of `intervalQuery` rather than assembled by hand: what rides along
+ * is then, by construction, the very address `scanQuery` reads back out. A
+ * criterion added to the scan and forgotten here cannot happen — and the
+ * round trip is asserted, so a name added to one list and not to the other
+ * fails a test rather than quietly returning somebody to a different scan.
+ */
+export function scanCarry(
+  input: IntervalInput,
+  criteria: CriteriaInput = EMPTY_CRITERIA,
+): Record<string, string> {
+  return Object.fromEntries(new URLSearchParams(intervalQuery(input, criteria)));
+}
+
+/**
+ * The fields of a scan, read back out of whatever address carries them.
+ *
+ * The two sections do not collide: `readMoment` reads `date`, `time` and the
+ * three options, `readInterval` reads the interval and the criteria, and the
+ * three they share hold the same value in both — `chartQuery` copies them
+ * from the very interval the scan ran on. So a chart's address can carry a
+ * whole scan alongside its own moment, with nothing nested and nothing
+ * re-encoded, and the chart page reads straight past it.
+ */
+export function scanFields(url: URL): Record<string, string | undefined> {
+  const fields: Record<string, string | undefined> = {};
+  for (const name of SCAN_FIELDS) {
+    // Only what is there: `trueSolarTime` is written solely when it is off,
+    // and an address that spelled out every default would say less clearly.
+    const value = url.searchParams.get(name);
+    if (value) fields[name] = value;
+  }
+  return fields;
+}
+
+/**
+ * The scan a chart was reached from, if it was reached from one.
+ *
+ * Two dates are what makes it a scan: without them there is nothing to
+ * return to, and the reader arrived at the chart some other way.
+ */
+export function scanQuery(url: URL): string | undefined {
+  const fields = scanFields(url);
+  if (!fields.from || !fields.to) return undefined;
+
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(fields)) {
+    if (value) params.set(key, value);
+  }
+  return params.toString();
+}
+
+const SCAN_FIELDS = [
+  'from',
+  'to',
+  'locationId',
+  'trueSolarTime',
+  'dayBoundary',
+  'gate',
+  'star',
+  'spirit',
+  'minStrength',
+  'towards',
+  'without',
+] as const;
 
 /** A week from today, which is the interval somebody arriving here means. */
 export function defaultInterval(): { from: string; to: string } {

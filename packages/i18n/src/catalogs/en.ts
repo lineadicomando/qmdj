@@ -274,7 +274,13 @@ export const en = {
     'These are arrangements, not recommendations. The engine reports where each one stands; whether it is a good hour to act is a reading, and it is yours to make.',
   'form.scan': 'Scan the interval',
   'form.scanned': '{runs} charts in the interval, {matched} of them with a palace that answers.',
+  // A row of the scan answers with the board for that hour, shown beside the
+  // list; the whole section — where the moment can be stepped and changed —
+  // is one link further on. Arriving there from a scan leaves a way back,
+  // because a scan is an interval somebody typed, not a page one lands on.
+  'form.showPlate': 'the board',
   'form.openChart': 'the whole board',
+  'form.backToScan': 'Back to the moments',
 
   // What the button says about its own state. A form still missing something
   // says what, in words: a button greyed out with no reason given is a dead

@@ -3,6 +3,7 @@
   import { page } from '$app/state';
   import type { MessageKey } from '@qimendunjia/i18n';
   import { appearance } from '$lib/appearance.svelte';
+  import { scanFields, scanQuery } from '$lib/interval';
   import { momentQuery, sayFailure, type MomentInput } from '$lib/moment';
   import { step, type Unit, type Wall } from '$lib/step';
   import FormPanel from '$lib/components/FormPanel.svelte';
@@ -63,6 +64,17 @@
     },
   );
 
+  /**
+   * The scan this chart was reached from, if it was reached from one.
+   *
+   * A chart is a page one lands on; a scan is an interval and a set of
+   * criteria somebody typed, and the browser's back button was the only way
+   * back to it. It is not lost — the scan is entirely in its own address —
+   * but it is recomputed, and a way back that is not on the page is a way
+   * back nobody is told about.
+   */
+  const back = $derived(scanQuery(page.url));
+
   let busy = $state(false);
   let panel: FormPanel | undefined = $state();
 
@@ -83,7 +95,10 @@
    * nobody can use. Back leaves the chart, which is what a reader means by it.
    */
   async function show(next: MomentInput): Promise<void> {
-    const query = momentQuery(next);
+    // The scan is carried through every step, so the way back outlives them.
+    // Somebody who found an hour and then looked at the one before it has
+    // not stopped coming from a scan.
+    const query = momentQuery(next, scanFields(page.url));
     const target = `${page.url.pathname}${query ? `?${query}` : ''}`;
     busy = true;
     try {
@@ -124,6 +139,10 @@
 </script>
 
 <svelte:head><title>{t('cli.heading.chart')}</title></svelte:head>
+
+{#if back}
+  <a class="back" href="/{t.locale}/moments?{back}">← {t('form.backToScan')}</a>
+{/if}
 
 <h1>{t('cli.heading.chart')}</h1>
 
@@ -215,6 +234,8 @@
 <style>
   h1 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.2rem; }
   h2 { font-size: 1em; font-weight: 500; margin: 1.5rem 0 0.5rem; }
+  /* Above the heading, where a way out of a page is looked for. */
+  .back { display: inline-block; color: var(--faint); font-size: 0.85em; margin-bottom: 0.6rem; }
   .failure { color: var(--alarm); }
   /* In the closed bar, beside text rather than under a label of its own. */
   .day { font-size: 0.9rem; padding: 0.15rem 0.35rem; color: var(--ink); }
