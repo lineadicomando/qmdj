@@ -1,8 +1,18 @@
-import { cells, layout, origin, type Cell, type Layout, type Register } from './geometry.js';
+import {
+  CORNERS,
+  EDGES,
+  cells,
+  layout,
+  origin,
+  type Cell,
+  type Layout,
+  type Register,
+} from './geometry.js';
 import { FONT_STACK, styleSheet } from './palette.js';
 import type {
   Named,
   PlateChart,
+  PlateDirections,
   PlateLabels,
   PlateOptions,
   PlatePalace,
@@ -54,7 +64,8 @@ const PHASES = ['mu', 'huo', 'tu', 'jin', 'shui'] as const;
 export function renderChartSvg(chart: PlateChart, options: PlateOptions = {}): string {
   const size = options.size ?? DEFAULT_SIZE;
   const captions = options.captions;
-  const geometry = layout(size, captions !== undefined);
+  const compass = options.compass;
+  const geometry = layout(size, { captions: captions !== undefined, compass: compass !== undefined });
   const byNumber = new Map(chart.palaces.map((palace) => [palace.palace.number, palace]));
   const marked = markedPalaces(chart);
 
@@ -87,6 +98,7 @@ export function renderChartSvg(chart: PlateChart, options: PlateOptions = {}): s
   }
 
   parts.push(drawGrid(geometry));
+  if (compass) parts.push(drawCompass(compass, geometry));
   if (captions) parts.push(drawCaptions(chart, captions, geometry));
   parts.push('</g></svg>');
 
@@ -320,6 +332,92 @@ function drawGrid(geometry: Layout): string {
 }
 
 /**
+ * The frame of directions, outside the grid.
+ *
+ * Two rings and a box. Against the grid, the twelve branches, each standing
+ * over the palace whose quarter of the sky it falls in; outside them, the
+ * word for each of the eight directions, at the middle of a side or in a
+ * corner. The branches are set faint and the words in ink, which is the
+ * palaces' arrangement turned around on purpose: inside a palace the name is
+ * the content and the word glosses it, and out here the direction is what the
+ * reader came for and the branch is what refines it.
+ */
+function drawCompass(directions: PlateDirections, geometry: Layout): string {
+  const { margin, cell, compass, font } = geometry;
+  const end = margin + cell * 3;
+  const outer = margin - compass.band;
+  const side = end - outer + compass.band;
+
+  const parts = [
+    `<rect class="rule" x="${round(outer)}" y="${round(outer)}" width="${round(side)}" height="${round(side)}"/>`,
+  ];
+
+  /** How far out a ring falls, on the near side of the grid or on the far one. */
+  const ring = (distance: number, outward: -1 | 1): number =>
+    outward < 0 ? margin - distance : end + distance;
+
+  for (const edge of EDGES) {
+    const horizontal = edge.along === 'x';
+    const write = (along: number, distance: number, word: string, size: number, line: Line): string => {
+      const across = ring(distance, edge.outward);
+      return text(
+        horizontal ? along : across,
+        baseline(horizontal ? across : along, size),
+        word,
+        size,
+        line,
+      );
+    };
+
+    for (const [index, branch] of edge.branches.entries()) {
+      parts.push(write(margin + cell * (index + 0.5), compass.branch, branch, font.branch, {
+        className: 'faint',
+        maxWidth: cell,
+      }));
+    }
+
+    const word = directions[edge.direction];
+    // The middle of the side, which is the palace the direction is named for:
+    // 午 is due south and Li is the southern palace, and the word belongs over
+    // both rather than floating between the three.
+    if (word) {
+      parts.push(write(margin + cell * 1.5, compass.word, word, font.direction, { maxWidth: cell }));
+    }
+  }
+
+  for (const corner of CORNERS) {
+    const word = directions[corner.direction];
+    if (!word) continue;
+    // On the diagonal, where the two bands meet and no branch stands: the
+    // corner palaces hold two branches each, one on each of their outer
+    // sides, and neither of them is the corner.
+    parts.push(
+      text(
+        ring(compass.word, corner.x),
+        baseline(ring(compass.word, corner.y), font.direction),
+        word,
+        font.direction,
+        { maxWidth: compass.band * 1.7 },
+      ),
+    );
+  }
+
+  return parts.filter(Boolean).join('\n');
+}
+
+/**
+ * A line centred on a ring rather than standing on it.
+ *
+ * A baseline is the foot of the letters, so a line placed at the centre of
+ * the band hangs above it. Half the cap height back down puts the ink where
+ * the number said, which is what keeps the two rings evenly apart on all four
+ * sides of the board.
+ */
+function baseline(centre: number, size: number): number {
+  return centre + size * 0.35;
+}
+
+/**
  * What separates two things on a caption line.
  *
  * A visible mark and not a run of spaces: SVG collapses whitespace, so a
@@ -337,6 +435,12 @@ function drawCaptions(
   const middle = size / 2;
   const pillars = chart.moment.pillars;
   const parts: string[] = [];
+  // What is left of the margin once the compass has its band, which is what
+  // the captions were always set in. Measured from the paper's edge and not
+  // from the grid's, so a drawing that grew a frame does not push its own
+  // lines out with it — the foot would land on the frame, and the head would
+  // drift halfway up the page.
+  const outside = margin - geometry.compass.band;
 
   const head = [
     captions.ju,
@@ -345,15 +449,15 @@ function drawCaptions(
   ]
     .filter(Boolean)
     .join(BETWEEN);
-  parts.push(text(middle, margin * 0.45, head, font.caption, { maxWidth: size * 0.94 }));
+  parts.push(text(middle, outside * 0.45, head, font.caption, { maxWidth: size * 0.94 }));
 
   const foot = [captions.chief, captions.chiefGate].filter(Boolean).join(BETWEEN);
-  parts.push(text(middle, size - margin * 0.58, foot, font.caption, { maxWidth: size * 0.94 }));
+  parts.push(text(middle, size - outside * 0.58, foot, font.caption, { maxWidth: size * 0.94 }));
 
   // The disclaimer travels with the picture, because a picture travels
   // further than the page it was made on.
   if (captions.note) {
-    parts.push(text(middle, size - margin * 0.22, captions.note, font.caption * 0.82, { className: 'faint' }));
+    parts.push(text(middle, size - outside * 0.22, captions.note, font.caption * 0.82, { className: 'faint' }));
   }
 
   return parts.filter(Boolean).join('\n');

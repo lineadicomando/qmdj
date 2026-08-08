@@ -13,6 +13,8 @@
  * asserts that it still does.
  */
 
+import type { DirectionId } from './geometry.js';
+
 export interface PlateChart {
   ju: { yang: boolean; number: number };
   chief: { star: { hanzi: string }; palace: { number: number } };
@@ -101,6 +103,20 @@ export interface PlateCaptions {
   note?: string;
 }
 
+/**
+ * The words for the eight directions, keyed as the engine keys them.
+ *
+ * Short ones: they are written in a band a twentieth of the drawing wide, and
+ * "nord-ovest" set there would be either unreadable or wider than the palace
+ * it stands over. `NO`, `SE`, `N` — the abbreviations a map uses, which are
+ * not the same in every language, which is why this package does not invent
+ * them either.
+ *
+ * Partial, so that a caller with nothing to say for a direction leaves that
+ * one blank rather than writing an identifier at the reader.
+ */
+export type PlateDirections = Partial<Record<DirectionId, string>>;
+
 export interface PlateOptions {
   /**
    * Side of the square, in pixels. Default 900.
@@ -120,6 +136,20 @@ export interface PlateOptions {
   scheme?: 'light' | 'dark' | 'auto';
   /** Text around the grid. Left out entirely when absent. */
   captions?: PlateCaptions;
+  /**
+   * The frame of directions outside the grid: the twelve branches around the
+   * board, and a word at each of the eight quarters.
+   *
+   * Drawn only when this is given, and the grid comes down in size to make
+   * room for it. A chart is consulted for a direction as often as for an
+   * hour, and the trigram in each palace already says which one — but it says
+   * it to a reader who knows that 巽 is the southeast, and this says it to
+   * everyone else, on the side of the board they would actually face.
+   *
+   * `{}` draws the branches and no words, which is a compass in Chinese and
+   * a legitimate thing to want.
+   */
+  compass?: PlateDirections;
   /**
    * Words for what stands in the palaces. Without it the drawing carries
    * hanzi and no language at all.

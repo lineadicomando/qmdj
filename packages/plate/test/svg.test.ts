@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { WRITTEN_ORDER, cells } from '../src/geometry.js';
+import { WRITTEN_ORDER, cells, layout } from '../src/geometry.js';
 import { renderChartSvg } from '../src/svg.js';
 import type { PlateChart } from '../src/types.js';
 
@@ -317,5 +317,97 @@ describe('renderChartSvg', () => {
     expect(large).toContain('width="1280"');
     // Same content, different measurements.
     expect(small.match(/<text/g)?.length).toBe(large.match(/<text/g)?.length);
+  });
+});
+
+describe('the compass', () => {
+  const WORDS = { n: 'N', ne: 'NE', e: 'E', se: 'SE', s: 'S', sw: 'SW', w: 'W', nw: 'NW' };
+
+  /** Where a line was written, whatever it was written in. */
+  const place = (svg: string, content: string): { x: number; y: number } => {
+    const found = new RegExp(`<text x="([\\d.]+)" y="([\\d.]+)"[^>]*>${content}<`).exec(svg);
+    return { x: Number(found?.[1]), y: Number(found?.[2]) };
+  };
+
+  it('is drawn only when the words are given', () => {
+    // 子 is nowhere else on the board: no palace holds it and no pillar of
+    // the fixture names it.
+    expect(renderChartSvg(CHART)).not.toContain('子');
+    expect(renderChartSvg(CHART, { compass: WORDS })).toContain('子');
+    expect(renderChartSvg(CHART, { compass: WORDS })).toContain('>NE<');
+  });
+
+  it('stands each branch over the palace whose quarter of the sky it falls in', () => {
+    const svg = renderChartSvg(CHART, { size: 900, compass: WORDS });
+    const grid = layout(900, { compass: true });
+    const column = (index: number): number => grid.margin + grid.cell * (index + 0.5);
+
+    // 午 is due south and the south is at the top, so it stands over the
+    // middle of the top row and above the grid; 子 is due north and stands
+    // under the middle of the bottom row.
+    expect(place(svg, '午').x).toBeCloseTo(column(1), 1);
+    expect(place(svg, '午').y).toBeLessThan(grid.margin);
+    expect(place(svg, '子').x).toBeCloseTo(column(1), 1);
+    expect(place(svg, '子').y).toBeGreaterThan(grid.margin + grid.cell * 3);
+
+    // 卯 is due east, which is on the left, and 酉 due west. Across the side
+    // it is the middle row, not a point: a baseline sits below the centre of
+    // the line it carries.
+    expect(place(svg, '卯').y).toBeGreaterThan(grid.margin + grid.cell);
+    expect(place(svg, '卯').y).toBeLessThan(grid.margin + grid.cell * 2);
+    expect(place(svg, '卯').x).toBeLessThan(grid.margin);
+    expect(place(svg, '酉').x).toBeGreaterThan(grid.margin + grid.cell * 3);
+
+    // And the eight that are not cardinal fall either side of them: 巳 in the
+    // southeast, over the same column as the palace of Xun.
+    expect(place(svg, '巳').x).toBeCloseTo(column(0), 1);
+    expect(place(svg, '未').x).toBeCloseTo(column(2), 1);
+  });
+
+  it('writes the direction outside the branch, and the corners on the diagonal', () => {
+    const svg = renderChartSvg(CHART, { size: 900, compass: WORDS });
+    const grid = layout(900, { compass: true });
+
+    // The word for the direction stands further from the grid than the
+    // branch it names, so the two rings read as two rings.
+    expect(place(svg, 'S').y).toBeLessThan(place(svg, '午').y);
+    expect(place(svg, 'N').y).toBeGreaterThan(place(svg, '子').y);
+    expect(place(svg, 'E').x).toBeLessThan(place(svg, '卯').x);
+    expect(place(svg, 'W').x).toBeGreaterThan(place(svg, '酉').x);
+
+    // A corner holds no branch, and the word for it sits outside the grid on
+    // both axes at once. Southeast is the top left, because south is up.
+    expect(place(svg, 'SE').x).toBeLessThan(grid.margin);
+    expect(place(svg, 'SE').y).toBeLessThan(grid.margin);
+    expect(place(svg, 'NW').x).toBeGreaterThan(grid.margin + grid.cell * 3);
+    expect(place(svg, 'NW').y).toBeGreaterThan(grid.margin + grid.cell * 3);
+  });
+
+  it('takes its band out of the grid and leaves the captions where they were', () => {
+    const bare = layout(900, { captions: true });
+    const framed = layout(900, { captions: true, compass: true });
+
+    // The drawing does not grow, so the palaces come down by the width of
+    // the band. What the reader gains is a frame; what it costs is this.
+    expect(framed.cell).toBeLessThan(bare.cell);
+    expect(framed.margin - framed.compass.band).toBeCloseTo(bare.margin, 6);
+
+    // And the lines around the grid stay against the paper's edge rather
+    // than riding out with the margin: the foot would land on the frame.
+    const foot = (svg: string): number => place(svg, 'chief Canopy').y;
+    const captions = { chief: 'chief Canopy' };
+    expect(foot(renderChartSvg(CHART, { size: 900, captions }))).toBeCloseTo(
+      foot(renderChartSvg(CHART, { size: 900, captions, compass: WORDS })),
+      6,
+    );
+  });
+
+  it('draws the branches alone when it is given no words', () => {
+    // A compass in Chinese, which is a legitimate thing to want and the only
+    // way the drawing stays free of any language.
+    const svg = renderChartSvg(CHART, { compass: {} });
+
+    expect(svg).toContain('子');
+    expect(svg).not.toMatch(/>[A-Za-z ]{1,3}</);
   });
 });

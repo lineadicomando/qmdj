@@ -14,13 +14,26 @@
  * PNG lives at `@qimendunjia/plate/png`, which pulls a native module.
  */
 
-export { cells, layout, origin, WRITTEN_ORDER, type Cell, type Layout } from './geometry.js';
+export {
+  cells,
+  layout,
+  origin,
+  CORNERS,
+  EDGES,
+  WRITTEN_ORDER,
+  type Cell,
+  type Corner,
+  type DirectionId,
+  type Edge,
+  type Layout,
+} from './geometry.js';
 export { FONT_STACK, PALETTES, styleSheet, type Palette, type Scheme } from './palette.js';
 export { renderChartSvg } from './svg.js';
 export type {
   Named,
   PlateCaptions,
   PlateChart,
+  PlateDirections,
   PlateLabels,
   PlateOptions,
   PlatePalace,
