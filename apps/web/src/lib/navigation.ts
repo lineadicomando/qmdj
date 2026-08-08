@@ -26,6 +26,23 @@ export function href(locale: string, slug: string, search = ''): string {
 }
 
 /**
+ * Whether a click on a link meant *here*, or meant *somewhere else*.
+ *
+ * A modifier, or any button but the first, is how a person says "open this
+ * apart from what I am reading". A script that takes a link over must let
+ * those through: preventing them would be taking away the one thing that was
+ * asked for.
+ *
+ * Which is why what a script takes over stays a link. `href` remains what a
+ * middle click, a new tab, a saved bookmark and a page without scripts all
+ * get; only the plain click is answered here, and a button in its place would
+ * have thrown all four away to gain nothing.
+ */
+export function isPlainClick(event: MouseEvent): boolean {
+  return event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
+}
+
+/**
  * Whether a section is the one being read.
  *
  * The chart lives at the root of a language, so a plain `startsWith` would

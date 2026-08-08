@@ -16,6 +16,7 @@
     type Kept,
   } from '$lib/interval';
   import { sayFailure } from '$lib/moment';
+  import { isPlainClick } from '$lib/navigation';
   import {
     DIRECTIONS,
     GATE_IDS,
@@ -154,26 +155,48 @@
     `/${t.locale}?${chartQuery(start, data.interval, scanCarry(data.interval, data.criteria, kept))}`;
 
   /**
-   * The hour that is open, if the answer still holds one.
+   * The row of the answer the open hour stands on, if the answer still has
+   * one.
    *
-   * `at` is the hour's own `start`, so a scan whose criteria have since
-   * changed finds no such row and opens nothing, rather than opening the
-   * wrong one.
+   * Matched on the minute, which is how every other part of this section
+   * names an instant: the run's own `start` carries seconds and an offset,
+   * a link to a board carries `time=04:10`, and an hour set aside is
+   * `2026-09-01T04:10@qian`. Comparing the strings whole would mean the
+   * shortlist could point at rows it cannot reach.
+   *
+   * It may well find nothing, and that is no longer a reason not to open. An
+   * hour set aside under one set of criteria and looked at again under the
+   * next is exactly the case the strip exists for; what the row supplies is
+   * the pillar in the heading, and nothing else.
    */
-  const picked = $derived(scan?.moments.find((moment: any) => moment.start === at));
+  const picked = $derived(
+    at ? scan?.moments.find((moment: any) => moment.start.slice(0, 16) === at.slice(0, 16)) : undefined,
+  );
 
+  /**
+   * The board, asked for from the address and not from the answer.
+   *
+   * Both endpoints take an instant, which `at` is; neither has ever needed
+   * the scan. Built from the row, they were open only to hours the current
+   * criteria still returned.
+   */
   const plateSrc = $derived(
-    picked &&
-      `/api/chart/plate?${chartQuery(picked.start, data.interval, { lang: t.locale, scheme: appearance.current })}`,
+    at && `/api/chart/plate?${chartQuery(at, data.interval, { lang: t.locale, scheme: appearance.current })}`,
   );
   const chartSrc = $derived(
-    picked && `/api/chart?${chartQuery(picked.start, data.interval, { lang: t.locale })}`,
+    at && `/api/chart?${chartQuery(at, data.interval, { lang: t.locale })}`,
   );
 
-  /** The hour in words, which is what names the dialog. */
+  /**
+   * The hour in words, which is what names the dialog.
+   *
+   * The pillar is added where the row is at hand and left out where it is
+   * not. Nothing is hidden by that: the drawing carries all four pillars in
+   * its own caption, and an hour named by its date and its clock is named.
+   */
   const heading = $derived(
-    picked &&
-      `${picked.start.slice(0, 10)} ${picked.start.slice(11, 16)} · ${gloss('stem', picked.hour.stem.id)} ${gloss('branch', picked.hour.branch.id)} ${picked.hour.hanzi}`,
+    at &&
+      `${at.slice(0, 10)} ${at.slice(11, 16)}${picked ? ` · ${gloss('stem', picked.hour.stem.id)} ${gloss('branch', picked.hour.branch.id)} ${picked.hour.hanzi}` : ''}`,
   );
 
   /**
@@ -192,8 +215,18 @@
    * which a reader reaches for before the back button.
    */
   function pick(start: string): void {
-    at = start;
+    // To the minute, which is how this section names an instant everywhere
+    // else — `time=04:10` in a link to a board, `…T04:10@qian` in the
+    // shortlist. A run's own `start` carries seconds, milliseconds and an
+    // offset, and the address is shorter and legible without them.
+    at = start.slice(0, 16);
     mark();
+  }
+
+  function choose(event: MouseEvent, start: string): void {
+    if (!isPlainClick(event)) return;
+    event.preventDefault();
+    pick(start);
   }
 
   function unpick(): void {
@@ -451,7 +484,13 @@
     <ul>
       {#each kept as entry (keptKey(entry.start, entry.palace))}
         <li>
-          <a href={chartHref(entry.start)}>
+          <!-- The board over the strip, exactly as a row of the table opens
+               it, and a link all the same — see `isPlainClick`. -->
+          <a
+            href={chartHref(entry.start)}
+            aria-current={entry.start === at ? 'true' : undefined}
+            onclick={(event) => choose(event, entry.start)}
+          >
             <span>{when(entry.start)}</span>
             <span class="where">
               {palaceOf(entry.palace).number}
@@ -503,21 +542,33 @@
           onkeep={keep}
         />
       </div>
-
-      {#if picked}
-        <PlateDialog
-          {t}
-          heading={heading as string}
-          plate={plateSrc as string}
-          chart={chartSrc as string}
-          href={chartHref(picked.start)}
-          onclosed={unpick}
-        />
-      {/if}
     {:else}
       <p class="none">{t('cli.value.nothingAnswered')}</p>
     {/if}
   </div>
+{/if}
+
+<!--
+  Outside the answer, like the strip that also opens it.
+
+  It used to hang inside the branch that renders the table, which made a board
+  something only a row could open. The board is a pure function of an instant
+  and a place, and both are in the address: an hour set aside a scan ago opens
+  the same way, whether or not the criteria in force still return it.
+
+  The place is the one thing worth guarding. Cast without it the endpoints
+  answer for the server's own zone — a chart of somewhere else, looking
+  exactly like a chart.
+-->
+{#if at && data.interval.place}
+  <PlateDialog
+    {t}
+    heading={heading as string}
+    plate={plateSrc as string}
+    chart={chartSrc as string}
+    href={chartHref(at)}
+    onclosed={unpick}
+  />
 {/if}
 
 <style>

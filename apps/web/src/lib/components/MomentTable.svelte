@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import { isPlainClick } from '$lib/navigation';
 
   /**
    * The answer to *when*, and to *which way*.
@@ -30,10 +31,7 @@
     /**
      * Choosing a row without leaving the page.
      *
-     * The cell stays a link whatever this does with it. `href` is the whole
-     * section and remains what a middle click, a new tab, a saved bookmark
-     * and a page without scripts all get; only a plain click is taken over.
-     * A button here would have thrown those away to gain nothing.
+     * The cell stays a link whatever this does with it — see `isPlainClick`.
      */
     onpick?: (start: string) => void;
     /**
@@ -99,15 +97,18 @@
   const dayName = (date: string): string => dayFormat.format(new Date(`${date}T00:00:00Z`));
 
   /**
-   * A plain click stays on the page; every other kind means somewhere else.
+   * Whether a row is the one whose board is open.
    *
-   * A modifier, or any button but the first, is how a person says "open this
-   * apart from what I am reading". Preventing those would be taking away the
-   * one thing they asked for.
+   * On the minute, and not on the string: what the page holds is how this
+   * section names an instant everywhere — `2026-09-01T04:10` — while a run's
+   * own `start` carries the seconds the bisection found it at.
    */
+  const isPicked = (start: string): boolean =>
+    picked !== '' && start.slice(0, 16) === picked.slice(0, 16);
+
+  /** A plain click stays on the page; every other kind means somewhere else. */
   function choose(event: MouseEvent, start: string): void {
-    if (!onpick) return;
-    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (!onpick || !isPlainClick(event)) return;
     event.preventDefault();
     onpick(start);
   }
@@ -163,7 +164,7 @@
       </tr>
       {#each day.moments as moment (moment.start)}
         {#each moment.palaces as cell, palace (cell.palace.number)}
-          <tr class:picked={moment.start === picked}>
+          <tr class:picked={isPicked(moment.start)}>
             {#if palace === 0}
               <th scope="row" rowspan={moment.palaces.length}>{hour(moment.start)}</th>
               <td rowspan={moment.palaces.length}>{hour(moment.end)}</td>
@@ -216,7 +217,7 @@
               <td rowspan={moment.palaces.length}>
                 <a
                   href={href(moment.start)}
-                  aria-current={moment.start === picked ? 'true' : undefined}
+                  aria-current={isPicked(moment.start) ? 'true' : undefined}
                   onclick={(event) => choose(event, moment.start)}
                 >
                   {t(onpick ? 'form.showPlate' : 'form.openChart')}
