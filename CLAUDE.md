@@ -18,6 +18,13 @@ anything.
 
 npm workspaces monorepo, Node ≥ 22, ESM, TypeScript.
 
+`docs/` holds the reference documents — things a reader looks things up in
+rather than reads through. **`docs/sources.md` is the register of where every
+number comes from**, and it is not optional bookkeeping: a quantity added to
+the engine without an entry there is a quantity nobody can weigh. See
+`docs/README.md` for what belongs in that directory and what belongs in
+`PLAN.md` instead.
+
 ## Commands
 
 ```sh
@@ -42,9 +49,19 @@ the engine falls back to Moshier, which needs no files.
 - **English is the language of the source.** Code, comments, identifiers, error
   codes, documentation and commit messages. Italian exists only as a locale in
   the catalogs of `packages/i18n`, never in the source.
-- **The engine does not localise, exactly as it does not interpret.** `core`
-  returns identifiers, hanzi and numbers; readable text is produced at the
-  surface. A function that returns a translated string is a design error.
+- **The engine does not localise.** `core` returns identifiers, hanzi and
+  numbers; readable text is produced at the surface. A function that returns a
+  translated string is a design error.
+- **The engine answers no question, which is not the same as saying nothing.**
+  It carries an attribute of a configuration when the sources hand it down
+  concordantly and it belongs to the configuration rather than to somebody's
+  situation — which is why `Pattern` has a `valence`: 門迫 *is* oppression and
+  擊刑 *is* punishment, named and weighed in one line of one text, and a table
+  that split them would report half of what it read. It stops at everything
+  that needs a question to have been asked: choosing the 用神, ranking palaces,
+  ordering hours, dating an outcome, advising. Any such attribute travels as an
+  identifier and a glyph, **never as prose** — a verdict that arrives inside an
+  English gloss is a verdict nothing can test.
 - **Chinese characters are not a locale.** 休門 is not the Chinese rendering of
   "Rest Gate": it is the name of the gate, and every reader expects to see it.
   Hanzi travels in the engine's output at all times; the catalog supplies only

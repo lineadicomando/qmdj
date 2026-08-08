@@ -33,12 +33,23 @@ compatible with it. The GeoNames data is CC BY 4.0.
 | Solar terms | the twenty-four 節氣, to the second, from Swiss Ephemeris |
 | Lunar calendar | months, intercalary months, lunar dates, reckoned on 120°E |
 | Four pillars | 四柱 with 藏干, 十神, 納音, 十二長生, 空亡, 大運 |
-| Qi Men charts | 時家 by the 拆補 or 置閏 method: four plates, configurations, seasonal states |
+| Qi Men charts | 時家 by the 拆補 or 置閏 method: four plates, configurations, seasonal states, 門宮 and 星宮 relations, the post horse of the day and of the hour |
 | Choosing a time | 擇時擇方: every chart over an interval, narrowed to the palaces answering stated criteria |
 
-It does **not** interpret. It reports that a gate stands over a palace whose
-phase it controls and that the configuration is called 門迫; what that means
-belongs to whoever reads it. See [`docs/agent-prompt.md`](docs/agent-prompt.md).
+It reports **arrangements and what the tradition calls them**. A gate stands
+over a palace whose phase it controls; the configuration is called 門迫; 迫 is
+oppression, so it comes back marked 凶. That last part is an attribute of the
+arrangement, transmitted with its name in the same line of the same text, and
+carrying it is reporting rather than interpreting — an engine that dropped it
+would be editing its sources, which it did, into glosses like "gate oppressed"
+where nothing could test it.
+
+What it does **not** do is everything that needs a question to have been asked:
+it does not choose the 用神 for what you want to know, does not rank palaces,
+does not order two hours, does not date an outcome, and does not advise. A
+chart holding four 凶 configurations is not a bad time to do anything — bad is
+a word about an undertaking, and no undertaking is known here.
+See [`docs/agent-prompt.md`](docs/agent-prompt.md).
 
 ## Layout
 
@@ -47,7 +58,7 @@ belongs to whoever reads it. See [`docs/agent-prompt.md`](docs/agent-prompt.md).
 | `packages/i18n` | message catalogs and locale negotiation. A leaf: depends on nothing |
 | `packages/geo` | location lookup over a local GeoNames dataset (SQLite) |
 | `packages/core` | the engine, and the `qimen` command |
-| `packages/plate` | the drawing: nine palaces framed by the compass, SVG and PNG |
+| `packages/plate` | the drawing: nine palaces framed by the compass, the configurations listed under them, SVG and PNG |
 | `packages/mcp` | MCP server, seven tools, stdio |
 | `apps/web` | SvelteKit: interface at `/en` and `/it`, six endpoints under `/api` |
 
@@ -131,6 +142,7 @@ from the first release:
 |---|---|---|
 | `method` | 拆補 / 置閏 / 茅山 | `chaibu` |
 | `plate` | 轉盤 / 飛盤 | `zhuan` |
+| `centreLodging` | the centre lodges in 坤, or in 坤 by yang dun and 艮 by yin | `kun` |
 | `trueSolarTime` | correct clock time to the Sun | `true` |
 | `yearBoundary` | 立春 or 正月初一 | `lichun` |
 | `dayBoundary` | the day pillar turns at 23:00 or at midnight | `zishi` |
@@ -151,27 +163,17 @@ identically.
 
 ## How sure the numbers are
 
-Not uniformly, and the difference is worth stating.
+Not uniformly, and the difference is worth stating. The solar terms are
+published astronomy, checked against an almanac over 1 926 dates; the Qi Men
+layout is consistent with one implementation of a contested tradition, checked
+over 160 charts; the configurations come from Chinese-language sources with no
+runnable reference at all.
 
-- **Solar terms, lunar calendar, four pillars** — verified against
-  `lunar-javascript` over 1 926 dates from 1902 to 2098. Year, month, day and
-  hour pillars and the lunar date agree on every one of them.
-- **The Qi Men layout** — verified against `qimen-dunjia` over 160 charts; all
-  thirteen quantities compared agree on every one, and the derived earth plate
-  reproduces all eighteen published arrangements. This means *consistent with
-  one implementation of a contested tradition*, not *verified against an
-  authority*: no observatory publishes Qi Men charts.
-- **The zhirun ju** — checked against `kinqimen` over 3 652 days: the yuan
-  agrees on every one, the term everywhere that reference follows the
-  classical bookkeeping — about two days in three, because its own reading
-  re-derives the term daily and cannot hold a sustained 超神 or a real 接氣.
-  The block structure — the four 符頭, the solstice anchor, the 195-day
-  leap — is confirmed by an independent Japanese source. The one contested
-  pin, at how many days of 超神 the intercalation falls, is declared in
-  `zhirun.ts`.
-- **The configurations and the seasonal states** — from Chinese-language
-  sources, each rule tested against the transmitted list it should reproduce.
-  There is no runnable reference for these at all.
+**[`docs/sources.md`](docs/sources.md) holds the whole register**: every
+source by name, what each was checked against, the licences, and — where two
+sources disagreed — which was followed and why. It is the document to read
+before trusting any single number, and the one to add to before shipping a new
+one.
 
 Working from memory was tried and abandoned: recalled almanac values were
 wrong more often than not, and the tests only became trustworthy once every
@@ -194,9 +196,15 @@ it as much as a Chinese one does. So hanzi travels in the engine's output
 whatever the locale, and the catalog only supplies the gloss beside it.
 
 A consequence worth having: the drawing is almost entirely
-locale-independent, because the palaces carry hanzi. Only its captions and the
-eight directions around its frame are text in a language — and the frame keeps
-the twelve branches beside them, since 子 is due north in every language.
+locale-independent, because the palaces carry hanzi. Only its captions, the
+eight directions around its frame and the band of configurations under it are
+text in a language — and the frame keeps the twelve branches beside them, since
+子 is due north in every language.
+
+The band is where a fortune is written, and the reason it exists: 吉 set alone
+in a palace would be a name with no gloss, and there is no room beside it for
+the word. It also carries 伏吟 and 反吟, which belong to the whole board and
+have no palace to be marked in — without it the picture never mentions them.
 
 ## Contributing
 

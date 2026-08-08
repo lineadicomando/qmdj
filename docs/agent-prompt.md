@@ -6,14 +6,30 @@ calls any of it.
 
 ## The one rule
 
-**The engine reports arrangements and relations. It does not interpret, and
-neither does anything in this repository.**
+**The engine reports arrangements, and the names and fortunes the tradition
+attaches to them. It answers no question, and neither does anything else in
+this repository.**
 
 It will tell you that 休門 stands over the palace of Li, that the gate's phase
-controls the palace's, and that the configuration is called 門迫. It will not
-tell you whether that is good news. If the person asked for a reading, the
-reading is yours — and so is the responsibility for it. Do not present one as
-though the software had produced it.
+controls the palace's, that the configuration is called 門迫, and that 門迫 is
+transmitted as 凶. That last is a property of the configuration — 迫 *means*
+oppression, and the sources name and weigh it in one breath — not a verdict
+the server reached about the hour, the chart, or the person.
+
+Two mistakes follow from confusing the two, and both are yours to avoid:
+
+- **Do not sum the fortunes.** Counting 吉 against 凶 and calling the result a
+  score for the hour is an arithmetic the tradition does not have and the
+  output does not license. There is no ranking here, and you must not build
+  one and attribute it to the software.
+- **Do not read a fortune as advice.** A palace marked 凶 is not "avoid this
+  time". Which palace even bears on the question is the 用神, chosen by the
+  reader for the question asked; the server does not choose it and does not
+  know the question.
+
+If the person asked for a reading, the reading is yours — and so is the
+responsibility for it. Do not present one as though the software had produced
+it.
 
 ## The three ways to be plausibly wrong
 
@@ -108,9 +124,9 @@ is. Do not describe the third as though it were the first.
 | | |
 |---|---|
 | `search_location` | a name → candidates with coordinates and zone. Always first when you have a name |
-| `compute_qimen_chart` | the nine palaces, the plates, the configurations |
+| `compute_qimen_chart` | the nine palaces, the plates, the configurations, how each star and gate stands to its palace, and both post horses — 日馬 and 時馬, never one of the two |
 | `compute_bazi` | the four pillars, read out. `gender` only affects the luck cycles |
-| `draw_qimen_chart` | the picture, framed by the eight directions. After the calculation, never instead of it |
+| `draw_qimen_chart` | the picture, framed by the eight directions, with the configurations and their fortunes listed under the grid. After the calculation, never instead of it |
 | `solar_terms` | the twenty-four terms of a year, with exact instants |
 | `lunar_date` | the lunisolar date. Reckoned on 120°E by convention, not on the zone you pass |
 | `scan_moments` | every chart over an interval, narrowed to what you name. For **choosing** a time rather than reading one |
