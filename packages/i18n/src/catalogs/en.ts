@@ -452,6 +452,7 @@ export const en = {
   'cli.column.star': 'star',
   'cli.column.gate': 'gate',
   'cli.column.spirit': 'spirit',
+  'cli.column.pillar': 'pillar',
   'cli.column.hidden': 'concealed',
   'cli.column.god': 'god',
   'cli.column.nayin': 'image',

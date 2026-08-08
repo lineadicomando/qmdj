@@ -393,6 +393,7 @@ export const it: Record<MessageKey, string> = {
   'cli.column.star': 'stella',
   'cli.column.gate': 'porta',
   'cli.column.spirit': 'spirito',
+  'cli.column.pillar': 'pilastro',
   'cli.column.hidden': 'celati',
   'cli.column.god': 'divinità',
   'cli.column.nayin': 'immagine',

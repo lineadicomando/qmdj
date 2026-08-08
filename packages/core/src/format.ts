@@ -1,6 +1,6 @@
 import type { MessageKey, Translator } from '@qimendunjia/i18n';
 import type { Bazi } from './bazi/index.js';
-import { palace, type QimenChart } from './dunjia/index.js';
+import { palace, YUAN_HANZI, YUAN_PINYIN, type QimenChart } from './dunjia/index.js';
 import type { Ganzhi } from './ganzhi.js';
 import type { LunarDate } from './lunar.js';
 import type { Moment } from './pillars.js';
@@ -24,27 +24,89 @@ import { fromJulianDay } from './time.js';
  */
 
 /**
- * `Rest 休門` — the word first, the name after it.
+ * A name in its script and said aloud: `休門 xiūmén`.
  *
  * The hanzi *is* the name, and it stays: without it nothing here can be
- * checked against a book or a second implementation. But it goes second and
- * small, because most people reading this cannot read it, and a line they
- * cannot read is a line they skip.
+ * checked against a book or a second implementation. The pinyin is beside it
+ * because this output is read by someone who does not read Chinese, and for
+ * them a glyph is a shape with no sound — they cannot say it, look it up, or
+ * ask anyone about it. The transliteration is what turns the name into
+ * something they can carry out of the terminal.
+ *
+ * It is not a locale and does not vary with one: 休門 is xiūmén to an Italian
+ * reader and to an English one. Only the gloss beside it changes.
  */
-function named(hanzi: string, key: MessageKey, t: Translator): string {
-  return `${t(key)} ${hanzi}`;
+function glyph(entity: { hanzi: string; pinyin: string }): string {
+  return `${entity.hanzi} ${entity.pinyin}`;
+}
+
+/**
+ * `Rest 休門 xiūmén` — the word first, the name after it.
+ *
+ * The word goes first and the name second, because most people reading this
+ * cannot read the glyph, and a line they cannot read is a line they skip.
+ */
+function named(
+  entity: { hanzi: string; pinyin: string },
+  key: MessageKey,
+  t: Translator,
+): string {
+  return `${t(key)} ${glyph(entity)}`;
+}
+
+/**
+ * How many columns a string takes in a terminal.
+ *
+ * Hanzi occupy two and Latin letters one. Counting code points would misalign
+ * every table on the page.
+ */
+function printedWidth(value: string): number {
+  let printed = 0;
+  for (const character of value) printed += /[⺀-鿿＀-｠]/.test(character) ? 2 : 1;
+  return printed;
 }
 
 function pad(value: string, width: number): string {
-  // Hanzi occupy two columns in a terminal; Latin letters one. Counting code
-  // points would misalign every table on the page.
-  let printed = 0;
-  for (const character of value) printed += /[⺀-鿿＀-｠]/.test(character) ? 2 : 1;
-  return value + ' '.repeat(Math.max(0, width - printed));
+  return value + ' '.repeat(Math.max(0, width - printedWidth(value)));
+}
+
+/**
+ * Rows of cells laid out as a table, each column as wide as its own content.
+ *
+ * The widths used to be constants. That is a thing which works in exactly one
+ * language: every one of them had been measured against English, and in
+ * Italian — where `Ricchezza Indiretta` stands for `Indirect Wealth` — several
+ * overflowed and welded two columns into one unreadable word. Some overflowed
+ * in English too, once a cell held three concealed stems instead of two.
+ *
+ * A width read off the content cannot do that, in any locale, however long a
+ * name the transliteration adds. The last cell of a row is never padded, so
+ * no line carries trailing blanks.
+ */
+function columns(rows: readonly (readonly string[])[], gutter = 2): string[] {
+  const widths: number[] = [];
+  for (const row of rows) {
+    for (const [index, cell] of row.entries()) {
+      widths[index] = Math.max(widths[index] ?? 0, printedWidth(cell));
+    }
+  }
+
+  return rows.map((row) =>
+    row
+      .map((cell, index) =>
+        index === row.length - 1 ? cell : pad(cell, (widths[index] as number) + gutter),
+      )
+      .join(''),
+  );
+}
+
+/** The same, indented two spaces, which is how every block here is set. */
+function table(rows: readonly (readonly string[])[], gutter = 2): string[] {
+  return columns(rows, gutter).map((line) => `  ${line}`);
 }
 
 function ganzhi(pair: Ganzhi, t: Translator): string {
-  return `${sayGanzhi(pair, t)}  ${pair.hanzi}`;
+  return `${sayGanzhi(pair, t)}  ${glyph(pair)}`;
 }
 
 function timeOf(julianDayUT: number, timezone: string): string {
@@ -52,7 +114,7 @@ function timeOf(julianDayUT: number, timezone: string): string {
 }
 
 function term(solarTerm: SolarTerm, timezone: string, t: Translator): string {
-  const gloss = named(solarTerm.term.hanzi, `label.term.${solarTerm.term.id}` as MessageKey, t);
+  const gloss = named(solarTerm.term, `label.term.${solarTerm.term.id}` as MessageKey, t);
   return `${gloss} — ${timeOf(solarTerm.julianDayUT, timezone)}`;
 }
 
@@ -64,39 +126,50 @@ function lunar(date: LunarDate, t: Translator): string {
 /** The instant, its pillars, and the calendrical facts they rest on. */
 export function formatMoment(moment: Moment, t: Translator): string {
   const zone = moment.input.timezone;
-  const lines = [
-    `${t('cli.heading.moment')}`,
-    `  ${pad(t('cli.field.local'), 20)}${moment.local}`,
-    `  ${pad(t('cli.field.utc'), 20)}${moment.utc}`,
+  const fields: string[][] = [
+    [t('cli.field.local'), moment.local],
+    [t('cli.field.utc'), moment.utc],
   ];
 
   if (moment.options.trueSolarTime) {
     const hours = Math.floor(moment.solar.hour);
     const minutes = Math.round((moment.solar.hour - hours) * 60);
-    lines.push(
-      `  ${pad(t('cli.field.solar'), 20)}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}` +
+    fields.push([
+      t('cli.field.solar'),
+      `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}` +
         `  (${t('cli.field.correction')} ${t('cli.value.minutes', { value: moment.solar.correctionMinutes.toFixed(1) })})`,
-    );
+    ]);
   }
 
-  lines.push(
-    `  ${pad(t('cli.field.term'), 20)}${term(moment.solarTerm, zone, t)}`,
-    `  ${pad(t('cli.field.jie'), 20)}${term(moment.jie, zone, t)}`,
-    `  ${pad(t('cli.field.lunar'), 20)}${lunar(moment.lunar, t)}`,
-    '',
-    `${t('cli.heading.pillars')}`,
-    `  ${pad(t('cli.column.year'), 26)}${pad(t('cli.column.month'), 26)}${pad(t('cli.column.day'), 26)}${t('cli.column.hour')}`,
-    `  ${pad(ganzhi(moment.pillars.year, t), 26)}${pad(ganzhi(moment.pillars.month, t), 26)}${pad(ganzhi(moment.pillars.day, t), 26)}${ganzhi(moment.pillars.hour, t)}`,
+  fields.push(
+    [t('cli.field.term'), term(moment.solarTerm, zone, t)],
+    [t('cli.field.jie'), term(moment.jie, zone, t)],
+    [t('cli.field.lunar'), lunar(moment.lunar, t)],
   );
 
-  return lines.join('\n');
+  // One pillar to a line rather than four across the page. Said in words and
+  // then in glyphs and then aloud, a pillar is some forty columns wide, and
+  // four of those is a table nothing can show without folding it in half.
+  const pillars = (['year', 'month', 'day', 'hour'] as const).map((position) => [
+    t(`cli.column.${position}` as MessageKey),
+    sayGanzhi(moment.pillars[position], t),
+    glyph(moment.pillars[position]),
+  ]);
+
+  return [
+    `${t('cli.heading.moment')}`,
+    ...table(fields, 4),
+    '',
+    `${t('cli.heading.pillars')}`,
+    ...table(pillars),
+  ].join('\n');
 }
 
 /** The Qi Men chart: the ju, the chief, and the nine palaces. */
 export function formatQimenChart(chart: QimenChart, t: Translator): string {
   const dun = chart.ju.yang ? t('cli.value.yangDun') : t('cli.value.yinDun');
   const yuan = named(
-    chart.ju.yuan === 'shang' ? '上元' : chart.ju.yuan === 'zhong' ? '中元' : '下元',
+    { hanzi: YUAN_HANZI[chart.ju.yuan], pinyin: YUAN_PINYIN[chart.ju.yuan] },
     `label.yuan.${chart.ju.yuan}` as MessageKey,
     t,
   );
@@ -106,7 +179,7 @@ export function formatQimenChart(chart: QimenChart, t: Translator): string {
   // it is always the term in force, which the moment above already shows.
   const served =
     chart.options.method === 'zhirun'
-      ? ` · ${chart.ju.leap ? '閏' : ''}${chart.ju.term.hanzi} ${
+      ? ` · ${chart.ju.leap ? '閏' : ''}${chart.ju.term.hanzi} ${chart.ju.leap ? 'rùn' : ''}${chart.ju.term.pinyin} ${
           chart.ju.leap
             ? t('cli.value.leapTerm', {
                 term: t(`label.term.${chart.ju.term.id}` as MessageKey),
@@ -117,54 +190,81 @@ export function formatQimenChart(chart: QimenChart, t: Translator): string {
 
   const lines = [
     `${t('cli.heading.chart')}`,
-    `  ${pad(t('cli.field.ju'), 20)}${dun} ${chart.ju.number} · ${yuan}${served}`,
-    `  ${pad(t('cli.field.instrument'), 20)}${t(`label.stem.${chart.instrument.id}` as MessageKey)} ${chart.instrument.hanzi}`,
-    `  ${pad(t('cli.field.chief'), 20)}${named(chart.chief.star.hanzi, `label.star.${chart.chief.star.id}` as MessageKey, t)} → ${named(chart.chief.palace.hanzi, `label.palace.${chart.chief.palace.id}` as MessageKey, t)}`,
-    `  ${pad(t('cli.field.chiefGate'), 20)}${named(chart.chiefGate.gate.hanzi, `label.gate.${chart.chiefGate.gate.id}` as MessageKey, t)} → ${named(chart.chiefGate.palace.hanzi, `label.palace.${chart.chiefGate.palace.id}` as MessageKey, t)}`,
+    ...table(
+      [
+        [t('cli.field.ju'), `${dun} ${chart.ju.number} · ${yuan}${served}`],
+        [
+          t('cli.field.instrument'),
+          named(chart.instrument, `label.stem.${chart.instrument.id}` as MessageKey, t),
+        ],
+        [
+          t('cli.field.chief'),
+          `${named(chart.chief.star, `label.star.${chart.chief.star.id}` as MessageKey, t)} → ` +
+            `${named(chart.chief.palace, `label.palace.${chart.chief.palace.id}` as MessageKey, t)}`,
+        ],
+        [
+          t('cli.field.chiefGate'),
+          `${named(chart.chiefGate.gate, `label.gate.${chart.chiefGate.gate.id}` as MessageKey, t)} → ` +
+            `${named(chart.chiefGate.palace, `label.palace.${chart.chiefGate.palace.id}` as MessageKey, t)}`,
+        ],
+      ],
+      4,
+    ),
     '',
     `${t('cli.heading.palaces')}`,
-    `  ${pad(t('cli.column.palace'), 18)}${pad(t('cli.column.earth'), 16)}${pad(t('cli.column.heaven'), 16)}${pad(t('cli.column.star'), 20)}${pad(t('cli.column.gate'), 20)}${t('cli.column.spirit')}`,
   ];
 
-  for (const cell of chart.palaces) {
-    const stem = (named_: { id: string; hanzi: string }): string =>
-      `${t(`label.stem.${named_.id}` as MessageKey)} ${named_.hanzi}`;
-    const strong = (state: { id: string } | undefined): string =>
-      state ? ` ${t(`label.strength.${state.id}` as MessageKey)}` : '';
-    // How it stands to the ground it is on, after how it stands to the season.
-    // The two are different questions of the same thing and are told apart by
-    // the glyph, which names the second and never the first.
-    const stands = (relation: { id: string; hanzi: string } | undefined): string =>
-      relation
-        ? ` · ${t(`label.relation.${relation.id}` as MessageKey)} ${relation.hanzi}`
-        : '';
+  const strong = (state: { id: string } | undefined): string =>
+    state ? ` ${t(`label.strength.${state.id}` as MessageKey)}` : '';
+  // How it stands to the ground it is on, after how it stands to the season.
+  // The two are different questions of the same thing and are told apart by
+  // the glyph, which names the second and never the first.
+  const stands = (relation: { id: string; hanzi: string; pinyin: string } | undefined): string =>
+    relation ? ` · ${named(relation, `label.relation.${relation.id}` as MessageKey, t)}` : '';
 
-    lines.push(
-      `  ${pad(`${cell.palace.number} ${t(`label.palace.${cell.palace.id}` as MessageKey)} ${cell.palace.hanzi}`, 18)}` +
-        `${pad(stem(cell.earth), 16)}${pad(stem(cell.heaven), 16)}` +
-        `${pad(`${t(`label.star.${cell.star.id}` as MessageKey)}${strong(cell.starStrength)}${stands(cell.starRelation)}`, 38)}` +
-        `${pad(cell.gate ? `${t(`label.gate.${cell.gate.id}` as MessageKey)}${strong(cell.gateStrength)}${stands(cell.gateRelation)}` : '—', 38)}` +
-        `${cell.spirit ? t(`label.spirit.${cell.spirit.id}` as MessageKey) : '—'}`,
-    );
-  }
+  lines.push(
+    ...table([
+      [
+        t('cli.column.palace'),
+        t('cli.column.earth'),
+        t('cli.column.heaven'),
+        t('cli.column.star'),
+        t('cli.column.gate'),
+        t('cli.column.spirit'),
+      ],
+      ...chart.palaces.map((cell) => [
+        `${cell.palace.number} ${named(cell.palace, `label.palace.${cell.palace.id}` as MessageKey, t)}`,
+        named(cell.earth, `label.stem.${cell.earth.id}` as MessageKey, t),
+        named(cell.heaven, `label.stem.${cell.heaven.id}` as MessageKey, t),
+        `${t(`label.star.${cell.star.id}` as MessageKey)}${strong(cell.starStrength)}${stands(cell.starRelation)}`,
+        cell.gate
+          ? `${t(`label.gate.${cell.gate.id}` as MessageKey)}${strong(cell.gateStrength)}${stands(cell.gateRelation)}`
+          : '—',
+        cell.spirit ? t(`label.spirit.${cell.spirit.id}` as MessageKey) : '—',
+      ]),
+    ]),
+  );
 
   if (chart.patterns.length > 0) {
-    lines.push('', `${t('cli.heading.patterns')}`);
-    for (const pattern of chart.patterns) {
-      const where = pattern.palace
-        ? ` — ${palaceOf(chart, pattern.palace, t)}`
-        : pattern.layer
-          ? ` — ${t(`label.layer.${pattern.layer}` as MessageKey)}`
-          : '';
-      const valence = `${t(`label.valence.${pattern.valence.id}` as MessageKey)} ${pattern.valence.hanzi}`;
-      lines.push(
-        // Ten and not eight: `pad` measures in columns, a hanzi takes two of
-        // them, and 五不遇時 or 熒入太白 fills eight exactly — leaving the
-        // fortune welded to the name.
-        `  ${pad(t(`label.pattern.${pattern.id}` as MessageKey), 32)}${pad(pattern.hanzi, 10)}` +
-          `${pad(valence, 32)}${where}`,
-      );
-    }
+    lines.push(
+      '',
+      `${t('cli.heading.patterns')}`,
+      ...table(
+        chart.patterns.map((pattern) => {
+          const where = pattern.palace
+            ? `— ${palaceOf(chart, pattern.palace, t)}`
+            : pattern.layer
+              ? `— ${t(`label.layer.${pattern.layer}` as MessageKey)}`
+              : '';
+          return [
+            t(`label.pattern.${pattern.id}` as MessageKey),
+            glyph(pattern),
+            named(pattern.valence, `label.valence.${pattern.valence.id}` as MessageKey, t),
+            where,
+          ];
+        }),
+      ),
+    );
   }
 
   lines.push(
@@ -178,8 +278,8 @@ export function formatQimenChart(chart: QimenChart, t: Translator): string {
     lines.push(
       `  ${t('cli.field.horse', {
         from: t(`label.horse.${horse.from}` as MessageKey),
-        branch: `${t(`label.branch.${horse.branch.id}` as MessageKey)} ${horse.branch.hanzi}`,
-        palace: `${horse.palace} ${t(`label.palace.${palace(horse.palace).id}` as MessageKey)} ${palace(horse.palace).hanzi}`,
+        branch: named(horse.branch, `label.branch.${horse.branch.id}` as MessageKey, t),
+        palace: `${horse.palace} ${named(palace(horse.palace), `label.palace.${palace(horse.palace).id}` as MessageKey, t)}`,
       })}`,
     );
   }
@@ -199,30 +299,63 @@ function palaceOf(chart: QimenChart, number: number, t: Translator): string {
 export function formatBazi(bazi: Bazi, t: Translator): string {
   const lines = [
     `${t('cli.heading.reading')}`,
-    `  ${pad(t('cli.field.dayMaster'), 20)}${t(`label.stem.${bazi.dayMaster.id}` as MessageKey)}  ${bazi.dayMaster.hanzi}`,
-    `  ${pad(t('cli.field.empty'), 20)}${bazi.emptyBranches.map((b) => t(`label.branch.${b.id}` as MessageKey)).join(', ')}`,
+    ...table(
+      [
+        [
+          t('cli.field.dayMaster'),
+          named(bazi.dayMaster, `label.stem.${bazi.dayMaster.id}` as MessageKey, t),
+        ],
+        [
+          t('cli.field.empty'),
+          bazi.emptyBranches
+            .map((branch) => named(branch, `label.branch.${branch.id}` as MessageKey, t))
+            .join(', '),
+        ],
+      ],
+      4,
+    ),
     '',
-    `  ${pad('', 8)}${pad(t('cli.column.year'), 26)}${pad(t('cli.column.god'), 22)}${pad(t('cli.column.hidden'), 14)}${t('cli.column.stage')}`,
+    // The pair alone, without the words for it: the block of pillars above
+    // has just said all four in full, and repeating that here bought a
+    // column forty wide to hold what the reader had read one line earlier.
+    ...table([
+      [
+        '',
+        t('cli.column.pillar'),
+        t('cli.column.god'),
+        t('cli.column.hidden'),
+        t('cli.column.stage'),
+      ],
+      ...bazi.pillars.map((pillar) => [
+        t(`cli.column.${pillar.position}` as MessageKey),
+        glyph(pillar.ganzhi),
+        pillar.stemGod
+          ? named(pillar.stemGod, `label.god.${pillar.stemGod.id}` as MessageKey, t)
+          : '—',
+        // The phase of each concealed stem, read off its identifier. It used
+        // to be read off the *translated* name of the stem by cutting away
+        // the first word — which is the polarity in English and the phase in
+        // Italian, so the Italian column reported `yin, yin` and never once
+        // said what was hidden there.
+        pillar.hidden
+          .map((hidden) => t(`label.element.${hidden.stem.stem.element}` as MessageKey))
+          .join(', '),
+        named(pillar.stage, `label.stage.${pillar.stage.id}` as MessageKey, t),
+      ]),
+    ]),
   ];
-
-  for (const pillar of bazi.pillars) {
-    const god = pillar.stemGod ? t(`label.god.${pillar.stemGod.id}` as MessageKey) : '—';
-    lines.push(
-      `  ${pad(t(`cli.column.${pillar.position}` as MessageKey), 8)}` +
-        `${pad(`${sayGanzhi(pillar.ganzhi, t)}  ${pillar.ganzhi.hanzi}`, 26)}` +
-        `${pad(god, 22)}` +
-        `${pad(pillar.hidden.map((h) => t(`label.stem.${h.stem.stem.id}` as MessageKey).replace(/^\S+ /, '')).join(', '), 14)}` +
-        `${t(`label.stage.${pillar.stage.id}` as MessageKey)}`,
-    );
-  }
 
   if (bazi.luck) {
     const direction = bazi.luck.forward ? t('cli.value.forward') : t('cli.value.backward');
     lines.push(
       '',
       `${t('cli.heading.luck')} — ${direction}, ${bazi.luck.start.years}y ${bazi.luck.start.months}m ${bazi.luck.start.days}d`,
-      ...bazi.luck.cycles.map(
-        (cycle) => `  ${String(cycle.startAge).padStart(3)}  ${sayGanzhi(cycle.ganzhi, t)}  ${cycle.ganzhi.hanzi}`,
+      ...table(
+        bazi.luck.cycles.map((cycle) => [
+          String(cycle.startAge).padStart(3),
+          sayGanzhi(cycle.ganzhi, t),
+          glyph(cycle.ganzhi),
+        ]),
       ),
     );
   }
@@ -237,14 +370,16 @@ export function formatSolarTerms(
   timezone: string,
   t: Translator,
 ): string {
-  const lines = [t('cli.heading.terms', { year })];
-  for (const entry of terms) {
-    lines.push(
-      `  ${pad(t(`label.term.${entry.term.id}` as MessageKey), 26)}` +
-        `${pad(timeOf(entry.julianDayUT, timezone), 18)}${entry.term.hanzi}`,
-    );
-  }
-  return lines.join('\n');
+  return [
+    t('cli.heading.terms', { year }),
+    ...table(
+      terms.map((entry) => [
+        t(`label.term.${entry.term.id}` as MessageKey),
+        timeOf(entry.julianDayUT, timezone),
+        glyph(entry.term),
+      ]),
+    ),
+  ].join('\n');
 }
 
 /** Whatever the calculation wants the caller to know, translated. */
@@ -272,10 +407,17 @@ export function formatScan(matches: readonly ScanMatch[], t: Translator): string
   // hour are read off it rather than converted through a zone a second time.
   const clock = (iso: string): string => `${iso.slice(0, 10)} ${iso.slice(11, 16)}`;
 
-  const lines = [
-    `  ${pad(t('cli.column.from'), 18)}${pad(t('cli.column.to'), 18)}${pad(t('cli.column.hour'), 30)}` +
-      `${pad(t('cli.column.ju'), 12)}${pad(t('cli.column.palace'), 22)}${pad(t('cli.column.gate'), 24)}` +
-      `${pad(t('cli.column.star'), 26)}${t('cli.column.spirit')}`,
+  const rows: string[][] = [
+    [
+      t('cli.column.from'),
+      t('cli.column.to'),
+      t('cli.column.hour'),
+      t('cli.column.ju'),
+      t('cli.column.palace'),
+      t('cli.column.gate'),
+      t('cli.column.star'),
+      t('cli.column.spirit'),
+    ],
   ];
 
   for (const { run, palaces } of matches) {
@@ -287,22 +429,23 @@ export function formatScan(matches: readonly ScanMatch[], t: Translator): string
       // The hour is written once for the run and left blank under itself:
       // repeating it down the column turns three palaces of one hour into
       // what reads as three hours.
-      const opens = index === 0 ? clock(run.start) : '';
-      const closes = index === 0 ? clock(run.end) : '';
-      // The pillar in words and then as the pair it is, as every other table
-      // here sets it: 甲寅 alone is a line most readers of this skip.
-      const hour = index === 0 ? ganzhi(run.chart.moment.pillars.hour, t) : '';
-      const ju = index === 0 ? `${dun} ${run.chart.ju.number}` : '';
-
-      lines.push(
-        `  ${pad(opens, 18)}${pad(closes, 18)}${pad(hour, 30)}${pad(ju, 12)}` +
-          `${pad(`${cell.palace.number} ${t(`label.palace.${cell.palace.id}` as MessageKey)} ${cell.palace.hanzi}`, 22)}` +
-          `${pad(cell.gate ? `${t(`label.gate.${cell.gate.id}` as MessageKey)}${strong(cell.gateStrength)}` : '—', 24)}` +
-          `${pad(`${t(`label.star.${cell.star.id}` as MessageKey)}${strong(cell.starStrength)}`, 26)}` +
-          `${cell.spirit ? t(`label.spirit.${cell.spirit.id}` as MessageKey) : '—'}`,
-      );
+      const first = index === 0;
+      rows.push([
+        first ? clock(run.start) : '',
+        first ? clock(run.end) : '',
+        // The pillar in words and then as the pair it is, as every other table
+        // here sets it: 甲寅 alone is a line most readers of this skip.
+        first ? ganzhi(run.chart.moment.pillars.hour, t) : '',
+        first ? `${dun} ${run.chart.ju.number}` : '',
+        `${cell.palace.number} ${named(cell.palace, `label.palace.${cell.palace.id}` as MessageKey, t)}`,
+        cell.gate
+          ? `${t(`label.gate.${cell.gate.id}` as MessageKey)}${strong(cell.gateStrength)}`
+          : '—',
+        `${t(`label.star.${cell.star.id}` as MessageKey)}${strong(cell.starStrength)}`,
+        cell.spirit ? t(`label.spirit.${cell.spirit.id}` as MessageKey) : '—',
+      ]);
     }
   }
 
-  return lines.join('\n');
+  return table(rows).join('\n');
 }

@@ -274,13 +274,13 @@ function resolvePlace(options: Options, input: LocalMoment): Place {
   };
 }
 
-/** `Asked for  Opening, starting … → Open 開門`, or nothing if no errand. */
+/** `Asked for  Opening, starting … → Open 開門 kāimén`, or nothing if no errand. */
 function expansionOf(options: Options, t: ReturnType<typeof createTranslator>): string {
   if (!options.for) return '';
   const gate = purposeCriteria(options.for as PurposeId).gate as string;
   const named = GATES.find((candidate) => candidate.id === gate) as (typeof GATES)[number];
 
-  return `  ${t('cli.heading.criteria')}: ${t(`label.purpose.${options.for}` as MessageKey)} → ${t(`label.gate.${gate}` as MessageKey)} ${named.hanzi}`;
+  return `  ${t('cli.heading.criteria')}: ${t(`label.purpose.${options.for}` as MessageKey)} → ${t(`label.gate.${gate}` as MessageKey)} ${named.hanzi} ${named.pinyin}`;
 }
 
 const DIRECTIONS = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'] as const;
