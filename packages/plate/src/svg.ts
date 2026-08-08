@@ -65,7 +65,15 @@ export function renderChartSvg(chart: PlateChart, options: PlateOptions = {}): s
   const size = options.size ?? DEFAULT_SIZE;
   const captions = options.captions;
   const compass = options.compass;
-  const geometry = layout(size, { captions: captions !== undefined, compass: compass !== undefined });
+  // The band is asked for by giving it a heading, and it costs the grid only
+  // what it carries — so the entries have to be gathered before the layout is
+  // settled rather than after it.
+  const listed = captions?.configurations ? configurations(chart) : [];
+  const geometry = layout(size, {
+    captions: captions !== undefined,
+    compass: compass !== undefined,
+    configurations: listed.length,
+  });
   const byNumber = new Map(chart.palaces.map((palace) => [palace.palace.number, palace]));
   const marked = markedPalaces(chart);
 
@@ -99,10 +107,47 @@ export function renderChartSvg(chart: PlateChart, options: PlateOptions = {}): s
 
   parts.push(drawGrid(geometry));
   if (compass) parts.push(drawCompass(compass, geometry));
+  if (listed.length > 0) {
+    parts.push(
+      drawConfigurations(listed, captions?.configurations as string, geometry, labels, byNumber),
+    );
+  }
   if (captions) parts.push(drawCaptions(chart, captions, geometry));
   parts.push('</g></svg>');
 
   return parts.join('\n');
+}
+
+/** One configuration, and every palace of this chart it fell in. */
+interface Entry {
+  pattern: PlatePattern;
+  palaces: number[];
+}
+
+/**
+ * The configurations, each once, in the order the engine found them.
+ *
+ * Gathered by name rather than by occurrence: 空亡 falling in two palaces is
+ * one configuration in two places, and a band that listed it twice would read
+ * as two things having happened. The order is the engine's throughout —
+ * sorting by fortune is the ranking this project refuses to produce.
+ */
+function configurations(chart: PlateChart): Entry[] {
+  const entries: Entry[] = [];
+  const byId = new Map<string, Entry>();
+
+  for (const pattern of chart.patterns) {
+    let entry = byId.get(pattern.id);
+    if (!entry) {
+      entry = { pattern, palaces: [] };
+      byId.set(pattern.id, entry);
+      entries.push(entry);
+    }
+    if (pattern.palace !== undefined) entry.palaces.push(pattern.palace);
+  }
+
+  for (const entry of entries) entry.palaces.sort((a, b) => a - b);
+  return entries;
 }
 
 /** Which configurations fell where, so a palace can be marked with them. */
@@ -425,6 +470,117 @@ function baseline(centre: number, size: number): number {
  * `capo Baldacchino porta del capo Riposo`, read as one phrase.
  */
 const BETWEEN = ' — ';
+
+/**
+ * Between the parts of one entry in the band, which are three short things.
+ *
+ * The spaces are no-break spaces for the reason `GAP` is a hair space: a
+ * renderer collapses a run of ordinary whitespace at the seam between two
+ * tspans, and the separator arrives welded to the glyph before it.
+ */
+const WITHIN = ' · ';
+
+/**
+ * A thing said twice, with the word's colour chosen by the caller.
+ *
+ * `named` leaves the word the colour of its line, which is right in a palace
+ * where the whole line is one thing. A line of the band is three things — the
+ * configuration, its fortune, where it fell — and only the first of them is
+ * written in the mark's colour that ties it back to the palaces.
+ */
+function tinted(
+  thing: { id: string; hanzi: string },
+  from: Record<string, string> | undefined,
+  className: string,
+): Run[] {
+  const word = from?.[thing.id];
+  if (!word) return [{ text: thing.hanzi, className }];
+
+  return [
+    { text: word, className },
+    { text: `${GAP}${thing.hanzi}`, scale: HANZI_SCALE, className: 'faint' },
+  ];
+}
+
+/**
+ * The band under the grid: every configuration once, with its fortune.
+ *
+ * It exists because a palace has room for a name and nothing else. A fortune
+ * is 吉 or 凶, and a glyph set alone in a palace is a name with no gloss —
+ * the one thing this project does not do to a reader who does not read
+ * Chinese. And 伏吟 and 反吟 have no palace to be written in at all: they are
+ * properties of the whole board, so without a band the drawing never mentions
+ * them, which is what it did until now.
+ *
+ * Set flush left, unlike everything else here. The lines are of unequal
+ * length and a centred list of them reads as ragged text rather than as a
+ * column of entries.
+ */
+function drawConfigurations(
+  entries: Entry[],
+  heading: string,
+  geometry: Layout,
+  labels: PlateLabels,
+  byNumber: Map<number, PlatePalace>,
+): string {
+  const { margin, cell, foot, font } = geometry;
+  const top = margin + cell * 3 + geometry.compass.band;
+  // Flush with the left edge of the grid, not of the paper: the band belongs
+  // to the board above it and reads as adrift when it starts outside the
+  // frame the compass draws.
+  const edge = margin + geometry.compass.band;
+  const width = cell * 3;
+
+  const parts = [
+    text(edge, top + foot.heading, heading, font.entry, {
+      className: 'faint',
+      anchor: 'start',
+      maxWidth: width,
+    }),
+  ];
+
+  entries.forEach((entry, index) => {
+    const { pattern } = entry;
+    // The palace's number and the word for its direction, and not its trigram:
+    // this is a pointer at a square of the grid, where the trigram is already
+    // written, rather than a second naming of it. The number is what the
+    // drawing puts in the corner of every palace, so it is what a reader
+    // follows back.
+    const where = entry.palaces.length
+      ? entry.palaces
+          .map((number) => {
+            const palace = byNumber.get(number)?.palace;
+            const word = palace ? labels.palace?.[palace.id] : undefined;
+            return word ? `${number} ${word}` : String(number);
+          })
+          .join(', ')
+      : // A configuration of the whole board has no palace, only the layer it
+        // came home on. With no word for that layer nothing is written: an
+        // identifier at the reader would be worse than the silence.
+        (pattern.layer ? labels.layer?.[pattern.layer] : undefined) ?? '';
+
+    const runs: Run[] = [...tinted(pattern, labels.pattern, 'mark')];
+    if (pattern.valence) {
+      // Fainter than the name it qualifies. Set at full strength the fortune
+      // is the heaviest thing on the line, and a band whose loudest word is
+      // 凶 is the ranking this drawing declines to make.
+      runs.push(
+        { text: WITHIN, className: 'faint' },
+        ...tinted(pattern.valence, labels.valence, 'faint'),
+      );
+    }
+    if (where) runs.push({ text: `${WITHIN}${where}`, className: 'faint' });
+
+    parts.push(
+      text(edge, top + foot.first + foot.step * index, runs, font.entry, {
+        anchor: 'start',
+        maxWidth: width,
+      }),
+    );
+  });
+
+  return parts.filter(Boolean).join('\n');
+}
 
 function drawCaptions(
   chart: PlateChart,

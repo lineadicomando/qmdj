@@ -30,9 +30,10 @@ const CHART: PlateChart = {
     },
   },
   patterns: [
-    { id: 'kongwang', hanzi: '空亡', palace: 2 },
-    { id: 'jixing', hanzi: '擊刑', palace: 4 },
-    { id: 'fuyin', hanzi: '伏吟' },
+    { id: 'kongwang', hanzi: '空亡', valence: { id: 'jixiong', hanzi: '吉凶' }, palace: 2 },
+    { id: 'kongwang', hanzi: '空亡', valence: { id: 'jixiong', hanzi: '吉凶' }, palace: 7 },
+    { id: 'jixing', hanzi: '擊刑', valence: { id: 'xiong', hanzi: '凶' }, palace: 4 },
+    { id: 'fuyin', hanzi: '伏吟', valence: { id: 'xiong', hanzi: '凶' }, layer: 'gate' },
   ],
   palaces: [
     cell(1, 'kan', '坎', 'shui', 'ji', '己', 'ren', '壬', 'tianfu', '天輔', 'xiu', '休', 'xiumen', '休門', 'qiu', '囚', 'liuhe', '六合'),
@@ -131,7 +132,9 @@ describe('renderChartSvg', () => {
 
     expect(svg).toContain('空亡');
     expect(svg).toContain('擊刑');
-    // A configuration belonging to the whole board has no palace to mark.
+    // A configuration belonging to the whole board has no palace to mark, and
+    // without the band asked for below it goes unmentioned — which is the
+    // reason the band exists.
     expect(svg).not.toContain('伏吟');
   });
 
@@ -409,5 +412,90 @@ describe('the compass', () => {
 
     expect(svg).toContain('子');
     expect(svg).not.toMatch(/>[A-Za-z ]{1,3}</);
+  });
+});
+
+describe('the band of configurations', () => {
+  const LABELS = {
+    palace: { kun: 'southwest', dui: 'west', xun: 'southeast' },
+    pattern: { kongwang: 'void', jixing: 'instrument struck', fuyin: 'the board come home' },
+    valence: { xiong: 'inauspicious', jixiong: 'auspicious and inauspicious' },
+    layer: { gate: 'the gates' },
+  };
+  const BAND = { captions: { configurations: 'Configurations' }, labels: LABELS };
+
+  it('is drawn only when it is given a heading', () => {
+    expect(renderChartSvg(CHART, { labels: LABELS })).not.toContain('伏吟');
+    expect(renderChartSvg(CHART, BAND)).toContain('伏吟');
+  });
+
+  it('says what a palace has no room to say', () => {
+    const svg = renderChartSvg(CHART, BAND);
+
+    // The fortune, in a word and in the name of it — the reason the band
+    // exists rather than a glyph appended in the palace, where the word would
+    // not fit and the glyph would stand without a gloss.
+    expect(svg).toContain('inauspicious');
+    expect(svg).toContain('凶');
+    expect(svg).toContain('auspicious and inauspicious');
+    expect(svg).toContain('吉凶');
+  });
+
+  it('reaches the configurations that belong to the whole board', () => {
+    // 伏吟 has no palace, so until there was a band the drawing never named
+    // it at all. It is placed by the layer it came home on instead.
+    const svg = renderChartSvg(CHART, BAND);
+
+    expect(svg).toContain('the board come home');
+    expect(svg).toContain('the gates');
+  });
+
+  it('lists a configuration once, with every palace it fell in', () => {
+    const svg = renderChartSvg(CHART, BAND);
+    const lines = svg.match(/void/g) ?? [];
+
+    // Twice in the whole drawing: the foot of palace 2 and the foot of palace
+    // 7 each carry the mark, and the band carries one entry naming both.
+    expect(lines).toHaveLength(3);
+    expect(svg).toContain('2 southwest, 7 west');
+  });
+
+  it('keeps the engine’s order and does not sort by fortune', () => {
+    const svg = renderChartSvg(CHART, BAND);
+    const band = svg.slice(svg.indexOf('Configurations'));
+
+    expect(band.indexOf('void')).toBeLessThan(band.indexOf('instrument struck'));
+    expect(band.indexOf('instrument struck')).toBeLessThan(band.indexOf('the board come home'));
+  });
+
+  it('costs the grid what it carries, and nothing when it carries nothing', () => {
+    const bare = layout(900, { captions: true });
+    const two = layout(900, { captions: true, configurations: 2 });
+    const six = layout(900, { captions: true, configurations: 6 });
+
+    expect(layout(900, { captions: true, configurations: 0 }).cell).toBe(bare.cell);
+    expect(two.cell).toBeLessThan(bare.cell);
+    expect(six.cell).toBeLessThan(two.cell);
+  });
+
+  it('leaves the band clear of the grid above it and the captions below', () => {
+    const svg = renderChartSvg(CHART, {
+      size: 900,
+      captions: { configurations: 'Configurations', chief: 'chief Canopy' },
+      labels: LABELS,
+    });
+    const geometry = layout(900, { captions: true, configurations: 3 });
+    // Measured inside the band: "void" is written in the foot of palace 2 as
+    // well, and that is the earlier of the two in the document.
+    const band = svg.slice(svg.indexOf('>Configurations<') - 120);
+    const at = (content: string): number => {
+      const found = new RegExp(`<text x="[\\d.]+" y="([\\d.]+)"[^>]*>(<tspan[^>]*>)?${content}`).exec(band);
+      return Number(found?.[1]);
+    };
+
+    const gridBottom = geometry.margin + geometry.cell * 3;
+    expect(at('Configurations')).toBeGreaterThan(gridBottom);
+    expect(at('void')).toBeGreaterThan(at('Configurations'));
+    expect(at('void')).toBeLessThan(at('chief Canopy'));
   });
 });

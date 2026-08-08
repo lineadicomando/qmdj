@@ -62,6 +62,19 @@ export interface PlatePattern {
   id: string;
   hanzi: string;
   palace?: number | undefined;
+  /**
+   * The fortune the tradition transmits with the name — 吉, 凶, or both.
+   *
+   * Optional, as everything here is optional that the drawing can do without:
+   * this package is handed charts and does not compute, so a caller on an
+   * older engine draws the configurations without their fortunes rather than
+   * failing. It is written in the band under the grid and never in a palace,
+   * where the room for it does not exist and a bare glyph would be a name
+   * with no gloss beside it.
+   */
+  valence?: { id: string; hanzi: string } | undefined;
+  /** `gate`, `star` or `both`, for a configuration belonging to the whole board. */
+  layer?: string | undefined;
 }
 
 /**
@@ -81,6 +94,9 @@ export interface PlateLabels {
   spirit?: Record<string, string>;
   stem?: Record<string, string>;
   pattern?: Record<string, string>;
+  valence?: Record<string, string>;
+  /** The word for a layer — the gates, the stars, both — as a place. */
+  layer?: Record<string, string>;
 }
 
 /**
@@ -101,6 +117,20 @@ export interface PlateCaptions {
   chiefGate?: string;
   /** What the drawing is not, said where it will be read. */
   note?: string;
+  /**
+   * The word for the band of configurations under the grid, e.g. «Patterns».
+   *
+   * Giving it is what draws the band, exactly as giving `compass` is what
+   * draws the frame, and the grid comes down in size to make room — by as much
+   * as the band carries and no more, since a chart with two configurations
+   * should not pay for a chart with six.
+   *
+   * The band exists because a palace has room for a configuration's name and
+   * for nothing else. Its fortune needs a word beside the glyph, and 伏吟 and
+   * 反吟 have no palace at all: they are properties of the whole board, and
+   * without a band the drawing simply never mentions them.
+   */
+  configurations?: string;
 }
 
 /**

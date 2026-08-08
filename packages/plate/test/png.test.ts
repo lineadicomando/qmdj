@@ -29,7 +29,11 @@ const CHART: PlateChart = {
   })),
 };
 
-describe('renderChartPng', () => {
+// Rasterising is slow and the cost is not the drawing: `loadSystemFonts` walks
+// the machine's fonts on every call, and a CJK family is a large file. Two
+// renders in one test came to about 4.9 s against a 5 s default, which is a
+// flake waiting for a slower machine rather than a test that was passing.
+describe('renderChartPng', { timeout: 30_000 }, () => {
   it('produces a PNG', () => {
     const png = renderChartPng(CHART, { width: 400 });
 

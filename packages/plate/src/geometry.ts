@@ -58,6 +58,25 @@ export interface Compass {
   word: number;
 }
 
+/**
+ * The band under the grid where the configurations are listed.
+ *
+ * Its height is a function of what it carries rather than a constant, which
+ * is the difference between this band and the compass's: a frame is the same
+ * frame on every chart, and a list is as long as the chart made it. A board
+ * that fell into two configurations gives up a tenth less of its grid than
+ * one that fell into six, and neither pays for the other.
+ */
+export interface Foot {
+  /** Total height. Zero where the drawing has no band. */
+  band: number;
+  /** Baseline of the heading, downward from the top of the band. */
+  heading: number;
+  /** Baseline of the first entry, and the step to each one after it. */
+  first: number;
+  step: number;
+}
+
 export interface Layout {
   size: number;
   /** Space around the grid, which the captions and the compass live in. */
@@ -66,6 +85,8 @@ export interface Layout {
   cell: number;
   /** The band the compass is written in. Zero where there is none. */
   compass: Compass;
+  /** The band the configurations are listed in. Zero where there is none. */
+  foot: Foot;
   /** Centres of the two columns, as fractions of the side. */
   column: { left: number; right: number };
   /** Widest a line inside a column may be, as a fraction of the side. */
@@ -86,6 +107,8 @@ export interface Layout {
     caption: number;
     branch: number;
     direction: number;
+    /** One line of the band under the grid. */
+    entry: number;
   };
 }
 
@@ -93,6 +116,8 @@ export interface Layout {
 export interface Around {
   captions?: boolean;
   compass?: boolean;
+  /** How many configurations the band under the grid has to list. */
+  configurations?: number;
 }
 
 /**
@@ -108,13 +133,24 @@ export interface Around {
 export function layout(size: number, around: Around = {}): Layout {
   const band = around.compass ? size * 0.055 : 0;
   const margin = (around.captions ? size * 0.085 : size * 0.03) + band;
-  const cell = (size - margin * 2) / 3;
+
+  // The heading, then one line per configuration, then the air that keeps the
+  // last of them off the caption below. Zero lines is no band at all rather
+  // than a heading over nothing.
+  const entries = around.configurations ?? 0;
+  const step = size * 0.026;
+  const foot: Foot = entries
+    ? { band: size * 0.034 + step * entries + size * 0.012, heading: size * 0.026, first: size * 0.034 + step * 0.75, step }
+    : { band: 0, heading: 0, first: 0, step };
+
+  const cell = (size - margin * 2 - foot.band) / 3;
 
   return {
     size,
     margin,
     cell,
     compass: { band, branch: band * 0.27, word: band * 0.76 },
+    foot,
     // Two columns, three registers each. On the left the board as it was
     // dealt — the two plates, then the palace itself; on the right what came
     // to stand over it — the spirit, the star, the gate. Every palace puts
@@ -148,6 +184,9 @@ export function layout(size: number, around: Around = {}): Layout {
       // enough for and no wider.
       branch: size * 0.023,
       direction: size * 0.016,
+      // A shade under the captions': the band is a list and reads as one, and
+      // a list set at caption size competes with the line naming the chart.
+      entry: size * 0.019,
     },
   };
 }
