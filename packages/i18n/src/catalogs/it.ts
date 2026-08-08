@@ -256,6 +256,8 @@ export const it: Record<MessageKey, string> = {
   'form.showPlate': 'la scacchiera',
   'form.openChart': 'la scacchiera intera',
   'form.backToScan': 'Torna ai momenti',
+  'form.keep': 'da tenere',
+  'form.keepMoment': 'Tieni {hour}, {palace}',
 
   'form.working': 'Calcolo in corso…',
   'form.needed.date': 'Manca ancora una data.',

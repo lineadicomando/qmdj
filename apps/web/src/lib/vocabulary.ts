@@ -81,6 +81,37 @@ export const METHODS = ['chaibu', 'zhirun'] as const;
 /** The eight outward directions. The centre faces none and is not offered. */
 export const DIRECTIONS = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'] as const;
 
+/**
+ * The nine palaces, in the order of the magic square.
+ *
+ * Redeclared for two things the client does without an answer in hand. The
+ * form asks for a direction and the address carries one, but the catalog has
+ * no word for a bare direction — the palace names itself by one, so the gloss
+ * is looked up through here. And an hour set aside is an hour *and a palace*,
+ * kept in the address long after the scan that found it has been re-run: the
+ * strip that lists them names and draws each one from this, with nothing
+ * fetched.
+ *
+ * The centre faces nowhere, which is why `direction` is nullable and why
+ * `DIRECTIONS` is eight and this is nine.
+ */
+export const PALACES = [
+  { number: 1, id: 'kan', hanzi: '坎', direction: 'n' },
+  { number: 2, id: 'kun', hanzi: '坤', direction: 'sw' },
+  { number: 3, id: 'zhen', hanzi: '震', direction: 'e' },
+  { number: 4, id: 'xun', hanzi: '巽', direction: 'se' },
+  { number: 5, id: 'zhong', hanzi: '中', direction: null },
+  { number: 6, id: 'qian', hanzi: '乾', direction: 'nw' },
+  { number: 7, id: 'dui', hanzi: '兌', direction: 'w' },
+  { number: 8, id: 'gen', hanzi: '艮', direction: 'ne' },
+  { number: 9, id: 'li', hanzi: '離', direction: 's' },
+] as const;
+
+/** The palace facing a given way, which is what the address carries. */
+export const PALACE_OF: Record<string, string> = Object.fromEntries(
+  PALACES.filter((palace) => palace.direction).map((palace) => [palace.direction, palace.id]),
+);
+
 /** Strongest first, which is the order a floor is chosen from. */
 export const STRENGTHS = ['wang', 'xiang', 'xiu', 'qiu', 'si'] as const;
 

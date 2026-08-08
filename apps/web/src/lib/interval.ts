@@ -1,4 +1,5 @@
 import type { Location } from '@qimendunjia/geo';
+import { PALACES } from './vocabulary.js';
 
 /**
  * A scan, as it travels in the address.
@@ -46,6 +47,85 @@ export const EMPTY_CRITERIA: CriteriaInput = {
   towards: [],
   without: [],
 };
+
+/**
+ * An hour set aside, which is an hour **and a palace**.
+ *
+ * A reader scans an interval, narrows it, scans it again, and wants to hold
+ * on to the few answers worth comparing. What they held on to is not a run:
+ * an interval does not contain a good hour, it contains an hour in which
+ * something stands to the southeast, and a shortlist of bare times would
+ * throw away the half of the answer this section exists for.
+ *
+ * It lives in the address, like everything else here. That is what makes a
+ * shortlist shareable and what a reload comes back to — and it is the only
+ * place it can live, since the privacy note promises that nothing typed is
+ * written to this browser, and a stretch of somebody's calendar on disk would
+ * be a different promise than the one already published.
+ */
+export interface Kept {
+  /** The minute the run opens, `YYYY-MM-DDTHH:MM`, local at the place. */
+  start: string;
+  /** The palace, by the engine's identifier. */
+  palace: string;
+}
+
+/**
+ * The minute names the hour, because the whole section already names it that
+ * way: the link to a board carries `time=04:10`, and the runs it points at
+ * are bisected to the minute and never shorter than a double hour. Seconds
+ * and an offset would be thirteen more characters of address saying the same
+ * thing.
+ */
+export function keptKey(start: string, palace: string): string {
+  return `${start.slice(0, 16)}@${palace}`;
+}
+
+const KEPT = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})@([a-z]+)$/;
+const PALACE_IDS: ReadonlySet<string> = new Set(PALACES.map((palace) => palace.id));
+
+/**
+ * The shortlist, read out of the address.
+ *
+ * Anything malformed is dropped rather than refused: a truncated link is
+ * still a link to a scan, and losing an hour off the end of one is a smaller
+ * failure than a page that will not open. A palace the engine never had is
+ * malformed too — the strip names it out of `PALACES` and would otherwise
+ * print a key.
+ *
+ * Sorted and deduplicated on the way in, so the same set of hours is the same
+ * address however it was collected.
+ */
+export function readKept(url: URL): Kept[] {
+  const seen = new Map<string, Kept>();
+
+  for (const entry of (url.searchParams.get('kept') ?? '').split(',')) {
+    const found = KEPT.exec(entry.trim());
+    if (!found || !PALACE_IDS.has(found[2])) continue;
+    seen.set(entry.trim(), { start: found[1], palace: found[2] });
+  }
+
+  return sortKept([...seen.values()]);
+}
+
+/**
+ * In the order of the clock, wherever the shortlist came from.
+ *
+ * A person ticks boxes in whatever order they read the table, and by the time
+ * there are six the order they were ticked in tells nobody anything. Times
+ * read as times. It also makes the same set of hours the same address, which
+ * is what a shared link ought to be.
+ */
+export function sortKept(kept: readonly Kept[]): Kept[] {
+  return [...kept].sort(
+    (one, other) => one.start.localeCompare(other.start) || one.palace.localeCompare(other.palace),
+  );
+}
+
+/** The shortlist as the one address field that carries it. */
+export function keptParam(kept: readonly Kept[]): string {
+  return kept.map((entry) => keptKey(entry.start, entry.palace)).join(',');
+}
 
 /** What the address says, before the place has a name. */
 export function readInterval(url: URL): {
@@ -159,8 +239,11 @@ export function chartQuery(
 export function scanCarry(
   input: IntervalInput,
   criteria: CriteriaInput = EMPTY_CRITERIA,
+  kept: readonly Kept[] = [],
 ): Record<string, string> {
-  return Object.fromEntries(new URLSearchParams(intervalQuery(input, criteria)));
+  return Object.fromEntries(
+    new URLSearchParams(intervalQuery(input, criteria, { kept: keptParam(kept) })),
+  );
 }
 
 /**
@@ -214,6 +297,10 @@ const SCAN_FIELDS = [
   'minStrength',
   'towards',
   'without',
+  // Not a criterion, and it rides along all the same: a reader who opens the
+  // whole board for one hour and comes back must find the other four they had
+  // set aside still there.
+  'kept',
 ] as const;
 
 /** A week from today, which is the interval somebody arriving here means. */

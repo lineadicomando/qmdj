@@ -6,14 +6,20 @@
   import {
     chartQuery,
     intervalQuery,
+    keptKey,
+    keptParam,
+    readKept,
     scanCarry,
+    sortKept,
     type CriteriaInput,
     type IntervalInput,
+    type Kept,
   } from '$lib/interval';
   import { sayFailure } from '$lib/moment';
   import {
     DIRECTIONS,
     GATE_IDS,
+    PALACE_OF,
     PATTERN_IDS,
     PURPOSES,
     SPIRIT_IDS,
@@ -43,12 +49,24 @@
    */
   // svelte-ignore state_referenced_locally
   let at = $state(page.url.searchParams.get('at') ?? '');
+  /**
+   * The hours set aside, which outlive the scan that found them.
+   *
+   * Held the same way as `at` and for the same reason, and the two are not
+   * the same thing: one hour is *open*, several are *kept*. What separates
+   * them is that a rescan is meant to lose the first and keep the second —
+   * narrowing the criteria and running it again is precisely how a shortlist
+   * gets built, so `show` carries these into the new address by hand.
+   */
+  // svelte-ignore state_referenced_locally
+  let kept = $state<Kept[]>(readKept(page.url));
   $effect(() => {
     asked = { ...data.interval };
     looking = { ...data.criteria };
     // A real navigation is a new answer, and the address is what it answers:
     // an hour picked in the last one is not necessarily in this one.
     at = page.url.searchParams.get('at') ?? '';
+    kept = readKept(page.url);
   });
 
   const scan = $derived(data.scan);
@@ -66,7 +84,7 @@
   async function show(): Promise<void> {
     busy = true;
     try {
-      await goto(`${page.url.pathname}?${intervalQuery(asked, looking)}`, {
+      await goto(`${page.url.pathname}?${intervalQuery(asked, looking, { kept: keptParam(carried()) })}`, {
         replaceState: true,
         noScroll: true,
         keepFocus: true,
@@ -74,6 +92,22 @@
     } finally {
       busy = false;
     }
+  }
+
+  /**
+   * What the shortlist survives, and the one thing it does not.
+   *
+   * Narrowing the criteria, widening the interval, changing the method: all
+   * of those leave what was set aside alone, and that is the whole point of
+   * it. Moving the place does not. An hour kept is a clock time, and the
+   * clock is the place's — 08:10 in Rome is not 08:10 in Beijing, and the
+   * chart it stands for is a different chart. Silently reinterpreting a
+   * shortlist against a new city would hand somebody five hours they never
+   * chose, looking exactly like five hours they did.
+   */
+  function carried(): Kept[] {
+    const moved = (asked.place?.id ?? null) !== (data.interval.place?.id ?? null);
+    return moved ? [] : kept;
   }
 
   async function submit(event: SubmitEvent): Promise<void> {
@@ -116,7 +150,7 @@
    * not part of the question it answers: `readMoment` reads past them.
    */
   const chartHref = (start: string): string =>
-    `/${t.locale}?${chartQuery(start, data.interval, scanCarry(data.interval, data.criteria))}`;
+    `/${t.locale}?${chartQuery(start, data.interval, scanCarry(data.interval, data.criteria, kept))}`;
 
   /**
    * The hour that is open, if the answer still holds one.
@@ -166,11 +200,37 @@
     mark();
   }
 
+  /**
+   * Setting an hour aside, or taking it back.
+   *
+   * The same shallow write as `pick`, for the same reason: nothing here needs
+   * the interval scanned again. The key is the minute and the palace — see
+   * `keptKey` — so the row a box was ticked in and the entry in the address
+   * are the same thing by construction, and a rescan finds its own boxes
+   * already ticked.
+   */
+  const keys = $derived(new Set(kept.map((entry) => keptKey(entry.start, entry.palace))));
+
+  const isKept = (start: string, palace: string): boolean => keys.has(keptKey(start, palace));
+
+  function keep(start: string, palace: string): void {
+    const key = keptKey(start, palace);
+    kept = keys.has(key)
+      ? kept.filter((entry) => keptKey(entry.start, entry.palace) !== key)
+      : sortKept([...kept, { start: start.slice(0, 16), palace }]);
+    mark();
+  }
+
   /** The choice, written where somebody can copy it out of the address bar. */
   function mark(): void {
     const next = new URL(page.url);
     if (at) next.searchParams.set('at', at);
     else next.searchParams.delete('at');
+
+    const list = keptParam(kept);
+    if (list) next.searchParams.set('kept', list);
+    else next.searchParams.delete('kept');
+
     replaceState(next, page.state);
   }
 
@@ -327,7 +387,15 @@
 
     {#if scan.moments.length > 0}
       <div class="scroller frame">
-        <MomentTable moments={scan.moments} {t} href={chartHref} picked={at} onpick={pick} />
+        <MomentTable
+          moments={scan.moments}
+          {t}
+          href={chartHref}
+          picked={at}
+          onpick={pick}
+          keeping={isKept}
+          onkeep={keep}
+        />
       </div>
 
       {#if picked}
@@ -345,27 +413,6 @@
     {/if}
   </div>
 {/if}
-
-<script lang="ts" module>
-  /**
-   * Which palace faces where.
-   *
-   * The direction is what the reader chooses and `se` is what the address
-   * carries, but the catalog has no word for a bare direction: the palace
-   * names itself by one — `label.palace.xun` is "southeast" — so the gloss is
-   * taken from there rather than duplicated under keys of its own.
-   */
-  const PALACE_OF: Record<string, string> = {
-    n: 'kan',
-    ne: 'gen',
-    e: 'zhen',
-    se: 'xun',
-    s: 'li',
-    sw: 'kun',
-    w: 'dui',
-    nw: 'qian',
-  };
-</script>
 
 <style>
   h1 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.2rem; }

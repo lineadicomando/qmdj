@@ -1,5 +1,6 @@
 import {
   GATES,
+  PALACES as ENGINE_PALACES,
   PATTERN_IDS,
   PURPOSES as ENGINE_PURPOSES,
   SPIRITS_YANG,
@@ -13,6 +14,8 @@ import {
   DIRECTIONS,
   GATE_IDS,
   METHODS,
+  PALACES,
+  PALACE_OF,
   PATTERN_IDS as FORM_PATTERN_IDS,
   PURPOSES,
   SPIRIT_IDS,
@@ -66,6 +69,30 @@ describe('the identifiers a form offers', () => {
   it('leave the centre out, which faces nowhere and can never answer', () => {
     expect(DIRECTIONS).toHaveLength(8);
     expect(DIRECTIONS).not.toContain('centre');
+  });
+
+  it('are the palaces the engine knows, number, name and glyph alike', () => {
+    // The glyph is here because an hour set aside carries its palace in the
+    // address and is named from this list alone, with no answer to read it
+    // out of. A 巽 drifting onto the wrong number would be a direction
+    // quietly renamed under somebody's shortlist.
+    expect(
+      PALACES.map(({ number, id, hanzi, direction }) => ({ number, id, hanzi, direction })),
+    ).toEqual(
+      ENGINE_PALACES.map(({ number, id, hanzi, direction }) => ({
+        number,
+        id,
+        hanzi,
+        direction,
+      })),
+    );
+  });
+
+  it('name the palace each direction faces', () => {
+    expect(Object.keys(PALACE_OF).sort()).toEqual([...DIRECTIONS].sort());
+    expect(PALACE_OF.se).toBe('xun');
+    // The centre is a palace and not a direction: it can be kept, never faced.
+    expect(Object.values(PALACE_OF)).not.toContain('zhong');
   });
 
   it('offer only the methods the engine implements', () => {

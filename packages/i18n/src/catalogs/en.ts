@@ -286,6 +286,12 @@ export const en = {
   'form.showPlate': 'the board',
   'form.openChart': 'the whole board',
   'form.backToScan': 'Back to the moments',
+  // What is set aside is an hour *and a palace*: the same double hour can
+  // hold an answer to the southeast worth keeping and one in the centre
+  // worth nothing. Each box says which, because a checkbox in a table is
+  // labelled by its column and by nothing a screen reader reads aloud.
+  'form.keep': 'keep',
+  'form.keepMoment': 'Keep {hour}, {palace}',
 
   // What the button says about its own state. A form still missing something
   // says what, in words: a button greyed out with no reason given is a dead

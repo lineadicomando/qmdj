@@ -2,9 +2,13 @@ import { describe, expect, it } from 'vitest';
 import {
   chartQuery,
   intervalQuery,
+  keptKey,
+  keptParam,
+  readKept,
   scanCarry,
   scanFields,
   scanQuery,
+  sortKept,
   EMPTY_CRITERIA,
   type CriteriaInput,
   type IntervalInput,
@@ -66,6 +70,63 @@ describe('the criteria as address fields', () => {
   });
 });
 
+describe('the hours set aside', () => {
+  const address = (kept: string): URL => new URL(`http://localhost/it/moments?kept=${kept}`);
+
+  it('names an hour by its minute and its palace', () => {
+    // The run's own `start` carries seconds, milliseconds and an offset. The
+    // section already names that moment `time=04:10` everywhere else, and the
+    // runs it points at are bisected to the minute.
+    expect(keptKey('2026-09-01T04:10:18.750+02:00', 'qian')).toBe('2026-09-01T04:10@qian');
+  });
+
+  it('reads a shortlist back out of the address', () => {
+    expect(readKept(address('2026-09-01T04:10@qian,2026-09-03T22:10@xun'))).toEqual([
+      { start: '2026-09-01T04:10', palace: 'qian' },
+      { start: '2026-09-03T22:10', palace: 'xun' },
+    ]);
+  });
+
+  it('has none when the address says nothing', () => {
+    expect(readKept(new URL('http://localhost/it/moments?from=2026-09-01'))).toEqual([]);
+  });
+
+  it('drops what it cannot read rather than refusing the page', () => {
+    // A truncated link is still a link to a scan, and losing an hour off the
+    // end of one is a smaller failure than a section that will not open.
+    // `wuxing` is the shape of a palace and not one of the nine: the strip
+    // names them out of PALACES and would otherwise print a key.
+    expect(readKept(address('2026-09-01T04:10@qian,rubbish,2026-09-03@xun,2026-09-04T08:00@wuxing')))
+      .toEqual([{ start: '2026-09-01T04:10', palace: 'qian' }]);
+  });
+
+  it('is the same address however it was collected', () => {
+    // A person ticks boxes in the order they read the table; two people who
+    // chose the same four hours share the same link.
+    const one = readKept(address('2026-09-03T22:10@xun,2026-09-01T04:10@qian'));
+    const other = readKept(address('2026-09-01T04:10@qian,2026-09-03T22:10@xun'));
+    expect(keptParam(one)).toBe(keptParam(other));
+
+    // And the same hour ticked twice is one hour, not two.
+    expect(readKept(address('2026-09-01T04:10@qian,2026-09-01T04:10@qian'))).toHaveLength(1);
+  });
+
+  it('keeps the two palaces of one hour apart', () => {
+    // What was chosen is a palace, not a run: the same double hour can hold
+    // an answer to the southeast worth keeping and one in the centre worth
+    // nothing.
+    expect(readKept(address('2026-09-01T04:10@qian,2026-09-01T04:10@xun'))).toHaveLength(2);
+  });
+
+  it('round-trips through the address it writes', () => {
+    const kept = sortKept([
+      { start: '2026-09-03T22:10', palace: 'xun' },
+      { start: '2026-09-01T04:10', palace: 'qian' },
+    ]);
+    expect(readKept(address(keptParam(kept)))).toEqual(kept);
+  });
+});
+
 describe('a chart reached from a scan', () => {
   const address = new URL(
     `http://localhost/en?${chartQuery('2026-09-03T08:00', INTERVAL, scanCarry(INTERVAL, LOOKING))}`,
@@ -101,6 +162,20 @@ describe('a chart reached from a scan', () => {
     // The round trip, which is what the reader experiences: the address the
     // way back leads to is the address they left.
     expect(scanQuery(address)).toBe(intervalQuery(INTERVAL, LOOKING));
+  });
+
+  it('brings the shortlist back with it', () => {
+    // A reader opens the whole board for one hour and comes back: the other
+    // four they had set aside must still be there. `kept` is not a criterion
+    // and rides along exactly as one does.
+    const kept = [{ start: '2026-09-01T04:10', palace: 'qian' }];
+    const url = new URL(
+      `http://localhost/en?${chartQuery('2026-09-03T08:00', INTERVAL, scanCarry(INTERVAL, LOOKING, kept))}`,
+    );
+
+    expect(readKept(url)).toEqual(kept);
+    expect(readKept(new URL(`http://localhost/it/moments?${scanQuery(url)}`))).toEqual(kept);
+    expect(scanQuery(url)).toBe(intervalQuery(INTERVAL, LOOKING, { kept: keptParam(kept) }));
   });
 
   it('carries the options through in both directions', () => {

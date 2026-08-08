@@ -18,6 +18,8 @@
     href,
     picked = '',
     onpick,
+    keeping,
+    onkeep,
   }: {
     moments: readonly any[];
     t: Translator;
@@ -34,6 +36,16 @@
      * A button here would have thrown those away to gain nothing.
      */
     onpick?: (start: string) => void;
+    /**
+     * Whether a palace of an hour is already among the ones set aside.
+     *
+     * A palace and not an hour, because that is what was chosen: the same
+     * double hour can hold an answer to the southeast worth keeping and one
+     * in the centre worth nothing.
+     */
+    keeping?: (start: string, palace: string) => boolean;
+    /** Setting one aside, or taking it back. The column exists only with it. */
+    onkeep?: (start: string, palace: string) => void;
   } = $props();
 
   const gloss = (prefix: string, id: string): string => t(`label.${prefix}.${id}` as MessageKey);
@@ -101,7 +113,7 @@
   }
 
   /** How wide a day's heading has to reach. */
-  const COLUMNS = 8;
+  const COLUMNS = $derived(onkeep ? 9 : 8);
 
   /**
    * The height of the column names, measured rather than declared.
@@ -140,6 +152,7 @@
       <th>{t('cli.column.gate')}</th>
       <th>{t('cli.column.star')}</th>
       <th>{t('cli.column.spirit')}</th>
+      {#if onkeep}<th>{t('form.keep')}</th>{/if}
       <th><span class="hidden">{t('form.showPlate')}</span></th>
     </tr>
   </thead>
@@ -181,6 +194,24 @@
                 <span class="glyph">{cell.spirit.hanzi}</span>
               {:else}<span class="gloss">—</span>{/if}
             </td>
+            <!-- A checkbox, because choosing some rows out of a table is what
+                 a checkbox is: a toggling button would have said the same
+                 thing in a control nobody has been taught to read that way.
+                 The column is headed with a word, and each box names the hour
+                 and the palace it stands for — the row is not its label. -->
+            {#if onkeep}
+              <td class="keep">
+                <input
+                  type="checkbox"
+                  aria-label={t('form.keepMoment', {
+                    hour: hour(moment.start),
+                    palace: gloss('palace', cell.palace.id),
+                  })}
+                  checked={keeping?.(moment.start, cell.palace.id) ?? false}
+                  onchange={() => onkeep?.(moment.start, cell.palace.id)}
+                />
+              </td>
+            {/if}
             {#if palace === 0}
               <td rowspan={moment.palaces.length}>
                 <a
@@ -216,6 +247,9 @@
   .glyph { display: block; color: var(--faint); font-size: 0.8em; }
   .gloss { display: block; color: var(--faint); font-size: 0.8em; }
   a { color: var(--faint); font-size: 0.85em; }
+  /* The box is the whole cell's worth: the page's fields carry a padding that
+     is right for something typed into and turns a checkbox into a lozenge. */
+  .keep input { padding: 0; margin: 0; }
 
   /*
    * Three things stay where they are while the rest scrolls under them.
