@@ -66,6 +66,17 @@ the engine falls back to Moshier, which needs no files.
   "Rest Gate": it is the name of the gate, and every reader expects to see it.
   Hanzi travels in the engine's output at all times; the catalog supplies only
   the gloss beside it. Identifiers are toneless pinyin (`xiumen`, `tianpeng`).
+- **A name carries its reading.** Every named thing in the engine has a
+  `pinyin` beside its `hanzi` — tone marks, one word, `xiūmén`. It is part of
+  the name and not a locale: 休門 is xiūmén to every reader, and a function
+  that returned a different one per language would be the same design error a
+  translated string is. A surface that prints the hanzi prints the reading
+  with it, because a glyph alone is, to the reader this is built for, a shape
+  with no sound — unsayable, unsearchable, unaskable. The tones are what the
+  identifiers had to drop, and they part what the identifiers cannot: 戊 wù
+  from 午 wǔ, 驚門 jīngmén from 景門 jǐngmén. See `docs/sources.md` for the
+  readings that were chosen deliberately, and `test/pinyin.test.ts` for the
+  check that no name is missing one.
 - **The interface is read by someone who does not read Chinese**, and it must
   be usable by them without a glossary. This does not contradict the rule
   above, it bounds it: hanzi accompany the engine's output — the palaces, the

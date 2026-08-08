@@ -9,17 +9,27 @@ ephemerides, not for the places, not for anything.
 ```
 $ qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lon 116.4
 
+Four Pillars
+  year   Yang Wood · Dragon  甲辰 jiǎchén
+  month  Yang Metal · Horse  庚午 gēngwǔ
+  day    Yang Metal · Dog    庚戌 gēngxū
+  hour   Yin Water · Goat    癸未 guǐwèi
+
 Qi Men chart
-  ju                  yang dun 9 · 下元 (lower yuan)
-  chief               天蓬 (Canopy) → 中 (centre)
-  chief gate          休門 (Rest) → 坎 (north)
+  ju               yang dun 9 · lower yuan 下元 xiàyuán
+  concealing 甲    Yin Earth 己 jǐ
+  chief            Canopy 天蓬 tiānpéng → centre 中 zhōng
+  chief gate       Rest 休門 xiūmén → north 坎 kǎn
 
 Nine palaces
-  palace            earth heaven  star                  gate                  spirit
-  1 坎 north        己    壬      天輔休 Assistant      休門囚 Rest           六合 Union
-  2 坤 southwest    庚    己      天蓬囚 Canopy         死門相 Death          值符 Chief
+  palace            earth            heaven             star                                        gate
+  1 north 坎 kǎn    Yin Earth 己 jǐ  Yang Water 壬 rén  Assistant resting · generated 生我 shēngwǒ  Rest imprisoned · same phase 比和 bǐhé
   …
 ```
+
+Every name arrives three ways at once: the word you read, the name as it is
+written, and the name as it is said. None of the three is optional — see
+[the vocabulary](#three-kinds-of-string).
 
 ## Licence
 
@@ -181,19 +191,33 @@ anchor had survived an independent check.
 
 ## Two languages, and a third thing that is not a language
 
-English and Italian, English by default. But there are three kinds of string
+English and Italian, English by default. But there are four kinds of string
 here, not two:
+
+<a id="three-kinds-of-string"></a>
 
 | | example | where it lives |
 |---|---|---|
 | identifier | `xiumen`, `tianpeng` | the engine, toneless pinyin, never translated |
 | hanzi | 休門, 天蓬 | the engine — **domain data, not a locale** |
+| pinyin | xiūmén, tiānpéng | the engine — the same, said aloud |
 | gloss | "Rest" / "Riposo" | the catalog, keyed by identifier |
 
-The middle row is the one usually got wrong. 休門 is not the Chinese rendering
-of "Rest Gate": it is the name of the gate, and an Italian reader wants to see
-it as much as a Chinese one does. So hanzi travels in the engine's output
-whatever the locale, and the catalog only supplies the gloss beside it.
+The middle two are the ones usually got wrong. 休門 is not the Chinese
+rendering of "Rest Gate": it is the name of the gate, and an Italian reader
+wants to see it as much as a Chinese one does. So hanzi travels in the
+engine's output whatever the locale, and the catalog only supplies the gloss
+beside it.
+
+The transliteration travels with it and for the reader who most needs it. A
+glyph alone is, to someone who does not read Chinese, a shape with no sound:
+it cannot be pronounced, looked up in a dictionary, or asked about out loud.
+`xiūmén` is what carries the name out of the screen. It is a property of the
+name and not of a language — 休門 is xiūmén on `/it` and on `/en` — which is
+why it sits in the engine beside the hanzi and not in a catalog. The tones are
+kept because they are what the identifiers had to drop: `jing1men` and
+`jing3men` carry a digit precisely because `jingmen` cannot say whether it
+means 驚門 jīngmén or 景門 jǐngmén.
 
 A consequence worth having: the drawing is almost entirely
 locale-independent, because the palaces carry hanzi. Only its captions, the
