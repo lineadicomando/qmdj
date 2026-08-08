@@ -19,3 +19,5 @@ packages/geo/data/
 .DS_Store
 .svelte-kit/
 build/
+
+compose.override.yaml
