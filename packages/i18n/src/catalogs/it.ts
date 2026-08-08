@@ -24,6 +24,8 @@ export const it: Record<MessageKey, string> = {
     'La data {date} cade fuori dall\'intervallo coperto dalle effemeridi (dal {from} al {to}).',
   'core.error.METHOD_NOT_IMPLEMENTED':
     'Il metodo {method} per la determinazione del ju non è implementato. Lo è soltanto chaibu, e nessun altro metodo gli viene sostituito: una carta posta con il metodo sbagliato sembra corretta e non lo è.',
+  'core.error.OPTION_NOT_IMPLEMENTED':
+    '"{value}" per {option} non è implementato. Lo è soltanto {implemented}, e nessun altro valore gli viene sostituito: una carta posta con l\'opzione sbagliata sembra corretta e non lo è.',
   'core.error.EPHEMERIS_FAILURE':
     'Calcolo delle effemeridi fallito al giorno giuliano {julianDay}: {reason}',
   'core.error.EMPTY_INTERVAL':

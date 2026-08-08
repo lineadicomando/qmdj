@@ -37,7 +37,11 @@ export function toHttpError(cause: unknown): never {
 function statusFor(code: string): number {
   // Everything the caller can fix is a 400; an ephemeris that will not
   // compute is not, and neither is a date outside the files' coverage.
-  return code === 'EPHEMERIS_FAILURE' ? 500 : code === 'METHOD_NOT_IMPLEMENTED' ? 501 : 400;
+  return code === 'EPHEMERIS_FAILURE'
+    ? 500
+    : code === 'METHOD_NOT_IMPLEMENTED' || code === 'OPTION_NOT_IMPLEMENTED'
+      ? 501
+      : 400;
 }
 
 /** `error()` throws an object of this shape; it must be rethrown, not wrapped. */

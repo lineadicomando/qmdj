@@ -1,3 +1,4 @@
+import { ChartError } from '../errors.js';
 import { STEMS, type Stem } from '../ganzhi.js';
 import type { Moment } from '../pillars.js';
 import type { ChartOptions, Element } from '../types.js';
@@ -79,6 +80,25 @@ export interface QimenChart {
  * whoever reads it.
  */
 export function computeQimenChart(moment: Moment, options: ChartOptions): QimenChart {
+  // The options carry every school divergence from day one, which means some
+  // values exist in the type before they exist in the engine. Asking for one
+  // of those is an error, exactly as it is for the method: a chart cast under
+  // a silently substituted option looks right and is not.
+  if (options.plate !== 'zhuan') {
+    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
+      option: 'plate',
+      value: options.plate,
+      implemented: 'zhuan',
+    });
+  }
+  if (options.system !== 'shijia') {
+    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
+      option: 'system',
+      value: options.system,
+      implemented: 'shijia',
+    });
+  }
+
   const ju = determineJu(moment, options);
   const earth = earthPlate(ju.yang, ju.number);
 

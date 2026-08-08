@@ -267,6 +267,37 @@ describe('no school is implicit', () => {
     }
   });
 
+  it('refuses a plate and a system it does not implement', () => {
+    // These two exist in the type before they exist in the engine, so that
+    // adding them will not break the input model. Ignoring them instead of
+    // refusing would hand back a zhuan shijia chart under another name.
+    const moment = resolveMoment(
+      { date: '2024-06-15', time: '14:00', timezone: 'Asia/Shanghai' },
+      BEIJING,
+      CLOCK,
+      context,
+    );
+
+    const unimplemented: Array<Partial<ChartOptions>> = [
+      { plate: 'fei' },
+      { system: 'rijia' },
+      { system: 'yuejia' },
+      { system: 'nianjia' },
+    ];
+    for (const overrides of unimplemented) {
+      const options = { ...CLOCK, ...overrides };
+      expect(() => computeQimenChart(moment, options)).toThrow(ChartError);
+      try {
+        computeQimenChart(moment, options);
+      } catch (error) {
+        expect((error as ChartError).code).toBe('OPTION_NOT_IMPLEMENTED');
+        const [option, value] = Object.entries(overrides)[0] as [string, string];
+        expect((error as ChartError).params['option']).toBe(option);
+        expect((error as ChartError).params['value']).toBe(value);
+      }
+    }
+  });
+
   it('keeps the options that produced it', () => {
     expect(cast('2024-06-15', '14:00').options).toEqual(CLOCK);
   });

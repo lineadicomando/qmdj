@@ -36,6 +36,8 @@ export const en = {
     'Date {date} falls outside the range the ephemeris covers ({from} to {to}).',
   'core.error.METHOD_NOT_IMPLEMENTED':
     'The {method} method for determining the ju is not implemented. Only chaibu is, and no other method is substituted for it: a chart cast by the wrong method looks right and is not.',
+  'core.error.OPTION_NOT_IMPLEMENTED':
+    '"{value}" for {option} is not implemented. Only {implemented} is, and no other value is substituted for it: a chart cast under the wrong option looks right and is not.',
   'core.error.EPHEMERIS_FAILURE': 'Ephemeris calculation failed at Julian Day {julianDay}: {reason}',
   'core.error.EMPTY_INTERVAL': 'The interval from {from} to {to} contains no time: it must end after it begins.',
   'core.error.INTERVAL_TOO_LONG':
