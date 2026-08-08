@@ -1,6 +1,6 @@
 import type { MessageKey, Translator } from '@qimendunjia/i18n';
 import type { Bazi } from './bazi/index.js';
-import type { QimenChart } from './dunjia/index.js';
+import { palace, type QimenChart } from './dunjia/index.js';
 import type { Ganzhi } from './ganzhi.js';
 import type { LunarDate } from './lunar.js';
 import type { Moment } from './pillars.js';
@@ -17,8 +17,10 @@ import { fromJulianDay } from './time.js';
  * who does not read Chinese still needs to know that 休門 is the gate of rest.
  * An agent gets both and can quote either.
  *
- * Nothing here interprets. The engine reports arrangements, and these
- * functions report them more legibly.
+ * Nothing here decides anything. The engine reports arrangements and what the
+ * tradition calls them, and these functions report that more legibly — in the
+ * order the engine found them, never sorted by fortune, which would be this
+ * layer inventing a ranking the engine refuses to have.
  */
 
 /**
@@ -129,12 +131,19 @@ export function formatQimenChart(chart: QimenChart, t: Translator): string {
       `${t(`label.stem.${named_.id}` as MessageKey)} ${named_.hanzi}`;
     const strong = (state: { id: string } | undefined): string =>
       state ? ` ${t(`label.strength.${state.id}` as MessageKey)}` : '';
+    // How it stands to the ground it is on, after how it stands to the season.
+    // The two are different questions of the same thing and are told apart by
+    // the glyph, which names the second and never the first.
+    const stands = (relation: { id: string; hanzi: string } | undefined): string =>
+      relation
+        ? ` · ${t(`label.relation.${relation.id}` as MessageKey)} ${relation.hanzi}`
+        : '';
 
     lines.push(
       `  ${pad(`${cell.palace.number} ${t(`label.palace.${cell.palace.id}` as MessageKey)} ${cell.palace.hanzi}`, 18)}` +
         `${pad(stem(cell.earth), 16)}${pad(stem(cell.heaven), 16)}` +
-        `${pad(`${t(`label.star.${cell.star.id}` as MessageKey)}${strong(cell.starStrength)}`, 20)}` +
-        `${pad(cell.gate ? `${t(`label.gate.${cell.gate.id}` as MessageKey)}${strong(cell.gateStrength)}` : '—', 20)}` +
+        `${pad(`${t(`label.star.${cell.star.id}` as MessageKey)}${strong(cell.starStrength)}${stands(cell.starRelation)}`, 38)}` +
+        `${pad(cell.gate ? `${t(`label.gate.${cell.gate.id}` as MessageKey)}${strong(cell.gateStrength)}${stands(cell.gateRelation)}` : '—', 38)}` +
         `${cell.spirit ? t(`label.spirit.${cell.spirit.id}` as MessageKey) : '—'}`,
     );
   }
@@ -147,8 +156,13 @@ export function formatQimenChart(chart: QimenChart, t: Translator): string {
         : pattern.layer
           ? ` — ${t(`label.layer.${pattern.layer}` as MessageKey)}`
           : '';
+      const valence = `${t(`label.valence.${pattern.valence.id}` as MessageKey)} ${pattern.valence.hanzi}`;
       lines.push(
-        `  ${pad(t(`label.pattern.${pattern.id}` as MessageKey), 30)}${pattern.hanzi}${where}`,
+        // Ten and not eight: `pad` measures in columns, a hanzi takes two of
+        // them, and 五不遇時 or 熒入太白 fills eight exactly — leaving the
+        // fortune welded to the name.
+        `  ${pad(t(`label.pattern.${pattern.id}` as MessageKey), 32)}${pad(pattern.hanzi, 10)}` +
+          `${pad(valence, 32)}${where}`,
       );
     }
   }
@@ -156,8 +170,21 @@ export function formatQimenChart(chart: QimenChart, t: Translator): string {
   lines.push(
     '',
     `  ${t('cli.column.season')} ${t(`label.element.${chart.season}` as MessageKey)}`,
-    `  ${t('cli.note.method', { method: chart.options.method })}`,
   );
+
+  // Both horses, always, and each said with the pillar it was reckoned from.
+  // Naming only one of them would be choosing a school in a line of output.
+  for (const horse of chart.horses) {
+    lines.push(
+      `  ${t('cli.field.horse', {
+        from: t(`label.horse.${horse.from}` as MessageKey),
+        branch: `${t(`label.branch.${horse.branch.id}` as MessageKey)} ${horse.branch.hanzi}`,
+        palace: `${horse.palace} ${t(`label.palace.${palace(horse.palace).id}` as MessageKey)} ${palace(horse.palace).hanzi}`,
+      })}`,
+    );
+  }
+
+  lines.push(`  ${t('cli.note.method', { method: chart.options.method })}`);
   return lines.join('\n');
 }
 

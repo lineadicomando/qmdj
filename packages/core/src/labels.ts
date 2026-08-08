@@ -1,6 +1,15 @@
 import type { MessageKey, Translator } from '@qimendunjia/i18n';
 import { BRANCHES, STEMS, type Ganzhi } from './ganzhi.js';
-import { DIRECTIONS, GATES, PALACES, SPIRITS_YANG, SPIRITS_YIN, STARS } from './dunjia/index.js';
+import {
+  DIRECTIONS,
+  GATES,
+  PALACES,
+  PATTERN_IDS,
+  SPIRITS_YANG,
+  SPIRITS_YIN,
+  STARS,
+  VALENCE_IDS,
+} from './dunjia/index.js';
 
 /**
  * The words for what a chart contains, in one locale.
@@ -25,19 +34,17 @@ export interface ChartLabels {
   spirit: Record<string, string>;
   stem: Record<string, string>;
   pattern: Record<string, string>;
+  /** 吉, 凶, or both — the fortune a configuration is transmitted with. */
+  valence: Record<string, string>;
+  /** The gates, the stars, or both: where a whole-board configuration came home. */
+  layer: Record<string, string>;
 }
 
-const PATTERN_IDS = [
-  'kongwang',
-  'rumu',
-  'menpo',
-  'jixing',
-  'fuyin',
-  'fanyin',
-  'wubuyu',
-  'qinglongfanshou',
-  'feiniaodiexue',
-];
+/**
+ * Not read off a runtime list the way the rest is, because there is none: a
+ * layer is a field of `Pattern` with three values and no table behind it.
+ */
+const LAYERS = ['gate', 'star', 'both'];
 
 export function chartLabels(t: Translator): ChartLabels {
   const from = <T extends { id: string }>(items: readonly T[], prefix: string) =>
@@ -55,6 +62,10 @@ export function chartLabels(t: Translator): ChartLabels {
     pattern: Object.fromEntries(
       PATTERN_IDS.map((id) => [id, t(`label.pattern.${id}` as MessageKey)]),
     ),
+    valence: Object.fromEntries(
+      VALENCE_IDS.map((id) => [id, t(`label.valence.${id}` as MessageKey)]),
+    ),
+    layer: Object.fromEntries(LAYERS.map((id) => [id, t(`label.layer.${id}` as MessageKey)])),
   };
 }
 

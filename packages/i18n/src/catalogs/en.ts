@@ -199,6 +199,48 @@ export const en = {
   'label.pattern.wubuyu': 'the hour that does not meet',
   'label.pattern.qinglongfanshou': 'the dragon turns its head',
   'label.pattern.feiniaodiexue': 'the bird falls to the nest',
+  // 十干克應. The images are the tradition's own — Venus is 太白, the white
+  // one, and Mars is 熒惑, the fiery muddler — and they are kept rather than
+  // paraphrased, because a reader who meets 太白入熒 in a book has to be able
+  // to recognise what the software called it.
+  'label.pattern.taibairuying': 'the white star enters the fire',
+  'label.pattern.yingrutaibai': 'the fire enters the white star',
+  'label.pattern.dage': 'the great barrier',
+  'label.pattern.xingge': 'the barrier of punishment',
+  'label.pattern.zhange': 'the barrier of battle',
+  'label.pattern.tengsheyaojiao': 'the serpent writhes',
+  'label.pattern.zhuquetoujiang': 'the vermilion bird throws itself in the river',
+  'label.pattern.qinglongtaozou': 'the dragon runs away',
+  'label.pattern.baihuchangkuang': 'the white tiger runs wild',
+
+  // The fortune each configuration is transmitted with. These are the plain
+  // translations and not softer ones: 凶 is what the sources say, and a gloss
+  // chosen to sound neutral would be the engine editing its material rather
+  // than reporting it. What they qualify is the arrangement — never an hour,
+  // a chart, or anything somebody is about to do.
+  'label.valence.ji': 'auspicious',
+  'label.valence.xiong': 'inauspicious',
+  'label.valence.jixiong': 'auspicious and inauspicious',
+
+  // How a gate or a star stands to the palace it has come to rest in. 我 is
+  // the gate or the star and 宮 is the ground: the five relations of the
+  // phases, said from the traveller's side. They are the relations themselves
+  // and not the words a school puts on them — see `dunjia/relation.ts`.
+  //
+  // One word each, because they are read in a column beside the strength and
+  // a phrase there is a phrase nobody finishes. The two verbs are the ones
+  // the engine already uses for 生 and 剋, so a reader meets the same word for
+  // the same cycle wherever it turns up.
+  'label.relation.bihe': 'same phase',
+  'label.relation.shengwo': 'generated',
+  'label.relation.wosheng': 'generating',
+  'label.relation.kewo': 'controlled',
+  'label.relation.woke': 'controlling',
+
+  // The post horse, and which pillar's branch it was reckoned from. Both are
+  // named in the tradition and neither stands for the other.
+  'label.horse.day': 'horse of the day',
+  'label.horse.hour': 'horse of the hour',
 
   // What somebody is choosing a time for. These are not names of gates: they
   // are the errands the transmitted lists put under each one, phrased as the
@@ -285,12 +327,13 @@ export const en = {
   // because a scan is an interval somebody typed, not a page one lands on.
   // The board is square and a screen is not, so a drawing stacked above its
   // own captions is bounded by a reading measure while a third of the window
-  // goes unused. Enlarging moves the words alongside it.
-  'form.enlarge': 'enlarge',
-  'form.reduce': 'reduce',
+  // goes unused. Enlarging moves the words alongside it. The two below name a
+  // control whose face is a drawing, so they stand alone rather than in a
+  // sentence: they are what a screen reader announces and what a tooltip says.
+  'form.enlarge': 'Enlarge',
+  'form.reduce': 'Reduce',
   'form.showPlate': 'the board',
   'form.openChart': 'the whole board',
-  'form.backToScan': 'Back to the moments',
   // What is set aside is an hour *and a palace*: the same double hour can
   // hold an answer to the southeast worth keeping and one in the centre
   // worth nothing. Each box says which, because a checkbox in a table is
@@ -354,7 +397,7 @@ export const en = {
   'notes.method':
     'Charts are cast by the chaibu method. Other schools lay out other charts from the same instant; the zhirun and maoshan methods are not implemented, and are refused rather than quietly substituted.',
   'notes.interpretation':
-    'The engine reports arrangements and relations, never a reading. That a gate stands over a palace whose phase it controls is a fact anyone can check off the plates; what it means is not in the output and is not for the software to say.',
+    'The engine reports arrangements, and the names and fortunes the tradition attaches to them. That a gate stands over a palace whose phase it controls is a fact anyone can check off the plates, that the arrangement is called 門迫 is its name, and that 門迫 is 凶 is part of that name rather than a judgement about your day: the sources do not name a configuration and rate it separately. What the engine will not do is anything that needs a question to have been asked — it does not choose which palace bears on what you want to know, does not rank the palaces or the hours, and does not advise. Reading is yours.',
   'notes.certainty':
     'The numbers are not equally sure. Solar terms, the lunar calendar and the four pillars were checked against published astronomical tables through an independent implementation, over 1 926 dates from 1902 to 2098. The Qi Men layout was checked against one open implementation, which means consistent with it, not verified. The configurations come from Chinese-language sources with no runnable reference at all.',
   'notes.script':
@@ -378,6 +421,8 @@ export const en = {
   'cli.heading.terms': 'Solar terms of {year}',
   'cli.heading.calendar': 'Lunar date',
   'cli.heading.patterns': 'Configurations',
+  // `{branch}` is the branch the horse stands on, said in words and in hanzi.
+  'cli.field.horse': '{from}: {branch}, palace {palace}',
   'cli.heading.scan': 'Charts from {from} to {to}',
   'cli.heading.criteria': 'Asked for',
   'cli.heading.warnings': 'Warnings',

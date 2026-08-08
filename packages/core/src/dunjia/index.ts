@@ -2,8 +2,10 @@ import { ChartError } from '../errors.js';
 import { STEMS, type Stem } from '../ganzhi.js';
 import type { Moment } from '../pillars.js';
 import type { ChartOptions, Element } from '../types.js';
+import { horseOf, type Horse } from './horse.js';
 import { determineJu, type Ju } from './ju.js';
 import { findPatterns, type Pattern } from './patterns.js';
+import { relationOf, type Relation } from './relation.js';
 import { seasonElement, strengthOf, type Strength } from './strength.js';
 import { PALACES, lodge, palace, type Palace } from './palaces.js';
 import {
@@ -37,6 +39,10 @@ export interface PalaceContents {
   starStrength: Strength;
   /** How the gate does. Absent with the gate. */
   gateStrength?: Strength;
+  /** How the star stands to this palace (星宮). */
+  starRelation: Relation;
+  /** How the gate does (門宮). Absent with the gate. */
+  gateRelation?: Relation;
 }
 
 export interface QimenChart {
@@ -55,6 +61,8 @@ export interface QimenChart {
   palaces: PalaceContents[];
   /** The element the season belongs to, which the strengths are read against. */
   season: Element;
+  /** The post horse of the day and of the hour (驛馬), and where each falls. */
+  horses: Horse[];
   /** The configurations the chart has fallen into. Facts, never verdicts. */
   patterns: Pattern[];
   /** The options this chart was cast with. A saved chart must reproduce. */
@@ -98,6 +106,16 @@ export function computeQimenChart(moment: Moment, options: ChartOptions): QimenC
       implemented: 'shijia',
     });
   }
+  // The lodging decides which palace the chief and the chief gate are read
+  // from, so the two values are two different charts. Refused rather than
+  // substituted, for the reason the other two are.
+  if (options.centreLodging !== 'kun') {
+    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
+      option: 'centreLodging',
+      value: options.centreLodging,
+      implemented: 'kun',
+    });
+  }
 
   const ju = determineJu(moment, options);
   const earth = earthPlate(ju.yang, ju.number);
@@ -123,20 +141,26 @@ export function computeQimenChart(moment: Moment, options: ChartOptions): QimenC
 
   const palaces = PALACES.map((current): PalaceContents => {
     const star = stars[current.number] as Star;
+    // A star and a gate take the element of the palace they belong to at
+    // rest, so nothing extra has to be stored to weigh them — against the
+    // season, which is the strength, or against the ground they have come to
+    // stand on, which is the relation.
+    const starElement = palace(star.home).element;
     const contents: PalaceContents = {
       palace: current,
       earth: earth[current.number] as Stem,
       heaven: heaven[current.number] as Stem,
       star,
-      // A star and a gate take the element of the palace they belong to at
-      // rest, so nothing extra has to be stored to weigh them.
-      starStrength: strengthOf(palace(star.home).element, season),
+      starStrength: strengthOf(starElement, season),
+      starRelation: relationOf(starElement, current.element),
     };
     const gateHere = gates[current.number];
     const spiritHere = spirits[current.number];
     if (gateHere) {
+      const gateElement = palace(gateHere.home).element;
       contents.gate = gateHere;
-      contents.gateStrength = strengthOf(palace(gateHere.home).element, season);
+      contents.gateStrength = strengthOf(gateElement, season);
+      contents.gateRelation = relationOf(gateElement, current.element);
     }
     if (spiritHere) contents.spirit = spiritHere;
     return contents;
@@ -160,6 +184,12 @@ export function computeQimenChart(moment: Moment, options: ChartOptions): QimenC
     chiefGate: { gate, palace: palace(gatePalaceNumber) },
     palaces,
     season,
+    // Both, and in the order the pillars are recited. Which of the two bears
+    // on a question is not a thing this knows — see `horse.ts`.
+    horses: [
+      horseOf('day', moment.pillars.day.branch),
+      horseOf('hour', hourGanzhi.branch),
+    ],
     patterns,
     options,
   };
@@ -174,13 +204,23 @@ function decadeInstrumentOf(ganzhiIndex: number): Stem {
 export { determineJu, YUAN_HANZI, type Ju, type Yuan } from './ju.js';
 export {
   PATTERN_IDS,
-  branchesOf,
+  VALENCE_IDS,
   findPatterns,
   opposite,
   unmetHour,
+  valenceOf,
   type Pattern,
   type PatternId,
+  type Valence,
+  type ValenceId,
 } from './patterns.js';
+export { horseBranch, horseOf, type Horse } from './horse.js';
+export {
+  RELATION_IDS,
+  relationOf,
+  type Relation,
+  type RelationId,
+} from './relation.js';
 export {
   seasonElement,
   strengthOf,
@@ -195,9 +235,11 @@ export {
   PALACES,
   RING_CLOCKWISE,
   RING_COUNTERCLOCKWISE,
+  branchesOf,
   lodge,
   orbitFrom,
   palace,
+  palaceOfBranch,
   step,
   type ByPalace,
   type Direction,

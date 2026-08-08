@@ -185,6 +185,46 @@ export const it: Record<MessageKey, string> = {
   'label.pattern.wubuyu': 'l\'ora che non incontra',
   'label.pattern.qinglongfanshou': 'il drago volge il capo',
   'label.pattern.feiniaodiexue': 'l\'uccello cade nel nido',
+  // 十干克應. Le immagini sono quelle della tradizione — 太白 è Venere, la
+  // bianca, e 熒惑 è Marte, il torbido ardente — e restano tali invece di
+  // essere parafrasate: chi incontra 太白入熒 su un libro deve poter
+  // riconoscere ciò che il software ha chiamato allo stesso modo.
+  'label.pattern.taibairuying': 'la stella bianca entra nel fuoco',
+  'label.pattern.yingrutaibai': 'il fuoco entra nella stella bianca',
+  'label.pattern.dage': 'la grande barriera',
+  'label.pattern.xingge': 'la barriera della punizione',
+  'label.pattern.zhange': 'la barriera della battaglia',
+  'label.pattern.tengsheyaojiao': 'il serpente si contorce',
+  'label.pattern.zhuquetoujiang': 'la fenice si getta nel fiume',
+  'label.pattern.qinglongtaozou': 'il drago fugge',
+  'label.pattern.baihuchangkuang': 'la tigre bianca infuria',
+
+  // La sorte con cui ciascuna configurazione è trasmessa. Traduzioni piane e
+  // non attenuate: 凶 è ciò che dicono le fonti, e una glossa scelta per
+  // suonare neutra sarebbe il motore che corregge il proprio materiale invece
+  // di riferirlo. Qualificano la disposizione — mai un'ora, mai un quadro,
+  // mai ciò che qualcuno sta per fare.
+  'label.valence.ji': 'fausto',
+  'label.valence.xiong': 'infausto',
+  'label.valence.jixiong': 'fausto e infausto insieme',
+
+  // Come una porta o una stella sta al palazzo in cui è venuta a posarsi. 我
+  // è la porta o la stella, 宮 è il terreno: le cinque relazioni delle fasi,
+  // dette dalla parte di chi arriva. Sono le relazioni, non i nomi che una
+  // scuola vi appone — vedi `dunjia/relation.ts`.
+  // Una parola ciascuna: si leggono in colonna accanto alla stagione, e lì una
+  // frase è una frase che nessuno finisce. I due verbi sono quelli che il
+  // motore già usa per 生 e 剋.
+  'label.relation.bihe': 'stessa fase',
+  'label.relation.shengwo': 'generata',
+  'label.relation.wosheng': 'che genera',
+  'label.relation.kewo': 'dominata',
+  'label.relation.woke': 'che domina',
+
+  // Il cavallo di posta, e il ramo da cui è calcolato. La tradizione li nomina
+  // entrambi e nessuno dei due sta per l'altro.
+  'label.horse.day': 'cavallo del giorno',
+  'label.horse.hour': 'cavallo dell\'ora',
 
   'label.purpose.opening': 'Aprire, cominciare, trattare con un ufficio, viaggiare',
   'label.purpose.meeting': 'Incontrare qualcuno, matrimonio, chiedere un favore, riposare',
@@ -253,11 +293,10 @@ export const it: Record<MessageKey, string> = {
     'Sono disposizioni, non raccomandazioni. Il motore riferisce dove ciascuna si trova; se sia un buon momento per agire è una lettura, e spetta a te farla.',
   'form.scan': "Scandisci l'intervallo",
   'form.scanned': '{runs} carte nell\'intervallo, {matched} con un palazzo che risponde.',
-  'form.enlarge': 'ingrandisci',
-  'form.reduce': 'riduci',
+  'form.enlarge': 'Ingrandisci',
+  'form.reduce': 'Riduci',
   'form.showPlate': 'la scacchiera',
   'form.openChart': 'la scacchiera intera',
-  'form.backToScan': 'Torna ai momenti',
   'form.keep': 'da tenere',
   'form.keepMoment': 'Tieni {hour}, {palace}',
   'form.kept': 'Messi da parte — {count}',
@@ -300,7 +339,7 @@ export const it: Record<MessageKey, string> = {
   'notes.method':
     'Le carte sono poste con il metodo chaibu. Altre scuole dispongono altre carte dallo stesso istante; i metodi zhirun e maoshan non sono implementati, e vengono rifiutati invece che sostituiti in silenzio.',
   'notes.interpretation':
-    'Il motore riporta disposizioni e relazioni, mai una lettura. Che una porta stia sopra un palazzo di cui controlla la fase è un fatto che chiunque può verificare sulle piastre; che cosa significhi non è nell\'output e non spetta al software dirlo.',
+    'Il motore riporta le disposizioni, e i nomi e le sorti che la tradizione vi attacca. Che una porta stia sopra un palazzo di cui controlla la fase è un fatto che chiunque può verificare sulle piastre; che quella disposizione si chiami 門迫 è il suo nome; e che 門迫 sia 凶 fa parte di quel nome, non è un giudizio sulla tua giornata: le fonti non nominano una configurazione per poi valutarla a parte. Ciò che il motore non fa è tutto quello che presuppone una domanda posta — non sceglie quale palazzo riguardi ciò che vuoi sapere, non ordina né i palazzi né le ore, non consiglia. La lettura è tua.',
   'notes.certainty':
     'I numeri non sono ugualmente sicuri. Termini solari, calendario lunare e quattro pilastri sono stati verificati contro tabelle astronomiche pubblicate tramite un\'implementazione indipendente, su 1.926 date dal 1902 al 2098. La disposizione Qi Men è stata verificata contro una sola implementazione aperta: significa coerente con quella, non verificata. Le configurazioni vengono da fonti in cinese, senza alcun riferimento eseguibile.',
   'notes.script':
@@ -324,6 +363,7 @@ export const it: Record<MessageKey, string> = {
   'cli.heading.terms': 'Termini solari del {year}',
   'cli.heading.calendar': 'Data lunare',
   'cli.heading.patterns': 'Configurazioni',
+  'cli.field.horse': '{from}: {branch}, palazzo {palace}',
   'cli.heading.scan': 'Carte dal {from} al {to}',
   'cli.heading.criteria': 'Richiesto',
   'cli.heading.warnings': 'Avvertenze',

@@ -52,7 +52,12 @@ const AGREED_WITH_KINQIMEN: Array<[string, boolean, number, Ju['yuan'], string]>
   ['2027-01-08', true, 8, 'zhong', 'xiaohan'],
 ];
 
-describe('the zhirun method', () => {
+// These walk a decade of days through the ephemeris and are slow by nature:
+// the drift bounds alone take some 2.4 s on their own, and more when the other
+// files are running beside them. Against a 5 s default that is not a passing
+// test, it is a test waiting for a busier machine — which is exactly how it
+// failed once the suite grew two files.
+describe('the zhirun method', { timeout: 30_000 }, () => {
   it('matches the runnable reference where the readings coincide', () => {
     for (const [date, yang, number, yuan, term] of AGREED_WITH_KINQIMEN) {
       const ju = juAt(date);

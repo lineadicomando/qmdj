@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { computeQimenChart, type QimenChart } from '../src/dunjia/index.js';
-import { opposite, unmetHour } from '../src/dunjia/patterns.js';
+import { PATTERN_IDS, VALENCE_IDS, opposite, unmetHour, valenceOf } from '../src/dunjia/patterns.js';
 import { PALACES, palace } from '../src/dunjia/palaces.js';
 import { GATES } from '../src/dunjia/plates.js';
 import { seasonElement, strengthOf } from '../src/dunjia/strength.js';
@@ -226,11 +226,58 @@ describe('what the configurations are, and are not', () => {
     }
   });
 
-  it('never carries a verdict', () => {
-    const serialised = JSON.stringify(cast('2024-06-15', '14:00').patterns);
+  it('says the fortune of every configuration it reports', () => {
+    for (const date of ['2005-05-05', '2015-08-08', '2022-02-22', '2024-06-15']) {
+      for (const pattern of cast(date, '14:00').patterns) {
+        expect(['ji', 'xiong', 'jixiong']).toContain(pattern.valence.id);
+        expect(pattern.valence.hanzi).toBeTruthy();
+      }
+    }
+  });
 
-    for (const word of ['lucky', 'unlucky', 'auspicious', 'inauspicious', 'good', 'bad', 'evil']) {
-      expect(serialised.toLowerCase()).not.toContain(word);
+  it('gives each configuration the fortune the sources hand it', () => {
+    // Stated against the table rather than against occurrences: 青龍返首 wants
+    // heaven's 戊 over earth's 丙 and is rare enough that any sample of charts
+    // small enough to run here can miss it entirely — which it did.
+    //
+    // 空亡 is the only one of the nine that takes both, and that is transmitted
+    // rather than hedged: the void withholds, which is a loss or a reprieve
+    // according to what fell into it, and the engine does not decide which.
+    expect(valenceOf('kongwang')).toEqual({ id: 'jixiong', hanzi: '吉凶' });
+    expect(valenceOf('qinglongfanshou')).toEqual({ id: 'ji', hanzi: '吉' });
+    expect(valenceOf('feiniaodiexue')).toEqual({ id: 'ji', hanzi: '吉' });
+    for (const id of ['rumu', 'menpo', 'jixing', 'fuyin', 'fanyin', 'wubuyu'] as const) {
+      expect(valenceOf(id)).toEqual({ id: 'xiong', hanzi: '凶' });
+    }
+
+    // Total: a configuration added without a fortune must not slip through.
+    for (const id of PATTERN_IDS) expect(VALENCE_IDS).toContain(valenceOf(id).id);
+  });
+
+  it('reports each occurrence with the fortune its name carries', () => {
+    for (const date of ['2005-05-05', '2015-08-08', '2022-02-22', '2024-06-15']) {
+      for (const hour of ['01:00', '14:00', '23:30']) {
+        for (const pattern of cast(date, hour).patterns) {
+          expect(pattern.valence).toEqual(valenceOf(pattern.id));
+        }
+      }
+    }
+  });
+
+  it('carries the fortune as an identifier and a glyph, never as a sentence', () => {
+    // The whole of the restated boundary in one assertion. A fortune is an
+    // attribute of an arrangement and travels as data, so the engine's output
+    // stays free of any language at all — the gloss is the surface's business,
+    // exactly as it is for a gate or a star. What must never appear is the
+    // vocabulary of advice and ranking, in any locale: that would mean the
+    // engine had heard a question, and it never does.
+    const serialised = JSON.stringify(cast('2024-06-15', '14:00').patterns).toLowerCase();
+
+    for (const word of ['auspicious', 'inauspicious', 'fausto', 'infausto']) {
+      expect(serialised).not.toContain(word);
+    }
+    for (const word of ['lucky', 'best', 'worst', 'avoid', 'should', 'recommend', 'score']) {
+      expect(serialised).not.toContain(word);
     }
   });
 

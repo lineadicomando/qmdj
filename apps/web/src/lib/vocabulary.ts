@@ -65,8 +65,18 @@ export const PATTERN_IDS = [
   'fuyin',
   'fanyin',
   'wubuyu',
+  // 十干克應, in the order the engine holds them.
   'qinglongfanshou',
   'feiniaodiexue',
+  'taibairuying',
+  'yingrutaibai',
+  'dage',
+  'xingge',
+  'zhange',
+  'tengsheyaojiao',
+  'zhuquetoujiang',
+  'qinglongtaozou',
+  'baihuchangkuang',
 ] as const;
 
 /**

@@ -64,6 +64,24 @@ export interface ChartOptions {
    * Which family of Qi Men chart: hour, day, month or year.
    */
   system: 'shijia' | 'rijia' | 'yuejia' | 'nianjia';
+
+  /**
+   * Where the centre lodges (寄宮).
+   *
+   * The centre has no direction, no gate and no spirit, so whatever the ju
+   * puts there has to be read somewhere else. `kun` sends it to the palace of
+   * Kun always, which is the common choice and the one implemented; `dun`
+   * sends it to Kun in a yang chart and to Gen in a yin one, which other
+   * schools hold to.
+   *
+   * It is a parameter and not a constant for the reason every divergence here
+   * is one: the palace the centre lodges in decides which palace the chief and
+   * the chief gate are read from, so two schools cast measurably different
+   * charts from it. It was a hardcoded 2 until the parameter existed, which
+   * made this engine's school implicit — the one thing this project says it
+   * will not do.
+   */
+  centreLodging: 'kun' | 'dun';
 }
 
 /**
@@ -79,6 +97,7 @@ export const DEFAULT_OPTIONS: ChartOptions = {
   yearBoundary: 'lichun',
   dayBoundary: 'zishi',
   system: 'shijia',
+  centreLodging: 'kun',
 };
 
 /** Where on Earth the chart is cast. */

@@ -1,6 +1,7 @@
 import { CONTROLS } from '../bazi/relations.js';
-import { BRANCHES, decade, type Branch, type Ganzhi, type Stem } from '../ganzhi.js';
-import { palace, type ByPalace } from './palaces.js';
+import { decade, type Branch, type Ganzhi, type Stem } from '../ganzhi.js';
+import { palace, palaceOfBranch, type ByPalace } from './palaces.js';
+import { relationOf } from './relation.js';
 import type { Gate, Star } from './plates.js';
 
 export type PatternId =
@@ -11,71 +12,145 @@ export type PatternId =
   | 'fuyin'
   | 'fanyin'
   | 'wubuyu'
+  // 十干克應 — the stem of the heaven plate standing over the stem of the
+  // earth plate. See `STEM_PAIRS`, and `docs/sources.md` for what each of
+  // these was checked against.
   | 'qinglongfanshou'
-  | 'feiniaodiexue';
+  | 'feiniaodiexue'
+  | 'taibairuying'
+  | 'yingrutaibai'
+  | 'dage'
+  | 'xingge'
+  | 'zhange'
+  | 'tengsheyaojiao'
+  | 'zhuquetoujiang'
+  | 'qinglongtaozou'
+  | 'baihuchangkuang';
+
+/**
+ * The fortune a configuration is transmitted with (吉凶).
+ *
+ * This is **not** the engine changing its mind about interpreting. The line
+ * it holds is between an attribute of the configuration and a reading of
+ * somebody's situation, and the fortune is on the near side of it, for a
+ * reason that is about the tradition rather than about the software: the
+ * classical sources do not name an arrangement and then rate it in a second
+ * step. 門迫 *is* 迫, oppression; 擊刑 *is* 刑, punishment. The name and the
+ * fortune arrive in the same line of the same text, and a table that carried
+ * one without the other would be reporting half of what it read.
+ *
+ * Which is why leaving it out never worked: it came in through the glosses
+ * anyway — «gate oppressed» is not a neutral phrase — where it could not be
+ * tested, sourced or contradicted. Here it can.
+ *
+ * What stays out is unchanged and is the whole of the doctrine that depends
+ * on a question being asked: which palace is the 用神 for what somebody wants
+ * to know, when the thing will happen, and what to do about it. Nothing in
+ * this package ranks two charts, orders two hours, or advises.
+ *
+ * **How sure this is**: the third tier, the same as the configurations
+ * themselves — Chinese-language sources with no runnable reference. Only
+ * fortunes the manuals hand down alike are here; anything a school disputes
+ * would be a parameter or an absence, as 三奇得使 is.
+ */
+export type ValenceId = 'ji' | 'xiong' | 'jixiong';
+
+export interface Valence {
+  id: ValenceId;
+  hanzi: string;
+}
+
+const VALENCE: Record<ValenceId, Valence> = {
+  ji: { id: 'ji', hanzi: '吉' },
+  xiong: { id: 'xiong', hanzi: '凶' },
+  jixiong: { id: 'jixiong', hanzi: '吉凶' },
+};
+
+/**
+ * Every configuration this engine recognises, with its name and its fortune.
+ *
+ * 空亡 is the one that takes 吉凶 rather than 凶, and it is not a hedge: the
+ * void withholds whatever falls into it, which the sources state in both
+ * directions in the same breath — what was wanted does not arrive, and
+ * 凶格落空則凶不成, a baleful configuration fallen into the void does not
+ * come off either. Two transmitted halves of one rule, not two schools.
+ */
+const CONFIGURATIONS: Record<PatternId, { hanzi: string; valence: ValenceId }> = {
+  kongwang: { hanzi: '空亡', valence: 'jixiong' },
+  rumu: { hanzi: '入墓', valence: 'xiong' },
+  menpo: { hanzi: '門迫', valence: 'xiong' },
+  jixing: { hanzi: '擊刑', valence: 'xiong' },
+  fuyin: { hanzi: '伏吟', valence: 'xiong' },
+  fanyin: { hanzi: '反吟', valence: 'xiong' },
+  wubuyu: { hanzi: '五不遇時', valence: 'xiong' },
+  qinglongfanshou: { hanzi: '青龍返首', valence: 'ji' },
+  feiniaodiexue: { hanzi: '飛鳥跌穴', valence: 'ji' },
+  taibairuying: { hanzi: '太白入熒', valence: 'xiong' },
+  yingrutaibai: { hanzi: '熒入太白', valence: 'xiong' },
+  dage: { hanzi: '大格', valence: 'xiong' },
+  xingge: { hanzi: '刑格', valence: 'xiong' },
+  zhange: { hanzi: '戰格', valence: 'xiong' },
+  tengsheyaojiao: { hanzi: '螣蛇夭矯', valence: 'xiong' },
+  zhuquetoujiang: { hanzi: '朱雀投江', valence: 'xiong' },
+  qinglongtaozou: { hanzi: '青龍逃走', valence: 'xiong' },
+  baihuchangkuang: { hanzi: '白虎猖狂', valence: 'xiong' },
+};
 
 /**
  * The same list at runtime, for the surfaces that have to offer it.
  *
  * A form cannot enumerate a union type, and neither can a command line
- * checking what it was handed. Declared beside the type so that the two
- * cannot drift apart without the compiler noticing.
+ * checking what it was handed. Read off the table rather than written twice,
+ * so a configuration added without a fortune fails to compile.
  */
-export const PATTERN_IDS: readonly PatternId[] = [
-  'kongwang',
-  'rumu',
-  'menpo',
-  'jixing',
-  'fuyin',
-  'fanyin',
-  'wubuyu',
-  'qinglongfanshou',
-  'feiniaodiexue',
-];
+export const PATTERN_IDS: readonly PatternId[] = Object.keys(CONFIGURATIONS) as PatternId[];
+
+/** The fortunes, for a surface that has to offer them all. */
+export const VALENCE_IDS: readonly ValenceId[] = Object.keys(VALENCE) as ValenceId[];
+
+/**
+ * The fortune of a configuration, without waiting for one to occur.
+ *
+ * A legend has to name what it is about to show, and a form offering the
+ * configurations as criteria has the same problem: 青龍返首 is rare enough
+ * that reading the fortune off an occurrence means reading it off a chart
+ * that may not have one.
+ */
+export function valenceOf(id: PatternId): Valence {
+  return VALENCE[CONFIGURATIONS[id].valence];
+}
 
 /**
  * A configuration the chart has fallen into.
  *
- * These are **structural facts**. That a gate stands in a palace whose
- * element it controls is something anyone can check off the plates; that this
- * is a bad place to be is a reading, and the engine does not offer one. The
- * identifiers are names of arrangements, not verdicts, which is why they are
- * transliterated rather than translated into a judgement.
+ * Each is **checkable off the plates**: that a gate stands in a palace whose
+ * element it controls is something anyone can verify, and so is the name the
+ * tradition gives that. The identifiers stay transliterated for the reason
+ * they always were — a name is not a sentence — and the fortune travels as
+ * `valence`, an identifier and a glyph, never as prose. The gloss beside it
+ * is the surface's business, as every other gloss is.
  */
 export interface Pattern {
   id: PatternId;
   hanzi: string;
+  /** 吉, 凶, or both, as the sources hand it down. */
+  valence: Valence;
   /** The palace it occurs in. Absent when it is a property of the whole chart. */
   palace?: number;
   /** Which layer it was found on, where more than one can carry it. */
   layer?: 'gate' | 'star' | 'both';
 }
 
+/** A configuration, named and weighed from the one table that holds both. */
+function mark(id: PatternId, rest: Omit<Pattern, 'id' | 'hanzi' | 'valence'> = {}): Pattern {
+  const { hanzi, valence } = CONFIGURATIONS[id];
+  return { id, hanzi, valence: VALENCE[valence], ...rest };
+}
+
 /** The palace facing another across the board. The centre faces nothing. */
 export function opposite(number: number): number | undefined {
   return number === 5 ? undefined : 10 - number;
 }
-
-/**
- * The palace a branch belongs to.
- *
- * Twelve branches over eight outer palaces: the four that hold two are the
- * corners, which is why 艮 takes both 丑 and 寅.
- */
-const BRANCH_PALACE: Record<number, number> = {
-  0: 1, //  子 — 坎
-  1: 8, //  丑 — 艮
-  2: 8, //  寅 — 艮
-  3: 3, //  卯 — 震
-  4: 4, //  辰 — 巽
-  5: 4, //  巳 — 巽
-  6: 9, //  午 — 離
-  7: 2, //  未 — 坤
-  8: 2, //  申 — 坤
-  9: 7, //  酉 — 兌
-  10: 6, // 戌 — 乾
-  11: 6, // 亥 — 乾
-};
 
 /**
  * Where each instrument is struck (六儀擊刑).
@@ -122,11 +197,16 @@ export interface PatternInput {
  * Every configuration the chart has fallen into.
  *
  * Each is checkable from the plates alone, and each is reported with the
- * palace it happened in wherever that makes sense. Nothing is ranked and
- * nothing is judged.
+ * palace it happened in wherever that makes sense, and with the fortune its
+ * name carries. Nothing here is ranked, ordered, or matched against a
+ * question: a chart with six baleful configurations is not a worse chart,
+ * because worse is a word about somebody's undertaking and no undertaking is
+ * known here.
  *
  * Not implemented: 三奇得使. The sources consulted do not agree on which
  * pairings count, and a rule guessed at would be worse than a rule absent.
+ * Nor is the whole of 十干克應 — eleven of its eighty-one cells are here and
+ * the rest await a second source; see `STEM_PAIRS` and `docs/sources.md`.
  */
 export function findPatterns(input: PatternInput): Pattern[] {
   const found: Pattern[] = [];
@@ -135,11 +215,11 @@ export function findPatterns(input: PatternInput): Pattern[] {
   found.push(...tombs(input.heaven));
   found.push(...oppressedGates(input.gates));
   found.push(...struckInstruments(input.earth));
-  found.push(...auspiciousPairs(input.earth, input.heaven));
+  found.push(...stemPairs(input.earth, input.heaven));
   found.push(...chanting(input.stars, input.gates));
 
   if (unmetHour(input.dayStem, input.hourGanzhi)) {
-    found.push({ id: 'wubuyu', hanzi: '五不遇時' });
+    found.push(mark('wubuyu'));
   }
 
   return found;
@@ -152,8 +232,8 @@ export function findPatterns(input: PatternInput): Pattern[] {
  */
 function voidPalaces(hourGanzhi: Ganzhi): Pattern[] {
   const { empty } = decade(hourGanzhi);
-  const numbers = new Set(empty.map((branch: Branch) => BRANCH_PALACE[branch.index] as number));
-  return [...numbers].map((number) => ({ id: 'kongwang' as const, hanzi: '空亡', palace: number }));
+  const numbers = new Set(empty.map((branch: Branch) => palaceOfBranch(branch)));
+  return [...numbers].map((number) => mark('kongwang', { palace: number }));
 }
 
 /** Stems standing in the palace they are buried in (入墓). */
@@ -161,7 +241,7 @@ function tombs(heaven: ByPalace<Stem>): Pattern[] {
   const found: Pattern[] = [];
   for (const [number, stem] of Object.entries(heaven)) {
     if (TOMB[stem.id] === Number(number)) {
-      found.push({ id: 'rumu', hanzi: '入墓', palace: Number(number) });
+      found.push(mark('rumu', { palace: Number(number) }));
     }
   }
   return found;
@@ -173,14 +253,19 @@ function tombs(heaven: ByPalace<Stem>): Pattern[] {
  * Derived, not tabulated. The published list — the gates of metal in the
  * palaces of wood, the gate of water in the palace of fire, and so on — is
  * exactly the set this produces, which makes the list a test.
+ *
+ * Said in terms of `relationOf` rather than of `CONTROLS` directly, because
+ * that is what it is: 門迫 is the name and the fortune the tradition attaches
+ * to one of the five 門宮 relations, and the palace already reports which of
+ * the five it is. Two spellings of one rule could disagree; one cannot.
  */
 function oppressedGates(gates: ByPalace<Gate>): Pattern[] {
   const found: Pattern[] = [];
   for (const [number, gate] of Object.entries(gates)) {
     const here = palace(Number(number));
     const gateElement = palace(gate.home).element;
-    if (CONTROLS[gateElement] === here.element) {
-      found.push({ id: 'menpo', hanzi: '門迫', palace: Number(number), layer: 'gate' });
+    if (relationOf(gateElement, here.element).id === 'woke') {
+      found.push(mark('menpo', { palace: Number(number), layer: 'gate' }));
     }
   }
   return found;
@@ -191,23 +276,69 @@ function struckInstruments(earth: ByPalace<Stem>): Pattern[] {
   const found: Pattern[] = [];
   for (const [number, stem] of Object.entries(earth)) {
     if (STRIKE[stem.id] === Number(number)) {
-      found.push({ id: 'jixing', hanzi: '擊刑', palace: Number(number) });
+      found.push(mark('jixing', { palace: Number(number) }));
     }
   }
   return found;
 }
 
-/** 青龍返首 — heaven's 戊 over earth's 丙; 飛鳥跌穴 — heaven's 丙 over earth's 戊. */
-function auspiciousPairs(earth: ByPalace<Stem>, heaven: ByPalace<Stem>): Pattern[] {
+/**
+ * 十干克應 — the stem above standing over the stem below.
+ *
+ * The whole table has eighty-one cells, nine stems over nine, and this holds
+ * eleven of them. **The rest are absent on purpose**, and the reason is the
+ * project's standing one: a pairing enters here only when at least two
+ * independent sources name it the same way. Which sources, and what each of
+ * these was checked against one by one, is in `docs/sources.md`.
+ *
+ * Two things the cross-check turned up, both worth knowing before adding to
+ * this table:
+ *
+ * - **The pairing is agreed far more widely than the name.** Every source
+ *   consulted marks 庚 over 癸 as a named configuration; the 煙波釣叟歌 and
+ *   the Japanese tradition call it 大格, while one modern implementation calls
+ *   it 太白沖刑. The same happens for 刑格 and for 戰格. Where the sources
+ *   name a pairing differently, the classical verse decides — it is the text
+ *   the others descend from — and the divergence is recorded in the sources
+ *   document rather than silently resolved.
+ * - **一 pairing was excluded for exactly this reason.** 庚 over 壬 is named
+ *   小格 by one source alone; the verse fetched does not carry it and the
+ *   other sources call it something else. One source is not enough for a
+ *   table that cannot be derived, and 三奇得使 is the precedent.
+ *
+ * 甲 never appears on a plate — it is concealed by the instrument of its
+ * decade — so the verse's 丙加甲 and 甲加丙 are read here as 丙 over 戊 and
+ * 戊 over 丙, 戊 being the instrument of 甲子.
+ */
+const STEM_PAIRS: readonly { above: string; below: string; id: PatternId }[] = [
+  // 丙加甲兮鳥跌穴，甲加丙兮龍返首 — 煙波釣叟歌
+  { above: 'bing', below: 'wu', id: 'feiniaodiexue' },
+  { above: 'wu', below: 'bing', id: 'qinglongfanshou' },
+  // 六庚加丙白入熒，六丙加庚熒入白 — 煙波釣叟歌
+  { above: 'geng', below: 'bing', id: 'taibairuying' },
+  { above: 'bing', below: 'geng', id: 'yingrutaibai' },
+  // 庚加癸兮為大格，加己為刑最不宜 — 煙波釣叟歌
+  { above: 'geng', below: 'gui', id: 'dage' },
+  { above: 'geng', below: 'ji', id: 'xingge' },
+  // 戰格: not in the verse fetched; named alike by two independent sources.
+  { above: 'geng', below: 'geng', id: 'zhange' },
+  // 六癸加丁蛇夭矯，六丁加癸雀投江 — 煙波釣叟歌
+  { above: 'gui', below: 'ding', id: 'tengsheyaojiao' },
+  { above: 'ding', below: 'gui', id: 'zhuquetoujiang' },
+  // 六乙加辛龍逃走，六辛加乙虎猖狂 — 煙波釣叟歌
+  { above: 'yi', below: 'xin', id: 'qinglongtaozou' },
+  { above: 'xin', below: 'yi', id: 'baihuchangkuang' },
+];
+
+function stemPairs(earth: ByPalace<Stem>, heaven: ByPalace<Stem>): Pattern[] {
   const found: Pattern[] = [];
   for (const [key, above] of Object.entries(heaven)) {
     const number = Number(key);
     const below = earth[number] as Stem;
-    if (above.id === 'wu' && below.id === 'bing') {
-      found.push({ id: 'qinglongfanshou', hanzi: '青龍返首', palace: number });
-    }
-    if (above.id === 'bing' && below.id === 'wu') {
-      found.push({ id: 'feiniaodiexue', hanzi: '飛鳥跌穴', palace: number });
+    for (const pair of STEM_PAIRS) {
+      if (above.id === pair.above && below.id === pair.below) {
+        found.push(mark(pair.id, { palace: number }));
+      }
     }
   }
   return found;
@@ -231,10 +362,10 @@ function chanting(stars: ByPalace<Star>, gates: ByPalace<Gate>): Pattern[] {
 
   const found: Pattern[] = [];
   if (gatesHome || starsHome) {
-    found.push({ id: 'fuyin', hanzi: '伏吟', layer: layerOf(gatesHome, starsHome) });
+    found.push(mark('fuyin', { layer: layerOf(gatesHome, starsHome) }));
   }
   if (gatesFacing || starsFacing) {
-    found.push({ id: 'fanyin', hanzi: '反吟', layer: layerOf(gatesFacing, starsFacing) });
+    found.push(mark('fanyin', { layer: layerOf(gatesFacing, starsFacing) }));
   }
   return found;
 }
@@ -256,7 +387,3 @@ export function unmetHour(dayStem: Stem, hourGanzhi: Ganzhi): boolean {
   return CONTROLS[hourStem.element] === dayStem.element && hourStem.yang === dayStem.yang;
 }
 
-/** The branch a palace holds, for the palaces that hold only one. */
-export function branchesOf(number: number): Branch[] {
-  return BRANCHES.filter((branch) => BRANCH_PALACE[branch.index] === number);
-}

@@ -1,3 +1,4 @@
+import { BRANCHES, type Branch } from '../ganzhi.js';
 import type { Element } from '../types.js';
 
 /**
@@ -42,6 +43,41 @@ export function palace(number: number): Palace {
   const found = PALACES.find((candidate) => candidate.number === number);
   if (!found) throw new Error(`no palace numbered ${number}`);
   return found;
+}
+
+/**
+ * The palace a branch belongs to.
+ *
+ * Twelve branches over eight outer palaces: the four that hold two are the
+ * corners, which is why 艮 takes both 丑 and 寅. The centre holds none — it
+ * has no direction, and a branch is a direction before it is anything else.
+ *
+ * A fact about the board and not about any one reading of it, which is why it
+ * lives here: the void palaces of a decade, the post horse and the frame of
+ * branches drawn around the grid all ask the same question of it.
+ */
+const BRANCH_PALACE: Record<number, number> = {
+  0: 1, //  子 — 坎
+  1: 8, //  丑 — 艮
+  2: 8, //  寅 — 艮
+  3: 3, //  卯 — 震
+  4: 4, //  辰 — 巽
+  5: 4, //  巳 — 巽
+  6: 9, //  午 — 離
+  7: 2, //  未 — 坤
+  8: 2, //  申 — 坤
+  9: 7, //  酉 — 兌
+  10: 6, // 戌 — 乾
+  11: 6, // 亥 — 乾
+};
+
+export function palaceOfBranch(branch: Branch): number {
+  return BRANCH_PALACE[branch.index] as number;
+}
+
+/** The branches a palace holds — two at a corner, one on an axis, none in the centre. */
+export function branchesOf(number: number): Branch[] {
+  return BRANCHES.filter((branch) => BRANCH_PALACE[branch.index] === number);
 }
 
 /**

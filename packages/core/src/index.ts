@@ -4,9 +4,11 @@
  * A pure library: no dependency on HTTP, on a web framework, or on MCP. The
  * adapters consume it from outside.
  *
- * Two rules govern what comes out of here. **The engine does not interpret**:
- * it produces facts that can be checked, and what they mean belongs to
- * whoever reads them. **The engine does not localise**: it returns
+ * Two rules govern what comes out of here. **The engine answers no question**:
+ * it produces what can be checked — the arrangement, the name the tradition
+ * gives it, and the fortune transmitted with that name — and stops before
+ * everything that needs to know what somebody wants. It chooses no 用神, ranks
+ * nothing and advises nobody. **The engine does not localise**: it returns
  * identifiers, hanzi and numbers, and readable text is made at the surface
  * from the catalogs in `@qimendunjia/i18n`.
  */
@@ -157,13 +159,18 @@ export {
   SPIRITS_YANG,
   SPIRITS_YIN,
   SPIRIT_IDS,
+  RELATION_IDS,
   STARS,
+  VALENCE_IDS,
   YUAN_HANZI,
   branchesOf,
   computeQimenChart,
   determineJu,
   findPatterns,
+  horseBranch,
+  horseOf,
   opposite,
+  relationOf,
   seasonElement,
   strengthOf,
   unmetHour,
@@ -172,24 +179,31 @@ export {
   orbitFrom,
   palace,
   palaceOf,
+  palaceOfBranch,
   step,
+  valenceOf,
   type ByPalace,
   type Direction,
   type Gate,
   type GateId,
   type Ju,
+  type Horse,
   type Palace,
   type PalaceContents,
   type PalaceId,
   type Pattern,
   type PatternId,
   type QimenChart,
+  type Relation,
+  type RelationId,
   type Spirit,
   type SpiritId,
   type Star,
   type StarId,
   type Strength,
   type StrengthId,
+  type Valence,
+  type ValenceId,
   type Yuan,
 } from './dunjia/index.js';
 
