@@ -1,0 +1,66 @@
+# What a fresh machine finds out that a developer's machine cannot: the
+# build order, the native modules, the fonts, and the two datasets the
+# repository deliberately does not carry. Each has bitten before — the root
+# build script once skipped the web application and nothing noticed until
+# the image tried to copy a directory that did not exist.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # The same major the runtime image runs on; `engines` states the floor.
+          node-version-file: .nvmrc
+          cache: npm
+
+      # The glyphs are the content of a PNG: without a CJK font *and* the
+      # fontconfig index, the drawing comes out an empty grid and png.ts
+      # refuses to draw. The runtime image installs the same two.
+      - name: Install the fonts the drawing needs
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends fonts-noto-cjk fontconfig
+
+      # ~2 MB, cached across runs. Without the files the engine falls back to
+      # Moshier, which computes — but the anchors in the tests were made at
+      # Swiss Ephemeris precision, and an instant asserted to the minute must
+      # not drift across a minute boundary for want of a download.
+      - name: Restore the ephemeris files
+        uses: actions/cache@v4
+        with:
+          path: packages/core/ephe
+          key: swiss-ephemeris-1800-2399
+
+      - run: npm ci
+      - run: npm run ephe:download -w @qimendunjia/core
+
+      # `npm ci` already ran `prepare`, which builds; saying it again costs
+      # seconds and keeps the pipeline true if `prepare` ever changes.
+      - run: npm run build
+      - run: npm run typecheck
+
+      # Four places with their real GeoNames identifiers, in place of the
+      # ~90 MB dataset nobody downloads in CI. The tests reach for exactly
+      # these; the script refuses to replace a database that already exists.
+      - name: Build the location fixture
+        run: npm run geo:fixture -w @qimendunjia/geo
+
+      - run: npm test
+
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Build, never push: what is asserted is that the Dockerfile still
+      # describes this repository — every stage, including the web build and
+      # the fonts, whose absence is exactly what it once shipped silently.
+      - name: Build the image
+        run: docker build .

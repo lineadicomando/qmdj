@@ -611,6 +611,30 @@ tiny image twice, once holding 休 and once holding nothing, and refuses to
 draw if they come out identical — and it is what turned a silent empty grid
 into a message naming the package to install.
 
+**Continuous integration came later**, on 2026-08-08, and finding out what a
+fresh machine needs was the point of adding it. Two findings:
+
+- **`npm test` on a fresh clone did not pass.** The web and MCP suites reach
+  for the imported GeoNames dataset — the two Romes that prove a search
+  chooses nothing, the Munich that proves the Italian exonym answers — and
+  nothing said so until a machine without the 90 MB tried. The fixture the
+  geo suite already built in a temp directory became a script,
+  `geo:fixture`: the same four places at the default path, refused where a
+  database already exists so it can never wear the dataset's name.
+- **Moshier is not precise enough for the tests, though it is for charts.**
+  The anchors were made at Swiss Ephemeris precision and asserted to the
+  minute; an ephemeris accurate to a tenth of an arc second moves a term's
+  instant by seconds, which is a different minute often enough. CI downloads
+  the ~2 MB of files and caches them rather than letting the fallback shift
+  an anchor.
+
+The workflow builds in order, typechecks, runs every suite with the fonts
+the drawing needs, and builds the Docker image without pushing it — each
+step one that failed silently at least once before it existed. `.nvmrc` pins
+the Node major the runtime image runs on, which is also the closest thing
+there is to pinning `tzdata`: the zone rules live in the ICU data Node
+bundles.
+
 ### Phase 8 — Choosing a time
 
 The engine casts a chart for an instant. 擇時擇方 is the other question, and
