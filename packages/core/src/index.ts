@@ -65,6 +65,8 @@ export {
   type LunarDate,
 } from './lunar.js';
 
+export { zhirunAssignment, type ZhirunAssignment } from './zhirun.js';
+
 export {
   BRANCHES,
   STEMS,

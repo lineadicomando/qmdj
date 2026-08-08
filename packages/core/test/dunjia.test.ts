@@ -249,21 +249,21 @@ describe('no school is implicit', () => {
   it('refuses a method it does not implement', () => {
     // A chart cast by the wrong method looks right and is not, so asking for
     // one that is missing is an error rather than a quiet substitution.
-    for (const method of ['zhirun', 'maoshan'] as const) {
-      const moment = resolveMoment(
-        { date: '2024-06-15', time: '14:00', timezone: 'Asia/Shanghai' },
-        BEIJING,
-        { ...CLOCK, method },
-        context,
-      );
+    // Only maoshan is missing now; zhirun has its own tests.
+    const method = 'maoshan' as const;
+    const moment = resolveMoment(
+      { date: '2024-06-15', time: '14:00', timezone: 'Asia/Shanghai' },
+      BEIJING,
+      { ...CLOCK, method },
+      context,
+    );
 
-      expect(() => determineJu(moment, { ...CLOCK, method })).toThrow(ChartError);
-      try {
-        determineJu(moment, { ...CLOCK, method });
-      } catch (error) {
-        expect((error as ChartError).code).toBe('METHOD_NOT_IMPLEMENTED');
-        expect((error as ChartError).params['method']).toBe(method);
-      }
+    expect(() => determineJu(moment, { ...CLOCK, method })).toThrow(ChartError);
+    try {
+      determineJu(moment, { ...CLOCK, method });
+    } catch (error) {
+      expect((error as ChartError).code).toBe('METHOD_NOT_IMPLEMENTED');
+      expect((error as ChartError).params['method']).toBe(method);
     }
   });
 

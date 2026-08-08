@@ -14,6 +14,7 @@ import { jieAt, solarTermAt, type SolarTerm } from './solar-terms.js';
 import { fromJulianDay, resolveTime, type LocalMoment } from './time.js';
 import { trueSolarTime, type TrueSolarTime } from './true-solar.js';
 import type { ChartOptions, Place } from './types.js';
+import { zhirunAssignment, type ZhirunAssignment } from './zhirun.js';
 
 export interface Pillars {
   year: Ganzhi;
@@ -50,6 +51,16 @@ export interface Moment {
    * other field of every hour without ever reaching this one.
    */
   readonly lunar: LunarDate;
+  /**
+   * Where the day stands in the 置閏 bookkeeping — which term its block
+   * serves, which yuan its stretch is, whether the block is intercalated.
+   *
+   * Deferred like `lunar`, and read only by the zhirun method, so no other
+   * chart pays for the solstice searches. Unlike `lunar` it does not
+   * serialise: it is working state, and what matters from it the ju of a
+   * zhirun chart reports itself.
+   */
+  readonly zhirun: ZhirunAssignment;
   /** The options this was computed with. A saved result must reproduce. */
   options: ChartOptions;
   warnings: ChartWarning[];
@@ -136,6 +147,19 @@ export function resolveMoment(
   // Enumerable, so a moment still serialises whole: whoever hands one to
   // `JSON.stringify` gets the lunar date, and pays for it there.
   Object.defineProperty(moment, 'lunar', { get: lunar, enumerable: true });
+
+  // The futou is a fact about the day pillar, so the bookkeeping reads the
+  // same day number the pillar was read from — shifted by the late hour of
+  // the Rat exactly when the pillar was.
+  const zhirun = deferred(() =>
+    zhirunAssignment({
+      day: options.dayBoundary === 'zishi' ? effectiveDay + opensNextDay : effectiveDay,
+      julianDayUT: time.julianDayUT,
+      dayOf: (jd) => localDayNumber(jd, input.timezone),
+      context,
+    }),
+  );
+  Object.defineProperty(moment, 'zhirun', { get: zhirun, enumerable: false });
 
   return moment;
 }

@@ -1,6 +1,6 @@
 import { ChartError } from '../errors.js';
 import type { Moment } from '../pillars.js';
-import type { SolarTermId } from '../solar-terms.js';
+import { SOLAR_TERMS, type SolarTermId } from '../solar-terms.js';
 import type { ChartOptions } from '../types.js';
 
 export type Yuan = 'shang' | 'zhong' | 'xia';
@@ -16,10 +16,17 @@ export interface Ju {
   yang: boolean;
   /** 1 to 9. */
   number: number;
-  /** Which fifth-part of the term the moment falls in. */
+  /** The moment's third of its term or, under zhirun, of its block. */
   yuan: Yuan;
-  /** Days elapsed since the term began, which is what fixes the yuan. */
+  /** Days elapsed since the term began. Under chaibu it fixes the yuan. */
   daysIntoTerm: number;
+  /**
+   * The term whose ju was taken. Under chaibu, always the term in force;
+   * under zhirun's 超神 it can be a term that has not yet begun.
+   */
+  term: { id: SolarTermId; hanzi: string };
+  /** True inside an intercalated block (閏), which repeats 芒種 or 大雪. */
+  leap: boolean;
 }
 
 /**
@@ -77,17 +84,39 @@ const YUAN_ORDER: Yuan[] = ['shang', 'zhong', 'xia'];
  * into one another, and rather than carry the drift, this method re-divides
  * the term each time.
  *
- * `zhirun` (置閏) carries the drift instead, by inserting a repeated term; and
- * `maoshan` (茅山) differs again. Neither is implemented, and neither is
- * silently substituted: asking for one is an error rather than a chart that
+ * Under `zhirun` (置閏) the drift is carried instead of re-divided: the yuan
+ * follows the day's futou through the sexagenary cycle, whole fifteen-day
+ * blocks serve one term each, and the accumulated drift is paid off by a
+ * repeated 芒種 or 大雪 block. The bookkeeping lives in `zhirun.ts`; the
+ * moment carries it, and this function only reads the table with it. The
+ * two methods therefore disagree not only on the yuan of a given day but,
+ * around a term's edges, on which term's ju the day takes at all.
+ *
+ * `maoshan` (茅山) differs again. It is not implemented, and it is not
+ * silently substituted: asking for it is an error rather than a chart that
  * looks right and is not.
  */
 export function determineJu(moment: Moment, options: ChartOptions): Ju {
+  const daysIntoTerm = moment.julianDayUT - moment.solarTerm.julianDayUT;
+
+  if (options.method === 'zhirun') {
+    const assignment = moment.zhirun;
+    const entry = JU_TABLE[assignment.term];
+    const definition = SOLAR_TERMS.find((candidate) => candidate.id === assignment.term);
+    return {
+      yang: entry.yang,
+      number: entry.ju[assignment.yuanIndex] as number,
+      yuan: YUAN_ORDER[assignment.yuanIndex] as Yuan,
+      daysIntoTerm,
+      term: { id: assignment.term, hanzi: definition?.hanzi as string },
+      leap: assignment.leap,
+    };
+  }
+
   if (options.method !== 'chaibu') {
     throw new ChartError('METHOD_NOT_IMPLEMENTED', { method: options.method });
   }
 
-  const daysIntoTerm = moment.julianDayUT - moment.solarTerm.julianDayUT;
   const index = Math.min(2, Math.max(0, Math.floor(daysIntoTerm / 5)));
   const entry = JU_TABLE[moment.solarTerm.term.id];
 
@@ -96,5 +125,7 @@ export function determineJu(moment: Moment, options: ChartOptions): Ju {
     number: entry.ju[index] as number,
     yuan: YUAN_ORDER[index] as Yuan,
     daysIntoTerm,
+    term: { id: moment.solarTerm.term.id, hanzi: moment.solarTerm.term.hanzi },
+    leap: false,
   };
 }
