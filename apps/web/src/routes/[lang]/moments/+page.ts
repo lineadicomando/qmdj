@@ -15,16 +15,36 @@ export const load: PageLoad = async ({ url, fetch, parent }) => {
   const { input, criteria, locationId } = readInterval(url);
   const { place, failure: unknownPlace } = await lookupPlace(fetch, locationId, locale);
   const interval = { ...input, place };
+  /**
+   * The address named a place and there is none — which is not the same as
+   * naming none at all.
+   *
+   * Without a `locationId` the engine reckons on the meridian of the zone and
+   * says so, and that is an answer. With one that matches nothing, anything
+   * cast from this address is cast for the server's own zone: a chart of
+   * somewhere else, looking exactly like a chart. The scan already refuses;
+   * the page needs to know so that the board it opens over the list refuses
+   * for the same reason and not by accident.
+   */
+  const placeLost = Boolean(unknownPlace);
 
   if (!input.from || !input.to) {
-    return { interval: { ...interval, ...defaultInterval() }, criteria, scan: undefined, failure: undefined };
+    return {
+      interval: { ...interval, ...defaultInterval() },
+      criteria,
+      placeLost,
+      scan: undefined,
+      failure: undefined,
+    };
   }
-  if (unknownPlace) return { interval, criteria, scan: undefined, failure: unknownPlace };
+  if (unknownPlace) {
+    return { interval, criteria, placeLost, scan: undefined, failure: unknownPlace };
+  }
 
   const response = await fetch(`/api/moments?${intervalQuery(interval, criteria, { lang: locale })}`);
   const body = await response.json();
 
   return response.ok
-    ? { interval, criteria, scan: body, failure: undefined }
-    : { interval, criteria, scan: undefined, failure: body as Failure };
+    ? { interval, criteria, placeLost, scan: body, failure: undefined }
+    : { interval, criteria, placeLost, scan: undefined, failure: body as Failure };
 };

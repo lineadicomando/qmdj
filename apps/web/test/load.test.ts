@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { load as chart } from '../src/routes/[lang]/+page';
 import { load as bazi } from '../src/routes/[lang]/bazi/+page';
+import { load as moments } from '../src/routes/[lang]/moments/+page';
 
 /**
  * What the pages ask for, given an address.
@@ -113,5 +114,51 @@ describe('the pillars page', () => {
 
     expect(data.result).toBeUndefined();
     expect(data.failure).toMatchObject({ code: 'UNKNOWN_LOCATION' });
+  });
+});
+
+/**
+ * `placeLost` is the distinction the board over the list hangs on, and the two
+ * cases look alike from the page: `interval.place` is undefined in both.
+ *
+ * They are not alike. Naming no place is an ordinary scan, reckoned on the
+ * meridian of the zone and said to be; naming one that matches nothing means
+ * anything cast from that address is cast for the server's own zone. Guarding
+ * on the place itself made a scan without one open no board at all — which is
+ * most scans, since the form asks only for two dates.
+ */
+describe('the moments page', () => {
+  it('scans without a place, and says a place was never lost', async () => {
+    const { data } = await open(moments, '/en?from=2026-09-01&to=2026-09-08');
+
+    expect(data.scan).toBeTruthy();
+    expect((data.interval as { place?: unknown }).place).toBeUndefined();
+    expect(data.placeLost).toBe(false);
+  });
+
+  it('says a place was lost when the address named one and there is none', async () => {
+    const { data, urls } = await open(moments, '/en?from=2026-09-01&to=2026-09-08&locationId=999999999');
+
+    expect(data.placeLost).toBe(true);
+    expect(data.scan).toBeUndefined();
+    expect(data.failure).toMatchObject({ code: 'UNKNOWN_LOCATION' });
+    expect(urls.some((url) => url.startsWith('/api/moments?'))).toBe(false);
+  });
+
+  it('says the same before there is an interval to scan', async () => {
+    // The panel opens on the coming week and waits; nothing has been lost.
+    const { data } = await open(moments, '/en');
+
+    expect(data.scan).toBeUndefined();
+    expect(data.placeLost).toBe(false);
+  });
+
+  it('keeps the place it was given', async () => {
+    const { data, urls } = await open(moments, '/en?from=2026-09-01&to=2026-09-08&locationId=1816670', {
+      '1816670': BEIJING,
+    });
+
+    expect(data.placeLost).toBe(false);
+    expect(urls).toContain('/api/moments?from=2026-09-01&to=2026-09-08&locationId=1816670&lang=en');
   });
 });

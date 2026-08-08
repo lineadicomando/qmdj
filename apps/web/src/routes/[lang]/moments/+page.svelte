@@ -556,11 +556,13 @@
   and a place, and both are in the address: an hour set aside a scan ago opens
   the same way, whether or not the criteria in force still return it.
 
-  The place is the one thing worth guarding. Cast without it the endpoints
-  answer for the server's own zone — a chart of somewhere else, looking
-  exactly like a chart.
+  What is worth guarding is not the *absence* of a place, which is an ordinary
+  scan reckoned on the meridian of the zone, but an address that named one and
+  could not find it: everything cast from that address is cast for the
+  server's own zone — a chart of somewhere else, looking exactly like a chart.
+  The scan already refuses; `placeLost` is how the board refuses with it.
 -->
-{#if at && data.interval.place}
+{#if at && !data.placeLost}
   <PlateDialog
     {t}
     heading={heading as string}
