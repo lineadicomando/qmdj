@@ -183,11 +183,13 @@
 
     <!-- The one thing that scrolls. See the note on `.body` below. -->
     <div class="body">
+      <!-- A middling chart's shape, to reserve the box with. See the chart
+           section, where the same attributes carry the same caveat. -->
       <img
         src={plate}
         alt=""
-        width="640"
-        height="640"
+        width="900"
+        height="1035"
         class:settling={drawn !== plate}
         onload={() => (drawn = plate)}
       />
@@ -209,10 +211,11 @@
   /*
    * As large as the screen allows, and no larger than the drawing needs.
    *
-   * The board is the content and it is square: given the width of a desktop
-   * it would stand taller than the window, so the height is what bounds it
-   * and the width follows. Tall enough to scroll on a phone in landscape,
-   * where the patterns go below the fold and the box carries them.
+   * The board is the content and it is square — the picture around it is not,
+   * since the list of configurations hangs below — so given the width of a
+   * desktop it would stand taller than the window, and the height is what
+   * bounds it while the width follows. Tall enough to scroll on a phone in
+   * landscape, where the patterns go below the fold and the box carries them.
    */
   dialog {
     /* No padding: the backdrop test in `fromBackdrop` is that a click landed
@@ -319,7 +322,12 @@
   @media (min-width: 56rem) {
     dialog.large .body { grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem); }
     dialog.large img {
-      inline-size: min(calc(96vw - 28rem), calc(90vh - 5rem));
+      /* The height budget buys eight sevenths of itself in width: what has to
+         fit is everything down to the foot of the board, which is the
+         caption's eighth plus the grid's three quarters — see the same sum in
+         the chart section. The list of configurations hangs below that and
+         scrolls with `.body`, which is what `.body` scrolls for. */
+      inline-size: min(calc(96vw - 28rem), calc((90vh - 5rem) * 8 / 7));
       block-size: auto;
       max-inline-size: 100%;
       justify-self: center;
