@@ -23,6 +23,9 @@ export type PalaceId = 'kan' | 'kun' | 'zhen' | 'xun' | 'zhong' | 'qian' | 'dui'
 
 export type Direction = 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw';
 
+/** The eight, going round from the north. The centre is not one of them. */
+export const DIRECTIONS: readonly Direction[] = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'];
+
 export const PALACES: readonly Palace[] = [
   { number: 1, id: 'kan', hanzi: '坎', element: 'shui', direction: 'n' },
   { number: 2, id: 'kun', hanzi: '坤', element: 'tu', direction: 'sw' },

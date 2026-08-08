@@ -169,6 +169,7 @@ export {
 } from './strength.js';
 export {
   CENTRE_HOST,
+  DIRECTIONS,
   FLIGHT_ASCENDING,
   FLIGHT_DESCENDING,
   PALACES,

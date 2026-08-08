@@ -92,6 +92,19 @@ export const en = {
   'label.palace.gen': 'northeast',
   'label.palace.li': 'south',
 
+  // The same eight directions abbreviated, for the frame around the drawing:
+  // a band a twentieth of the picture wide holds "SE" and not "southeast".
+  // Two keys for one thing because the abbreviation is not the word cut
+  // short — Italian says O for west, from `ovest`, where English says W.
+  'label.compass.n': 'N',
+  'label.compass.ne': 'NE',
+  'label.compass.e': 'E',
+  'label.compass.se': 'SE',
+  'label.compass.s': 'S',
+  'label.compass.sw': 'SW',
+  'label.compass.w': 'W',
+  'label.compass.nw': 'NW',
+
   'label.star.tianpeng': 'Canopy',
   'label.star.tianrui': 'Grain',
   'label.star.tianchong': 'Rush',

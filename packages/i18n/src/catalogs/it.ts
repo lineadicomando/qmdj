@@ -82,6 +82,15 @@ export const it: Record<MessageKey, string> = {
   'label.palace.gen': 'nord-est',
   'label.palace.li': 'sud',
 
+  'label.compass.n': 'N',
+  'label.compass.ne': 'NE',
+  'label.compass.e': 'E',
+  'label.compass.se': 'SE',
+  'label.compass.s': 'S',
+  'label.compass.sw': 'SO',
+  'label.compass.w': 'O',
+  'label.compass.nw': 'NO',
+
   'label.star.tianpeng': 'Baldacchino',
   'label.star.tianrui': 'Grano',
   'label.star.tianchong': 'Impeto',

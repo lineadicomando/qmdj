@@ -1,6 +1,6 @@
 import type { MessageKey, Translator } from '@qimendunjia/i18n';
 import { BRANCHES, STEMS, type Ganzhi } from './ganzhi.js';
-import { GATES, PALACES, SPIRITS_YANG, SPIRITS_YIN, STARS } from './dunjia/index.js';
+import { DIRECTIONS, GATES, PALACES, SPIRITS_YANG, SPIRITS_YIN, STARS } from './dunjia/index.js';
 
 /**
  * The words for what a chart contains, in one locale.
@@ -11,6 +11,15 @@ import { GATES, PALACES, SPIRITS_YANG, SPIRITS_YIN, STARS } from './dunjia/index
  */
 export interface ChartLabels {
   palace: Record<string, string>;
+  /**
+   * The eight directions, abbreviated: `SE`, `NO`.
+   *
+   * Not `palace` cut short. The palace is named by its direction in full —
+   * "southeast" — and this is the map's abbreviation of it, which is a
+   * different word in every language and is asked for separately for that
+   * reason. It is what the frame around the drawing is written in.
+   */
+  direction: Record<string, string>;
   star: Record<string, string>;
   gate: Record<string, string>;
   spirit: Record<string, string>;
@@ -36,6 +45,9 @@ export function chartLabels(t: Translator): ChartLabels {
 
   return {
     palace: from(PALACES, 'palace'),
+    direction: Object.fromEntries(
+      DIRECTIONS.map((id) => [id, t(`label.compass.${id}` as MessageKey)]),
+    ),
     star: from(STARS, 'star'),
     gate: from(GATES, 'gate'),
     spirit: { ...from(SPIRITS_YANG, 'spirit'), ...from(SPIRITS_YIN, 'spirit') },
