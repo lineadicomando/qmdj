@@ -106,7 +106,7 @@ is. Do not describe the third as though it were the first.
 | `search_location` | a name → candidates with coordinates and zone. Always first when you have a name |
 | `compute_qimen_chart` | the nine palaces, the plates, the configurations |
 | `compute_bazi` | the four pillars, read out. `gender` only affects the luck cycles |
-| `draw_qimen_chart` | the picture. After the calculation, never instead of it |
+| `draw_qimen_chart` | the picture, framed by the eight directions. After the calculation, never instead of it |
 | `solar_terms` | the twenty-four terms of a year, with exact instants |
 | `lunar_date` | the lunisolar date. Reckoned on 120°E by convention, not on the zone you pass |
 | `scan_moments` | every chart over an interval, narrowed to what you name. For **choosing** a time rather than reading one |

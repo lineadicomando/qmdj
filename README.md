@@ -47,7 +47,7 @@ belongs to whoever reads it. See [`docs/agent-prompt.md`](docs/agent-prompt.md).
 | `packages/i18n` | message catalogs and locale negotiation. A leaf: depends on nothing |
 | `packages/geo` | location lookup over a local GeoNames dataset (SQLite) |
 | `packages/core` | the engine, and the `qimen` command |
-| `packages/plate` | the drawing: nine palaces, SVG and PNG |
+| `packages/plate` | the drawing: nine palaces framed by the compass, SVG and PNG |
 | `packages/mcp` | MCP server, seven tools, stdio |
 | `apps/web` | SvelteKit: interface at `/en` and `/it`, six endpoints under `/api` |
 
@@ -172,8 +172,9 @@ it as much as a Chinese one does. So hanzi travels in the engine's output
 whatever the locale, and the catalog only supplies the gloss beside it.
 
 A consequence worth having: the drawing is almost entirely
-locale-independent, because the palaces carry hanzi. Only its captions are
-text in a language.
+locale-independent, because the palaces carry hanzi. Only its captions and the
+eight directions around its frame are text in a language — and the frame keeps
+the twelve branches beside them, since 子 is due north in every language.
 
 ## Contributing
 
