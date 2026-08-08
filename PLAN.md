@@ -696,6 +696,32 @@ minority practice, and where it is done the bridge is the ganzhi rather than
 any geometry between two plates. The scan stands on its own; a natal filter,
 if it ever comes, is a criterion like the others.
 
+**A list of hours is read scrolling, and the section was built to be read in
+one glance.** Two things followed from that, neither of them in the engine.
+
+- **The date left the row and became a rowgroup.** It had been written into
+  the first hour of each day and left out of the rest, which is right for a
+  table taken in at once and wrong for one scrolled: twenty rows down, the
+  date qualifying the hours is off the top of the screen. It sticks now, with
+  the column names above it and the hour to its left, which cost the frame
+  around the table a height — a sticky cell sticks to the nearest scroll
+  container, and `overflow-x: auto` makes one on *both* axes, so inside a
+  frame that only ever scrolled sideways nothing would ever have stuck. The
+  heading names the civil date and no day pillar: under the default boundary
+  the pillar turns at 23:00, so one ganzhi over the group is wrong for the
+  last row of most of them.
+- **Choosing ends in setting aside, and what is set aside is a palace.** An
+  hour kept is `2026-09-01T04:10@qian` in the address, for the reason the
+  whole phase turns on — an interval does not hold a good hour, it holds an
+  hour in which something stands to the northwest — and because the address
+  is where this application's state lives: a shortlist on disk would be a
+  different promise than the one the privacy note publishes. It survives
+  narrowing the criteria, which is how a shortlist gets built, and does not
+  survive moving the place, since an hour kept is a clock time and the clock
+  is the place's. That is also why the strip listing them stands above the
+  answer rather than in it: the scan that comes back with nothing must not be
+  able to take it away.
+
 ---
 
 ## 5. Risks, worst first

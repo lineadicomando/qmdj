@@ -292,6 +292,17 @@ export const en = {
   // labelled by its column and by nothing a screen reader reads aloud.
   'form.keep': 'keep',
   'form.keepMoment': 'Keep {hour}, {palace}',
+  // The shortlist gathers what the table would otherwise scatter over a
+  // fortnight, and it outlives the scan: an hour set aside under one set of
+  // criteria is still set aside under the next, where it may no longer be a
+  // row at all. Which is why the strip stands above the answer and not in it.
+  'form.kept': 'Set aside — {count}',
+  'form.keptRemove': 'Take {hour}, {palace} off the list',
+  'form.keptCopy': 'copy the list',
+  'form.keptCopied': 'copied',
+  'form.keptClear': 'empty it',
+  'form.keptNote':
+    'The list is in the address of this page: sharing the address shares it, and the dates and the place along with it.',
 
   // What the button says about its own state. A form still missing something
   // says what, in words: a button greyed out with no reason given is a dead

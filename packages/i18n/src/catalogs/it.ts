@@ -258,6 +258,13 @@ export const it: Record<MessageKey, string> = {
   'form.backToScan': 'Torna ai momenti',
   'form.keep': 'da tenere',
   'form.keepMoment': 'Tieni {hour}, {palace}',
+  'form.kept': 'Messi da parte — {count}',
+  'form.keptRemove': 'Togli {hour}, {palace} dalla lista',
+  'form.keptCopy': 'copia la lista',
+  'form.keptCopied': 'copiata',
+  'form.keptClear': 'svuota',
+  'form.keptNote':
+    'La lista è nell\'indirizzo di questa pagina: condividere l\'indirizzo la condivide, e con essa le date e il luogo.',
 
   'form.working': 'Calcolo in corso…',
   'form.needed.date': 'Manca ancora una data.',

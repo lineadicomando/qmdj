@@ -19,6 +19,7 @@
   import {
     DIRECTIONS,
     GATE_IDS,
+    PALACES,
     PALACE_OF,
     PATTERN_IDS,
     PURPOSES,
@@ -221,6 +222,60 @@
     mark();
   }
 
+  function empty(): void {
+    kept = [];
+    mark();
+  }
+
+  /**
+   * An hour set aside, said in full without an answer to read it out of.
+   *
+   * This is the whole reason the palace travels in the address beside the
+   * minute. The entry may well not be a row any more — that is what happens
+   * when the criteria are narrowed, and losing sight of what one had chosen
+   * at exactly that moment is the failure the strip exists to prevent. It is
+   * named from `PALACES` instead, which the engine's own list is asserted
+   * against, and the whole board remains one link away.
+   */
+  const whenFormat = $derived(
+    new Intl.DateTimeFormat(t.locale, {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+      timeZone: 'UTC',
+    }),
+  );
+  const when = (start: string): string =>
+    `${whenFormat.format(new Date(`${start.slice(0, 10)}T00:00:00Z`))} · ${start.slice(11, 16)}`;
+
+  const palaceOf = (id: string): (typeof PALACES)[number] =>
+    PALACES.find((palace) => palace.id === id) as (typeof PALACES)[number];
+
+  /**
+   * The list as something to paste somewhere else.
+   *
+   * Where "set aside" usually ends: in a message, a calendar, a notebook.
+   * The address is the other way of taking it away, and the note under the
+   * buttons says so — a link carries the list *and* reopens the scan behind
+   * it, which no amount of text can.
+   */
+  let copied = $state(false);
+
+  async function copy(): Promise<void> {
+    if (!navigator.clipboard) return;
+
+    const lines = kept.map(
+      (entry) =>
+        `${entry.start.slice(0, 10)} ${entry.start.slice(11, 16)} · ${palaceOf(entry.palace).number} ${gloss('palace', entry.palace)} ${palaceOf(entry.palace).hanzi}`,
+    );
+    await navigator.clipboard.writeText(
+      [data.interval.place?.name, ...lines].filter(Boolean).join('\n'),
+    );
+
+    copied = true;
+    setTimeout(() => (copied = false), 2000);
+  }
+
   /** The choice, written where somebody can copy it out of the address bar. */
   function mark(): void {
     const next = new URL(page.url);
@@ -377,6 +432,57 @@
   {/snippet}
 </FormPanel>
 
+<!--
+  Above the answer, and deliberately outside it.
+
+  What is set aside outlives the scan that found it: a rescan that narrows the
+  criteria is exactly how a shortlist gets built, and it may well leave an
+  hour already chosen off the table. So the strip stands here, where a scan
+  that matched nothing — or failed — still cannot take it away.
+
+  A `details` and not a panel of the page's own: it opens and shuts without
+  scripts, it is the one disclosure on the site nothing else has to know the
+  state of, and shut it costs a single line above the count.
+-->
+{#if kept.length > 0}
+  <details class="kept" open>
+    <summary>{t('form.kept', { count: kept.length })}</summary>
+
+    <ul>
+      {#each kept as entry (keptKey(entry.start, entry.palace))}
+        <li>
+          <a href={chartHref(entry.start)}>
+            <span>{when(entry.start)}</span>
+            <span class="where">
+              {palaceOf(entry.palace).number}
+              {gloss('palace', entry.palace)}
+              <span class="glyph">{palaceOf(entry.palace).hanzi}</span>
+            </span>
+          </a>
+          <button
+            type="button"
+            aria-label={t('form.keptRemove', {
+              hour: when(entry.start),
+              palace: gloss('palace', entry.palace),
+            })}
+            onclick={() => keep(entry.start, entry.palace)}
+          >
+            ×
+          </button>
+        </li>
+      {/each}
+    </ul>
+
+    <p class="actions">
+      <button type="button" onclick={copy}>
+        {copied ? t('form.keptCopied') : t('form.keptCopy')}
+      </button>
+      <button type="button" onclick={empty}>{t('form.keptClear')}</button>
+    </p>
+    <p class="note">{t('form.keptNote')}</p>
+  </details>
+{/if}
+
 {#if failure}<p class="failure" role="alert">{failure}</p>{/if}
 
 {#if scan}
@@ -468,6 +574,55 @@
    * nothing but the page's foot, so the scrolling does not strand anything.
    */
   .frame { max-height: 70vh; }
+
+  /*
+   * The shortlist: a rule and a heading, and nothing that competes with the
+   * panel above it. It is not a second form — it is a note the reader wrote
+   * on the side of the answer, and it should read like one.
+   */
+  .kept { border-top: 1px solid var(--rule); padding-top: 0.6rem; margin-bottom: 1.6rem; }
+  .kept summary { color: var(--faint); font-size: 0.9em; cursor: pointer; }
+  .kept ul {
+    list-style: none;
+    margin: 0.6rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    /* Twenty hours are a shortlist somebody is still narrowing, and they are
+       not worth half the window. Past a few rows of them it scrolls. */
+    max-height: 11rem;
+    overflow-y: auto;
+  }
+  /*
+   * One hour to a pill: the whole of what was chosen, and the way back to the
+   * board it stands in. The date leads and the palace is under it, which is
+   * the order the table reads in — the same answer, gathered rather than
+   * spread over a fortnight.
+   */
+  .kept li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.3rem;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 0.25rem 0.35rem 0.25rem 0.55rem;
+  }
+  .kept li a { text-decoration: none; display: grid; font-size: 0.9em; }
+  .kept li a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+  .kept .where { color: var(--faint); font-size: 0.85em; }
+  .kept li button {
+    border: 0;
+    background: none;
+    color: var(--faint);
+    cursor: pointer;
+    font: inherit;
+    padding: 0 0.15rem;
+    line-height: 1.2;
+  }
+  .kept li button:hover { color: var(--alarm); background: none; }
+  .actions { display: flex; gap: 0.5rem; margin: 0.6rem 0 0; }
+  .actions button { font-size: 0.85em; cursor: pointer; padding: 0.15rem 0.5rem; }
   /*
    * The board is over the list and not in it — see `PlateDialog`.
    *

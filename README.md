@@ -99,7 +99,10 @@ stands *now*; `/it/moments` asks *when, in a stretch of days, does a thing
 stand — and which way is it*. That second half is not decoration: a chart is
 consulted for a direction as much as for an hour, and an answer of times
 alone would have thrown away what this art has and the others do not. Each
-row links back to the whole board for its hour.
+row links back to the whole board for its hour, and the hours worth comparing
+are set aside into a shortlist that rides in the address with the scan — so it
+survives narrowing the criteria and running them again, and can be sent to
+somebody as a link.
 
 One exception, and it is the same rule read carefully: an address that does
 not say *when* means now, and now is a different answer every hour. Those are
