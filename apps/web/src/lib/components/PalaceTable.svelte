@@ -42,6 +42,17 @@
         <td>
           <span>{gloss('star', cell.star.id)}</span>
           <span class="glyph">{cell.star.hanzi} · {gloss('strength', cell.starStrength.id)}</span>
+          <!-- How it stands to the palace it is in, under how it stands to the
+               season. Two questions of the same thing, told apart by the glyph
+               that names only the second: 旺相休囚死 is the season and 生我 ·
+               剋我 · 比和 is the ground.
+
+               Guarded like the horses in `ChartReading`, and for the same
+               reason: a chart is cached private for a day, so a field added to
+               the engine meets charts cast before it existed. -->
+          {#if cell.starRelation}
+            <span class="glyph">{cell.starRelation.hanzi} · {gloss('relation', cell.starRelation.id)}</span>
+          {/if}
         </td>
         <td>
           {#if cell.gate}
@@ -49,6 +60,9 @@
             <!-- The space is written out: Svelte trims what sits against the
                  edge of a block, and the name would touch the separator. -->
             <span class="glyph">{cell.gate.hanzi}{#if cell.gateStrength}&nbsp;· {gloss('strength', cell.gateStrength.id)}{/if}</span>
+            {#if cell.gateRelation}
+              <span class="glyph">{cell.gateRelation.hanzi} · {gloss('relation', cell.gateRelation.id)}</span>
+            {/if}
           {:else}<span class="gloss">—</span>{/if}
         </td>
         <td>

@@ -1,15 +1,13 @@
 <script lang="ts">
   import { goto, invalidateAll } from '$app/navigation';
   import { page } from '$app/state';
-  import type { MessageKey } from '@qimendunjia/i18n';
   import { appearance } from '$lib/appearance.svelte';
-  import { scanFields, scanQuery } from '$lib/interval';
   import { momentQuery, sayFailure, type MomentInput } from '$lib/moment';
   import { step, type Unit, type Wall } from '$lib/step';
+  import ChartReading from '$lib/components/ChartReading.svelte';
   import FormPanel from '$lib/components/FormPanel.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
   import MomentSteps from '$lib/components/MomentSteps.svelte';
-  import PalaceTable from '$lib/components/PalaceTable.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
 
   let { data } = $props();
@@ -64,17 +62,6 @@
     },
   );
 
-  /**
-   * The scan this chart was reached from, if it was reached from one.
-   *
-   * A chart is a page one lands on; a scan is an interval and a set of
-   * criteria somebody typed, and the browser's back button was the only way
-   * back to it. It is not lost — the scan is entirely in its own address —
-   * but it is recomputed, and a way back that is not on the page is a way
-   * back nobody is told about.
-   */
-  const back = $derived(scanQuery(page.url));
-
   let busy = $state(false);
   let panel: FormPanel | undefined = $state();
 
@@ -95,10 +82,7 @@
    * nobody can use. Back leaves the chart, which is what a reader means by it.
    */
   async function show(next: MomentInput): Promise<void> {
-    // The scan is carried through every step, so the way back outlives them.
-    // Somebody who found an hour and then looked at the one before it has
-    // not stopped coming from a scan.
-    const query = momentQuery(next, scanFields(page.url));
+    const query = momentQuery(next);
     const target = `${page.url.pathname}${query ? `?${query}` : ''}`;
     busy = true;
     try {
@@ -140,11 +124,8 @@
 
 <svelte:head><title>{t('cli.heading.chart')}</title></svelte:head>
 
-{#if back}
-  <a class="back" href="/{t.locale}/moments?{back}">← {t('form.backToScan')}</a>
-{/if}
-
-<h1>{t('cli.heading.chart')}</h1>
+<!-- Named, not shown: the nav says which section this is — see `.offscreen`. -->
+<h1 class="offscreen">{t('cli.heading.chart')}</h1>
 
 <FormPanel {t} bind:this={panel} closable={chart !== undefined} onsubmit={submit}>
   {#snippet fields()}
@@ -207,44 +188,11 @@
       onload={() => (drawn = plate)}
     />
 
-    <div>
-      <p class="ju">
-        {chart.ju.yang ? t('cli.value.yangDun') : t('cli.value.yinDun')}
-        {chart.ju.number} · {t(`label.yuan.${chart.ju.yuan}` as MessageKey)}
-        <!-- Under zhirun the ju's term deserves saying: it can be one the Sun
-             has not reached yet, or a repeated one — the intercalation. -->
-        {#if chart.options.method === 'zhirun'}
-          · <span class="glyph">{chart.ju.leap ? '閏' : ''}{chart.ju.term.hanzi}</span>
-          {chart.ju.leap
-            ? t('cli.value.leapTerm', { term: t(`label.term.${chart.ju.term.id}` as MessageKey) })
-            : t(`label.term.${chart.ju.term.id}` as MessageKey)}
-        {/if}
-      </p>
-      <!-- Six columns of two lines each: on a narrow screen the table scrolls
-           inside its frame rather than taking the page with it. -->
-      <div class="scroller"><PalaceTable palaces={chart.palaces} {t} /></div>
-
-      {#if chart.patterns.length > 0}
-        <h2>{t('cli.heading.patterns')}</h2>
-        <ul class="patterns">
-          {#each chart.patterns as pattern}
-            <li>
-              {t(`label.pattern.${pattern.id}` as MessageKey)}
-              {#if pattern.palace}— {pattern.palace}{/if}
-              <span class="glyph">{pattern.hanzi}</span>
-            </li>
-          {/each}
-        </ul>
-      {/if}
-    </div>
+    <div><ChartReading {chart} {t} /></div>
   </section>
 {/if}
 
 <style>
-  h1 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.2rem; }
-  h2 { font-size: 1em; font-weight: 500; margin: 1.5rem 0 0.5rem; }
-  /* Above the heading, where a way out of a page is looked for. */
-  .back { display: inline-block; color: var(--faint); font-size: 0.85em; margin-bottom: 0.6rem; }
   .failure { color: var(--alarm); }
   /* In the closed bar, beside text rather than under a label of its own. */
   .day { font-size: 0.9rem; padding: 0.15rem 0.35rem; color: var(--ink); }
@@ -264,7 +212,4 @@
   @media (prefers-reduced-motion: reduce) {
     .result, img { transition: none; }
   }
-  .ju { font-size: 1.1em; margin: 0 0 0.75rem; }
-  .patterns { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.25rem; }
-  .glyph { margin-left: 0.5rem; color: var(--faint); font-size: 0.85em; }
 </style>

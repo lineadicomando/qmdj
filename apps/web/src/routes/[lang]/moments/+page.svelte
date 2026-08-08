@@ -9,7 +9,6 @@
     keptKey,
     keptParam,
     readKept,
-    scanCarry,
     sortKept,
     type CriteriaInput,
     type IntervalInput,
@@ -146,13 +145,20 @@
   }
 
   /**
-   * The whole section, for one hour of the answer — carrying the scan.
+   * The chart section, for one hour of the answer.
    *
-   * The criteria ride along so that the chart can offer a way back. They are
-   * not part of the question it answers: `readMoment` reads past them.
+   * Nothing follows a plain click here — `choose` opens the board over the
+   * list instead, and the board now holds the whole reading. This is what is
+   * left when that cannot happen: no script, a middle click, a ctrl click.
+   * A real address that answers on its own, which is the only kind worth
+   * putting in an `href`.
+   *
+   * It no longer carries the scan. The criteria used to ride along so the
+   * chart could offer a way back to them; with the round trip gone they were
+   * parameters nobody read, in an address somebody might share.
    */
   const chartHref = (start: string): string =>
-    `/${t.locale}?${chartQuery(start, data.interval, scanCarry(data.interval, data.criteria, kept))}`;
+    `/${t.locale}?${chartQuery(start, data.interval)}`;
 
   /**
    * The row of the answer the open hour stands on, if the answer still has
@@ -343,7 +349,8 @@
 
 <svelte:head><title>{t('nav.moments')}</title></svelte:head>
 
-<h1>{t('nav.moments')}</h1>
+<!-- Named, not shown: the nav says which section this is — see `.offscreen`. -->
+<h1 class="offscreen">{t('nav.moments')}</h1>
 
 <FormPanel
   {t}
@@ -568,13 +575,11 @@
     heading={heading as string}
     plate={plateSrc as string}
     chart={chartSrc as string}
-    href={chartHref(at)}
     onclosed={unpick}
   />
 {/if}
 
 <style>
-  h1 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.2rem; }
   .failure { color: var(--alarm); }
   /* As many per row as the panel has room for, one when it has none: the
      criteria are `select`s holding words of very uneven length, and a fixed

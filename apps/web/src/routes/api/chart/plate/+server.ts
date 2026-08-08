@@ -55,6 +55,10 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
         pillars: PILLARS,
         chief: `${t('cli.field.chief')} ${labels.star[chart.chief.star.id]} ${chart.chief.star.hanzi}`,
         chiefGate: `${t('cli.field.chiefGate')} ${labels.gate[chart.chiefGate.gate.id]} ${chart.chiefGate.gate.hanzi}`,
+        // The configurations, each once, with the fortune the tradition gives
+        // it and the palaces it fell in — including the two that belong to the
+        // whole board and have no palace to be written in.
+        configurations: t('cli.heading.patterns'),
       },
     });
 

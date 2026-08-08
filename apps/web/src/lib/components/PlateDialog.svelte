@@ -14,12 +14,26 @@
   pane above the list had to stay small enough to leave the list somewhere to
   be, and was neither one thing nor the other.
 
-  What it does not hold — the palaces in full, the stepper, the form — is one
-  link away, and that link is the whole point of `form.openChart`.
+  It holds **the whole reading**, and it used to offer a link to the chart
+  section for the rest of it. The link was answering with a page load for
+  something already in hand: `/api/chart` comes back with the nine palaces
+  whether or not anybody reads them, and this asked for it anyway to get the
+  ju and the configurations. So the palaces are shown, and the round trip out
+  to the chart section and back is gone — along with the way back it needed at
+  the far end, and with the scan's parameters that used to ride in a chart's
+  address to make that way back possible.
+
+  Nothing shareable was lost with it: the open hour is `at` in the scan's own
+  address, written by `pick`, and that is what somebody sends.
+
+  What is genuinely gone is the stepper. From a scan there is no longer a way
+  to the hour *next to* this one — which from a scan is nearly always in the
+  list already, or absent because it answered no criterion.
 -->
 <script lang="ts">
-  import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { Translator } from '@qimendunjia/i18n';
   import { sayFailure, type Failure } from '$lib/moment';
+  import ChartReading from './ChartReading.svelte';
 
   interface Props {
     t: Translator;
@@ -27,10 +41,8 @@
     heading: string;
     /** The drawing. */
     plate: string;
-    /** The same chart as data, for what a drawing cannot carry. */
+    /** The same chart as data, for everything a drawing cannot carry. */
     chart: string;
-    /** The whole section, for what this cannot carry. */
-    href: string;
     /**
      * Called once the dialog has closed, however it was closed.
      *
@@ -40,7 +52,7 @@
     onclosed: () => void;
   }
 
-  let { t, heading, plate, chart, href, onclosed }: Props = $props();
+  let { t, heading, plate, chart, onclosed }: Props = $props();
 
   /** One `id` per instance, since the heading is what names the dialog. */
   const named = $props.id();
@@ -75,8 +87,8 @@
    *
    * The rule the chart section states and this obeys: a drawing carries the
    * glyphs but not the warnings, so it is never shown on its own. The scan's
-   * own row already says where the gates and stars stand; what is missing
-   * from it is the ju and the patterns, and that is what this fetches.
+   * own row says where the gates and stars stand in the *matched* palace;
+   * this is the whole chart, which is what the answer already contained.
    *
    * Asked for from the browser, not from `load`: the drawing beside it is an
    * `<img>` the browser fetches anyway, so there is nothing to be gained by
@@ -116,8 +128,16 @@
    * Not written to the browser either: the appearance is the one thing this
    * site stores, the note says so by name, and a second key would be a second
    * promise for something a reader restates with one click.
+   *
+   * **Open enlarged.** It began the other way round, when this held a drawing
+   * and two lines and the small box was the whole of it. It now holds the
+   * chart entire, and small that is one column: the board, then a long scroll
+   * to reach the palaces. Enlarged on a wide window it is the board beside
+   * the words, which is what somebody comparing hours is looking at. Below
+   * 56rem the flag changes nothing anyway — there is no room for a second
+   * column, and the button that sets it is not even drawn under 42rem.
    */
-  let large = $state(false);
+  let large = $state(true);
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
@@ -129,51 +149,58 @@
   onclick={fromBackdrop}
 >
   <div class="box">
+    <!-- Outside what scrolls, so the title and the way out of the dialog are
+         still there at the foot of a long chart. -->
     <div class="head">
       <h2 id={named}>{heading}</h2>
-      <!-- What the press will do, rather than what the state is: a label that
-           changes says it in the reader's own language, where `aria-pressed`
-           over a fixed word would say it twice and in neither. -->
-      <button type="button" class="size" onclick={() => (large = !large)}>
-        {t(large ? 'form.reduce' : 'form.enlarge')}
+      <!-- The window controls of every other window on the screen: corners
+           opening outwards to enlarge, closing inwards to reduce, beside the
+           × that closes. What the press will do, rather than what the state
+           is — so the icon and the name it carries change together, where
+           `aria-pressed` over a fixed one would say it twice and in neither.
+
+           The name travels in `aria-label` and in `title`: the face is a
+           picture, and a picture has to say what it is to a screen reader and
+           to whoever hovers it before pressing. Drawn rather than typed —
+           ⤢ is missing from most text faces and comes out a box. -->
+      <button
+        type="button"
+        class="size"
+        onclick={() => (large = !large)}
+        aria-label={t(large ? 'form.reduce' : 'form.enlarge')}
+        title={t(large ? 'form.reduce' : 'form.enlarge')}
+      >
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+          {#if large}
+            <path d="M6.5 2.5v4h-4M9.5 2.5v4h4M9.5 13.5v-4h4M6.5 13.5v-4h-4" />
+          {:else}
+            <path d="M2.5 6.5v-4h4M13.5 6.5v-4h-4M13.5 9.5v4h-4M2.5 9.5v4h4" />
+          {/if}
+        </svg>
       </button>
       <button type="button" onclick={() => dialog?.close()} aria-label={t('form.close')}>×</button>
     </div>
 
-    <img
-      src={plate}
-      alt=""
-      width="640"
-      height="640"
-      class:settling={drawn !== plate}
-      onload={() => (drawn = plate)}
-    />
+    <!-- The one thing that scrolls. See the note on `.body` below. -->
+    <div class="body">
+      <img
+        src={plate}
+        alt=""
+        width="640"
+        height="640"
+        class:settling={drawn !== plate}
+        onload={() => (drawn = plate)}
+      />
 
-    <div class="said">
-      {#await asked}
-        <p class="note">{t('form.working')}</p>
-      {:then found}
-        <p class="ju">
-          {found.ju.yang ? t('cli.value.yangDun') : t('cli.value.yinDun')}
-          {found.ju.number} · {t(`label.yuan.${found.ju.yuan}` as MessageKey)}
-        </p>
-
-        {#if found.patterns.length > 0}
-          <ul class="patterns">
-            {#each found.patterns as pattern}
-              <li>
-                {t(`label.pattern.${pattern.id}` as MessageKey)}
-                {#if pattern.palace}— {pattern.palace}{/if}
-                <span class="glyph">{pattern.hanzi}</span>
-              </li>
-            {/each}
-          </ul>
-        {/if}
-      {:catch failure}
-        <p class="failure" role="alert">{failure.message}</p>
-      {/await}
-
-      <a class="whole" {href}>{t('form.openChart')}</a>
+      <div class="said">
+        {#await asked}
+          <p class="note">{t('form.working')}</p>
+        {:then found}
+          <ChartReading chart={found} {t} />
+        {:catch failure}
+          <p class="failure" role="alert">{failure.message}</p>
+        {/await}
+      </div>
     </div>
   </div>
 </dialog>
@@ -199,8 +226,29 @@
     color: var(--ink);
     max-inline-size: min(94vw, 34rem);
     max-block-size: 90vh;
-    overflow: auto;
+    /*
+     * Not the scroll container any more — `.body` is.
+     *
+     * While this held the whole chart's worth of scrolling, the heading and
+     * the way out of the dialog went up and off the top with everything else,
+     * and a modal whose × cannot be reached is a modal nobody can leave
+     * except by guessing at Escape. The box below splits into a head that
+     * stays and a body that moves.
+     */
+    overflow: hidden;
     overscroll-behavior: contain;
+    /*
+     * So the box can fill it: a grid child stretches, and `fromBackdrop`
+     * depends on the box leaving nothing of the element uncovered.
+     *
+     * `minmax(0, 1fr)` and not the implicit `auto`. An auto row is as tall as
+     * its content and the `max-block-size` above only *clips* it — the box
+     * kept its full height, the body inside it was never given a bound to
+     * scroll within, and the chart simply ran off the bottom of the dialog
+     * with no way to reach it. The same trap as the row below, one level up.
+     */
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
   }
   dialog::backdrop { background: rgb(0 0 0 / 0.55); }
   /*
@@ -228,28 +276,54 @@
    */
   dialog.large { max-inline-size: 96vw; }
 
-  .box { display: grid; gap: 0.7rem; padding: 0.8rem 0.9rem 1rem; }
+  /* A head that stays and a body that scrolls. `minmax(0, 1fr)` and not
+     `1fr`: a grid row's default minimum is its content, and a row that will
+     not shrink below a whole chart never scrolls — it overflows the dialog. */
+  .box {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 0.7rem;
+    padding: 0.8rem 0.9rem 1rem;
+    min-inline-size: 0;
+  }
   .head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     gap: 1rem;
-    /* Two buttons at the right end and the heading at the left, whatever the
-       box does with its columns below. */
-    grid-column: 1 / -1;
   }
   h2 { font-size: 0.9rem; font-weight: 400; margin: 0; margin-inline-end: auto; }
-  .said { display: grid; gap: 0.7rem; align-content: start; }
-  /* Where there is room for a column of words beside a square. Below this the
-     enlargement is the width of the window and nothing else, which on a phone
-     the dialog already had. */
+  .body {
+    overflow: auto;
+    overscroll-behavior: contain;
+    min-block-size: 0;
+    display: grid;
+    gap: 0.9rem;
+    align-content: start;
+  }
+  /* A shade quieter than the chart section's, which is a page's answer where
+     this is a column beside a picture. Everything in `ChartReading` is sized
+     in `em`, so one declaration moves all of it. */
+  .said { font-size: 0.95rem; }
+  /*
+   * Where there is room for a column of words beside a square. Below this the
+   * enlargement is the width of the window and nothing else, which on a phone
+   * the dialog already had.
+   *
+   * The column is wider than it was: it used to hold the ju and a short list,
+   * and it now holds the table of the nine palaces as well. Six columns of
+   * two lines do not fit in seventeen rems — they scroll sideways inside
+   * `.scroller`, which is what they already do on a phone, but a column that
+   * scrolls before it has shown a single palace whole is not worth having.
+   */
   @media (min-width: 56rem) {
-    dialog.large .box { grid-template-columns: minmax(0, 1fr) minmax(13rem, 17rem); }
+    dialog.large .body { grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem); }
     dialog.large img {
-      inline-size: min(calc(96vw - 21rem), calc(90vh - 5rem));
+      inline-size: min(calc(96vw - 28rem), calc(90vh - 5rem));
       block-size: auto;
       max-inline-size: 100%;
       justify-self: center;
+      align-self: start;
     }
   }
   .head button {
@@ -261,9 +335,11 @@
     padding: 0 0.2rem;
   }
   .head button:hover { color: var(--ink); background: none; }
-  /* A word, not a glyph: nobody operates a control whose face they cannot
-     read, and ⤢ is a face. Set as the links are, since that is what it is. */
-  .size { font-size: 0.85em; text-decoration: underline; text-underline-offset: 0.2em; }
+  /* Centred against the heading rather than sat on its baseline: a button
+     holding a drawing and no text has no baseline worth aligning to. */
+  .size { display: inline-flex; align-self: center; }
+  /* The stroke follows the colour of the button, so the hover carries it. */
+  .size svg { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
   /*
    * Where there is nothing left to give, nothing offers to give it.
    *
@@ -281,11 +357,7 @@
   @media (prefers-reduced-motion: reduce) {
     img { transition: none; }
   }
-  .ju { margin: 0; font-size: 0.95em; }
   .note, .failure { margin: 0; font-size: 0.85em; }
   .note { color: var(--faint); }
   .failure { color: var(--alarm); }
-  .patterns { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.2rem; font-size: 0.85em; }
-  .glyph { margin-left: 0.4rem; color: var(--faint); font-size: 0.9em; }
-  .whole { color: var(--faint); font-size: 0.85em; justify-self: start; }
 </style>

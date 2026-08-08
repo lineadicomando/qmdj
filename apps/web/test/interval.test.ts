@@ -5,9 +5,6 @@ import {
   keptKey,
   keptParam,
   readKept,
-  scanCarry,
-  scanFields,
-  scanQuery,
   sortKept,
   EMPTY_CRITERIA,
   type CriteriaInput,
@@ -17,12 +14,12 @@ import {
 /**
  * The address of a scan, and the address of a chart reached from one.
  *
- * The second is the whole point of these: a chart carries the scan it came
- * from so that it can offer a way back, and it can only do that because the
- * two sections read disjoint parameters out of one address. That is an
- * arrangement nothing enforces at compile time, so it is asserted here — a
- * parameter added to one side and colliding with the other would otherwise
- * be found by a reader whose way back had quietly become a different scan.
+ * The chart's address used to carry the whole scan alongside its moment, so
+ * that the chart section could offer a way back. It does not any more: the
+ * board over the list holds the whole reading, nobody makes that journey, and
+ * what was left was a dozen parameters nothing read. What is asserted here is
+ * the other half of that — a row's `href` still answers on its own, which is
+ * what a middle click and a browser with no scripts get.
  */
 
 const ROME = { id: 3169070, name: 'Rome', country: 'Italy', timezone: 'Europe/Rome' };
@@ -57,16 +54,12 @@ describe('the criteria as address fields', () => {
   it('joins the lists the way the address carries them', () => {
     // A criterion asked of several directions at once is one parameter, not
     // one per direction: `towards` is read back by splitting on the comma.
-    expect(scanCarry(INTERVAL, LOOKING)).toEqual({
-      from: '2026-09-01',
-      to: '2026-09-08',
-      locationId: '3169070',
-      gate: 'kaimen',
-      star: 'tianxin',
-      minStrength: 'wang',
-      towards: 'se,e',
-      without: 'fugan',
-    });
+    const params = new URLSearchParams(intervalQuery(INTERVAL, LOOKING));
+
+    expect(params.get('towards')).toBe('se,e');
+    expect(params.get('without')).toBe('fugan');
+    expect(params.get('gate')).toBe('kaimen');
+    expect(params.get('minStrength')).toBe('wang');
   });
 });
 
@@ -128,84 +121,36 @@ describe('the hours set aside', () => {
 });
 
 describe('a chart reached from a scan', () => {
-  const address = new URL(
-    `http://localhost/en?${chartQuery('2026-09-03T08:00', INTERVAL, scanCarry(INTERVAL, LOOKING))}`,
-  );
+  const address = new URL(`http://localhost/en?${chartQuery('2026-09-03T08:00', INTERVAL)}`);
 
-  it('says its own moment first of all', () => {
-    // What the chart page actually casts for. The scan riding along must not
-    // touch any of it.
+  it('says its own moment, and the place and options it was scanned under', () => {
+    // Everything the chart page needs to cast exactly the hour that was
+    // clicked, and nothing else. This is the address a middle click opens.
     expect(address.searchParams.get('date')).toBe('2026-09-03');
     expect(address.searchParams.get('time')).toBe('08:00');
     expect(address.searchParams.get('locationId')).toBe('3169070');
   });
 
-  it('gives back the scan it came from', () => {
-    const back = scanQuery(address);
-    expect(back).toBeDefined();
-
-    const returned = new URLSearchParams(back);
-    expect(returned.get('from')).toBe('2026-09-01');
-    expect(returned.get('to')).toBe('2026-09-08');
-    expect(returned.get('gate')).toBe('kaimen');
-    expect(returned.get('star')).toBe('tianxin');
-    expect(returned.get('minStrength')).toBe('wang');
-    expect(returned.get('towards')).toBe('se,e');
-    expect(returned.get('without')).toBe('fugan');
-    expect(returned.get('locationId')).toBe('3169070');
-    // The moment is the chart's, not the scan's: it must not come back.
-    expect(returned.get('date')).toBeNull();
-    expect(returned.get('time')).toBeNull();
-  });
-
-  it('returns to the very scan that was run', () => {
-    // The round trip, which is what the reader experiences: the address the
-    // way back leads to is the address they left.
-    expect(scanQuery(address)).toBe(intervalQuery(INTERVAL, LOOKING));
-  });
-
-  it('brings the shortlist back with it', () => {
-    // A reader opens the whole board for one hour and comes back: the other
-    // four they had set aside must still be there. `kept` is not a criterion
-    // and rides along exactly as one does.
-    const kept = [{ start: '2026-09-01T04:10', palace: 'qian' }];
-    const url = new URL(
-      `http://localhost/en?${chartQuery('2026-09-03T08:00', INTERVAL, scanCarry(INTERVAL, LOOKING, kept))}`,
-    );
-
-    expect(readKept(url)).toEqual(kept);
-    expect(readKept(new URL(`http://localhost/it/moments?${scanQuery(url)}`))).toEqual(kept);
-    expect(scanQuery(url)).toBe(intervalQuery(INTERVAL, LOOKING, { kept: keptParam(kept) }));
-  });
-
-  it('carries the options through in both directions', () => {
+  it('carries the options the scan ran under', () => {
     const options: IntervalInput = { ...INTERVAL, trueSolarTime: false, dayBoundary: 'midnight' };
-    const url = new URL(
-      `http://localhost/en?${chartQuery('2026-09-03T08:00', options, scanCarry(options))}`,
-    );
+    const url = new URL(`http://localhost/en?${chartQuery('2026-09-03T08:00', options)}`);
 
-    // Shared between the two sections, and the same value in both — which is
-    // what makes one address able to hold a moment and a scan at once.
+    // A chart cast under different options is a different chart, so these are
+    // the one thing that must survive the crossing between the two sections.
     expect(url.searchParams.get('trueSolarTime')).toBe('false');
     expect(url.searchParams.get('dayBoundary')).toBe('midnight');
-    expect(scanQuery(url)).toBe(intervalQuery(options, EMPTY_CRITERIA));
-  });
-});
-
-describe('a chart reached some other way', () => {
-  it('has no scan to go back to', () => {
-    const url = new URL('http://localhost/en?date=2026-09-03&time=08:00&locationId=3169070');
-    expect(scanQuery(url)).toBeUndefined();
   });
 
-  it('has none with only half an interval either', () => {
-    expect(scanQuery(new URL('http://localhost/en?from=2026-09-01'))).toBeUndefined();
-    expect(scanQuery(new URL('http://localhost/en?to=2026-09-08'))).toBeUndefined();
-  });
+  it('carries nothing of the scan itself', () => {
+    // The criteria and the shortlist stay in the scan's own address. They were
+    // never part of the question a chart answers, and an address that hauls
+    // them about is one nobody can read and everybody might share.
+    const url = new URL(
+      `http://localhost/en?${chartQuery('2026-09-03T08:00', { ...INTERVAL }, {})}`,
+    );
 
-  it('adds nothing to the address it is stepped to', () => {
-    // `show` on the chart page appends these to every step. With no scan in
-    // the address there is nothing to append, and the plain chart stays plain.
-    expect(scanFields(new URL('http://localhost/en?date=2026-09-03'))).toEqual({});
+    for (const name of ['from', 'to', 'gate', 'star', 'minStrength', 'towards', 'without', 'kept']) {
+      expect(url.searchParams.get(name)).toBeNull();
+    }
   });
 });

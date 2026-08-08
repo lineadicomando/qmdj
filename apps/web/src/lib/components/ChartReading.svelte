@@ -1,0 +1,120 @@
+<!--
+  A chart said in full: the ju, the nine palaces, the configurations.
+
+  Everything the two places that show a chart have in common, which since the
+  board came to the scan is everything either of them shows. It exists because
+  they were about to hold two copies of it — and the copy that drifts is never
+  the one being looked at.
+
+  What it deliberately does *not* hold is the drawing. The picture is sized by
+  the room its container has, and those two rooms are not alike: a page gives
+  it the measure of the reading, a dialog gives it whichever of the window's
+  two dimensions runs out first. So each caller draws its own board and hands
+  this the words that go under it.
+-->
+<script lang="ts">
+  import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import PalaceTable from './PalaceTable.svelte';
+
+  /**
+   * The chart as data, not as a type.
+   *
+   * The client imports only types from `core`, and a value import would drag
+   * the ephemerides and a native module into the browser bundle. What arrives
+   * here has crossed HTTP as JSON in any case.
+   */
+  let { chart, t }: { chart: any; t: Translator } = $props();
+</script>
+
+<p class="ju">
+  {chart.ju.yang ? t('cli.value.yangDun') : t('cli.value.yinDun')}
+  {chart.ju.number} · {t(`label.yuan.${chart.ju.yuan}` as MessageKey)}
+  <!-- Under zhirun the ju's term deserves saying: it can be one the Sun has
+       not reached yet, or a repeated one — the intercalation. -->
+  {#if chart.options.method === 'zhirun'}
+    · <span class="glyph">{chart.ju.leap ? '閏' : ''}{chart.ju.term.hanzi}</span>
+    {chart.ju.leap
+      ? t('cli.value.leapTerm', { term: t(`label.term.${chart.ju.term.id}` as MessageKey) })
+      : t(`label.term.${chart.ju.term.id}` as MessageKey)}
+  {/if}
+</p>
+
+<!--
+  Both post horses, never one of them.
+
+  日馬 and 時馬 are two things the tradition names apart, and showing whichever
+  one the software preferred would be a school chosen in a line of markup.
+  Which of them bears on a question is the reader's, as the errand of a gate is.
+
+  Guarded, and the guard is not superstition. A chart is cached `private` for a
+  day, and the dialog reads one over `fetch`: a reader who was here yesterday
+  holds yesterday's JSON, and the first thing a field added to the engine meets
+  is a chart cast before it existed. Without this the whole reading throws and
+  the dialog sits on «working» for ever — which is exactly what it did, once,
+  against a response left over from before the field was built.
+-->
+<ul class="horses">
+  {#each chart.horses ?? [] as horse}
+    <li>
+      {t(`label.horse.${horse.from}` as MessageKey)}:
+      {t(`label.branch.${horse.branch.id}` as MessageKey)}
+      <span class="glyph">{horse.branch.hanzi}</span>
+      — {horse.palace}
+    </li>
+  {/each}
+</ul>
+
+<!-- Six columns of two lines each: on a narrow screen the table scrolls
+     inside its frame rather than taking the page with it. -->
+<div class="scroller"><PalaceTable palaces={chart.palaces} {t} /></div>
+
+{#if chart.patterns.length > 0}
+  <h2>{t('cli.heading.patterns')}</h2>
+  <ul class="patterns">
+    {#each chart.patterns as pattern}
+      <li>
+        {t(`label.pattern.${pattern.id}` as MessageKey)}
+        {#if pattern.palace}— {pattern.palace}{/if}
+        <span class="glyph">{pattern.hanzi}</span>
+        <!--
+          Written in words and in no colour. The fortune is an attribute of the
+          arrangement, and green against red would turn a list of configurations
+          into a verdict on the hour holding them, which is the one thing this
+          is not.
+        -->
+        <span class="valence">
+          {t(`label.valence.${pattern.valence.id}` as MessageKey)}
+          <span class="glyph">{pattern.valence.hanzi}</span>
+        </span>
+      </li>
+    {/each}
+  </ul>
+{/if}
+
+<style>
+  /*
+   * Sized in `em` throughout, so the caller decides how loud this is.
+   *
+   * The same words are a page's answer and a column beside a drawing in a
+   * dialog, and the second wants them a shade smaller. One `font-size` on the
+   * element that holds this moves all of it together.
+   */
+  .ju { font-size: 1.1em; margin: 0 0 0.35rem; }
+  /* Under the ju and above the board: they qualify the whole chart, as the ju
+     does, and neither belongs to any one palace of it. */
+  .horses {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 1rem;
+    font-size: 0.9em;
+    color: var(--faint);
+  }
+  h2 { font-size: 1em; font-weight: 500; margin: 1.5rem 0 0.5rem; }
+  .patterns { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.25rem; }
+  .glyph { margin-left: 0.5rem; color: var(--faint); font-size: 0.85em; }
+  .valence { margin-left: 0.75rem; color: var(--faint); font-size: 0.9em; }
+  .valence .glyph { margin-left: 0.25rem; }
+</style>
