@@ -38,14 +38,53 @@
 
   const gloss = (prefix: string, id: string): string => t(`label.${prefix}.${id}` as MessageKey);
 
-  /** `2026-09-01 08:41` — local at the place already, so it is only trimmed. */
-  const clock = (iso: string): string => `${iso.slice(0, 10)} ${iso.slice(11, 16)}`;
+  /** Local at the place already, so it is only trimmed. */
   const hour = (iso: string): string => iso.slice(11, 16);
 
-  /** The date is written once a day: a column repeating it reads as noise. */
-  function opensADay(index: number): boolean {
-    return index === 0 || moments[index - 1].start.slice(0, 10) !== moments[index].start.slice(0, 10);
-  }
+  /**
+   * The hours, gathered under the day they fall on.
+   *
+   * The date used to be written into the first cell of the first hour of each
+   * day and left out of the rest, which is right for a table read in one
+   * glance and wrong for one scrolled: twenty rows down, the date that
+   * qualifies them is off the top of the screen and the hours mean nothing.
+   * A rowgroup per day gives it somewhere to stand — see the styles.
+   *
+   * Grouped by the *civil* date, and the heading names no day pillar for it.
+   * Under the default day boundary the pillar turns at 23:00, so an hour of
+   * 子時 at the foot of one civil day already belongs to the next day's
+   * ganzhi: one name over the group would be wrong for the last row of most
+   * of them. The pillar is a column of the chart, and the chart is a click
+   * away.
+   */
+  const days = $derived(
+    moments.reduce<{ date: string; moments: any[] }[]>((groups, moment) => {
+      const date = moment.start.slice(0, 10);
+      const last = groups.at(-1);
+      if (last && last.date === date) last.moments.push(moment);
+      else groups.push({ date, moments: [moment] });
+      return groups;
+    }, []),
+  );
+
+  /**
+   * The day in the reader's language, weekday and all.
+   *
+   * This is the surface, which is where readable text is made; and a person
+   * choosing a time for something wants to know it falls on a Sunday before
+   * they want anything else about it. Read as UTC and formatted as UTC: the
+   * string is a calendar date and has no instant in it to be shifted.
+   */
+  const dayFormat = $derived(
+    new Intl.DateTimeFormat(t.locale, {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      timeZone: 'UTC',
+    }),
+  );
+  const dayName = (date: string): string => dayFormat.format(new Date(`${date}T00:00:00Z`));
 
   /**
    * A plain click stays on the page; every other kind means somewhere else.
@@ -60,10 +99,39 @@
     event.preventDefault();
     onpick(start);
   }
+
+  /** How wide a day's heading has to reach. */
+  const COLUMNS = 8;
+
+  /**
+   * The height of the column names, measured rather than declared.
+   *
+   * Two rows stick to the top of the frame and the second has to stand
+   * exactly on the first. That offset is one line of text at 0.85em in
+   * whichever language, plus padding and a rule — a rendered fact, not a
+   * constant: a value written here would leave either a hairline of rows
+   * showing between the two bars or a heading half hidden under them.
+   * `ResizeObserver` and not one measurement, because the frame is resized,
+   * the phone is turned, and the browser's own font size is a setting.
+   *
+   * The fallback in the stylesheet is what a page with no scripts uses, where
+   * nothing measures anything and the two bars are all there is to get wrong.
+   */
+  let head: HTMLTableSectionElement | undefined = $state();
+  let headHeight = $state(0);
+
+  $effect(() => {
+    if (!head) return;
+    const observer = new ResizeObserver(() => {
+      headHeight = head?.getBoundingClientRect().height ?? 0;
+    });
+    observer.observe(head);
+    return () => observer.disconnect();
+  });
 </script>
 
-<table>
-  <thead>
+<table style:--head={headHeight ? `${headHeight}px` : null}>
+  <thead bind:this={head}>
     <tr>
       <th>{t('cli.column.from')}</th>
       <th>{t('cli.column.to')}</th>
@@ -75,57 +143,60 @@
       <th><span class="hidden">{t('form.showPlate')}</span></th>
     </tr>
   </thead>
-  <tbody>
-    {#each moments as moment, index (moment.start)}
-      {#each moment.palaces as cell, palace (cell.palace.number)}
-        <tr class:day={palace === 0 && opensADay(index)} class:picked={moment.start === picked}>
-          {#if palace === 0}
-            <th scope="row" rowspan={moment.palaces.length}>
-              {opensADay(index) ? clock(moment.start) : hour(moment.start)}
-            </th>
-            <td rowspan={moment.palaces.length}>{hour(moment.end)}</td>
-            <!-- The whole pillar in words: the name below is 壬子, and a word
-                 that said only "Rat" would say less than the name it glosses. -->
-            <td rowspan={moment.palaces.length}>
-              <span>{gloss('stem', moment.hour.stem.id)} · {gloss('branch', moment.hour.branch.id)}</span>
-              <span class="glyph">{moment.hour.hanzi}</span>
+  {#each days as day (day.date)}
+    <tbody>
+      <tr class="day">
+        <th colspan={COLUMNS} scope="rowgroup"><span>{dayName(day.date)}</span></th>
+      </tr>
+      {#each day.moments as moment (moment.start)}
+        {#each moment.palaces as cell, palace (cell.palace.number)}
+          <tr class:picked={moment.start === picked}>
+            {#if palace === 0}
+              <th scope="row" rowspan={moment.palaces.length}>{hour(moment.start)}</th>
+              <td rowspan={moment.palaces.length}>{hour(moment.end)}</td>
+              <!-- The whole pillar in words: the name below is 壬子, and a word
+                   that said only "Rat" would say less than the name it glosses. -->
+              <td rowspan={moment.palaces.length}>
+                <span>{gloss('stem', moment.hour.stem.id)} · {gloss('branch', moment.hour.branch.id)}</span>
+                <span class="glyph">{moment.hour.hanzi}</span>
+              </td>
+            {/if}
+            <td>
+              <span>{cell.palace.number} {gloss('palace', cell.palace.id)}</span>
+              <span class="glyph">{cell.palace.hanzi}</span>
             </td>
-          {/if}
-          <td>
-            <span>{cell.palace.number} {gloss('palace', cell.palace.id)}</span>
-            <span class="glyph">{cell.palace.hanzi}</span>
-          </td>
-          <td>
-            {#if cell.gate}
-              <span>{gloss('gate', cell.gate.id)}</span>
-              <span class="glyph">{cell.gate.hanzi}{#if cell.gateStrength}&nbsp;· {gloss('strength', cell.gateStrength.id)}{/if}</span>
-            {:else}<span class="gloss">—</span>{/if}
-          </td>
-          <td>
-            <span>{gloss('star', cell.star.id)}</span>
-            <span class="glyph">{cell.star.hanzi} · {gloss('strength', cell.starStrength.id)}</span>
-          </td>
-          <td>
-            {#if cell.spirit}
-              <span>{gloss('spirit', cell.spirit.id)}</span>
-              <span class="glyph">{cell.spirit.hanzi}</span>
-            {:else}<span class="gloss">—</span>{/if}
-          </td>
-          {#if palace === 0}
-            <td rowspan={moment.palaces.length}>
-              <a
-                href={href(moment.start)}
-                aria-current={moment.start === picked ? 'true' : undefined}
-                onclick={(event) => choose(event, moment.start)}
-              >
-                {t(onpick ? 'form.showPlate' : 'form.openChart')}
-              </a>
+            <td>
+              {#if cell.gate}
+                <span>{gloss('gate', cell.gate.id)}</span>
+                <span class="glyph">{cell.gate.hanzi}{#if cell.gateStrength}&nbsp;· {gloss('strength', cell.gateStrength.id)}{/if}</span>
+              {:else}<span class="gloss">—</span>{/if}
             </td>
-          {/if}
-        </tr>
+            <td>
+              <span>{gloss('star', cell.star.id)}</span>
+              <span class="glyph">{cell.star.hanzi} · {gloss('strength', cell.starStrength.id)}</span>
+            </td>
+            <td>
+              {#if cell.spirit}
+                <span>{gloss('spirit', cell.spirit.id)}</span>
+                <span class="glyph">{cell.spirit.hanzi}</span>
+              {:else}<span class="gloss">—</span>{/if}
+            </td>
+            {#if palace === 0}
+              <td rowspan={moment.palaces.length}>
+                <a
+                  href={href(moment.start)}
+                  aria-current={moment.start === picked ? 'true' : undefined}
+                  onclick={(event) => choose(event, moment.start)}
+                >
+                  {t(onpick ? 'form.showPlate' : 'form.openChart')}
+                </a>
+              </td>
+            {/if}
+          </tr>
+        {/each}
       {/each}
-    {/each}
-  </tbody>
+    </tbody>
+  {/each}
 </table>
 
 <style>
@@ -141,17 +212,72 @@
   th, td { text-align: left; padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--rule); vertical-align: baseline; }
   thead th { color: var(--faint); font-weight: 400; font-size: 0.85em; }
   tbody th { font-weight: 400; white-space: nowrap; }
-  /* A heavier rule where the day turns, so a week can be read down. */
-  .day th, .day td { border-top: 1px solid var(--rule); }
+  th span:first-child, td span:first-child { display: block; }
+  .glyph { display: block; color: var(--faint); font-size: 0.8em; }
+  .gloss { display: block; color: var(--faint); font-size: 0.8em; }
+  a { color: var(--faint); font-size: 0.85em; }
+
+  /*
+   * Three things stay where they are while the rest scrolls under them.
+   *
+   * The column names, because eight columns of glossed names are told apart
+   * by their heading and by nothing else — a star and a spirit both read as a
+   * word and a glyph. The day, because it is what the hours are hours *of*.
+   * And the hour itself, because the table is wider than a phone and the
+   * reader who scrolls right to reach the spirit had lost which row they were
+   * on by the time they got there.
+   *
+   * Every one of them needs a background of its own: a transparent cell that
+   * stays put shows whatever passes underneath it. And a background is not
+   * enough — with `border-collapse` the rules belong to the table rather than
+   * to the cells, so a stuck row leaves its border behind and floats. The two
+   * bars draw their own with an inset shadow instead.
+   *
+   * All of it depends on the frame around the table owning the scrolling in
+   * both directions, which is why it is given a height. Sticky sticks to the
+   * nearest scroll container, and `overflow-x: auto` makes one on *both*
+   * axes: inside a frame that only ever scrolled sideways, nothing here would
+   * ever have stuck to anything.
+   */
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: var(--ground);
+    border-bottom: 0;
+    box-shadow: inset 0 -1px 0 var(--rule);
+  }
+  thead th:first-child { left: 0; z-index: 4; }
+
+  .day th {
+    position: sticky;
+    top: var(--head, 2.1rem);
+    z-index: 2;
+    background: var(--ground);
+    border-bottom: 0;
+    box-shadow: inset 0 1px 0 var(--rule), inset 0 -1px 0 var(--rule);
+    font-size: 0.9em;
+    padding-top: 0.6rem;
+    padding-bottom: 0.4rem;
+  }
+  /* The heading spans the table, so it would be off the left edge as soon as
+     the reader moved sideways. The cell keeps its width; the words in it
+     stay in view. */
+  .day th span { display: inline-block; position: sticky; left: 0.5rem; }
+
+  tbody th {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--ground);
+  }
+
   /* The hour whose board is open, marked in the list it was chosen from.
      Tinted and ruled at the edge both: a tint alone is a colour, and a
      colour alone is not a message — hence `aria-current` on the link too. */
   .picked th, .picked td { background: var(--tint); }
   .picked th:first-child { box-shadow: inset 2px 0 0 var(--ink); }
-  th span:first-child, td span:first-child { display: block; }
-  .glyph { display: block; color: var(--faint); font-size: 0.8em; }
-  .gloss { display: block; color: var(--faint); font-size: 0.8em; }
-  a { color: var(--faint); font-size: 0.85em; }
+
   /*
    * The column that has a heading only for whoever cannot see it has one.
    *

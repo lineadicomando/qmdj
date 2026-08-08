@@ -326,7 +326,7 @@
     </p>
 
     {#if scan.moments.length > 0}
-      <div class="scroller">
+      <div class="scroller frame">
         <MomentTable moments={scan.moments} {t} href={chartHref} picked={at} onpick={pick} />
       </div>
 
@@ -408,6 +408,19 @@
   }
   .result { transition: opacity 0.15s ease-out; }
   .stale { opacity: 0.5; }
+  /*
+   * The one table on the site that scrolls in both directions.
+   *
+   * Elsewhere `.scroller` is a frame the page scrolls past; here the answer
+   * is hundreds of rows and the column names, the day and the hour stay in
+   * view while they go by — which they can only do if this box is what
+   * scrolls, since a sticky cell sticks to its nearest scroll container and
+   * a frame the height of its content never scrolls vertically at all. The
+   * height is a share of the window rather than a measurement, so the panel
+   * above stays readable on whatever the window is; below this there is
+   * nothing but the page's foot, so the scrolling does not strand anything.
+   */
+  .frame { max-height: 70vh; }
   /*
    * The board is over the list and not in it — see `PlateDialog`.
    *
