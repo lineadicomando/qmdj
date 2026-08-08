@@ -67,7 +67,9 @@ export function translatorFor(lang: string | undefined): Translator {
 export const langSchema = z
   .enum(['en', 'it'])
   .optional()
-  .describe('Language of the readable labels. Default en. Never changes the hanzi or the numbers.');
+  .describe(
+    'Language of the readable labels. Default en. Never changes the hanzi, the pinyin or the numbers.',
+  );
 
 export const dateSchema = z
   .string()

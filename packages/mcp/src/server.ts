@@ -131,7 +131,7 @@ function palaceReference(): string {
     '|---|---|---|---|',
     ...PALACES.map(
       (palace) =>
-        `| ${palace.number} | ${palace.hanzi} ${palace.id} | ${palace.element} | ${palace.direction ?? '—'} |`,
+        `| ${palace.number} | ${palace.hanzi} ${palace.pinyin} \`${palace.id}\` | ${palace.element} | ${palace.direction ?? '—'} |`,
     ),
   ].join('\n');
 }
@@ -149,21 +149,21 @@ function layerReference(): string {
     '',
     '| Gate | Home |',
     '|---|---|',
-    ...GATES.map((gate) => `| ${gate.hanzi} ${gate.id} | ${gate.home} |`),
+    ...GATES.map((gate) => `| ${gate.hanzi} ${gate.pinyin} \`${gate.id}\` | ${gate.home} |`),
     '',
     '## The nine stars',
     '',
     '| Star | Home |',
     '|---|---|',
-    ...STARS.map((star) => `| ${star.hanzi} ${star.id} | ${star.home} |`),
+    ...STARS.map((star) => `| ${star.hanzi} ${star.pinyin} \`${star.id}\` | ${star.home} |`),
     '',
     '## The eight spirits',
     '',
     'The fifth and sixth differ between the halves of the year in the convention',
     'this engine follows.',
     '',
-    `- yang dun: ${SPIRITS_YANG.map((spirit) => spirit.hanzi).join(' ')}`,
-    `- yin dun: ${SPIRITS_YIN.map((spirit) => spirit.hanzi).join(' ')}`,
+    `- yang dun: ${SPIRITS_YANG.map((spirit) => `${spirit.hanzi} ${spirit.pinyin}`).join(' · ')}`,
+    `- yin dun: ${SPIRITS_YIN.map((spirit) => `${spirit.hanzi} ${spirit.pinyin}`).join(' · ')}`,
   ].join('\n');
 }
 
@@ -203,7 +203,7 @@ function purposeReference(): string {
     '|---|---|',
     ...PURPOSES.map((purpose) => {
       const gate = gateOf(purpose.gate);
-      return `| ${t(`label.purpose.${purpose.id}` as MessageKey)} | ${gate.hanzi} \`${gate.id}\` |`;
+      return `| ${t(`label.purpose.${purpose.id}` as MessageKey)} | ${gate.hanzi} ${gate.pinyin} \`${gate.id}\` |`;
     }),
   ].join('\n');
 }
@@ -221,7 +221,7 @@ function termReference(): string {
     '|---|---|---|---|',
     ...SOLAR_TERMS.map(
       (term) =>
-        `| ${term.hanzi} ${term.id} | ${term.longitude}° | ${term.kind} | ${term.monthBranch ?? '—'} |`,
+        `| ${term.hanzi} ${term.pinyin} \`${term.id}\` | ${term.longitude}° | ${term.kind} | ${term.monthBranch ?? '—'} |`,
     ),
   ].join('\n');
 }
