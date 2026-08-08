@@ -32,6 +32,8 @@ npm start -w @qimendunjia/web               # http://localhost:3000, after build
 
 `npm run geo:import -w @qimendunjia/geo` downloads **~215 MB**: run it once,
 when location search does not work. Not something to run out of habit.
+`npm run geo:fixture -w @qimendunjia/geo` writes a four-place stand-in
+instead — enough for every test suite, refused if a database already exists.
 `npm run ephe:download -w @qimendunjia/core` (~2 MB) is optional — without it
 the engine falls back to Moshier, which needs no files.
 

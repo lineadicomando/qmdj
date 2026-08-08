@@ -22,7 +22,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "geo:import": "node scripts/import-geonames.mjs"
+    "geo:import": "node scripts/import-geonames.mjs",
+    "geo:fixture": "node scripts/build-fixture.mjs"
   },
   "dependencies": {
     "@qimendunjia/i18n": "*"

@@ -63,7 +63,10 @@ npm test
 ```
 
 The location import is the only slow step and it is needed only for searching
-places by name; everything else works without it. The ephemeris files are
+places by name; everything else works without it — except the tests that
+search. `npm run geo:fixture -w @qimendunjia/geo` writes a four-place stand-in
+in seconds, enough for every suite, and refuses to touch a database that
+already exists. It is what continuous integration uses. The ephemeris files are
 fetched by `npm run ephe:download -w @qimendunjia/core` (~2 MB) and are
 optional — without them the engine falls back to Moshier, which needs no files
 and is accurate to about a tenth of an arc second. That is far below anything
