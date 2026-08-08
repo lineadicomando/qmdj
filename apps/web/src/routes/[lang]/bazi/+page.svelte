@@ -62,7 +62,8 @@
 
 <svelte:head><title>{t('cli.heading.pillars')}</title></svelte:head>
 
-<h1>{t('cli.heading.pillars')}</h1>
+<!-- Named, not shown: the nav says which section this is — see `.offscreen`. -->
+<h1 class="offscreen">{t('cli.heading.pillars')}</h1>
 
 <FormPanel {t} bind:this={panel} closable={result !== undefined} onsubmit={submit}>
   {#snippet fields()}
@@ -150,7 +151,6 @@
 {/if}
 
 <style>
-  h1 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.2rem; }
   h2 { font-size: 1em; font-weight: 500; margin: 1.5rem 0 0.5rem; }
   /* The one field the pillars ask for beyond the moment. Bounded: a `select`
      of three words does not become clearer for being a panel wide. */

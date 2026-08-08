@@ -118,6 +118,31 @@ input, select, button, textarea {
 button:hover { background: var(--tint); }
 
 /*
+ * Said to whoever cannot see the page, and to nobody else.
+ *
+ * The nav names the section that is open and marks it `aria-current`, so a
+ * heading repeating the same two words underneath it was a line of ink saying
+ * nothing. What the heading still does is structural: it is where a reader
+ * jumping by heading lands, what tells a screen reader which section this is
+ * without walking back up to the nav, and what the `h2`s below hang from. So
+ * it stays in the document and leaves the page.
+ *
+ * `clip-path` and a single pixel rather than `display: none`, which would take
+ * it out of the accessibility tree along with the layout.
+ */
+.offscreen {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/*
  * A table wider than the screen scrolls inside its own frame.
  *
  * The alternative is the page scrolling sideways, which moves the heading and
