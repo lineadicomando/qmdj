@@ -216,7 +216,12 @@ describe('the other tools', () => {
     const text = await call('draw_qimen_chart', { ...BEIJING, size: 400 });
 
     expect(text.startsWith('<svg')).toBe(true);
-    expect(text).toContain('viewBox="0 0 400 400"');
+    // `size` is the width. The height is the width plus whatever the list of
+    // configurations under the board needs, which depends on the hour — the
+    // board itself is the same square on every chart.
+    const box = /viewBox="0 0 (\d+) ([\d.]+)"/.exec(text);
+    expect(Number(box?.[1])).toBe(400);
+    expect(Number(box?.[2])).toBeGreaterThanOrEqual(400);
     // Framed by the directions: an agent that passes the picture on has
     // passed on which way it faces, which is half of what was asked.
     expect(text).toContain('>NE<');

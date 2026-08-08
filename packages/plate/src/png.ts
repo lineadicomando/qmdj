@@ -19,7 +19,13 @@ export interface PngOptions extends Omit<PlateOptions, 'scheme'> {
    * is no `auto` here for that reason.
    */
   scheme?: Scheme;
-  /** Width in pixels. The drawing is square, so this is also the height. */
+  /**
+   * Width in pixels. The height follows from it.
+   *
+   * Square, unless the drawing was asked for a list of configurations — that
+   * band is written on paper the square grew downward, so the taller the list
+   * the taller the raster. See `Foot`.
+   */
   width?: number;
 }
 
@@ -106,6 +112,7 @@ export function inlineColours(svg: string, scheme: Scheme): string {
   const values: Record<string, string> = {
     '--qmdj-ink': palette.ink,
     '--qmdj-faint': palette.faint,
+    '--qmdj-word': palette.word,
     '--qmdj-rule': palette.rule,
     '--qmdj-ground': palette.ground,
     '--qmdj-mark': palette.mark,

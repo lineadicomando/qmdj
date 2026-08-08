@@ -107,12 +107,23 @@ describe('the board', () => {
 });
 
 describe('renderChartSvg', () => {
-  it('produces a square SVG', () => {
+  it('produces a square SVG, until it is given a list to carry', () => {
     const svg = renderChartSvg(CHART, { size: 500 });
 
     expect(svg.startsWith('<svg')).toBe(true);
     expect(svg.trimEnd().endsWith('</svg>')).toBe(true);
     expect(svg).toContain('viewBox="0 0 500 500"');
+
+    // The band is written on paper the square grew, so the width is still the
+    // number it was given and the height is the one that moved.
+    const listed = renderChartSvg(CHART, {
+      size: 500,
+      captions: { configurations: 'Configurations' },
+    });
+    const box = /viewBox="0 0 (\d+) ([\d.]+)"/.exec(listed);
+
+    expect(Number(box?.[1])).toBe(500);
+    expect(Number(box?.[2])).toBeGreaterThan(500);
   });
 
   it('carries every glyph of the chart', () => {
@@ -152,9 +163,14 @@ describe('renderChartSvg', () => {
     expect(worded).toContain('Yin Earth');
     // 休門 is not the Chinese for "Rest": it is what the gate is called, and
     // it stays on the board whatever language the reader is given. It leads,
-    // set large, and the word sits under it — same column, fainter, smaller.
+    // set large, and the word sits under it — same column, smaller, quieter.
+    //
+    // Quieter is `word` and no longer `faint`, which is the register the small
+    // hanzi and the corner number kept. For a reader with no Chinese this line
+    // is the content, and it is held at 7:1 rather than at the 4.6:1 that
+    // suits something merely glossing what is already legible.
     const gate = /<text x="([\d.]+)" y="([\d.]+)" font-size="([\d.]+)"[^>]*>休門/.exec(worded);
-    const word = /<text x="([\d.]+)" y="([\d.]+)" class="faint" font-size="([\d.]+)"[^>]*>Rest/.exec(
+    const word = /<text x="([\d.]+)" y="([\d.]+)" class="word" font-size="([\d.]+)"[^>]*>Rest/.exec(
       worded,
     );
 
@@ -204,11 +220,19 @@ describe('renderChartSvg', () => {
 
   it('wraps a word too long for its column instead of shrinking it', () => {
     const size = (svg: string, word: string): number =>
-      Number(new RegExp(`<text x="[\\d.]+" y="[\\d.]+" class="faint" font-size="([\\d.]+)"[^>]*>${word}<`).exec(svg)?.[1]);
+      Number(new RegExp(`<text x="[\\d.]+" y="[\\d.]+" class="word" font-size="([\\d.]+)"[^>]*>${word}<`).exec(svg)?.[1]);
     const svg = renderChartSvg(CHART, {
       size: 900,
       labels: { spirit: { liuhe: 'Assemblea', zhifu: 'Guerriero Oscuro' } },
     });
+
+    // That each of the three was found at all, before anything is compared
+    // about them. A regex that matches nothing yields `NaN`, and `NaN` is
+    // `Object.is`-equal to `NaN` — so the two assertions below went on holding
+    // after the class this looks for had been renamed out from under them.
+    for (const word of ['Guerriero', 'Oscuro', 'Assemblea']) {
+      expect(size(svg, word)).not.toBeNaN();
+    }
 
     // Both halves are set at the size a word that fitted would have been:
     // a column half a palace wide holds neither on one line, and shrinking
@@ -468,14 +492,35 @@ describe('the band of configurations', () => {
     expect(band.indexOf('instrument struck')).toBeLessThan(band.indexOf('the board come home'));
   });
 
-  it('costs the grid what it carries, and nothing when it carries nothing', () => {
+  it('costs the paper its own height, and nothing when it carries nothing', () => {
     const bare = layout(900, { captions: true });
     const two = layout(900, { captions: true, configurations: 2 });
     const six = layout(900, { captions: true, configurations: 6 });
 
-    expect(layout(900, { captions: true, configurations: 0 }).cell).toBe(bare.cell);
-    expect(two.cell).toBeLessThan(bare.cell);
-    expect(six.cell).toBeLessThan(two.cell);
+    expect(bare.height).toBe(900);
+    expect(layout(900, { captions: true, configurations: 0 }).height).toBe(bare.height);
+    expect(two.height).toBeGreaterThan(bare.height);
+    expect(six.height).toBeGreaterThan(two.height);
+    // Exactly what it needs and not a fraction more.
+    expect(six.height - 900).toBeCloseTo(six.foot.band, 6);
+  });
+
+  it('leaves the board the same size however long the list is', () => {
+    // The regression this exists for: the band used to come out of the grid,
+    // and the grid is square — so a list one line longer shrank the palaces in
+    // both directions. Stepping the hour resized the board under the reader
+    // with the window untouched, by a third of its side across the range of
+    // configuration counts a real year of charts produces.
+    const sizes = [0, 1, 2, 3, 5, 6, 9].map(
+      (configurations) => layout(900, { captions: true, compass: true, configurations }).cell,
+    );
+
+    for (const cell of sizes) expect(cell).toBeCloseTo(sizes[0] as number, 6);
+
+    // And it is centred across the paper, which follows from the grid taking
+    // the whole square rather than being anything this has to arrange.
+    const geometry = layout(900, { captions: true, compass: true, configurations: 6 });
+    expect(geometry.margin * 2 + geometry.cell * 3).toBeCloseTo(900, 6);
   });
 
   it('leaves the band clear of the grid above it and the captions below', () => {

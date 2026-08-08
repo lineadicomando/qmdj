@@ -44,6 +44,10 @@ const STRENGTH_MARK: Record<string, string> = {
  * size — what the SVG takes up where nobody constrains it, and what the
  * raster is that many pixels wide by default.
  *
+ * The *width*, and the height only where the drawing carries no list of
+ * configurations. Where it does, the paper is taller by exactly what the list
+ * needs: see `Foot`.
+ *
  * 900 rather than the old 640 because a palace now holds six names, each with
  * a word under it, where it used to hold five lines. Dropped into a document
  * at its intrinsic size, 640 renders that dense enough to need a lens.
@@ -78,7 +82,7 @@ export function renderChartSvg(chart: PlateChart, options: PlateOptions = {}): s
   const marked = markedPalaces(chart);
 
   const parts = [
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="${escape(ariaLabel(chart))}">`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${round(geometry.height)}" width="${size}" height="${round(geometry.height)}" role="img" aria-label="${escape(ariaLabel(chart))}">`,
     // Anchoring stays out of the sheet: a rule here would outrank the
     // `text-anchor` each line carries — a declaration beats a presentation
     // attribute — and every line would centre, including the one written
@@ -87,6 +91,7 @@ export function renderChartSvg(chart: PlateChart, options: PlateOptions = {}): s
       .qmdj { font-family: ${FONT_STACK}; }
       .qmdj text { fill: var(--qmdj-ink); }
       .qmdj .faint { fill: var(--qmdj-faint); }
+      .qmdj .word { fill: var(--qmdj-word); }
       .qmdj .mark { fill: var(--qmdj-mark); }
       .qmdj .rule { stroke: var(--qmdj-rule); fill: none; }
       ${PHASES.map((phase) => `.qmdj .${phase} { fill: var(--qmdj-ink-${phase}); }`).join('\n      ')}
@@ -94,7 +99,7 @@ export function renderChartSvg(chart: PlateChart, options: PlateOptions = {}): s
     // Both as an attribute and in the sheet: rasterisers apply
     // presentation attributes reliably and class selectors not at all.
     `<g class="qmdj" font-family="${FONT_STACK.replace(/"/g, '&quot;')}">`,
-    `<rect x="0" y="0" width="${size}" height="${size}" fill="var(--qmdj-ground)"/>`,
+    `<rect x="0" y="0" width="${size}" height="${round(geometry.height)}" fill="var(--qmdj-ground)"/>`,
   ];
 
   const labels = options.labels ?? {};
@@ -327,7 +332,7 @@ function register(
   else if (mark) parts[parts.length - 1] += mark;
 
   for (const [index, part] of parts.entries()) {
-    lines.push(text(x, wordLine + index * size * 1.08, part, size, { className: 'faint', maxWidth }));
+    lines.push(text(x, wordLine + index * size * 1.08, part, size, { className: 'word', maxWidth }));
   }
 
   return lines.filter(Boolean).join('\n');
@@ -524,16 +529,22 @@ function drawConfigurations(
   byNumber: Map<number, PlatePalace>,
 ): string {
   const { margin, cell, foot, font } = geometry;
+  // Below the frame and not merely below the grid: the compass closes
+  // underneath the palaces, and the list has to clear it.
   const top = margin + cell * 3 + geometry.compass.band;
   // Flush with the left edge of the grid, not of the paper: the band belongs
-  // to the board above it and reads as adrift when it starts outside the
-  // frame the compass draws.
-  const edge = margin + geometry.compass.band;
+  // to the board above it and reads as adrift when it starts anywhere else.
+  //
+  // The compass does not enter into it here, unlike in `top`. The frame is
+  // *outside* the grid on every side, so a line starting at the grid's edge
+  // already stands clear of it — and the width of it was being added on top,
+  // which started the list a whole band in from the palaces it lists.
+  const edge = margin;
   const width = cell * 3;
 
   const parts = [
     text(edge, top + foot.heading, heading, font.entry, {
-      className: 'faint',
+      className: 'word',
       anchor: 'start',
       maxWidth: width,
     }),
@@ -561,15 +572,18 @@ function drawConfigurations(
 
     const runs: Run[] = [...tinted(pattern, labels.pattern, 'mark')];
     if (pattern.valence) {
-      // Fainter than the name it qualifies. Set at full strength the fortune
-      // is the heaviest thing on the line, and a band whose loudest word is
-      // 凶 is the ranking this drawing declines to make.
+      // Quieter than the name it qualifies, and quieter is now a shade rather
+      // than a whisper: `word` sits just under `mark`. Set at full strength
+      // the fortune is the heaviest thing on the line, and a band whose
+      // loudest word is 凶 is the ranking this drawing declines to make — but
+      // «fausto e infausto insieme» is also the plainest thing on the line for
+      // a reader with no Chinese, and it cannot be at 4.6:1 for that.
       runs.push(
-        { text: WITHIN, className: 'faint' },
-        ...tinted(pattern.valence, labels.valence, 'faint'),
+        { text: WITHIN, className: 'word' },
+        ...tinted(pattern.valence, labels.valence, 'word'),
       );
     }
-    if (where) runs.push({ text: `${WITHIN}${where}`, className: 'faint' });
+    if (where) runs.push({ text: `${WITHIN}${where}`, className: 'word' });
 
     parts.push(
       text(edge, top + foot.first + foot.step * index, runs, font.entry, {
@@ -587,7 +601,7 @@ function drawCaptions(
   captions: NonNullable<PlateOptions['captions']>,
   geometry: Layout,
 ): string {
-  const { size, margin, font } = geometry;
+  const { size, height, margin, font } = geometry;
   const middle = size / 2;
   const pillars = chart.moment.pillars;
   const parts: string[] = [];
@@ -607,13 +621,17 @@ function drawCaptions(
     .join(BETWEEN);
   parts.push(text(middle, outside * 0.45, head, font.caption, { maxWidth: size * 0.94 }));
 
+  // Measured up from the foot of the paper and not from the foot of the
+  // square: the list of configurations stands between the two, and these two
+  // lines belong under all of it. On a drawing with no list the paper is the
+  // square and this is the same number it always was.
   const foot = [captions.chief, captions.chiefGate].filter(Boolean).join(BETWEEN);
-  parts.push(text(middle, size - outside * 0.58, foot, font.caption, { maxWidth: size * 0.94 }));
+  parts.push(text(middle, height - outside * 0.58, foot, font.caption, { maxWidth: size * 0.94 }));
 
   // The disclaimer travels with the picture, because a picture travels
   // further than the page it was made on.
   if (captions.note) {
-    parts.push(text(middle, size - outside * 0.22, captions.note, font.caption * 0.82, { className: 'faint' }));
+    parts.push(text(middle, height - outside * 0.22, captions.note, font.caption * 0.82, { className: 'word' }));
   }
 
   return parts.filter(Boolean).join('\n');

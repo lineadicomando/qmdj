@@ -63,9 +63,18 @@ export interface Compass {
  *
  * Its height is a function of what it carries rather than a constant, which
  * is the difference between this band and the compass's: a frame is the same
- * frame on every chart, and a list is as long as the chart made it. A board
- * that fell into two configurations gives up a tenth less of its grid than
- * one that fell into six, and neither pays for the other.
+ * frame on every chart, and a list is as long as the chart made it.
+ *
+ * **What it is a function of is the paper's height, and nothing else.** It
+ * used to come out of the grid, and the grid is square: a list one line longer
+ * shrank the palaces in both directions, so stepping the hour resized the
+ * board under the reader's eyes without the window having moved. Over a year
+ * of hours a chart falls into between one and nine configurations — mostly
+ * three to six — and that swing was a third of the board's side.
+ *
+ * So the paper grows downward by exactly what the list needs, and the grid
+ * keeps the whole square whatever the hour. The board is the same size on
+ * every chart, and it is larger on all of them than the largest it used to be.
  */
 export interface Foot {
   /** Total height. Zero where the drawing has no band. */
@@ -78,9 +87,23 @@ export interface Foot {
 }
 
 export interface Layout {
+  /**
+   * The side of the square: the width of the paper, and the height of
+   * everything down to the foot of the grid.
+   *
+   * Every proportion here is a fraction of it, so one number still scales the
+   * whole drawing. It is no longer the height — see `height`.
+   */
   size: number;
   /** Space around the grid, which the captions and the compass live in. */
   margin: number;
+  /**
+   * The height of the paper: the square, plus whatever the list needs.
+   *
+   * Equal to `size` on a drawing with no band, which is what this was before
+   * there was a band at all.
+   */
+  height: number;
   /** Side of one palace. */
   cell: number;
   /** The band the compass is written in. Zero where there is none. */
@@ -132,7 +155,11 @@ export interface Around {
  */
 export function layout(size: number, around: Around = {}): Layout {
   const band = around.compass ? size * 0.055 : 0;
-  const margin = (around.captions ? size * 0.085 : size * 0.03) + band;
+  // A caption is one line, and the head sits at 0.45 of this and the foot at
+  // 0.58 of it from the far edge: at 0.085 the line had two of its own heights
+  // of air above it and the grid paid for all of it, twice over. Enough to
+  // stand the line clear of the frame, and no more.
+  const margin = (around.captions ? size * 0.07 : size * 0.03) + band;
 
   // The heading, then one line per configuration, then the air that keeps the
   // last of them off the caption below. Zero lines is no band at all rather
@@ -143,11 +170,14 @@ export function layout(size: number, around: Around = {}): Layout {
     ? { band: size * 0.034 + step * entries + size * 0.012, heading: size * 0.026, first: size * 0.034 + step * 0.75, step }
     : { band: 0, heading: 0, first: 0, step };
 
-  const cell = (size - margin * 2 - foot.band) / 3;
+  // The square, and nothing but the square. The band does not come into it:
+  // it is written on the paper the square grew, not out of the square.
+  const cell = (size - margin * 2) / 3;
 
   return {
     size,
     margin,
+    height: size + foot.band,
     cell,
     compass: { band, branch: band * 0.27, word: band * 0.76 },
     foot,
