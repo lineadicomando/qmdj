@@ -114,5 +114,16 @@
   .glyph { display: block; color: var(--faint); font-size: 0.8em; }
   .gloss { display: block; color: var(--faint); font-size: 0.8em; }
   a { color: var(--faint); font-size: 0.85em; }
-  .hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  /*
+   * The column that has a heading only for whoever cannot see it has one.
+   *
+   * Clipped where it stands, and deliberately not taken out of the flow:
+   * `position: absolute` with nothing positioned above it resolves against
+   * the page itself, so this landed at the far right of a table that is
+   * wider than a phone — and dragged the whole document sideways with it,
+   * past the frame whose scrolling was supposed to contain the table. In
+   * flow it costs one pixel inside a cell already as wide as the link below
+   * it, and the page stays where it is.
+   */
+  .hidden { display: block; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 </style>
