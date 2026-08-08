@@ -29,6 +29,7 @@ const INTERVAL: IntervalInput = {
   place: ROME as never,
   trueSolarTime: true,
   dayBoundary: 'zishi',
+  method: 'chaibu',
 };
 
 const LOOKING: CriteriaInput = {

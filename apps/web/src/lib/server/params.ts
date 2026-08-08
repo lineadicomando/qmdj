@@ -116,6 +116,17 @@ export function readOptions(params: URLSearchParams): ChartOptions {
   const yearBoundary = params.get('yearBoundary');
   if (yearBoundary === 'lichun' || yearBoundary === 'chunjie') options.yearBoundary = yearBoundary;
 
+  // Strict, unlike the three above: their misspellings fall back to defaults
+  // that show in the answer, but a chart cast by the wrong method looks right
+  // and is not. maoshan passes through and the engine refuses it with a 501.
+  const method = params.get('method');
+  if (method !== null) {
+    if (method !== 'chaibu' && method !== 'zhirun' && method !== 'maoshan') {
+      throw new ChartError('UNKNOWN_IDENTIFIER', { parameter: 'method', value: method });
+    }
+    options.method = method;
+  }
+
   return options;
 }
 

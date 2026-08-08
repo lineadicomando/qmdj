@@ -1,7 +1,9 @@
 <script lang="ts">
-  import type { Translator } from '@qimendunjia/i18n';
+  import type { MessageKey, Translator } from '@qimendunjia/i18n';
   import type { Location } from '$lib/moment';
   import LocationSearch from './LocationSearch.svelte';
+
+  import { METHODS } from '$lib/vocabulary';
 
   let {
     t,
@@ -10,6 +12,7 @@
     place = $bindable<Location | undefined>(undefined),
     trueSolarTime = $bindable(true),
     dayBoundary = $bindable('zishi'),
+    method = $bindable<string | undefined>(undefined),
   }: {
     t: Translator;
     date?: string;
@@ -17,6 +20,8 @@
     place?: Location | undefined;
     trueSolarTime?: boolean;
     dayBoundary?: string;
+    /** Bound only where a ju is cast: the pillars have no method to choose. */
+    method?: string | undefined;
   } = $props();
 </script>
 
@@ -53,7 +58,19 @@
         <option value="midnight">{t('form.dayBoundary.midnight')}</option>
       </select>
     </label>
-    <p class="note">{t('cli.note.methodOnly')}</p>
+    {#if method !== undefined}
+      <label>
+        {t('form.method')}
+        <!-- The word leads and the method's own name follows with its hanzi:
+             the thing named is Chinese, the choice must be readable without. -->
+        <select bind:value={method}>
+          {#each METHODS as id}
+            <option value={id}>{t(`form.method.${id}` as MessageKey)}</option>
+          {/each}
+        </select>
+      </label>
+      <p class="note">{t('cli.note.method', { method: method ?? 'chaibu' })}</p>
+    {/if}
   </details>
 
 <style>

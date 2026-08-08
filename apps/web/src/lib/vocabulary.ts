@@ -69,6 +69,15 @@ export const PATTERN_IDS = [
   'feiniaodiexue',
 ] as const;
 
+/**
+ * The methods a form offers, which are the ones the engine implements.
+ *
+ * `maoshan` exists in the engine's type and is deliberately not here: an
+ * option that can only ever come back as an error is not a choice, and the
+ * address still accepts it for whoever asks the API directly.
+ */
+export const METHODS = ['chaibu', 'zhirun'] as const;
+
 /** The eight outward directions. The centre faces none and is not offered. */
 export const DIRECTIONS = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'] as const;
 

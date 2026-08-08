@@ -123,6 +123,13 @@ describe('compute_qimen_chart', () => {
     expect(await call('compute_qimen_chart', BEIJING)).toContain('chaibu');
   });
 
+  it('casts by the method it is asked for', async () => {
+    const zhirun = await call('compute_qimen_chart', { ...BEIJING, method: 'zhirun' });
+
+    expect(zhirun).toContain('zhirun');
+    expect(zhirun).not.toContain('chaibu');
+  });
+
   it('answers in the language it was asked in', async () => {
     const italian = await call('compute_qimen_chart', { ...BEIJING, lang: 'it' });
 

@@ -114,6 +114,38 @@ describe('GET /api/chart', () => {
   it('refuses half a set of coordinates', async () => {
     expect((await call(chart, 'latitude=39.9')).status).toBe(400);
   });
+
+  it('casts by the method the address chooses', async () => {
+    // The same instant under the two schools, and not even the dun survives:
+    // 15 June 2024 is ten days into 芒種, lower yuan of a yang chart under
+    // chaibu — but its 庚戌 day stands in a block already serving 夏至, six
+    // days before the Sun gets there (超神), and 夏至 opens the yin half.
+    const { body } = await call(chart, `${MOMENT}&method=zhirun`);
+    const answer = body as { chart: { ju: Record<string, unknown>; options: { method: string } } };
+
+    expect(answer.chart.options.method).toBe('zhirun');
+    expect(answer.chart.ju).toMatchObject({ yang: false, number: 9, yuan: 'shang' });
+    expect(answer.chart.ju['term']).toMatchObject({ id: 'xiazhi' });
+  });
+
+  it('refuses a method it has never heard of', async () => {
+    // Ignoring it instead would cast a chaibu chart under whatever name the
+    // address misspelt, and it would look exactly like the chart asked for.
+    const { status, body } = await call(chart, `${MOMENT}&method=zhirn`);
+
+    expect(status).toBe(400);
+    expect(body).toMatchObject({
+      code: 'UNKNOWN_IDENTIFIER',
+      params: { parameter: 'method', value: 'zhirn' },
+    });
+  });
+
+  it('answers maoshan with a refusal, not a substitute', async () => {
+    const { status, body } = await call(chart, `${MOMENT}&method=maoshan`);
+
+    expect(status).toBe(501);
+    expect(body).toMatchObject({ code: 'METHOD_NOT_IMPLEMENTED' });
+  });
 });
 
 describe('GET /api/bazi', () => {

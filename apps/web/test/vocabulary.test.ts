@@ -8,9 +8,11 @@ import {
   STARS,
 } from '@qimendunjia/core';
 import { describe, expect, it } from 'vitest';
+import type { ChartOptions } from '@qimendunjia/core';
 import {
   DIRECTIONS,
   GATE_IDS,
+  METHODS,
   PATTERN_IDS as FORM_PATTERN_IDS,
   PURPOSES,
   SPIRIT_IDS,
@@ -64,5 +66,16 @@ describe('the identifiers a form offers', () => {
   it('leave the centre out, which faces nowhere and can never answer', () => {
     expect(DIRECTIONS).toHaveLength(8);
     expect(DIRECTIONS).not.toContain('centre');
+  });
+
+  it('offer only the methods the engine implements', () => {
+    // The subset relation is checked by the compiler: a method the type has
+    // never heard of would not assign. What the runtime check adds is the
+    // exclusion — maoshan is in the type and deliberately not offered,
+    // because the engine refuses it and an option that can only come back
+    // as an error is not a choice. The API still accepts it and answers 501.
+    const offered: ChartOptions['method'][] = [...METHODS];
+    expect(offered).toEqual(['chaibu', 'zhirun']);
+    expect(offered).not.toContain('maoshan');
   });
 });

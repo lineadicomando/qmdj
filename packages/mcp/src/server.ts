@@ -52,9 +52,11 @@ export function createServer(context: ToolContext = {}): McpServer {
         'stands over a palace whose element it controls, and it will not tell you what that ' +
         'means. Interpretation, if the person asks for one, is yours — and so is the ' +
         'responsibility for it. ' +
-        'Charts are cast by the chaibu method; the zhirun and maoshan methods are not ' +
-        'implemented and are refused rather than silently substituted, because a chart cast by ' +
-        'the wrong method looks right and is not.',
+        'Charts are cast by the chaibu method unless the method parameter chooses zhirun; the ' +
+        'two are different schools and lay out different charts from the same instant, so never ' +
+        'switch method between charts you are comparing. maoshan is not implemented and is ' +
+        'refused rather than silently substituted, because a chart cast by the wrong method ' +
+        'looks right and is not.',
     },
   );
 

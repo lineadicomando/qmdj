@@ -28,6 +28,10 @@ export interface MomentInput {
   place?: Location;
   trueSolarTime: boolean;
   dayBoundary: string;
+  /** How the ju is determined. Carried verbatim: the server refuses a value
+   * it does not know, where a silent fallback would cast a chaibu chart under
+   * whatever name the address had misspelt. */
+  method: string;
 }
 
 /** A failure as it crosses HTTP: a code with parameters, never prose. */
@@ -50,6 +54,7 @@ export function readMoment(url: URL): {
       time: params.get('time') ?? '',
       trueSolarTime: params.get('trueSolarTime') !== 'false',
       dayBoundary: params.get('dayBoundary') === 'midnight' ? 'midnight' : 'zishi',
+      method: params.get('method') ?? 'chaibu',
     },
     locationId: params.get('locationId'),
   };
@@ -72,6 +77,7 @@ export function momentQuery(
   if (input.place) params.set('locationId', String(input.place.id));
   if (!input.trueSolarTime) params.set('trueSolarTime', 'false');
   if (input.dayBoundary !== 'zishi') params.set('dayBoundary', input.dayBoundary);
+  if (input.method && input.method !== 'chaibu') params.set('method', input.method);
 
   for (const [key, value] of Object.entries(extra)) {
     if (value) params.set(key, value);

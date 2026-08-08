@@ -24,6 +24,8 @@ export interface IntervalInput {
   place?: Location;
   trueSolarTime: boolean;
   dayBoundary: string;
+  /** How the ju is determined. Verbatim, as in `MomentInput`. */
+  method: string;
 }
 
 /** What is being looked for, as identifiers the engine knows. */
@@ -64,6 +66,7 @@ export function readInterval(url: URL): {
       to: params.get('to') ?? '',
       trueSolarTime: params.get('trueSolarTime') !== 'false',
       dayBoundary: params.get('dayBoundary') === 'midnight' ? 'midnight' : 'zishi',
+      method: params.get('method') ?? 'chaibu',
     },
     criteria: {
       gate: params.get('gate') ?? '',
@@ -106,6 +109,7 @@ export function intervalQuery(
   if (input.place) params.set('locationId', String(input.place.id));
   if (!input.trueSolarTime) params.set('trueSolarTime', 'false');
   if (input.dayBoundary !== 'zishi') params.set('dayBoundary', input.dayBoundary);
+  if (input.method && input.method !== 'chaibu') params.set('method', input.method);
 
   for (const [key, value] of Object.entries({ ...criteriaFields(criteria), ...extra })) {
     if (value) params.set(key, value);
@@ -135,6 +139,7 @@ export function chartQuery(
   if (input.place) params.set('locationId', String(input.place.id));
   if (!input.trueSolarTime) params.set('trueSolarTime', 'false');
   if (input.dayBoundary !== 'zishi') params.set('dayBoundary', input.dayBoundary);
+  if (input.method && input.method !== 'chaibu') params.set('method', input.method);
 
   for (const [key, value] of Object.entries(extra)) {
     if (value) params.set(key, value);
@@ -202,6 +207,7 @@ const SCAN_FIELDS = [
   'locationId',
   'trueSolarTime',
   'dayBoundary',
+  'method',
   'gate',
   'star',
   'spirit',

@@ -124,8 +124,9 @@ export function registerComputeQimenChart(server: McpServer, context: ToolContex
         'For the present moment OMIT date and time: the server supplies them, and you do not ' +
         'know the current date. Give the place with location_id from search_location, or with ' +
         'latitude + longitude + timezone together. ' +
-        'The chart is cast by the chaibu method; other schools lay out other charts from the ' +
-        'same instant, and the answer says so.',
+        'The chart is cast by the chaibu method unless method says otherwise; zhirun is the ' +
+        'other one implemented, the two are different schools, and the answer says which one ' +
+        'cast it.',
       inputSchema: {
         date: dateSchema,
         time: timeSchema,

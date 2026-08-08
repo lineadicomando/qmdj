@@ -116,6 +116,12 @@ export const optionSchema = {
     .enum(['lichun', 'chunjie'])
     .optional()
     .describe('Where the year of the pillars begins. Default lichun.'),
+  method: z
+    .enum(['chaibu', 'zhirun'])
+    .optional()
+    .describe(
+      'How the ju of a Qi Men chart is determined. Default chaibu, which splits each term into three five-day thirds from the instant it begins. zhirun follows the day\'s futou through whole fifteen-day blocks and pays the drift off with an intercalated Mangzhong or Daxue; its ju can belong to a term the Sun has not reached yet, and the answer says which. The two are different schools, not approximations of one another. Does not affect the Four Pillars.',
+    ),
 };
 
 export interface ResolvedInput {
@@ -134,6 +140,7 @@ interface RawInput {
   true_solar_time?: boolean | undefined;
   day_boundary?: 'zishi' | 'midnight' | undefined;
   year_boundary?: 'lichun' | 'chunjie' | undefined;
+  method?: 'chaibu' | 'zhirun' | undefined;
 }
 
 /**
@@ -158,6 +165,7 @@ export function resolveInput(raw: RawInput, context: ToolContext): ResolvedInput
   if (raw.true_solar_time !== undefined) options.trueSolarTime = raw.true_solar_time;
   if (raw.day_boundary) options.dayBoundary = raw.day_boundary;
   if (raw.year_boundary) options.yearBoundary = raw.year_boundary;
+  if (raw.method) options.method = raw.method;
 
   const ephemeris: EphemerisContext = initEphemeris(context.ephemerisPath);
   return {

@@ -155,6 +155,7 @@
       bind:place={asked.place}
       bind:trueSolarTime={asked.trueSolarTime}
       bind:dayBoundary={asked.dayBoundary}
+      bind:method={asked.method}
     />
     <!-- Nothing here can be missing: a chart of no date is the chart of now. -->
     <SubmitButton {t} label="cli.heading.chart" {busy} />
@@ -210,6 +211,14 @@
       <p class="ju">
         {chart.ju.yang ? t('cli.value.yangDun') : t('cli.value.yinDun')}
         {chart.ju.number} · {t(`label.yuan.${chart.ju.yuan}` as MessageKey)}
+        <!-- Under zhirun the ju's term deserves saying: it can be one the Sun
+             has not reached yet, or a repeated one — the intercalation. -->
+        {#if chart.options.method === 'zhirun'}
+          · <span class="glyph">{chart.ju.leap ? '閏' : ''}{chart.ju.term.hanzi}</span>
+          {chart.ju.leap
+            ? t('cli.value.leapTerm', { term: t(`label.term.${chart.ju.term.id}` as MessageKey) })
+            : t(`label.term.${chart.ju.term.id}` as MessageKey)}
+        {/if}
       </p>
       <!-- Six columns of two lines each: on a narrow screen the table scrolls
            inside its frame rather than taking the page with it. -->
