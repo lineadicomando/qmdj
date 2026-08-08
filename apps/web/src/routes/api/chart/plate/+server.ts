@@ -46,6 +46,10 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
       size,
       scheme,
       labels,
+      // The frame of directions. A chart is consulted for a direction as
+      // often as for an hour, and the picture is what travels: sent on
+      // without the page around it, it still has to say which way it faces.
+      compass: labels.direction,
       captions: {
         ju: `${chart.ju.yang ? t('cli.value.yangDun') : t('cli.value.yinDun')} ${chart.ju.number}`,
         pillars: PILLARS,

@@ -300,7 +300,8 @@ export function registerDrawQimenChart(server: McpServer, context: ToolContext):
       title: 'Draw a Qi Men chart',
       description:
         'Renders a chart as an SVG picture of the nine palaces, south at the top as the ' +
-        'tradition draws it. ' +
+        'tradition draws it, framed by the eight directions and the twelve branches so that ' +
+        'the picture says which way it faces. ' +
         'CALL THIS AFTER compute_qimen_chart, not instead of it: a picture carries the glyphs ' +
         'but not the warnings, and not the note about which method cast it. Show the person ' +
         'both, or show them the data alone.',
@@ -336,6 +337,9 @@ export function registerDrawQimenChart(server: McpServer, context: ToolContext):
           // The palaces are written in words, each beside the name it
           // renders — the same drawing the web surface serves.
           labels,
+          // And the frame of directions around it, for the same reason: the
+          // answer to "which way" is half of what a chart is asked for.
+          compass: labels.direction,
           captions: {
             ju: `${chart.ju.yang ? t('cli.value.yangDun') : t('cli.value.yinDun')} ${chart.ju.number}`,
             pillars: PILLARS,

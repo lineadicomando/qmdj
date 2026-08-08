@@ -205,6 +205,10 @@ describe('the other tools', () => {
 
     expect(text.startsWith('<svg')).toBe(true);
     expect(text).toContain('viewBox="0 0 400 400"');
+    // Framed by the directions: an agent that passes the picture on has
+    // passed on which way it faces, which is half of what was asked.
+    expect(text).toContain('>NE<');
+    expect(text).toContain('>子<');
   });
 });
 

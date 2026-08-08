@@ -229,6 +229,19 @@ describe('GET /api/chart/plate', () => {
     expect(english.text).toMatch(/chief Canopy 天蓬 — chief gate Rest 休門/);
   });
 
+  it('frames the drawing with the directions, in the language it was asked for', async () => {
+    const english = await call(plate, `${MOMENT}&lang=en`);
+    const italian = await call(plate, `${MOMENT}&lang=it`);
+
+    // West is W in English and O in Italian, from `ovest`: the abbreviation
+    // is not the word cut short, which is why it has a key of its own.
+    expect(english.text).toContain('>W<');
+    expect(italian.text).toContain('>O<');
+    // And the branches beside them, which are the same in either.
+    expect(english.text).toContain('>子<');
+    expect(italian.text).toContain('>子<');
+  });
+
   it('resolves to one appearance when asked, and carries both when not', async () => {
     // A page that knows what its reader picked asks for that one; a drawing
     // dropped anywhere else carries both behind a media query, because an
