@@ -79,12 +79,17 @@ describe('what the server offers', () => {
     expect(byName.get('scan_moments')).toMatch(/rather than loosening the question/i);
   });
 
-  it('says it does not interpret, where an agent will read it', async () => {
+  it('says where it stops, where an agent will read it', async () => {
     const { tools } = await client.listTools();
     const chart = tools.find((tool) => tool.name === 'compute_qimen_chart');
 
+    // The boundary an agent has to be told, now that a fortune comes back with
+    // each configuration: the fortune belongs to the arrangement, and reading
+    // it as a verdict on the hour is the mistake worth naming outright.
     expect(chart?.description).toMatch(/arrangements only/i);
-    expect(chart?.description).toMatch(/not the server's to say/i);
+    expect(chart?.description).toMatch(/property of the arrangement/i);
+    expect(chart?.description).toMatch(/does not rank/i);
+    expect(chart?.description).toMatch(/not the server's\s+to make/i);
   });
 
   it('offers reference material without spending context on it', async () => {

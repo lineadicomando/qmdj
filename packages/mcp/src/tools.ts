@@ -116,11 +116,18 @@ export function registerComputeQimenChart(server: McpServer, context: ToolContex
       title: 'Cast a Qi Men Dun Jia chart',
       description:
         'Casts the nine palaces for a moment: the dun and the ju, the earth and heaven plates, ' +
-        'the nine stars, the eight gates, the eight spirits, and the configurations the chart ' +
-        'has fallen into. ' +
-        'Returns arrangements only. It reports that a gate stands over a palace whose element ' +
-        'it controls; whether that is a good thing to know is not in the output and is not the ' +
-        "server's to say — if the person wants a reading, that is yours to give and yours to own. " +
+        'the nine stars, the eight gates, the eight spirits, the configurations the chart ' +
+        'has fallen into, how each star and gate stands to the palace it rests in, and the ' +
+        'post horse of the day and of the hour. ' +
+        'Both horses come back, never one: 日馬 and 時馬 are two things the tradition names ' +
+        'apart, and which of them bears on a question is the reader\'s to decide. ' +
+        'Returns arrangements only, each with the fortune its name is transmitted with: 門迫 ' +
+        'comes back as an oppressed gate marked xiong, because oppression is what the sources ' +
+        'call it, not because the server has weighed the hour. Read that fortune as a property ' +
+        'of the arrangement and of nothing else. It does not rank the palaces, it does not make ' +
+        'one hour better than another, and a chart holding four xiong configurations is not a ' +
+        "bad time to do anything — that judgement is not in the output and is not the server's " +
+        'to make. If the person wants a reading, it is yours to give and yours to own. ' +
         'For the present moment OMIT date and time: the server supplies them, and you do not ' +
         'know the current date. Give the place with location_id from search_location, or with ' +
         'latitude + longitude + timezone together. ' +
@@ -346,6 +353,10 @@ export function registerDrawQimenChart(server: McpServer, context: ToolContext):
             pillars: PILLARS,
             chief: `${t('cli.field.chief')} ${labels.star[chart.chief.star.id]} ${chart.chief.star.hanzi}`,
             chiefGate: `${t('cli.field.chiefGate')} ${labels.gate[chart.chiefGate.gate.id]} ${chart.chiefGate.gate.hanzi}`,
+            // The band under the grid. A palace has room for a configuration's
+            // name and not for its fortune, and 伏吟 and 反吟 have no palace at
+            // all — without this the picture is silent about both.
+            configurations: t('cli.heading.patterns'),
           },
         });
 
