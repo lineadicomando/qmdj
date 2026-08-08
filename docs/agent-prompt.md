@@ -65,10 +65,14 @@ Ask. If the person does not know, say what that costs rather than choosing.
   not a reading. It does not carry the note about an ambiguous local hour, or
   about the method. Call the drawing **after** the calculation and show both,
   or show the data alone.
-- **Only one method is implemented.** Charts are cast by 拆補; 置閏 and 茅山
-  are refused with `METHOD_NOT_IMPLEMENTED` rather than silently substituted,
-  because a chart cast by the wrong method looks right and is not. If someone
-  asks for one of those, say it is not available.
+- **Two methods are implemented, and they are different schools.** Charts are
+  cast by 拆補 unless `method` chooses 置閏, whose ju follows the day's 符頭
+  and can belong to a term the Sun has not reached yet — the answer says
+  which. Never switch method between charts you are comparing, and never
+  present one method's chart as the other's. 茅山 is refused with
+  `METHOD_NOT_IMPLEMENTED` rather than silently substituted, because a chart
+  cast by the wrong method looks right and is not; if someone asks for it,
+  say it is not available.
 - **三奇得使 is not computed.** The sources consulted do not agree on which
   pairings count. Its absence is deliberate; do not fill the gap yourself.
 - **No table says which gate suits which undertaking.** The transmitted

@@ -324,14 +324,43 @@ the transmitted list it is supposed to reproduce. Where the sources disagree,
 the code says so and picks one; where they were too thin to pick from, nothing
 was written. **三奇得使 is deliberately absent** for that reason.
 
-Still to come: the two methods that are not `chaibu`. `determineJu` throws
-`METHOD_NOT_IMPLEMENTED` for them rather than quietly substituting, because a
-chart cast by the wrong method looks right and is not. The same refusal now
-covers the flying plate and the systems beyond 時家: `plate` and `system`
-stood in the type from day one, as § 3 requires, but the engine never read
-either field — a caller asking for a flying plate received a rotating chart
-with `fei` written on it. `computeQimenChart` throws `OPTION_NOT_IMPLEMENTED`
-for both.
+**The zhirun method is implemented too**, and choosable on every surface:
+`--method` on the CLI, `method` in the address and the MCP schema, a select
+in the form. `zhirun.ts` sits in the calendrical layer, not in `dunjia/`:
+the 超神接氣 bookkeeping is a fact about days and terms, and the ju only
+reads it. The assignment needs no history — pinning each solstice's block
+inside its one-block window fixes every block between two solstices, and a
+thirteenth block between two pins *is* the intercalation, repeating 芒種 or
+大雪. Four findings:
+
+- **The futou follows the day pillar.** The 符頭 is a fact about the day
+  ganzhi, so it moves with `dayBoundary` and true solar time exactly as the
+  pillar does, and the same instant at 23:30 can stand on either side of an
+  intercalation. The alternative — reckoning the blocks on 120°E like the
+  lunar calendar — would let a chart's ju contradict its own day pillar.
+- **The drift bounds are looser than the pin.** The window holds 超神 to
+  eight days *at the solstices*; between them it crests at ten or eleven —
+  which is the classical trigger, "nine or ten days and the leap must be
+  set" — and 接氣 deepens through the short winter terms. Measured over
+  2018–2027: −7 to +11 days. The first version of the invariant test
+  asserted the pin's bounds everywhere and was wrong.
+- **The two methods disagree about more than the yuan.** Around a term's
+  edges they disagree which term the ju belongs to, and near a solstice
+  about the dun itself: 15 June 2024 is a yang chart under 拆補 and a yin
+  one under 置閏, whose block already serves 夏至. `Ju.term` says which term
+  was used, and the surfaces show it.
+- **The threshold is the contested pin.** Nine days of 超神 force the leap
+  here and in `kinqimen`; some sources say ten, and a Japanese tradition
+  says "the futou nearest the solstice", each shifting the window by a day.
+  One value is implemented and the comment on `MAX_CHAOSHEN` declares it.
+
+Still to come: `maoshan`. `determineJu` throws `METHOD_NOT_IMPLEMENTED` for
+it rather than quietly substituting, because a chart cast by the wrong method
+looks right and is not. The same refusal covers the flying plate and the
+systems beyond 時家: `plate` and `system` stood in the type from day one, as
+§ 3 requires, but the engine never read either field — a caller asking for a
+flying plate received a rotating chart with `fei` written on it.
+`computeQimenChart` throws `OPTION_NOT_IMPLEMENTED` for both.
 
 Three findings from the reading layer:
 
@@ -671,6 +700,17 @@ if it ever comes, is a criterion like the others.
      everything newer — and it runs once the package directory is put on
      `sys.path`, because `kinqimen.py` says `import config` where it means
      its own module. Re-verified 2026-08-08.
+
+     Its 置閏, used as the reference for this engine's, needed the same
+     care: it re-derives the term day by day from the term astronomically
+     in force, so it can express neither a sustained 超神 nor a real 接氣,
+     and it changes the ju in the middle of a five-day stretch — which no
+     account of the method allows, including its own futou-based yuan.
+     Agreement over 2018–2027 is exact on the yuan (3 652 of 3 652) and
+     two-in-three on the term, everywhere the drift phase makes the two
+     readings coincide. The classical structure was instead confirmed
+     piecewise: the four 符頭 heads, the anchor at the solstice, and the
+     195-day leap each match an independent Japanese source (ktonko.com).
 
      Runnable is not the same as agreeing: **its 拆補 is a different 拆補.**
      `kinqimen` assigns the yuan from the day's 符頭 — a 己卯 day opens an

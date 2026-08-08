@@ -33,7 +33,7 @@ compatible with it. The GeoNames data is CC BY 4.0.
 | Solar terms | the twenty-four 節氣, to the second, from Swiss Ephemeris |
 | Lunar calendar | months, intercalary months, lunar dates, reckoned on 120°E |
 | Four pillars | 四柱 with 藏干, 十神, 納音, 十二長生, 空亡, 大運 |
-| Qi Men charts | 時家 by the 拆補 method: four plates, configurations, seasonal states |
+| Qi Men charts | 時家 by the 拆補 or 置閏 method: four plates, configurations, seasonal states |
 | Choosing a time | 擇時擇方: every chart over an interval, narrowed to the palaces answering stated criteria |
 
 It does **not** interpret. It reports that a gate stands over a palace whose
@@ -73,6 +73,7 @@ a pillar turns on.
 
 ```sh
 qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lang en
+qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --method zhirun
 qimen bazi  --date 1968-03-12 --time 14:30 --tz Europe/Rome --gender male
 qimen terms --year 2024 --tz Asia/Shanghai
 qimen calendar --date 2023-04-01
@@ -128,9 +129,16 @@ from the first release:
 | `yearBoundary` | 立春 or 正月初一 | `lichun` |
 | `dayBoundary` | the day pillar turns at 23:00 or at midnight | `zishi` |
 
-`method` accepts only `chaibu` today. The other two raise
+`method` accepts `chaibu` and `zhirun` today, and they are different schools,
+not approximations of one another: under 拆補 each term is split into three
+five-day thirds from the instant it begins, while under 置閏 the yuan follows
+the day's 符頭 through whole fifteen-day blocks and the drift is paid off with
+an intercalated 芒種 or 大雪 — so around a term's edges the two disagree even
+about which term the ju belongs to, and occasionally about the dun itself.
+A zhirun chart names the term its ju was taken from. `maoshan` raises
 `METHOD_NOT_IMPLEMENTED` rather than being silently substituted, because a
-chart cast by the wrong method looks right and is not.
+chart cast by the wrong method looks right and is not; the same refusal
+covers the unimplemented values of `plate` and `system`.
 
 A chart carries the options that produced it, so a saved one reproduces
 identically.
@@ -147,6 +155,14 @@ Not uniformly, and the difference is worth stating.
   reproduces all eighteen published arrangements. This means *consistent with
   one implementation of a contested tradition*, not *verified against an
   authority*: no observatory publishes Qi Men charts.
+- **The zhirun ju** — checked against `kinqimen` over 3 652 days: the yuan
+  agrees on every one, the term everywhere that reference follows the
+  classical bookkeeping — about two days in three, because its own reading
+  re-derives the term daily and cannot hold a sustained 超神 or a real 接氣.
+  The block structure — the four 符頭, the solstice anchor, the 195-day
+  leap — is confirmed by an independent Japanese source. The one contested
+  pin, at how many days of 超神 the intercalation falls, is declared in
+  `zhirun.ts`.
 - **The configurations and the seasonal states** — from Chinese-language
   sources, each rule tested against the transmitted list it should reproduce.
   There is no runnable reference for these at all.
