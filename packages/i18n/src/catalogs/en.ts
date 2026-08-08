@@ -251,6 +251,9 @@ export const en = {
   'form.dayBoundary': 'The day begins',
   'form.dayBoundary.zishi': 'at the hour of the Rat 子時, 23:00',
   'form.dayBoundary.midnight': 'at midnight, 00:00',
+  'form.method': 'The ju is determined',
+  'form.method.chaibu': 'by thirds of the term — chaibu 拆補',
+  'form.method.zhirun': 'by whole blocks, with the leap — zhirun 置閏',
   'form.gender': 'Sex — only the direction of the luck cycles depends on it',
   'form.gender.unset': 'not given',
   'form.gender.male': 'male',
@@ -404,9 +407,10 @@ export const en = {
   'cli.value.nothingAnswered':
     'No palace in the interval answers what was asked. This says the arrangement did not occur, and nothing else.',
   'cli.value.everyPalace': 'every palace, nothing asked for in particular',
+  'cli.value.leapTerm': 'intercalated {term}',
 
-  'cli.note.methodOnly':
-    'Cast by the chaibu method. Other schools lay out other charts from the same instant.',
+  'cli.note.method':
+    'Cast by the {method} method. Other schools lay out other charts from the same instant.',
 
   'cli.error.unknownCommand': 'Unknown command "{command}". Try `qimen --help`.',
   'cli.error.unknownOption': 'Unknown option "{option}". Try `qimen --help`.',

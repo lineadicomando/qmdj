@@ -99,9 +99,23 @@ export function formatQimenChart(chart: QimenChart, t: Translator): string {
     t,
   );
 
+  // Under zhirun the ju's term is worth a word of its own: it can be a term
+  // the Sun has not reached yet (超神), or a repeated one (閏). Under chaibu
+  // it is always the term in force, which the moment above already shows.
+  const served =
+    chart.options.method === 'zhirun'
+      ? ` · ${chart.ju.leap ? '閏' : ''}${chart.ju.term.hanzi} ${
+          chart.ju.leap
+            ? t('cli.value.leapTerm', {
+                term: t(`label.term.${chart.ju.term.id}` as MessageKey),
+              })
+            : t(`label.term.${chart.ju.term.id}` as MessageKey)
+        }`
+      : '';
+
   const lines = [
     `${t('cli.heading.chart')}`,
-    `  ${pad(t('cli.field.ju'), 20)}${dun} ${chart.ju.number} · ${yuan}`,
+    `  ${pad(t('cli.field.ju'), 20)}${dun} ${chart.ju.number} · ${yuan}${served}`,
     `  ${pad(t('cli.field.instrument'), 20)}${t(`label.stem.${chart.instrument.id}` as MessageKey)} ${chart.instrument.hanzi}`,
     `  ${pad(t('cli.field.chief'), 20)}${named(chart.chief.star.hanzi, `label.star.${chart.chief.star.id}` as MessageKey, t)} → ${named(chart.chief.palace.hanzi, `label.palace.${chart.chief.palace.id}` as MessageKey, t)}`,
     `  ${pad(t('cli.field.chiefGate'), 20)}${named(chart.chiefGate.gate.hanzi, `label.gate.${chart.chiefGate.gate.id}` as MessageKey, t)} → ${named(chart.chiefGate.palace.hanzi, `label.palace.${chart.chiefGate.palace.id}` as MessageKey, t)}`,
@@ -142,7 +156,7 @@ export function formatQimenChart(chart: QimenChart, t: Translator): string {
   lines.push(
     '',
     `  ${t('cli.column.season')} ${t(`label.element.${chart.season}` as MessageKey)}`,
-    `  ${t('cli.note.methodOnly')}`,
+    `  ${t('cli.note.method', { method: chart.options.method })}`,
   );
   return lines.join('\n');
 }

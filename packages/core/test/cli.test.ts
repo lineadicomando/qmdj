@@ -61,6 +61,22 @@ describe('chart', () => {
 
     expect(out).toContain('chaibu');
   });
+
+  it('casts by the method it is asked for', async () => {
+    // The same instant under the two methods: the readings differ, and the
+    // zhirun chart says which term its ju was taken from.
+    await run(['chart', ...MOMENT, '--method', 'zhirun', '--lang', 'en']);
+
+    expect(out).toContain('zhirun');
+    expect(out).not.toContain('chaibu');
+  });
+
+  it('refuses a method it has never heard of', async () => {
+    const code = await run(['chart', ...MOMENT, '--method', 'zhirn', '--lang', 'en']);
+
+    expect(code).toBe(2);
+    expect(err).toContain('zhirn');
+  });
 });
 
 describe('bazi', () => {

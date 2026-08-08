@@ -229,6 +229,9 @@ export const it: Record<MessageKey, string> = {
   'form.dayBoundary': 'Il giorno comincia',
   'form.dayBoundary.zishi': 'all\'ora del Topo 子時, alle 23:00',
   'form.dayBoundary.midnight': 'a mezzanotte, alle 00:00',
+  'form.method': 'Il ju si determina',
+  'form.method.chaibu': 'per terzi del termine — chaibu 拆補',
+  'form.method.zhirun': 'per blocchi interi, con l\'intercalazione — zhirun 置閏',
   'form.gender': 'Sesso — ne dipende solo la direzione dei cicli decennali',
   'form.gender.unset': 'non indicato',
   'form.gender.male': 'maschile',
@@ -361,9 +364,10 @@ export const it: Record<MessageKey, string> = {
   'cli.value.nothingAnswered':
     "Nessun palazzo dell'intervallo risponde a quanto è stato chiesto. Questo dice che la disposizione non si è presentata, e nient'altro.",
   'cli.value.everyPalace': 'ogni palazzo, nessuna richiesta particolare',
+  'cli.value.leapTerm': '{term} intercalato',
 
-  'cli.note.methodOnly':
-    'Posta con il metodo chaibu. Altre scuole dispongono altre carte dallo stesso istante.',
+  'cli.note.method':
+    'Posta con il metodo {method}. Altre scuole dispongono altre carte dallo stesso istante.',
 
   'cli.error.unknownCommand': 'Comando "{command}" sconosciuto. Prova `qimen --help`.',
   'cli.error.unknownOption': 'Opzione "{option}" sconosciuta. Prova `qimen --help`.',

@@ -7,7 +7,13 @@
  * also a real surface, so it obeys the same rules as the others — it resolves
  * a locale, it translates by code, and it never interprets.
  */
-import { createTranslator, resolveLocale, type Locale, type MessageKey } from '@qimendunjia/i18n';
+import {
+  createTranslator,
+  resolveLocale,
+  type Locale,
+  type MessageKey,
+  type Translator,
+} from '@qimendunjia/i18n';
 import { computeBazi, type Gender } from './bazi/index.js';
 import {
   GATES,
@@ -66,6 +72,7 @@ interface Options {
   help: boolean;
   trueSolar?: boolean;
   dayBoundary?: string;
+  method?: string;
   until?: string;
   gate?: string;
   star?: string;
@@ -104,6 +111,7 @@ Narrowing a scan
   --without id,id        configurations that rule a palace out, e.g. kongwang
   --true-solar, --no-true-solar   default: on
   --day-boundary zishi|midnight   default: zishi
+  --method chaibu|zhirun          how the ju is determined; default: chaibu
   --lang en|it           default: the environment, then English
   --json                 the data, unformatted and untranslated
   --help
@@ -172,7 +180,7 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
   }
 
   const place = resolvePlace(options, input);
-  const chartOptions = resolveOptions(options);
+  const chartOptions = resolveOptions(options, t);
   const moment = resolveMoment(input, place, chartOptions, context);
 
   if (command === 'scan') {
@@ -340,11 +348,20 @@ function resolveCriteria(options: Options, t: ReturnType<typeof createTranslator
   return criteria;
 }
 
-function resolveOptions(options: Options): ChartOptions {
+function resolveOptions(options: Options, t: Translator): ChartOptions {
   const chartOptions: ChartOptions = { ...DEFAULT_OPTIONS };
   if (options.trueSolar !== undefined) chartOptions.trueSolarTime = options.trueSolar;
   if (options.dayBoundary === 'midnight' || options.dayBoundary === 'zishi') {
     chartOptions.dayBoundary = options.dayBoundary;
+  }
+  // Strict, unlike the two above: their misspellings fall back to a default
+  // that shows in the output, but a chart cast by the wrong method looks
+  // right and is not. maoshan passes through and the engine refuses it.
+  if (options.method !== undefined) {
+    if (options.method !== 'chaibu' && options.method !== 'zhirun' && options.method !== 'maoshan') {
+      throw new UsageError(t('cli.error.unknownValue', { option: '--method', value: options.method }));
+    }
+    chartOptions.method = options.method;
   }
   return chartOptions;
 }
@@ -360,6 +377,7 @@ const FLAGS: Record<string, keyof Options> = {
   '--gender': 'gender',
   '--lang': 'lang',
   '--day-boundary': 'dayBoundary',
+  '--method': 'method',
   '--until': 'until',
   '--gate': 'gate',
   '--star': 'star',
