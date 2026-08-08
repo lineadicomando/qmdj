@@ -201,12 +201,13 @@ function decadeInstrumentOf(ganzhiIndex: number): Stem {
   return STEMS.find((stem) => stem.id === order[Math.floor(ganzhiIndex / 10)]) as Stem;
 }
 
-export { determineJu, YUAN_HANZI, type Ju, type Yuan } from './ju.js';
+export { determineJu, YUAN_HANZI, YUAN_PINYIN, type Ju, type Yuan } from './ju.js';
 export {
   PATTERN_IDS,
   VALENCE_IDS,
   findPatterns,
   opposite,
+  patternName,
   unmetHour,
   valenceOf,
   type Pattern,

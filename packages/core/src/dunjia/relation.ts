@@ -27,14 +27,16 @@ export type RelationId = 'bihe' | 'shengwo' | 'wosheng' | 'kewo' | 'woke';
 export interface Relation {
   id: RelationId;
   hanzi: string;
+  /** The relation said aloud, e.g. `wǒkè`. */
+  pinyin: string;
 }
 
-const RELATION: Record<RelationId, string> = {
-  bihe: '比和',
-  shengwo: '生我',
-  wosheng: '我生',
-  kewo: '剋我',
-  woke: '我剋',
+const RELATION: Record<RelationId, { hanzi: string; pinyin: string }> = {
+  bihe: { hanzi: '比和', pinyin: 'bǐhé' },
+  shengwo: { hanzi: '生我', pinyin: 'shēngwǒ' },
+  wosheng: { hanzi: '我生', pinyin: 'wǒshēng' },
+  kewo: { hanzi: '剋我', pinyin: 'kèwǒ' },
+  woke: { hanzi: '我剋', pinyin: 'wǒkè' },
 };
 
 /** The same list at runtime, for the surfaces that have to offer it. */
@@ -48,7 +50,7 @@ export const RELATION_IDS: readonly RelationId[] = Object.keys(RELATION) as Rela
  */
 export function relationOf(mine: Element, ground: Element): Relation {
   const id = idOf(mine, ground);
-  return { id, hanzi: RELATION[id] };
+  return { id, ...RELATION[id] };
 }
 
 function idOf(mine: Element, ground: Element): RelationId {

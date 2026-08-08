@@ -93,6 +93,43 @@ tradition puts it in Kun with 甲.
 
 ---
 
+## The transliteration
+
+Every named thing in the engine carries a `pinyin` beside its `hanzi`: the
+stems and branches, the sixty pairs, the twenty-four terms, the nine palaces,
+the nine stars, the eight gates, the ten spirits, the configurations and their
+fortunes, the five relations, the five states of the season, the three yuan,
+the thirty images of 納音, the twelve stages and the ten gods.
+
+**This is not a quantity and nothing is computed from it.** It is here because
+it is data that was written by hand and can therefore be wrong, and a reader
+who does not read Chinese has no way to catch it — which is exactly the reader
+it exists for.
+
+It is **standard Hanyu Pinyin with tone marks**, one word per name, taken from
+the character readings in the *Xiandai Hanyu Cidian* / Unihan `kMandarin`
+tradition. The tones are the point: they carry what the identifiers had to
+drop, and they part the pairs the identifiers cannot — 戊 wù from 午 wǔ, 驚門
+jīngmén from 景門 jǐngmén.
+
+Where a name uses a character in other than its commonest reading, the choice
+is written next to the entry rather than left to be noticed:
+
+| Name | Reading | Not |
+|---|---|---|
+| 芒種 | mángzhòng | zhǒng, the seed |
+| 處暑 | chǔshǔ | chù, the place |
+| 乾 (the trigram) | qián | gān, dry |
+| 相 (of 旺相) | xiàng | xiāng, mutual |
+| 長生 | chángshēng | zhǎng, to grow |
+
+A sexagenary pair is **not** in any table: `ganzhiOf` joins its stem's reading
+to its branch's, because neither is read differently for standing next to the
+other. A test asserts that, and asserts that no named thing anywhere in the
+engine is missing its reading.
+
+---
+
 ## 十干克應 — what was checked, one pairing at a time
 
 The table has eighty-one cells: nine stems on the heaven plate over nine on

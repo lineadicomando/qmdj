@@ -10,6 +10,8 @@ export interface SolarTermDefinition {
   id: SolarTermId;
   /** The name. Not a translation — every reader expects to see it. */
   hanzi: string;
+  /** The name said aloud, tones and all, e.g. `lìchūn`. */
+  pinyin: string;
   /** Apparent solar longitude at which the term begins, in degrees. */
   longitude: number;
   /**
@@ -44,30 +46,32 @@ export type SolarTermId =
  * 0°, 15° … — the wrap past 0° sits inside the list, not at its edge.
  */
 export const SOLAR_TERMS: readonly SolarTermDefinition[] = [
-  { id: 'lichun', hanzi: '立春', longitude: 315, kind: 'jie', monthBranch: 2 },
-  { id: 'yushui', hanzi: '雨水', longitude: 330, kind: 'qi' },
-  { id: 'jingzhe', hanzi: '驚蟄', longitude: 345, kind: 'jie', monthBranch: 3 },
-  { id: 'chunfen', hanzi: '春分', longitude: 0, kind: 'qi' },
-  { id: 'qingming', hanzi: '清明', longitude: 15, kind: 'jie', monthBranch: 4 },
-  { id: 'guyu', hanzi: '穀雨', longitude: 30, kind: 'qi' },
-  { id: 'lixia', hanzi: '立夏', longitude: 45, kind: 'jie', monthBranch: 5 },
-  { id: 'xiaoman', hanzi: '小滿', longitude: 60, kind: 'qi' },
-  { id: 'mangzhong', hanzi: '芒種', longitude: 75, kind: 'jie', monthBranch: 6 },
-  { id: 'xiazhi', hanzi: '夏至', longitude: 90, kind: 'qi' },
-  { id: 'xiaoshu', hanzi: '小暑', longitude: 105, kind: 'jie', monthBranch: 7 },
-  { id: 'dashu', hanzi: '大暑', longitude: 120, kind: 'qi' },
-  { id: 'liqiu', hanzi: '立秋', longitude: 135, kind: 'jie', monthBranch: 8 },
-  { id: 'chushu', hanzi: '處暑', longitude: 150, kind: 'qi' },
-  { id: 'bailu', hanzi: '白露', longitude: 165, kind: 'jie', monthBranch: 9 },
-  { id: 'qiufen', hanzi: '秋分', longitude: 180, kind: 'qi' },
-  { id: 'hanlu', hanzi: '寒露', longitude: 195, kind: 'jie', monthBranch: 10 },
-  { id: 'shuangjiang', hanzi: '霜降', longitude: 210, kind: 'qi' },
-  { id: 'lidong', hanzi: '立冬', longitude: 225, kind: 'jie', monthBranch: 11 },
-  { id: 'xiaoxue', hanzi: '小雪', longitude: 240, kind: 'qi' },
-  { id: 'daxue', hanzi: '大雪', longitude: 255, kind: 'jie', monthBranch: 0 },
-  { id: 'dongzhi', hanzi: '冬至', longitude: 270, kind: 'qi' },
-  { id: 'xiaohan', hanzi: '小寒', longitude: 285, kind: 'jie', monthBranch: 1 },
-  { id: 'dahan', hanzi: '大寒', longitude: 300, kind: 'qi' },
+  { id: 'lichun', hanzi: '立春', pinyin: 'lìchūn', longitude: 315, kind: 'jie', monthBranch: 2 },
+  { id: 'yushui', hanzi: '雨水', pinyin: 'yǔshuǐ', longitude: 330, kind: 'qi' },
+  { id: 'jingzhe', hanzi: '驚蟄', pinyin: 'jīngzhé', longitude: 345, kind: 'jie', monthBranch: 3 },
+  { id: 'chunfen', hanzi: '春分', pinyin: 'chūnfēn', longitude: 0, kind: 'qi' },
+  { id: 'qingming', hanzi: '清明', pinyin: 'qīngmíng', longitude: 15, kind: 'jie', monthBranch: 4 },
+  { id: 'guyu', hanzi: '穀雨', pinyin: 'gǔyǔ', longitude: 30, kind: 'qi' },
+  { id: 'lixia', hanzi: '立夏', pinyin: 'lìxià', longitude: 45, kind: 'jie', monthBranch: 5 },
+  { id: 'xiaoman', hanzi: '小滿', pinyin: 'xiǎomǎn', longitude: 60, kind: 'qi' },
+  // 種 is zhòng here, the sowing and not the seed.
+  { id: 'mangzhong', hanzi: '芒種', pinyin: 'mángzhòng', longitude: 75, kind: 'jie', monthBranch: 6 },
+  { id: 'xiazhi', hanzi: '夏至', pinyin: 'xiàzhì', longitude: 90, kind: 'qi' },
+  { id: 'xiaoshu', hanzi: '小暑', pinyin: 'xiǎoshǔ', longitude: 105, kind: 'jie', monthBranch: 7 },
+  { id: 'dashu', hanzi: '大暑', pinyin: 'dàshǔ', longitude: 120, kind: 'qi' },
+  { id: 'liqiu', hanzi: '立秋', pinyin: 'lìqiū', longitude: 135, kind: 'jie', monthBranch: 8 },
+  // 處 is chǔ here, the stopping and not the place.
+  { id: 'chushu', hanzi: '處暑', pinyin: 'chǔshǔ', longitude: 150, kind: 'qi' },
+  { id: 'bailu', hanzi: '白露', pinyin: 'báilù', longitude: 165, kind: 'jie', monthBranch: 9 },
+  { id: 'qiufen', hanzi: '秋分', pinyin: 'qiūfēn', longitude: 180, kind: 'qi' },
+  { id: 'hanlu', hanzi: '寒露', pinyin: 'hánlù', longitude: 195, kind: 'jie', monthBranch: 10 },
+  { id: 'shuangjiang', hanzi: '霜降', pinyin: 'shuāngjiàng', longitude: 210, kind: 'qi' },
+  { id: 'lidong', hanzi: '立冬', pinyin: 'lìdōng', longitude: 225, kind: 'jie', monthBranch: 11 },
+  { id: 'xiaoxue', hanzi: '小雪', pinyin: 'xiǎoxuě', longitude: 240, kind: 'qi' },
+  { id: 'daxue', hanzi: '大雪', pinyin: 'dàxuě', longitude: 255, kind: 'jie', monthBranch: 0 },
+  { id: 'dongzhi', hanzi: '冬至', pinyin: 'dōngzhì', longitude: 270, kind: 'qi' },
+  { id: 'xiaohan', hanzi: '小寒', pinyin: 'xiǎohán', longitude: 285, kind: 'jie', monthBranch: 1 },
+  { id: 'dahan', hanzi: '大寒', pinyin: 'dàhán', longitude: 300, kind: 'qi' },
 ];
 
 /** An occurrence: a term, and the instant at which it began. */

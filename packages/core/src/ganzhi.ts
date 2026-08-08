@@ -8,6 +8,8 @@ export interface Stem {
   index: number;
   id: StemId;
   hanzi: string;
+  /** The name said aloud, e.g. `jiǎ`. Not a locale: see `pinyin` in the docs. */
+  pinyin: string;
   element: Element;
   yang: boolean;
 }
@@ -17,6 +19,8 @@ export interface Branch {
   index: number;
   id: BranchId;
   hanzi: string;
+  /** The name said aloud, e.g. `zǐ`. */
+  pinyin: string;
   element: Element;
   yang: boolean;
 }
@@ -32,34 +36,36 @@ export type BranchId =
  *
  * Note that stem 戊 and branch 午 are both `wu` once the tones are dropped.
  * They never share a field — a pillar has one of each — and a combined
- * identifier reads stem first, so `wuwu` is 戊午 and nothing else.
+ * identifier reads stem first, so `wuwu` is 戊午 and nothing else. The
+ * `pinyin` field is where the tone survives, and there it tells them apart:
+ * 戊 is wù and 午 is wǔ.
  */
 export const STEMS: readonly Stem[] = [
-  { index: 0, id: 'jia', hanzi: '甲', element: 'mu', yang: true },
-  { index: 1, id: 'yi', hanzi: '乙', element: 'mu', yang: false },
-  { index: 2, id: 'bing', hanzi: '丙', element: 'huo', yang: true },
-  { index: 3, id: 'ding', hanzi: '丁', element: 'huo', yang: false },
-  { index: 4, id: 'wu', hanzi: '戊', element: 'tu', yang: true },
-  { index: 5, id: 'ji', hanzi: '己', element: 'tu', yang: false },
-  { index: 6, id: 'geng', hanzi: '庚', element: 'jin', yang: true },
-  { index: 7, id: 'xin', hanzi: '辛', element: 'jin', yang: false },
-  { index: 8, id: 'ren', hanzi: '壬', element: 'shui', yang: true },
-  { index: 9, id: 'gui', hanzi: '癸', element: 'shui', yang: false },
+  { index: 0, id: 'jia', hanzi: '甲', pinyin: 'jiǎ', element: 'mu', yang: true },
+  { index: 1, id: 'yi', hanzi: '乙', pinyin: 'yǐ', element: 'mu', yang: false },
+  { index: 2, id: 'bing', hanzi: '丙', pinyin: 'bǐng', element: 'huo', yang: true },
+  { index: 3, id: 'ding', hanzi: '丁', pinyin: 'dīng', element: 'huo', yang: false },
+  { index: 4, id: 'wu', hanzi: '戊', pinyin: 'wù', element: 'tu', yang: true },
+  { index: 5, id: 'ji', hanzi: '己', pinyin: 'jǐ', element: 'tu', yang: false },
+  { index: 6, id: 'geng', hanzi: '庚', pinyin: 'gēng', element: 'jin', yang: true },
+  { index: 7, id: 'xin', hanzi: '辛', pinyin: 'xīn', element: 'jin', yang: false },
+  { index: 8, id: 'ren', hanzi: '壬', pinyin: 'rén', element: 'shui', yang: true },
+  { index: 9, id: 'gui', hanzi: '癸', pinyin: 'guǐ', element: 'shui', yang: false },
 ];
 
 export const BRANCHES: readonly Branch[] = [
-  { index: 0, id: 'zi', hanzi: '子', element: 'shui', yang: true },
-  { index: 1, id: 'chou', hanzi: '丑', element: 'tu', yang: false },
-  { index: 2, id: 'yin', hanzi: '寅', element: 'mu', yang: true },
-  { index: 3, id: 'mao', hanzi: '卯', element: 'mu', yang: false },
-  { index: 4, id: 'chen', hanzi: '辰', element: 'tu', yang: true },
-  { index: 5, id: 'si', hanzi: '巳', element: 'huo', yang: false },
-  { index: 6, id: 'wu', hanzi: '午', element: 'huo', yang: true },
-  { index: 7, id: 'wei', hanzi: '未', element: 'tu', yang: false },
-  { index: 8, id: 'shen', hanzi: '申', element: 'jin', yang: true },
-  { index: 9, id: 'you', hanzi: '酉', element: 'jin', yang: false },
-  { index: 10, id: 'xu', hanzi: '戌', element: 'tu', yang: true },
-  { index: 11, id: 'hai', hanzi: '亥', element: 'shui', yang: false },
+  { index: 0, id: 'zi', hanzi: '子', pinyin: 'zǐ', element: 'shui', yang: true },
+  { index: 1, id: 'chou', hanzi: '丑', pinyin: 'chǒu', element: 'tu', yang: false },
+  { index: 2, id: 'yin', hanzi: '寅', pinyin: 'yín', element: 'mu', yang: true },
+  { index: 3, id: 'mao', hanzi: '卯', pinyin: 'mǎo', element: 'mu', yang: false },
+  { index: 4, id: 'chen', hanzi: '辰', pinyin: 'chén', element: 'tu', yang: true },
+  { index: 5, id: 'si', hanzi: '巳', pinyin: 'sì', element: 'huo', yang: false },
+  { index: 6, id: 'wu', hanzi: '午', pinyin: 'wǔ', element: 'huo', yang: true },
+  { index: 7, id: 'wei', hanzi: '未', pinyin: 'wèi', element: 'tu', yang: false },
+  { index: 8, id: 'shen', hanzi: '申', pinyin: 'shēn', element: 'jin', yang: true },
+  { index: 9, id: 'you', hanzi: '酉', pinyin: 'yǒu', element: 'jin', yang: false },
+  { index: 10, id: 'xu', hanzi: '戌', pinyin: 'xū', element: 'tu', yang: true },
+  { index: 11, id: 'hai', hanzi: '亥', pinyin: 'hài', element: 'shui', yang: false },
 ];
 
 /**
@@ -75,6 +81,8 @@ export interface Ganzhi {
   branch: Branch;
   /** e.g. `甲子`. Travels in the output whatever the locale. */
   hanzi: string;
+  /** e.g. `jiǎzǐ` — the two read as the one name they are. */
+  pinyin: string;
   /** e.g. `jiazi`. */
   id: string;
 }
@@ -88,6 +96,9 @@ export function ganzhiOf(index: number): Ganzhi {
     stem,
     branch,
     hanzi: `${stem.hanzi}${branch.hanzi}`,
+    // Joined rather than written out again: a pair is its two characters and
+    // neither of them is read differently for standing next to the other.
+    pinyin: `${stem.pinyin}${branch.pinyin}`,
     id: `${stem.id}${branch.id}`,
   };
 }

@@ -58,12 +58,14 @@ export type ValenceId = 'ji' | 'xiong' | 'jixiong';
 export interface Valence {
   id: ValenceId;
   hanzi: string;
+  /** The fortune said aloud, e.g. `jí`. */
+  pinyin: string;
 }
 
 const VALENCE: Record<ValenceId, Valence> = {
-  ji: { id: 'ji', hanzi: '吉' },
-  xiong: { id: 'xiong', hanzi: '凶' },
-  jixiong: { id: 'jixiong', hanzi: '吉凶' },
+  ji: { id: 'ji', hanzi: '吉', pinyin: 'jí' },
+  xiong: { id: 'xiong', hanzi: '凶', pinyin: 'xiōng' },
+  jixiong: { id: 'jixiong', hanzi: '吉凶', pinyin: 'jíxiōng' },
 };
 
 /**
@@ -75,25 +77,25 @@ const VALENCE: Record<ValenceId, Valence> = {
  * 凶格落空則凶不成, a baleful configuration fallen into the void does not
  * come off either. Two transmitted halves of one rule, not two schools.
  */
-const CONFIGURATIONS: Record<PatternId, { hanzi: string; valence: ValenceId }> = {
-  kongwang: { hanzi: '空亡', valence: 'jixiong' },
-  rumu: { hanzi: '入墓', valence: 'xiong' },
-  menpo: { hanzi: '門迫', valence: 'xiong' },
-  jixing: { hanzi: '擊刑', valence: 'xiong' },
-  fuyin: { hanzi: '伏吟', valence: 'xiong' },
-  fanyin: { hanzi: '反吟', valence: 'xiong' },
-  wubuyu: { hanzi: '五不遇時', valence: 'xiong' },
-  qinglongfanshou: { hanzi: '青龍返首', valence: 'ji' },
-  feiniaodiexue: { hanzi: '飛鳥跌穴', valence: 'ji' },
-  taibairuying: { hanzi: '太白入熒', valence: 'xiong' },
-  yingrutaibai: { hanzi: '熒入太白', valence: 'xiong' },
-  dage: { hanzi: '大格', valence: 'xiong' },
-  xingge: { hanzi: '刑格', valence: 'xiong' },
-  zhange: { hanzi: '戰格', valence: 'xiong' },
-  tengsheyaojiao: { hanzi: '螣蛇夭矯', valence: 'xiong' },
-  zhuquetoujiang: { hanzi: '朱雀投江', valence: 'xiong' },
-  qinglongtaozou: { hanzi: '青龍逃走', valence: 'xiong' },
-  baihuchangkuang: { hanzi: '白虎猖狂', valence: 'xiong' },
+const CONFIGURATIONS: Record<PatternId, { hanzi: string; pinyin: string; valence: ValenceId }> = {
+  kongwang: { hanzi: '空亡', pinyin: 'kōngwáng', valence: 'jixiong' },
+  rumu: { hanzi: '入墓', pinyin: 'rùmù', valence: 'xiong' },
+  menpo: { hanzi: '門迫', pinyin: 'ménpò', valence: 'xiong' },
+  jixing: { hanzi: '擊刑', pinyin: 'jīxíng', valence: 'xiong' },
+  fuyin: { hanzi: '伏吟', pinyin: 'fúyín', valence: 'xiong' },
+  fanyin: { hanzi: '反吟', pinyin: 'fǎnyín', valence: 'xiong' },
+  wubuyu: { hanzi: '五不遇時', pinyin: 'wǔbùyùshí', valence: 'xiong' },
+  qinglongfanshou: { hanzi: '青龍返首', pinyin: 'qīnglóngfǎnshǒu', valence: 'ji' },
+  feiniaodiexue: { hanzi: '飛鳥跌穴', pinyin: 'fēiniǎodiēxué', valence: 'ji' },
+  taibairuying: { hanzi: '太白入熒', pinyin: 'tàibáirùyíng', valence: 'xiong' },
+  yingrutaibai: { hanzi: '熒入太白', pinyin: 'yíngrùtàibái', valence: 'xiong' },
+  dage: { hanzi: '大格', pinyin: 'dàgé', valence: 'xiong' },
+  xingge: { hanzi: '刑格', pinyin: 'xínggé', valence: 'xiong' },
+  zhange: { hanzi: '戰格', pinyin: 'zhàngé', valence: 'xiong' },
+  tengsheyaojiao: { hanzi: '螣蛇夭矯', pinyin: 'téngshéyāojiǎo', valence: 'xiong' },
+  zhuquetoujiang: { hanzi: '朱雀投江', pinyin: 'zhūquètóujiāng', valence: 'xiong' },
+  qinglongtaozou: { hanzi: '青龍逃走', pinyin: 'qīnglóngtáozǒu', valence: 'xiong' },
+  baihuchangkuang: { hanzi: '白虎猖狂', pinyin: 'báihǔchāngkuáng', valence: 'xiong' },
 };
 
 /**
@@ -121,6 +123,18 @@ export function valenceOf(id: PatternId): Valence {
 }
 
 /**
+ * The name of a configuration, without waiting for one to occur.
+ *
+ * The companion of `valenceOf`, and there for the same reason it is: a legend
+ * has to write 空亡 before any chart has fallen into it. 青龍返首 occurs too
+ * rarely to read its own name off an occurrence.
+ */
+export function patternName(id: PatternId): { hanzi: string; pinyin: string } {
+  const { hanzi, pinyin } = CONFIGURATIONS[id];
+  return { hanzi, pinyin };
+}
+
+/**
  * A configuration the chart has fallen into.
  *
  * Each is **checkable off the plates**: that a gate stands in a palace whose
@@ -133,6 +147,8 @@ export function valenceOf(id: PatternId): Valence {
 export interface Pattern {
   id: PatternId;
   hanzi: string;
+  /** The name said aloud, e.g. `qīnglóngfǎnshǒu`. */
+  pinyin: string;
   /** 吉, 凶, or both, as the sources hand it down. */
   valence: Valence;
   /** The palace it occurs in. Absent when it is a property of the whole chart. */
@@ -142,9 +158,12 @@ export interface Pattern {
 }
 
 /** A configuration, named and weighed from the one table that holds both. */
-function mark(id: PatternId, rest: Omit<Pattern, 'id' | 'hanzi' | 'valence'> = {}): Pattern {
-  const { hanzi, valence } = CONFIGURATIONS[id];
-  return { id, hanzi, valence: VALENCE[valence], ...rest };
+function mark(
+  id: PatternId,
+  rest: Omit<Pattern, 'id' | 'hanzi' | 'pinyin' | 'valence'> = {},
+): Pattern {
+  const { hanzi, pinyin, valence } = CONFIGURATIONS[id];
+  return { id, hanzi, pinyin, valence: VALENCE[valence], ...rest };
 }
 
 /** The palace facing another across the board. The centre faces nothing. */

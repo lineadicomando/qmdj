@@ -11,6 +11,12 @@ export const YUAN_HANZI: Record<Yuan, string> = {
   xia: '下元',
 };
 
+export const YUAN_PINYIN: Record<Yuan, string> = {
+  shang: 'shàngyuán',
+  zhong: 'zhōngyuán',
+  xia: 'xiàyuán',
+};
+
 export interface Ju {
   /** `true` for 陽遁, the half of the year running from the winter solstice. */
   yang: boolean;
@@ -24,7 +30,7 @@ export interface Ju {
    * The term whose ju was taken. Under chaibu, always the term in force;
    * under zhirun's 超神 it can be a term that has not yet begun.
    */
-  term: { id: SolarTermId; hanzi: string };
+  term: { id: SolarTermId; hanzi: string; pinyin: string };
   /** True inside an intercalated block (閏), which repeats 芒種 or 大雪. */
   leap: boolean;
 }
@@ -108,7 +114,11 @@ export function determineJu(moment: Moment, options: ChartOptions): Ju {
       number: entry.ju[assignment.yuanIndex] as number,
       yuan: YUAN_ORDER[assignment.yuanIndex] as Yuan,
       daysIntoTerm,
-      term: { id: assignment.term, hanzi: definition?.hanzi as string },
+      term: {
+        id: assignment.term,
+        hanzi: definition?.hanzi as string,
+        pinyin: definition?.pinyin as string,
+      },
       leap: assignment.leap,
     };
   }
@@ -125,7 +135,11 @@ export function determineJu(moment: Moment, options: ChartOptions): Ju {
     number: entry.ju[index] as number,
     yuan: YUAN_ORDER[index] as Yuan,
     daysIntoTerm,
-    term: { id: moment.solarTerm.term.id, hanzi: moment.solarTerm.term.hanzi },
+    term: {
+      id: moment.solarTerm.term.id,
+      hanzi: moment.solarTerm.term.hanzi,
+      pinyin: moment.solarTerm.term.pinyin,
+    },
     leap: false,
   };
 }

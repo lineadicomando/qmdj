@@ -17,6 +17,8 @@ import {
 export interface Star {
   id: StarId;
   hanzi: string;
+  /** The name said aloud, e.g. `tiānpéng`. */
+  pinyin: string;
   /** Luoshu number of the palace the star sits in at rest. */
   home: number;
 }
@@ -26,27 +28,30 @@ export type StarId =
   | 'tianxin' | 'tianzhu' | 'tianren' | 'tianying';
 
 export const STARS: readonly Star[] = [
-  { id: 'tianpeng', hanzi: '天蓬', home: 1 },
-  { id: 'tianrui', hanzi: '天芮', home: 2 },
-  { id: 'tianchong', hanzi: '天沖', home: 3 },
-  { id: 'tianfu', hanzi: '天輔', home: 4 },
-  { id: 'tianqin', hanzi: '天禽', home: 5 },
-  { id: 'tianxin', hanzi: '天心', home: 6 },
-  { id: 'tianzhu', hanzi: '天柱', home: 7 },
-  { id: 'tianren', hanzi: '天任', home: 8 },
-  { id: 'tianying', hanzi: '天英', home: 9 },
+  { id: 'tianpeng', hanzi: '天蓬', pinyin: 'tiānpéng', home: 1 },
+  { id: 'tianrui', hanzi: '天芮', pinyin: 'tiānruì', home: 2 },
+  { id: 'tianchong', hanzi: '天沖', pinyin: 'tiānchōng', home: 3 },
+  { id: 'tianfu', hanzi: '天輔', pinyin: 'tiānfǔ', home: 4 },
+  { id: 'tianqin', hanzi: '天禽', pinyin: 'tiānqín', home: 5 },
+  { id: 'tianxin', hanzi: '天心', pinyin: 'tiānxīn', home: 6 },
+  { id: 'tianzhu', hanzi: '天柱', pinyin: 'tiānzhù', home: 7 },
+  { id: 'tianren', hanzi: '天任', pinyin: 'tiānrèn', home: 8 },
+  { id: 'tianying', hanzi: '天英', pinyin: 'tiānyīng', home: 9 },
 ];
 
 /**
  * The eight gates.
  *
  * Two of them collide once the tones are dropped — 驚門 is jīng and 景門 is
- * jǐng — so those two, and only those two, carry the tone number. Everything
- * else in the project stays toneless.
+ * jǐng — so those two, and only those two, carry the tone number in their
+ * identifier. Every other identifier in the project stays toneless; `pinyin`
+ * is where the tone is kept for all of them, and is what a reader is shown.
  */
 export interface Gate {
   id: GateId;
   hanzi: string;
+  /** The name said aloud. Where the identifiers collide, this is what parts them. */
+  pinyin: string;
   /** Luoshu number of the palace the gate belongs to at rest. */
   home: number;
 }
@@ -57,19 +62,21 @@ export type GateId =
 
 /** At rest, in the order the gates are always recited and always laid out. */
 export const GATES: readonly Gate[] = [
-  { id: 'xiumen', hanzi: '休門', home: 1 },
-  { id: 'shengmen', hanzi: '生門', home: 8 },
-  { id: 'shangmen', hanzi: '傷門', home: 3 },
-  { id: 'dumen', hanzi: '杜門', home: 4 },
-  { id: 'jing3men', hanzi: '景門', home: 9 },
-  { id: 'simen', hanzi: '死門', home: 2 },
-  { id: 'jing1men', hanzi: '驚門', home: 7 },
-  { id: 'kaimen', hanzi: '開門', home: 6 },
+  { id: 'xiumen', hanzi: '休門', pinyin: 'xiūmén', home: 1 },
+  { id: 'shengmen', hanzi: '生門', pinyin: 'shēngmén', home: 8 },
+  { id: 'shangmen', hanzi: '傷門', pinyin: 'shāngmén', home: 3 },
+  { id: 'dumen', hanzi: '杜門', pinyin: 'dùmén', home: 4 },
+  { id: 'jing3men', hanzi: '景門', pinyin: 'jǐngmén', home: 9 },
+  { id: 'simen', hanzi: '死門', pinyin: 'sǐmén', home: 2 },
+  { id: 'jing1men', hanzi: '驚門', pinyin: 'jīngmén', home: 7 },
+  { id: 'kaimen', hanzi: '開門', pinyin: 'kāimén', home: 6 },
 ];
 
 export interface Spirit {
   id: SpiritId;
   hanzi: string;
+  /** The name said aloud, e.g. `zhífú`. */
+  pinyin: string;
 }
 
 export type SpiritId =
@@ -86,25 +93,25 @@ export type SpiritId =
  * pair throughout, which is a divergence this engine does not yet expose.
  */
 export const SPIRITS_YANG: readonly Spirit[] = [
-  { id: 'zhifu', hanzi: '值符' },
-  { id: 'tengshe', hanzi: '滕蛇' },
-  { id: 'taiyin', hanzi: '太陰' },
-  { id: 'liuhe', hanzi: '六合' },
-  { id: 'gouchen', hanzi: '勾陳' },
-  { id: 'zhuque', hanzi: '朱雀' },
-  { id: 'jiudi', hanzi: '九地' },
-  { id: 'jiutian', hanzi: '九天' },
+  { id: 'zhifu', hanzi: '值符', pinyin: 'zhífú' },
+  { id: 'tengshe', hanzi: '滕蛇', pinyin: 'téngshé' },
+  { id: 'taiyin', hanzi: '太陰', pinyin: 'tàiyīn' },
+  { id: 'liuhe', hanzi: '六合', pinyin: 'liùhé' },
+  { id: 'gouchen', hanzi: '勾陳', pinyin: 'gōuchén' },
+  { id: 'zhuque', hanzi: '朱雀', pinyin: 'zhūquè' },
+  { id: 'jiudi', hanzi: '九地', pinyin: 'jiǔdì' },
+  { id: 'jiutian', hanzi: '九天', pinyin: 'jiǔtiān' },
 ];
 
 export const SPIRITS_YIN: readonly Spirit[] = [
-  { id: 'zhifu', hanzi: '值符' },
-  { id: 'tengshe', hanzi: '滕蛇' },
-  { id: 'taiyin', hanzi: '太陰' },
-  { id: 'liuhe', hanzi: '六合' },
-  { id: 'baihu', hanzi: '白虎' },
-  { id: 'xuanwu', hanzi: '玄武' },
-  { id: 'jiudi', hanzi: '九地' },
-  { id: 'jiutian', hanzi: '九天' },
+  { id: 'zhifu', hanzi: '值符', pinyin: 'zhífú' },
+  { id: 'tengshe', hanzi: '滕蛇', pinyin: 'téngshé' },
+  { id: 'taiyin', hanzi: '太陰', pinyin: 'tàiyīn' },
+  { id: 'liuhe', hanzi: '六合', pinyin: 'liùhé' },
+  { id: 'baihu', hanzi: '白虎', pinyin: 'báihǔ' },
+  { id: 'xuanwu', hanzi: '玄武', pinyin: 'xuánwǔ' },
+  { id: 'jiudi', hanzi: '九地', pinyin: 'jiǔdì' },
+  { id: 'jiutian', hanzi: '九天', pinyin: 'jiǔtiān' },
 ];
 
 /**

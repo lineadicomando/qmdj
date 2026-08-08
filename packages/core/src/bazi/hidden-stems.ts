@@ -56,23 +56,25 @@ export type TwelveStageId =
 export interface TwelveStage {
   id: TwelveStageId;
   hanzi: string;
+  /** The stage said aloud, e.g. `chángshēng` — 長 is cháng, the long. */
+  pinyin: string;
   /** Position in the cycle, 0 at 長生. */
   index: number;
 }
 
-const STAGES: [TwelveStageId, string][] = [
-  ['changsheng', '長生'],
-  ['muyu', '沐浴'],
-  ['guandai', '冠帶'],
-  ['linguan', '臨官'],
-  ['diwang', '帝旺'],
-  ['shuai', '衰'],
-  ['bing', '病'],
-  ['si', '死'],
-  ['mu', '墓'],
-  ['jue', '絕'],
-  ['tai', '胎'],
-  ['yang', '養'],
+const STAGES: [TwelveStageId, string, string][] = [
+  ['changsheng', '長生', 'chángshēng'],
+  ['muyu', '沐浴', 'mùyù'],
+  ['guandai', '冠帶', 'guāndài'],
+  ['linguan', '臨官', 'línguān'],
+  ['diwang', '帝旺', 'dìwàng'],
+  ['shuai', '衰', 'shuāi'],
+  ['bing', '病', 'bìng'],
+  ['si', '死', 'sǐ'],
+  ['mu', '墓', 'mù'],
+  ['jue', '絕', 'jué'],
+  ['tai', '胎', 'tāi'],
+  ['yang', '養', 'yǎng'],
 ];
 
 /** The branch at which each stem is born, indexed by stem. */
@@ -91,6 +93,6 @@ export function twelveStage(stem: Stem, branch: Branch): TwelveStage {
   const birth = BIRTH_BRANCH[stem.index] as number;
   const steps = stem.yang ? branch.index - birth : birth - branch.index;
   const index = ((steps % 12) + 12) % 12;
-  const [id, hanzi] = STAGES[index] as [TwelveStageId, string];
-  return { id, hanzi, index };
+  const [id, hanzi, pinyin] = STAGES[index] as [TwelveStageId, string, string];
+  return { id, hanzi, pinyin, index };
 }

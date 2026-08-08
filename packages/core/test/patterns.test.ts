@@ -243,11 +243,11 @@ describe('what the configurations are, and are not', () => {
     // 空亡 is the only one of the nine that takes both, and that is transmitted
     // rather than hedged: the void withholds, which is a loss or a reprieve
     // according to what fell into it, and the engine does not decide which.
-    expect(valenceOf('kongwang')).toEqual({ id: 'jixiong', hanzi: '吉凶' });
-    expect(valenceOf('qinglongfanshou')).toEqual({ id: 'ji', hanzi: '吉' });
-    expect(valenceOf('feiniaodiexue')).toEqual({ id: 'ji', hanzi: '吉' });
+    expect(valenceOf('kongwang')).toEqual({ id: 'jixiong', hanzi: '吉凶', pinyin: 'jíxiōng' });
+    expect(valenceOf('qinglongfanshou')).toEqual({ id: 'ji', hanzi: '吉', pinyin: 'jí' });
+    expect(valenceOf('feiniaodiexue')).toEqual({ id: 'ji', hanzi: '吉', pinyin: 'jí' });
     for (const id of ['rumu', 'menpo', 'jixing', 'fuyin', 'fanyin', 'wubuyu'] as const) {
-      expect(valenceOf(id)).toEqual({ id: 'xiong', hanzi: '凶' });
+      expect(valenceOf(id)).toEqual({ id: 'xiong', hanzi: '凶', pinyin: 'xiōng' });
     }
 
     // Total: a configuration added without a fortune must not slip through.

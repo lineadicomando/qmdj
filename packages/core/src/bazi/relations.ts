@@ -45,19 +45,21 @@ export type TenGodId =
 export interface TenGod {
   id: TenGodId;
   hanzi: string;
+  /** The god said aloud, e.g. `bǐjiān`. */
+  pinyin: string;
 }
 
-const TEN_GODS: Record<TenGodId, string> = {
-  bijian: '比肩',
-  jiecai: '劫財',
-  shishen: '食神',
-  shangguan: '傷官',
-  piancai: '偏財',
-  zhengcai: '正財',
-  qisha: '七殺',
-  zhengguan: '正官',
-  pianyin: '偏印',
-  zhengyin: '正印',
+const TEN_GODS: Record<TenGodId, { hanzi: string; pinyin: string }> = {
+  bijian: { hanzi: '比肩', pinyin: 'bǐjiān' },
+  jiecai: { hanzi: '劫財', pinyin: 'jiécái' },
+  shishen: { hanzi: '食神', pinyin: 'shíshén' },
+  shangguan: { hanzi: '傷官', pinyin: 'shāngguān' },
+  piancai: { hanzi: '偏財', pinyin: 'piāncái' },
+  zhengcai: { hanzi: '正財', pinyin: 'zhèngcái' },
+  qisha: { hanzi: '七殺', pinyin: 'qīshā' },
+  zhengguan: { hanzi: '正官', pinyin: 'zhèngguān' },
+  pianyin: { hanzi: '偏印', pinyin: 'piānyìn' },
+  zhengyin: { hanzi: '正印', pinyin: 'zhèngyìn' },
 };
 
 /**
@@ -71,7 +73,7 @@ const TEN_GODS: Record<TenGodId, string> = {
 export function tenGod(dayMaster: Stem, other: Stem): TenGod {
   const same = dayMaster.yang === other.yang;
   const id = relationId(dayMaster.element, other.element, same);
-  return { id, hanzi: TEN_GODS[id] };
+  return { id, ...TEN_GODS[id] };
 }
 
 function relationId(master: Element, other: Element, samePolarity: boolean): TenGodId {

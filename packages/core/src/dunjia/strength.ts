@@ -7,14 +7,18 @@ export type StrengthId = 'wang' | 'xiang' | 'xiu' | 'qiu' | 'si';
 export interface Strength {
   id: StrengthId;
   hanzi: string;
+  /** The state said aloud, e.g. `wàng`. */
+  pinyin: string;
 }
 
-const STRENGTH: Record<StrengthId, string> = {
-  wang: '旺',
-  xiang: '相',
-  xiu: '休',
-  qiu: '囚',
-  si: '死',
+// 相 is xiàng in this list — the supported state, not the xiāng of "each
+// other". The identifier drops the tone and cannot say which; this can.
+const STRENGTH: Record<StrengthId, { hanzi: string; pinyin: string }> = {
+  wang: { hanzi: '旺', pinyin: 'wàng' },
+  xiang: { hanzi: '相', pinyin: 'xiàng' },
+  xiu: { hanzi: '休', pinyin: 'xiū' },
+  qiu: { hanzi: '囚', pinyin: 'qiú' },
+  si: { hanzi: '死', pinyin: 'sǐ' },
 };
 
 /**
@@ -59,7 +63,7 @@ export function seasonElement(monthBranch: Branch): Element {
  */
 export function strengthOf(element: Element, season: Element): Strength {
   const id = idOf(element, season);
-  return { id, hanzi: STRENGTH[id] };
+  return { id, ...STRENGTH[id] };
 }
 
 function idOf(element: Element, season: Element): StrengthId {

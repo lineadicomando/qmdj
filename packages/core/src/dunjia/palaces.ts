@@ -15,6 +15,8 @@ export interface Palace {
   id: PalaceId;
   /** The trigram, e.g. `坎`. */
   hanzi: string;
+  /** The trigram said aloud, e.g. `kǎn`. */
+  pinyin: string;
   element: Element;
   /** Compass direction, `null` for the centre, which has none. */
   direction: Direction | null;
@@ -27,16 +29,18 @@ export type Direction = 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw';
 /** The eight, going round from the north. The centre is not one of them. */
 export const DIRECTIONS: readonly Direction[] = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'];
 
+// 乾 is qián, the trigram — not the gān that means dry. The identifier had
+// already made the choice; the transliteration only makes it visible.
 export const PALACES: readonly Palace[] = [
-  { number: 1, id: 'kan', hanzi: '坎', element: 'shui', direction: 'n' },
-  { number: 2, id: 'kun', hanzi: '坤', element: 'tu', direction: 'sw' },
-  { number: 3, id: 'zhen', hanzi: '震', element: 'mu', direction: 'e' },
-  { number: 4, id: 'xun', hanzi: '巽', element: 'mu', direction: 'se' },
-  { number: 5, id: 'zhong', hanzi: '中', element: 'tu', direction: null },
-  { number: 6, id: 'qian', hanzi: '乾', element: 'jin', direction: 'nw' },
-  { number: 7, id: 'dui', hanzi: '兌', element: 'jin', direction: 'w' },
-  { number: 8, id: 'gen', hanzi: '艮', element: 'tu', direction: 'ne' },
-  { number: 9, id: 'li', hanzi: '離', element: 'huo', direction: 's' },
+  { number: 1, id: 'kan', hanzi: '坎', pinyin: 'kǎn', element: 'shui', direction: 'n' },
+  { number: 2, id: 'kun', hanzi: '坤', pinyin: 'kūn', element: 'tu', direction: 'sw' },
+  { number: 3, id: 'zhen', hanzi: '震', pinyin: 'zhèn', element: 'mu', direction: 'e' },
+  { number: 4, id: 'xun', hanzi: '巽', pinyin: 'xùn', element: 'mu', direction: 'se' },
+  { number: 5, id: 'zhong', hanzi: '中', pinyin: 'zhōng', element: 'tu', direction: null },
+  { number: 6, id: 'qian', hanzi: '乾', pinyin: 'qián', element: 'jin', direction: 'nw' },
+  { number: 7, id: 'dui', hanzi: '兌', pinyin: 'duì', element: 'jin', direction: 'w' },
+  { number: 8, id: 'gen', hanzi: '艮', pinyin: 'gèn', element: 'tu', direction: 'ne' },
+  { number: 9, id: 'li', hanzi: '離', pinyin: 'lí', element: 'huo', direction: 's' },
 ];
 
 export function palace(number: number): Palace {
