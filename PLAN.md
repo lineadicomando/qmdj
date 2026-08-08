@@ -326,7 +326,12 @@ was written. **三奇得使 is deliberately absent** for that reason.
 
 Still to come: the two methods that are not `chaibu`. `determineJu` throws
 `METHOD_NOT_IMPLEMENTED` for them rather than quietly substituting, because a
-chart cast by the wrong method looks right and is not.
+chart cast by the wrong method looks right and is not. The same refusal now
+covers the flying plate and the systems beyond 時家: `plate` and `system`
+stood in the type from day one, as § 3 requires, but the engine never read
+either field — a caller asking for a flying plate received a rotating chart
+with `fei` written on it. `computeQimenChart` throws `OPTION_NOT_IMPLEMENTED`
+for both.
 
 Three findings from the reading layer:
 
@@ -618,13 +623,19 @@ provides.
   from one: a direction, a floor under the strength, an exclusion. A test
   asserted the opposite before the engine corrected it.
 
-**No table of purposes**, deliberately. The transmitted mapping from an
-undertaking to its 用神 — the open gate for negotiation, the life gate for
-money — varies by school, and putting one in the engine would make a school
-implicit in it. It belongs in a table with its sources declared and there is
-no such table yet; 三奇得使 is the precedent for saying so rather than
-guessing. The criteria are the layer underneath, so it can be added later
-without moving anything.
+**The table of purposes came later, and smaller than the doctrine.** This
+phase first shipped without one, because the transmitted mapping from an
+undertaking to its 用神 varies by school, and a table in the engine makes a
+school implicit. What `purposes.ts` now carries is the part the manuals do
+not dispute: the eight gates and their errands, a bijection, expanded by
+`purposeCriteria` into criteria a caller could have written by hand —
+`matchRuns` never hears of a purpose, and nothing is applied where it cannot
+be seen or edited. Everything past the gates — the stems as significators,
+the stars, the spirits — stays out, for the original reason; 三奇得使 remains
+the precedent for saying so rather than guessing. A second tradition of
+associations, if one arrives, is a second table behind a `tradition`
+parameter, and no shared link breaks: a purpose is not in a chart's address,
+the criteria it expands to are.
 
 **The natal question is not answered here and was never meant to be.**
 Comparing a birth chart against the chart of a moment is a modern and
@@ -654,16 +665,32 @@ if it ever comes, is a criterion like the others.
      拆補轉盤. It emits the ju, the 旬首 and 符首, the 值符 and 值使 with
      their palaces, and all four plates across the nine palaces. It builds its
      pillars on `lunar-javascript`, which phases 1 and 2 already agree with.
-   - `kinqimen` (PyPI) covers 拆補 *and* 置閏 and would be the better
-     reference, but it does not install: its `sxtwl` dependency fails to
-     compile on every Python from 3.9 to 3.14 available here.
+   - `kinqimen` (PyPI, 0.0.6.6) covers 拆補 *and* 置閏, plus 金函玉鏡 (日家)
+     and 刻家. It **does install under Python 3.9** — `sxtwl` and `ephem`
+     ship prebuilt wheels for it, while the source build still fails on
+     everything newer — and it runs once the package directory is put on
+     `sys.path`, because `kinqimen.py` says `import config` where it means
+     its own module. Re-verified 2026-08-08.
+
+     Runnable is not the same as agreeing: **its 拆補 is a different 拆補.**
+     `kinqimen` assigns the yuan from the day's 符頭 — a 己卯 day opens an
+     upper yuan wherever it falls in the term — where `qimen-dunjia`, and
+     this engine with it, split the term into three five-day thirds from the
+     instant it begins. For 2026-09-02 11:00 in Beijing the two return
+     陰遁一局上元 and 陰遁七局下元 from the same instant, each internally
+     consistent. So the method the two references share by name they do not
+     share in fact, and a `zhirun` implementation checked against `kinqimen`
+     inherits its futou-based reading of the yuan with it. That is a school
+     divergence inside `chaibu` itself; if both readings are ever shipped,
+     the split is a new explicit parameter, not a correction.
 
    **The weight of this evidence is not the weight of phase 1's.** An almanac
    encodes published astronomical fact; a Qi Men implementation encodes one
    author's reading of a contested tradition. Agreement with `qimen-dunjia`
    means "consistent with a common implementation", never "verified". It also
-   covers only 拆補: 置閏 and 茅山 have no reference at all, and shipping them
-   means shipping something unfalsified. Say so at the surface.
+   covers only 拆補. 置閏 now has a runnable reference in `kinqimen` — see
+   below, and weigh it the same way; 茅山 has no reference at all, and
+   shipping it means shipping something unfalsified. Say so at the surface.
 
    Two known defects in that reference, for whoever uses it: its 局數 table is
    keyed in traditional characters while it reads term names from
