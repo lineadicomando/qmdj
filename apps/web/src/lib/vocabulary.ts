@@ -106,15 +106,15 @@ export const DIRECTIONS = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'] as const;
  * `DIRECTIONS` is eight and this is nine.
  */
 export const PALACES = [
-  { number: 1, id: 'kan', hanzi: '坎', direction: 'n' },
-  { number: 2, id: 'kun', hanzi: '坤', direction: 'sw' },
-  { number: 3, id: 'zhen', hanzi: '震', direction: 'e' },
-  { number: 4, id: 'xun', hanzi: '巽', direction: 'se' },
-  { number: 5, id: 'zhong', hanzi: '中', direction: null },
-  { number: 6, id: 'qian', hanzi: '乾', direction: 'nw' },
-  { number: 7, id: 'dui', hanzi: '兌', direction: 'w' },
-  { number: 8, id: 'gen', hanzi: '艮', direction: 'ne' },
-  { number: 9, id: 'li', hanzi: '離', direction: 's' },
+  { number: 1, id: 'kan', hanzi: '坎', pinyin: 'kǎn', direction: 'n' },
+  { number: 2, id: 'kun', hanzi: '坤', pinyin: 'kūn', direction: 'sw' },
+  { number: 3, id: 'zhen', hanzi: '震', pinyin: 'zhèn', direction: 'e' },
+  { number: 4, id: 'xun', hanzi: '巽', pinyin: 'xùn', direction: 'se' },
+  { number: 5, id: 'zhong', hanzi: '中', pinyin: 'zhōng', direction: null },
+  { number: 6, id: 'qian', hanzi: '乾', pinyin: 'qián', direction: 'nw' },
+  { number: 7, id: 'dui', hanzi: '兌', pinyin: 'duì', direction: 'w' },
+  { number: 8, id: 'gen', hanzi: '艮', pinyin: 'gèn', direction: 'ne' },
+  { number: 9, id: 'li', hanzi: '離', pinyin: 'lí', direction: 's' },
 ] as const;
 
 /** The palace facing a given way, which is what the address carries. */

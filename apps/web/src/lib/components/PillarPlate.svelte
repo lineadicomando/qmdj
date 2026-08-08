@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { glyph } from '$lib/glyph';
   import type { BaziPillar } from '@qimendunjia/core';
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
 
@@ -34,11 +35,11 @@
         </p>
         <p class="pair">
           <span>{t(`label.stem.${pillar.ganzhi.stem.id}` as MessageKey)}</span>
-          <span class="glyph">{pillar.ganzhi.stem.hanzi}</span>
+          <span class="glyph">{glyph(pillar.ganzhi.stem)}</span>
         </p>
         <p class="pair">
           <span>{t(`label.branch.${pillar.ganzhi.branch.id}` as MessageKey)}</span>
-          <span class="glyph">{pillar.ganzhi.branch.hanzi}</span>
+          <span class="glyph">{glyph(pillar.ganzhi.branch)}</span>
         </p>
         <p class="stage">{t(`label.stage.${pillar.stage.id}` as MessageKey)}</p>
       </div>

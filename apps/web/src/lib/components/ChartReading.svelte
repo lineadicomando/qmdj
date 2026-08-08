@@ -13,6 +13,7 @@
   this the words that go under it.
 -->
 <script lang="ts">
+  import { glyph } from '$lib/glyph';
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
   import PalaceTable from './PalaceTable.svelte';
 
@@ -32,7 +33,7 @@
   <!-- Under zhirun the ju's term deserves saying: it can be one the Sun has
        not reached yet, or a repeated one — the intercalation. -->
   {#if chart.options.method === 'zhirun'}
-    · <span class="glyph">{chart.ju.leap ? '閏' : ''}{chart.ju.term.hanzi}</span>
+    · <span class="glyph">{chart.ju.leap ? '閏' : ''}{chart.ju.term.hanzi} {chart.ju.leap ? 'rùn' : ''}{chart.ju.term.pinyin ?? ''}</span>
     {chart.ju.leap
       ? t('cli.value.leapTerm', { term: t(`label.term.${chart.ju.term.id}` as MessageKey) })
       : t(`label.term.${chart.ju.term.id}` as MessageKey)}
@@ -58,7 +59,7 @@
     <li>
       {t(`label.horse.${horse.from}` as MessageKey)}:
       {t(`label.branch.${horse.branch.id}` as MessageKey)}
-      <span class="glyph">{horse.branch.hanzi}</span>
+      <span class="glyph">{glyph(horse.branch)}</span>
       — {horse.palace}
     </li>
   {/each}
@@ -75,7 +76,7 @@
       <li>
         {t(`label.pattern.${pattern.id}` as MessageKey)}
         {#if pattern.palace}— {pattern.palace}{/if}
-        <span class="glyph">{pattern.hanzi}</span>
+        <span class="glyph">{glyph(pattern)}</span>
         <!--
           Written in words and in no colour. The fortune is an attribute of the
           arrangement, and green against red would turn a list of configurations
@@ -84,7 +85,7 @@
         -->
         <span class="valence">
           {t(`label.valence.${pattern.valence.id}` as MessageKey)}
-          <span class="glyph">{pattern.valence.hanzi}</span>
+          <span class="glyph">{glyph(pattern.valence)}</span>
         </span>
       </li>
     {/each}

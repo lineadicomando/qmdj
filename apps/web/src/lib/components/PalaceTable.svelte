@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { glyph } from '$lib/glyph';
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
 
   /**
@@ -29,19 +30,19 @@
       <tr>
         <th scope="row">
           <span>{cell.palace.number} {gloss('palace', cell.palace.id)}</span>
-          <span class="glyph">{cell.palace.hanzi}</span>
+          <span class="glyph">{glyph(cell.palace)}</span>
         </th>
         <td>
           <span>{gloss('stem', cell.earth.id)}</span>
-          <span class="glyph">{cell.earth.hanzi}</span>
+          <span class="glyph">{glyph(cell.earth)}</span>
         </td>
         <td>
           <span>{gloss('stem', cell.heaven.id)}</span>
-          <span class="glyph">{cell.heaven.hanzi}</span>
+          <span class="glyph">{glyph(cell.heaven)}</span>
         </td>
         <td>
           <span>{gloss('star', cell.star.id)}</span>
-          <span class="glyph">{cell.star.hanzi} · {gloss('strength', cell.starStrength.id)}</span>
+          <span class="glyph">{glyph(cell.star)} · {gloss('strength', cell.starStrength.id)}</span>
           <!-- How it stands to the palace it is in, under how it stands to the
                season. Two questions of the same thing, told apart by the glyph
                that names only the second: 旺相休囚死 is the season and 生我 ·
@@ -51,7 +52,7 @@
                reason: a chart is cached private for a day, so a field added to
                the engine meets charts cast before it existed. -->
           {#if cell.starRelation}
-            <span class="glyph">{cell.starRelation.hanzi} · {gloss('relation', cell.starRelation.id)}</span>
+            <span class="glyph">{glyph(cell.starRelation)} · {gloss('relation', cell.starRelation.id)}</span>
           {/if}
         </td>
         <td>
@@ -59,16 +60,16 @@
             <span>{gloss('gate', cell.gate.id)}</span>
             <!-- The space is written out: Svelte trims what sits against the
                  edge of a block, and the name would touch the separator. -->
-            <span class="glyph">{cell.gate.hanzi}{#if cell.gateStrength}&nbsp;· {gloss('strength', cell.gateStrength.id)}{/if}</span>
+            <span class="glyph">{glyph(cell.gate)}{#if cell.gateStrength}&nbsp;· {gloss('strength', cell.gateStrength.id)}{/if}</span>
             {#if cell.gateRelation}
-              <span class="glyph">{cell.gateRelation.hanzi} · {gloss('relation', cell.gateRelation.id)}</span>
+              <span class="glyph">{glyph(cell.gateRelation)} · {gloss('relation', cell.gateRelation.id)}</span>
             {/if}
           {:else}<span class="gloss">—</span>{/if}
         </td>
         <td>
           {#if cell.spirit}
             <span>{gloss('spirit', cell.spirit.id)}</span>
-            <span class="glyph">{cell.spirit.hanzi}</span>
+            <span class="glyph">{glyph(cell.spirit)}</span>
           {:else}<span class="gloss">—</span>{/if}
         </td>
       </tr>

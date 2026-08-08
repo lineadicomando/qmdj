@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { glyph } from '$lib/glyph';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
   import type { MessageKey } from '@qimendunjia/i18n';
@@ -102,7 +103,7 @@
   <div class="result" class:stale={busy} aria-busy={busy}>
     <p class="master">
       {t('cli.field.dayMaster')}: {t(`label.stem.${result.bazi.dayMaster.id}` as MessageKey)}
-      <span class="glyph">{result.bazi.dayMaster.hanzi}</span>
+      <span class="glyph">{glyph(result.bazi.dayMaster)}</span>
     </p>
 
     <!-- The four pillars at a glance, then the same four read out in full. -->
@@ -124,7 +125,7 @@
               <th scope="row">{t(`cli.column.${pillar.position}` as MessageKey)}</th>
               <td>
                 <span>{say(pillar.ganzhi)}</span>
-                <span class="glyph">{pillar.ganzhi.hanzi}</span>
+                <span class="glyph">{glyph(pillar.ganzhi)}</span>
               </td>
               <td>{#if pillar.stemGod}{t(`label.god.${pillar.stemGod.id}` as MessageKey)}{:else}—{/if}</td>
               <td>{pillar.hidden.map((h: any) => t(`label.stem.${h.stem.stem.id}` as MessageKey)).join(', ')}</td>

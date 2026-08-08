@@ -49,7 +49,7 @@
     { unit: 'year' },
     { unit: 'month' },
     { unit: 'day' },
-    { unit: 'shichen', hanzi: '時辰' },
+    { unit: 'shichen', hanzi: '時辰 shíchén' },
   ];
 </script>
 

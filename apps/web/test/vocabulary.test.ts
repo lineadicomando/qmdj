@@ -77,12 +77,19 @@ describe('the identifiers a form offers', () => {
     // out of. A 巽 drifting onto the wrong number would be a direction
     // quietly renamed under somebody's shortlist.
     expect(
-      PALACES.map(({ number, id, hanzi, direction }) => ({ number, id, hanzi, direction })),
-    ).toEqual(
-      ENGINE_PALACES.map(({ number, id, hanzi, direction }) => ({
+      PALACES.map(({ number, id, hanzi, pinyin, direction }) => ({
         number,
         id,
         hanzi,
+        pinyin,
+        direction,
+      })),
+    ).toEqual(
+      ENGINE_PALACES.map(({ number, id, hanzi, pinyin, direction }) => ({
+        number,
+        id,
+        hanzi,
+        pinyin,
         direction,
       })),
     );

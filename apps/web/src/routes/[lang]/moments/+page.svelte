@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { glyph } from '$lib/glyph';
   import { goto, replaceState } from '$app/navigation';
   import { page } from '$app/state';
   import type { MessageKey } from '@qimendunjia/i18n';
@@ -202,7 +203,7 @@
    */
   const heading = $derived(
     at &&
-      `${at.slice(0, 10)} ${at.slice(11, 16)}${picked ? ` · ${gloss('stem', picked.hour.stem.id)} ${gloss('branch', picked.hour.branch.id)} ${picked.hour.hanzi}` : ''}`,
+      `${at.slice(0, 10)} ${at.slice(11, 16)}${picked ? ` · ${gloss('stem', picked.hour.stem.id)} ${gloss('branch', picked.hour.branch.id)} ${glyph(picked.hour)}` : ''}`,
   );
 
   /**
@@ -305,7 +306,7 @@
 
     const lines = kept.map(
       (entry) =>
-        `${entry.start.slice(0, 10)} ${entry.start.slice(11, 16)} · ${palaceOf(entry.palace).number} ${gloss('palace', entry.palace)} ${palaceOf(entry.palace).hanzi}`,
+        `${entry.start.slice(0, 10)} ${entry.start.slice(11, 16)} · ${palaceOf(entry.palace).number} ${gloss('palace', entry.palace)} ${glyph(palaceOf(entry.palace))}`,
     );
     await navigator.clipboard.writeText(
       [data.interval.place?.name, ...lines].filter(Boolean).join('\n'),
@@ -502,7 +503,7 @@
             <span class="where">
               {palaceOf(entry.palace).number}
               {gloss('palace', entry.palace)}
-              <span class="glyph">{palaceOf(entry.palace).hanzi}</span>
+              <span class="glyph">{glyph(palaceOf(entry.palace))}</span>
             </span>
           </a>
           <button

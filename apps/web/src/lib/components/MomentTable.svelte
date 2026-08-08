@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { glyph } from '$lib/glyph';
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
   import { isPlainClick } from '$lib/navigation';
 
@@ -172,27 +173,27 @@
                    that said only "Rat" would say less than the name it glosses. -->
               <td rowspan={moment.palaces.length}>
                 <span>{gloss('stem', moment.hour.stem.id)} · {gloss('branch', moment.hour.branch.id)}</span>
-                <span class="glyph">{moment.hour.hanzi}</span>
+                <span class="glyph">{glyph(moment.hour)}</span>
               </td>
             {/if}
             <td>
               <span>{cell.palace.number} {gloss('palace', cell.palace.id)}</span>
-              <span class="glyph">{cell.palace.hanzi}</span>
+              <span class="glyph">{glyph(cell.palace)}</span>
             </td>
             <td>
               {#if cell.gate}
                 <span>{gloss('gate', cell.gate.id)}</span>
-                <span class="glyph">{cell.gate.hanzi}{#if cell.gateStrength}&nbsp;· {gloss('strength', cell.gateStrength.id)}{/if}</span>
+                <span class="glyph">{glyph(cell.gate)}{#if cell.gateStrength}&nbsp;· {gloss('strength', cell.gateStrength.id)}{/if}</span>
               {:else}<span class="gloss">—</span>{/if}
             </td>
             <td>
               <span>{gloss('star', cell.star.id)}</span>
-              <span class="glyph">{cell.star.hanzi} · {gloss('strength', cell.starStrength.id)}</span>
+              <span class="glyph">{glyph(cell.star)} · {gloss('strength', cell.starStrength.id)}</span>
             </td>
             <td>
               {#if cell.spirit}
                 <span>{gloss('spirit', cell.spirit.id)}</span>
-                <span class="glyph">{cell.spirit.hanzi}</span>
+                <span class="glyph">{glyph(cell.spirit)}</span>
               {:else}<span class="gloss">—</span>{/if}
             </td>
             <!-- A checkbox, because choosing some rows out of a table is what
