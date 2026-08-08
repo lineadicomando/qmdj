@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { tick } from 'svelte';
   import { goto, replaceState } from '$app/navigation';
   import { page } from '$app/state';
   import type { MessageKey } from '@qimendunjia/i18n';
@@ -24,7 +23,7 @@
   import FormPanel from '$lib/components/FormPanel.svelte';
   import LocationSearch from '$lib/components/LocationSearch.svelte';
   import MomentTable from '$lib/components/MomentTable.svelte';
-  import PlatePane from '$lib/components/PlatePane.svelte';
+  import PlateDialog from '$lib/components/PlateDialog.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
 
   let { data } = $props();
@@ -123,7 +122,7 @@
    * The hour that is open, if the answer still holds one.
    *
    * `at` is the hour's own `start`, so a scan whose criteria have since
-   * changed finds no such row and shows no pane, rather than showing the
+   * changed finds no such row and opens nothing, rather than opening the
    * wrong one.
    */
   const picked = $derived(scan?.moments.find((moment: any) => moment.start === at));
@@ -136,35 +135,30 @@
     picked && `/api/chart?${chartQuery(picked.start, data.interval, { lang: t.locale })}`,
   );
 
-  /** The hour in words, which is what names the pane. */
+  /** The hour in words, which is what names the dialog. */
   const heading = $derived(
     picked &&
       `${picked.start.slice(0, 10)} ${picked.start.slice(11, 16)} · ${gloss('stem', picked.hour.stem.id)} ${gloss('branch', picked.hour.branch.id)} ${picked.hour.hanzi}`,
   );
 
-  let pane: HTMLElement | undefined = $state();
-
   /**
-   * Choosing an hour puts its board above the list.
+   * Choosing an hour opens its board over the list.
    *
    * The address follows the choice, but shallowly: `replaceState` from
    * `$app/navigation` moves it without running `load`, so picking an hour
-   * does not rescan the interval. The answer on screen is the one already
-   * computed, and only the pane changes.
+   * does not rescan the interval. The answer behind the dialog is the one
+   * already computed, and a board somebody is looking at is one they can
+   * send — which a dialog holding its hour in a variable would not be.
    *
    * Replacing rather than pushing, as the scan itself does. A reader picks a
    * dozen hours in a row to compare them, and a back button that had to walk
-   * out of all twelve is a back button that cannot leave the section.
+   * out of all twelve is a back button that cannot leave the section. What
+   * closes the dialog is Escape, the backdrop or the button, all three of
+   * which a reader reaches for before the back button.
    */
-  async function pick(start: string): Promise<void> {
+  function pick(start: string): void {
     at = start;
     mark();
-
-    // The pane is at the top of the answer, and the hour that was chosen may
-    // be the thirtieth row down. `nearest` scrolls only when it has to, so
-    // choosing an hour already in view does not move the page under the eye.
-    await tick();
-    pane?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   function unpick(): void {
@@ -332,24 +326,20 @@
     </p>
 
     {#if scan.moments.length > 0}
-      <div class="answer">
-        {#if picked}
-          <div class="held" bind:this={pane}>
-            <PlatePane
-              {t}
-              heading={heading as string}
-              plate={plateSrc as string}
-              chart={chartSrc as string}
-              href={chartHref(picked.start)}
-              onclose={unpick}
-            />
-          </div>
-        {/if}
-
-        <div class="scroller">
-          <MomentTable moments={scan.moments} {t} href={chartHref} picked={at} onpick={pick} />
-        </div>
+      <div class="scroller">
+        <MomentTable moments={scan.moments} {t} href={chartHref} picked={at} onpick={pick} />
       </div>
+
+      {#if picked}
+        <PlateDialog
+          {t}
+          heading={heading as string}
+          plate={plateSrc as string}
+          chart={chartSrc as string}
+          href={chartHref(picked.start)}
+          onclosed={unpick}
+        />
+      {/if}
     {:else}
       <p class="none">{t('cli.value.nothingAnswered')}</p>
     {/if}
@@ -419,27 +409,15 @@
   .result { transition: opacity 0.15s ease-out; }
   .stale { opacity: 0.5; }
   /*
-   * The board above the list, at every width.
+   * The board is over the list and not in it — see `PlateDialog`.
    *
-   * A column of its own beside the list was the intent, and the page has not
-   * got the room: the list asks for some 55rem of content before it starts
-   * scrolling inside its frame, the narrowest pane in which the glyphs can
-   * still be read is another 17, and the shell's measure is 72rem for all of
-   * it. Every arrangement that fitted both did it by hiding the spirit
-   * behind the pane — which is the one thing the scrolling frame exists to
-   * spare the reader — so neither is asked to share: the board takes the top
-   * and choosing an hour scrolls to it.
-   *
-   * Board before list in the markup as well as on the screen. It is what was
-   * just asked for, and it is where the keyboard and a screen reader should
-   * arrive.
+   * Sharing the page between them was tried and does not fit: the list asks
+   * for some 55rem of content before it starts scrolling inside its frame,
+   * the narrowest board in which the glyphs can still be read is another 17,
+   * and the shell's measure is 72rem for all of it. Every arrangement that
+   * fitted both did it by hiding the spirit behind the board, which is the
+   * one thing the scrolling frame exists to spare the reader.
    */
-  .answer { display: grid; gap: 1.5rem; }
-  /* A grid item does not shrink below its own content unless it is told it
-     may, and the frame only frames anything once it is allowed to be
-     narrower than the table inside it. Without this the list stopped
-     scrolling in its frame and took the page sideways with it. */
-  .answer > * { min-inline-size: 0; }
   @media (prefers-reduced-motion: reduce) {
     .result { transition: none; }
   }
