@@ -5,6 +5,9 @@ export const SECTIONS: readonly { slug: string; label: MessageKey }[] = [
   { slug: '', label: 'nav.chart' },
   { slug: 'bazi', label: 'nav.bazi' },
   { slug: 'moments', label: 'nav.moments' },
+  // Last, because it is the only one that does not answer a question of its
+  // own: it poses a chart to be read somewhere else.
+  { slug: 'consult', label: 'nav.consult' },
 ];
 
 /**

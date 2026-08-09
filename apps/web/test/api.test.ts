@@ -347,6 +347,30 @@ describe('GET /api/chart/prompt', () => {
     expect(text).not.toContain('asked=true');
   });
 
+  /**
+   * The other frame: a chart of a birth read as a chart of a life. A frame
+   * and never a method — which palace stands for which part of a life is the
+   * doctrine this project declines to carry, and the prompt says so.
+   */
+  it('frames a chart of a birth without supplying a natal method', async () => {
+    const { text } = await call(prompt, `${MOMENT}&lang=en&frame=natal`);
+
+    expect(text).toContain('modern and minority application');
+    expect(text).toContain('which palace stands for which part of a life');
+    // Nothing that belongs to a question survives into it.
+    expect(text).not.toContain('用神');
+    expect(text).not.toContain('The question asked is');
+  });
+
+  it('takes no question under the natal frame, whatever the address says', async () => {
+    // The two do not overlap: a natal chart carrying a question is a third
+    // thing, and `asked` is simply not read here.
+    const { text } = await call(prompt, `${MOMENT}&lang=en&frame=natal&asked=true`);
+
+    expect(text.endsWith('The question asked is:\n')).toBe(false);
+    expect(text).toContain('let the person ask');
+  });
+
   it('fails with a code and parameters, as every other endpoint does', async () => {
     const { status, body } = await call(prompt, 'date=15/06/2024');
 

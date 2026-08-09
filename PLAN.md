@@ -957,7 +957,47 @@ settled to keep that true.
   read the contract and does not need it read to it. The prompt exists for the
   model that is not connected to any of this.
 
-> Commits: `Says what a prompt for a model has to carry` · `Hands the chart over with the conditions attached` · `Asks the terminal for a prompt, and for the question it is read for` · `Puts the chart in the clipboard, as words and as a prompt`
+**And then the prompt was given a section of its own, which is where the
+methodological problem turned out to live.** The block sat under the board,
+and under the board a question can only be asked *after* the chart is on
+screen — which is backwards. The instant of asking is the instant that is
+cast; a chart looked at idly and given a question afterwards is a chart with a
+caption on it.
+
+Gating the chart section was considered and refused. Every way of doing it
+broke something documented: a link that still rendered a chart would make the
+gate theatre, one that did not would kill the shareable address; the arrows
+either bypassed the gate or went; and the question would have had to sit in
+the address, which is the one place it must never be. So the ceremony moved to
+a section that can keep it, and the chart section went back to being an
+instrument.
+
+`/[lang]/consult` is therefore the only page here where **asking is not
+navigating**. A consultation is an act rather than an address: cast by `fetch`
+at the instant of the press, held in the component, gone on a reload. Only the
+setup travels in the URL. That is not a shortcoming of the page, it is what a
+consultation is — and it is also the only shape under which the question can
+stay out of the address for good.
+
+**The natal frame is the concession, and it is bounded like everything else
+here.** Reading a Qi Men chart as a chart of a life is common in the West and
+is not the classical use. The engine does not notice — a chart of a birth is
+the same computation — so the whole of the decision is in the prompt, and the
+prompt gives **a frame and never a method**: it says the application is modern
+and minority, says the schools disagree, and refuses to map palaces onto parts
+of a life. That refusal is the same one `purposes.ts` makes about everything
+past the eight gates, and it matters more here than anywhere: natal material
+is abundant in a model's training data and comes overwhelmingly from the
+commercial lineages this project named as unusable, so a prompt that merely
+stayed silent would be filled in confidently and wrongly.
+
+The two frames do not overlap, and the type says so: `ReadingRequest` is a
+union, `--natal` refuses `--ask`, and `asked` is not read under `frame=natal`.
+A natal chart carrying a question is a third thing — a chart of a life
+compared against the chart of a moment — which this file had already declined
+under the scan.
+
+> Commits: `Says what a prompt for a model has to carry` · `Hands the chart over with the conditions attached` · `Asks the terminal for a prompt, and for the question it is read for` · `Puts the chart in the clipboard, as words and as a prompt` · `Poses a chart where the question can come first`
 
 ---
 

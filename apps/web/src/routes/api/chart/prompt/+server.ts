@@ -18,6 +18,10 @@ import type { RequestHandler } from './$types';
  * that introduces one, and the browser appends the single line that must not
  * leave it. Without `asked` the prompt says plainly that nothing was asked,
  * which is the honest answer and not the same as choosing a 用神 for somebody.
+ *
+ * `frame=natal` asks for the other reading: a chart cast for a birth and read
+ * as a chart of a life. It takes no question — the two do not overlap — and
+ * `asked` is not read under it.
  */
 export const GET: RequestHandler = ({ url, request, setHeaders }) => {
   try {
@@ -29,10 +33,17 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
       'cache-control': momentIsFixed(url.searchParams) ? 'private, max-age=86400' : 'no-store',
     });
     return new Response(
-      readingPrompt(moment, chart, createTranslator(locale), {
-        source: pageAddress(url, locale),
-        ...(url.searchParams.get('asked') === 'true' ? { question: '' } : {}),
-      }),
+      readingPrompt(
+        moment,
+        chart,
+        createTranslator(locale),
+        url.searchParams.get('frame') === 'natal'
+          ? { frame: 'destiny', source: pageAddress(url, locale) }
+          : {
+              source: pageAddress(url, locale),
+              ...(url.searchParams.get('asked') === 'true' ? { question: '' } : {}),
+            },
+      ),
       { headers: { 'content-type': 'text/plain; charset=utf-8' } },
     );
   } catch (cause) {

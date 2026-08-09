@@ -268,6 +268,9 @@ export const en = {
   'nav.chart': 'Qi Men',
   'nav.bazi': 'Four Pillars',
   'nav.moments': 'Choosing a time',
+  // Named by where the reading happens, which is not here. A section called
+  // "Reading" would be this project claiming the one thing it declines to do.
+  'nav.consult': 'Asking an AI',
   'nav.sections': 'Sections',
 
   'scheme.label': 'Appearance',
@@ -360,6 +363,9 @@ export const en = {
   'form.needed.date': 'A date is still needed.',
   'form.needed.interval': 'Both dates of the interval are still needed.',
   'form.needed.question': 'A question is still needed: the prompt is built to be read towards one.',
+  // The hour, and not only the day. A Qi Men chart turns on the hour pillar,
+  // so a birth without a time is not a rougher chart — it is a different one.
+  'form.needed.birth': 'A date and a time of birth are still needed: the chart turns on the hour.',
   // The same thing `cli.error.genderRequired` says, without naming a command
   // line option to somebody looking at a form.
   'form.needed.gender':
@@ -385,6 +391,31 @@ export const en = {
     'The clipboard would not take it — that happens outside an encrypted connection. The text is here: select it and copy it by hand.',
   'form.copyFallback': 'The text, to copy by hand',
   'form.copyUnread': 'The chart could not be read again.',
+
+  // The section where a chart is posed in order to be taken away. Two errands
+  // that do not overlap: a question asked now, and a chart of a birth read as
+  // a chart of a life. Neither is the other, and a chart of a birth with a
+  // question on it would be a third thing this project has already declined —
+  // comparing a natal chart against the chart of a moment.
+  'consult.title': 'Asking an AI to read a chart',
+  'consult.note':
+    'This page casts a chart and hands it over with the instructions for reading it. The reading happens in your own assistant, not here: nothing on this site reads a chart, and nothing is sent anywhere.',
+  'consult.mode': 'What is being asked',
+  'consult.mode.question': 'A question, asked now',
+  'consult.mode.natal': 'A chart of a birth',
+  // Why the question is above the moment and not below the chart. The order
+  // is the whole of it: the instant of asking is the instant that is cast.
+  'consult.questionNote':
+    'The question comes first because the chart is cast for the moment you ask it. Write it, then cast: a chart looked at idly and given a question afterwards is a chart with a caption on it.',
+  'consult.natalNote':
+    'Reading a Qi Men chart as a chart of a life is a modern and minority application — the classical uses are divination and the choosing of times — and the schools that teach it do not agree with one another. This site takes no position on which palace stands for which part of a life, here or in the prompt. No question is asked in this mode: the assistant describes the chart, and you ask it what you want to know afterwards.',
+  'consult.cast': 'Cast the chart',
+  'consult.uncast': 'The chart is cast when you ask for it, and is not in the address of this page: reloading does not bring it back, and there is no link to it.',
+
+  // Under the board, where somebody who wants a reading will be looking. It
+  // sends them on rather than offering a field here: the question belongs
+  // before the casting, and this page has already cast.
+  'form.toConsult': 'To have a chart read, with a question or as a chart of a birth:',
 
   'form.promptTitle': 'A prompt for an AI',
   'form.promptNote':
@@ -491,6 +522,22 @@ export const en = {
   // is a disclaimer that was written for somebody else.
   'prompt.disclaimer':
     'Say, in your own words and without burying it at the end, that this is for entertainment: a chart is not evidence, and whatever the person does on the strength of your reading is entirely their own decision and their own responsibility. It stands in for no medical, legal or financial advice. Where somebody is heading towards one of those, say plainly where the real answer has to come from.',
+  // The other frame: a chart cast for a birth and read as a chart of a life.
+  //
+  // A frame and never a method. The engine will not say which palace stands
+  // for which part of a life, for the reason `purposes.ts` gives about
+  // everything past the eight gates: there the schools genuinely diverge, and
+  // what reached the West most widely reached it as the teaching material of
+  // particular commercial lineages. That is exactly the natal material — and
+  // exactly what a model will produce most confidently, because there is so
+  // much of it about. So the warning is louder here than anywhere else.
+  'prompt.destiny.heading': 'Reading a Qi Men Dun Jia chart cast for a birth',
+  'prompt.destiny.frame':
+    'The chart below is cast for a moment of birth and is to be read as a chart of a life. Say once, early and plainly that this is a modern and minority application of Qi Men Dun Jia — the classical uses are divination and the choosing of times — and that the schools which teach it do not agree with one another.',
+  'prompt.destiny.noMapping':
+    'Nothing below says which palace stands for which part of a life, and the omission is deliberate: that is where the schools diverge most, and much of what circulates in the West is the teaching material of particular lineages. If you use such a mapping, say plainly that it is yours and not this software\'s, and name whose it is if you can.',
+  'prompt.destiny.task':
+    'No question has been asked, and none is needed here. Describe how this chart stands — what lies and what stands in each palace, and the configurations it fell into — in the order that makes it legible rather than the order that makes it striking. Then stop, and let the person ask. This is a conversation and not a document: whatever they want to know about one part of their life is a question they can put to you next, with the chart already in front of you both.',
   'prompt.source': 'The chart is at {url}',
   'prompt.chart': 'The chart',
   'prompt.asked': 'The question asked is:',
@@ -581,6 +628,11 @@ export const en = {
   'cli.error.missingValue': 'Option "{option}" needs a value.',
   'cli.error.contradiction':
     'Option "{option}" already says which gate to look for, and "{other}" says a different one. Drop one of them.',
+  // Not a contradiction about a value: two frames that do not overlap. A
+  // chart of a birth carrying a question is a third thing, and refusing is
+  // how this project answers a request it takes no position on.
+  'cli.error.exclusive':
+    'Options "{option}" and "{other}" cannot both be given: they ask for two different readings of the same chart. Drop one of them.',
   'cli.error.unknownValue':
     'Option "{option}" does not take the value "{value}". Left unchecked it would match nothing, which reads exactly like an arrangement that never occurred.',
   'cli.error.genderRequired':

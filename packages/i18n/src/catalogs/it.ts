@@ -248,6 +248,7 @@ export const it: Record<MessageKey, string> = {
   'nav.chart': 'Qi Men',
   'nav.bazi': 'Quattro pilastri',
   'nav.moments': 'Scegliere il momento',
+  'nav.consult': 'Chiedere a un\'AI',
   'nav.sections': 'Sezioni',
 
   'scheme.label': 'Aspetto',
@@ -311,6 +312,7 @@ export const it: Record<MessageKey, string> = {
   'form.needed.date': 'Manca ancora una data.',
   'form.needed.interval': "Mancano ancora le due date dell'intervallo.",
   'form.needed.question': 'Manca ancora una domanda: il prompt è costruito per essere letto verso una.',
+  'form.needed.birth': "Mancano ancora la data e l'ora di nascita: la carta dipende dal pilastro dell'ora.",
   'form.needed.gender':
     'I cicli decennali richiedono il sesso, perché la tradizione ne trae la direzione. Senza, i pilastri restano comunque completi.',
   'form.jumpDate': 'Il giorno per cui la carta è posta',
@@ -323,6 +325,22 @@ export const it: Record<MessageKey, string> = {
     'Gli appunti non si sono lasciati scrivere — succede fuori da una connessione cifrata. Il testo è qui: selezionalo e copialo a mano.',
   'form.copyFallback': 'Il testo, da copiare a mano',
   'form.copyUnread': 'La carta non è stata riletta.',
+
+  'consult.title': "Chiedere a un'AI di leggere una carta",
+  'consult.note':
+    'Questa pagina pone una carta e la consegna insieme alle istruzioni per leggerla. La lettura avviene nel tuo assistente, non qui: niente in questo sito legge una carta, e niente viene mandato da nessuna parte.',
+  'consult.mode': 'Che cosa si chiede',
+  'consult.mode.question': 'Una domanda, posta adesso',
+  'consult.mode.natal': 'La carta di una nascita',
+  'consult.questionNote':
+    'La domanda viene prima perché la carta è posta per l\'istante in cui la fai. Scrivila, poi poni: una carta guardata per ozio e corredata di domanda dopo è una carta con una didascalia.',
+  'consult.natalNote':
+    'Leggere una carta di Qi Men come carta di una vita è un\'applicazione moderna e minoritaria — gli usi classici sono la divinazione e la scelta dei tempi — e le scuole che la insegnano non concordano fra loro. Questo sito non prende posizione su quale palazzo corrisponda a quale parte di una vita, né qui né nel prompt. In questa modalità non si pone alcuna domanda: l\'assistente descrive la carta, e quello che vuoi sapere glielo chiedi dopo.',
+  'consult.cast': 'Poni la carta',
+  'consult.uncast':
+    'La carta è posta quando la chiedi, e non sta nell\'indirizzo di questa pagina: ricaricare non la riporta, e non esiste un collegamento a essa.',
+
+  'form.toConsult': 'Per far leggere una carta, con una domanda o come carta di una nascita:',
 
   'form.promptTitle': "Un prompt per un'AI",
   'form.promptNote':
@@ -398,6 +416,13 @@ export const it: Record<MessageKey, string> = {
     'Ogni nome è dato in cinese, in pinyin e con una glossa. Scrivi per chi il cinese non lo legge: metti avanti la glossa e tieni gli hanzi accanto la prima volta che ciascun nome compare.',
   'prompt.disclaimer':
     'Di\', con parole tue e senza relegarlo in fondo, che tutto questo ha puro scopo di intrattenimento: una carta non è una prova, e qualunque cosa la persona faccia sulla base della tua lettura è interamente una sua decisione e una sua responsabilità. Non sostituisce alcun parere medico, legale o finanziario. Se qualcuno sta andando verso uno di quelli, di\' apertamente da dove deve venire la risposta vera.',
+  'prompt.destiny.heading': 'Leggere una carta di Qi Men Dun Jia posta per una nascita',
+  'prompt.destiny.frame':
+    'La carta qui sotto è posta per un istante di nascita e va letta come carta di una vita. Di\' una volta, subito e apertamente, che questa è un\'applicazione moderna e minoritaria del Qi Men Dun Jia — gli usi classici sono la divinazione e la scelta dei tempi — e che le scuole che la insegnano non concordano fra loro.',
+  'prompt.destiny.noMapping':
+    'Nulla qui sotto dice quale palazzo corrisponda a quale parte di una vita, e l\'omissione è voluta: è lì che le scuole divergono di più, e molto di ciò che circola in Occidente è materiale didattico di lignaggi particolari. Se usi una tale corrispondenza, di\' apertamente che è tua e non di questo programma, e di\' di chi è se lo sai.',
+  'prompt.destiny.task':
+    'Nessuna domanda è stata posta, e qui non ne serve una. Descrivi come sta questa carta — che cosa giace e che cosa sta in ciascun palazzo, e in quali configurazioni è caduta — nell\'ordine che la rende leggibile, non in quello che la rende suggestiva. Poi fermati, e lascia che la persona chieda. Questa è una conversazione e non un documento: qualunque cosa voglia sapere su una parte della sua vita è una domanda che può farti dopo, con la carta già davanti a entrambi.',
   'prompt.source': 'La carta è all\'indirizzo {url}',
   'prompt.chart': 'La carta',
   'prompt.asked': 'La domanda posta è:',
@@ -478,6 +503,8 @@ export const it: Record<MessageKey, string> = {
   'cli.error.missingValue': 'L\'opzione "{option}" richiede un valore.',
   'cli.error.contradiction':
     'L\'opzione "{option}" dice già quale porta cercare, e "{other}" ne dice un\'altra. Togline una.',
+  'cli.error.exclusive':
+    'Le opzioni "{option}" e "{other}" non possono stare insieme: chiedono due letture diverse della stessa carta. Togline una.',
   'cli.error.unknownValue':
     'L\'opzione "{option}" non accetta il valore "{value}". Non controllato non corrisponderebbe a nulla, che si legge esattamente come una disposizione che non si è mai presentata.',
   'cli.error.genderRequired':

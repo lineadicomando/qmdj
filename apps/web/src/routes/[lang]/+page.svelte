@@ -5,9 +5,8 @@
   import { momentQuery, sayFailure, type MomentInput } from '$lib/moment';
   import { step, type Unit, type Wall } from '$lib/step';
   import ChartReading from '$lib/components/ChartReading.svelte';
-  import ChartTools from '$lib/components/ChartTools.svelte';
+  import CopyText from '$lib/components/CopyText.svelte';
   import FormPanel from '$lib/components/FormPanel.svelte';
-  import ReadingPrompt from '$lib/components/ReadingPrompt.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
   import MomentSteps from '$lib/components/MomentSteps.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
@@ -210,17 +209,30 @@
 
     <div>
       <ChartReading {chart} {t} />
-      <!-- Two errands and two controls: the chart in words, and the chart in
-           the hands of something that will read it. Nobody looking for the
-           first should have to go through the second. -->
-      <ChartTools {t} query={address} />
-      <ReadingPrompt {t} query={address} />
+      <!--
+        The chart in words, and nothing more.
+
+        Taking a chart to something that will read it is a different errand and
+        lives in its own section, because there the question comes before the
+        casting and here it could only come after. A field for one under this
+        board would teach the wrong order — so what is left here is a pointer
+        to where the right one is kept.
+      -->
+      <div class="tools">
+        <CopyText {t} label="form.copyChart" url="/api/chart/text?{address}" />
+        <p class="note">
+          {t('form.toConsult')}
+          <a href="/{t.locale}/consult">{t('nav.consult')}</a>
+        </p>
+      </div>
     </div>
   </section>
 {/if}
 
 <style>
   .failure { color: var(--alarm); }
+  .tools { margin-top: 1.5rem; display: grid; justify-items: start; gap: 0.6rem; }
+  .note { margin: 0; font-size: 0.8rem; color: var(--faint); max-width: 62ch; }
   /* In the closed bar, beside text rather than under a label of its own. */
   .day { font-size: 0.9rem; padding: 0.15rem 0.35rem; color: var(--ink); }
   /*

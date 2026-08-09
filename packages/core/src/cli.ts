@@ -72,6 +72,7 @@ interface Options {
   help: boolean;
   prompt: boolean;
   ask?: string;
+  natal: boolean;
   trueSolar?: boolean;
   dayBoundary?: string;
   method?: string;
@@ -125,6 +126,11 @@ Handing a chart to a model
   --ask "…"              the question it is to be read for; implies --prompt.
                          Without one the prompt says none was asked, which is
                          not the same as choosing a 用神 on nobody's behalf
+  --natal                frame the prompt as a chart of a life rather than of
+                         a question — a modern, minority and school-divergent
+                         application, which the prompt says. Refuses --ask:
+                         a chart of a birth carrying a question is a third
+                         thing, and not one this engine takes a position on
 
 A note on what this prints
   The engine reports arrangements — which gate stands over which palace, how
@@ -249,11 +255,23 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
   const chart = computeQimenChart(moment, chartOptions);
   if (options.json) return JSON.stringify(chart, null, 2);
 
+  // The two frames do not overlap: a chart of a birth carrying a question is
+  // a natal chart compared against a chart of a moment, which is a third
+  // thing and a modern, minority one. Refused rather than resolved.
+  if (options.natal && options.ask !== undefined) {
+    throw new UsageError(t('cli.error.exclusive', { option: '--natal', other: '--ask' }));
+  }
+
   // A question asked is a question meant to be carried, so it turns the plain
   // printing into the prompt by itself: `--ask` without `--prompt` that
   // printed a chart and dropped the question would be a flag that did nothing.
-  if (options.prompt || options.ask !== undefined) {
-    return readingPrompt(moment, chart, t, options.ask ? { question: options.ask } : {});
+  if (options.prompt || options.natal || options.ask !== undefined) {
+    return readingPrompt(
+      moment,
+      chart,
+      t,
+      options.natal ? { frame: 'destiny' } : options.ask ? { question: options.ask } : {},
+    );
   }
   return chartTranscript(moment, chart, t);
 }
@@ -406,7 +424,7 @@ const FLAGS: Record<string, keyof Options> = {
 };
 
 function parse(argv: string[]): { command?: Command; options: Options } {
-  const options: Options = { json: false, help: false, prompt: false };
+  const options: Options = { json: false, help: false, prompt: false, natal: false };
   let command: Command | undefined;
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -422,6 +440,10 @@ function parse(argv: string[]): { command?: Command; options: Options } {
     }
     if (argument === '--prompt') {
       options.prompt = true;
+      continue;
+    }
+    if (argument === '--natal') {
+      options.natal = true;
       continue;
     }
     if (argument === '--true-solar') {

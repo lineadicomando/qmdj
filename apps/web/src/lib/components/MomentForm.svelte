@@ -13,6 +13,7 @@
     trueSolarTime = $bindable(true),
     dayBoundary = $bindable('zishi'),
     method = $bindable<string | undefined>(undefined),
+    instant = true,
   }: {
     t: Translator;
     date?: string;
@@ -22,21 +23,32 @@
     dayBoundary?: string;
     /** Bound only where a ju is cast: the pillars have no method to choose. */
     method?: string | undefined;
+    /**
+     * Whether the moment is asked for at all.
+     *
+     * A consultation is cast for the instant the question is put, so there is
+     * nothing to pick: the fields are left out rather than filled in and
+     * ignored. The place stays — it fixes the hour pillar wherever the moment
+     * comes from.
+     */
+    instant?: boolean;
   } = $props();
 </script>
 
   <!-- The three things asked of every moment, side by side where there is
        room for three and stacked where there is not. -->
   <div class="row">
-    <label>
-      {t('cli.column.day')}
-      <!-- ISO whatever the locale: a shared address must mean one thing. -->
-      <input type="date" bind:value={date} />
-    </label>
-    <label>
-      {t('cli.column.hour')}
-      <input type="time" bind:value={time} />
-    </label>
+    {#if instant}
+      <label>
+        {t('cli.column.day')}
+        <!-- ISO whatever the locale: a shared address must mean one thing. -->
+        <input type="date" bind:value={date} />
+      </label>
+      <label>
+        {t('cli.column.hour')}
+        <input type="time" bind:value={time} />
+      </label>
+    {/if}
     <LocationSearch {t} bind:selected={place} />
   </div>
 

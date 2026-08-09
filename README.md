@@ -87,6 +87,7 @@ So the chart travels **already computed**, and the conditions travel with it:
 ```sh
 qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai \
             --ask "Will the contract be signed as it stands?"
+qimen chart --date 1968-03-12 --time 14:30 --tz Europe/Rome --natal
 ```
 
 What comes out is the chart set out in full inside a fence, wrapped in what
@@ -97,11 +98,24 @@ which of the three tiers of certainty each number sits in. It is
 [`docs/agent-prompt.md`](docs/agent-prompt.md) said to a model that will never
 read it.
 
-The interface offers the same thing under the board, next to the plainer
-control that copies the chart as words. The question is typed there and stays
-there: the browser tells the server only that one exists, and appends the
-sentence itself — a question is somebody's own, and a query string is written
-into every log between the two.
+**Two frames, and they do not overlap.** A question asked now is the classical
+use. A chart cast for a birth and read as a chart of a life is a modern and
+minority application, widespread enough to be worth framing honestly and
+disputed enough that a frame is all that is offered: the prompt says the
+schools do not agree, and it refuses to say which palace stands for which part
+of a life — that is the doctrine `purposes.ts` declines to carry, from the
+sources it names as unusable, and it is where a model invents most
+confidently. A chart of a birth carrying a question would be a third thing,
+and `--natal` refuses `--ask` rather than resolving it.
+
+In the interface both live in their own section, `/en/consult`, and not under
+the board. The reason is an order the chart section cannot keep: **the instant
+of asking is the instant that is cast**, so the question comes before the
+casting or it is a caption on a chart that was already there. There is nothing
+else on that page. The question never leaves the browser — the server is told
+only that one exists — and the consultation is not in the address: it is an
+act, not a link, and reloading finds the fields ready rather than the answer
+preserved.
 
 This project talks to no model, holds no key and sends nothing anywhere. The
 prompt goes to a clipboard.
@@ -121,7 +135,7 @@ was copied from was written for somebody who is no longer there.
 | `packages/core` | the engine, and the `qimen` command |
 | `packages/plate` | the drawing: nine palaces framed by the compass, the configurations listed under them, SVG and PNG |
 | `packages/mcp` | MCP server, seven tools, stdio |
-| `apps/web` | SvelteKit: interface at `/en` and `/it`, eight endpoints under `/api` |
+| `apps/web` | SvelteKit: four sections at `/en` and `/it`, eight endpoints under `/api` |
 
 npm workspaces, Node ≥ 22, ESM, TypeScript.
 
@@ -180,6 +194,12 @@ somebody as a link.
 One exception, and it is the same rule read carefully: an address that does
 not say *when* means now, and now is a different answer every hour. Those are
 `no-store`; only an address that fixes the instant is cacheable.
+
+The fourth section breaks that promise on purpose, and is the only thing here
+that does. `/en/consult` poses a chart in order to hand it to something that
+will read it, and a consultation is an act rather than an address: the chart
+is cast at the instant it is asked for, it holds somebody's question, and
+neither is in the URL. See the section above.
 
 ## Docker
 

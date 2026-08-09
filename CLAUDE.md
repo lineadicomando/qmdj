@@ -14,7 +14,7 @@ anything.
 | `packages/core` | calculation engine and the `qimen` CLI: solar terms, lunar calendar, sexagenary cycles, Four Pillars, Qi Men charts, scanning an interval |
 | `packages/plate` | the drawing: nine palaces, glyphs, SVG and PNG |
 | `packages/mcp` | MCP server: seven tools, three resources, stdio transport |
-| `apps/web` | SvelteKit: interface at `/en` and `/it`, plus eight GET endpoints under `/api` |
+| `apps/web` | SvelteKit: four sections at `/en` and `/it`, plus eight GET endpoints under `/api` |
 
 npm workspaces monorepo, Node ≥ 22, ESM, TypeScript.
 
@@ -125,6 +125,19 @@ the engine falls back to Moshier, which needs no files.
   `asked=true` and nothing more, and the prompt ends on the line that
   introduces a question for the browser to append. What somebody asks a chart
   is theirs, and a query string is written into every log along the way.
+- **A consultation is an act, not an address.** `/[lang]/consult` is the one
+  section where the answer is not in the URL: the chart is cast by `fetch` at
+  the instant it is asked for and held in the component, because **the instant
+  of asking is the instant that is cast** — the question comes before the
+  casting or it is a caption on a chart that was already there. Only the setup
+  travels in the address. Everywhere else, asking is navigating.
+- **Two frames, and they do not overlap.** `readingPrompt` reads a chart as a
+  question (`divination`, the default) or as a chart of a life (`destiny`),
+  and the type is a union so no caller can pass both. The natal frame is a
+  **frame and never a method**: it names the application as modern, minority
+  and school-divergent, and refuses to say which palace stands for which part
+  of a life — that is the doctrine `purposes.ts` declines, from the sources it
+  names as unusable, and it is where a model invents most confidently.
 - **The lunar calendar is reckoned on 120°E, never on the chart's zone.** It
   is a published artefact: the same instant carries the same lunar date in
   Rome and in Beijing. Chinese wartime and summer clocks do not move it. The

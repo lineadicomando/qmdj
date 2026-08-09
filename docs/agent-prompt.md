@@ -185,6 +185,15 @@ ends on the line that introduces a question, for the caller to append; without
 it the prompt says plainly that none was asked. A question is somebody's own,
 and one in a query string is one written into every log along the way.
 
+`frame=natal` asks for the other reading: a chart cast for a birth and read as
+a chart of a life. It takes no question — the two do not overlap — and the
+prompt it returns names that application as modern, minority and
+school-divergent, and refuses to say which palace stands for which part of a
+life. **If you are asked for a natal reading, that refusal is yours to keep
+too.** The mapping is not in the engine, it is not in the resources, and
+supplying one from memory would be attributing to this software a doctrine it
+declines to hold — for the same reason 三奇得使 is absent.
+
 Failures come back with a `code`, a `messageKey` and `params` rather than a
 sentence to parse:
 

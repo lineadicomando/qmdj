@@ -137,3 +137,60 @@ describe('the prompt', () => {
     expect(text).toContain('離');
   });
 });
+
+/**
+ * The other frame: a chart cast for a birth, read as a chart of a life.
+ *
+ * What is asserted is that it is a frame and not a method — the application
+ * is named as modern and minority, the mapping of palaces to parts of a life
+ * is refused, and nothing that belongs to a question survives into it.
+ */
+describe('the prompt for a chart of a birth', () => {
+  function destiny(t = en): string {
+    const at = moment();
+    return readingPrompt(at, computeQimenChart(at, DEFAULT_OPTIONS), t, { frame: 'destiny' });
+  }
+
+  it('says what this application is, and that the schools disagree', () => {
+    expect(destiny()).toContain('modern and minority application');
+    expect(destiny()).toContain('do not agree with one another');
+  });
+
+  it('refuses the mapping of palaces onto parts of a life', () => {
+    const text = destiny();
+
+    expect(text).toContain('which palace stands for which part of a life');
+    expect(text).toContain('say plainly that it is yours');
+  });
+
+  it('describes and then hands the turn back, rather than answering nobody', () => {
+    const text = destiny();
+
+    expect(text).toContain('let the person ask');
+    // A prompt is pasted into a conversation: the questions come after.
+    expect(text).toContain('conversation and not a document');
+  });
+
+  it('carries nothing that belongs to a question', () => {
+    const text = destiny();
+
+    expect(text).not.toContain('用神');
+    expect(text).not.toContain('The question asked is');
+    expect(text).not.toContain('No question was asked');
+    expect(text).not.toContain('ask before you read');
+  });
+
+  it('keeps every bound the other frame has', () => {
+    const text = destiny();
+
+    expect(text).toContain('Do not rank the palaces');
+    expect(text).toContain('this is for entertainment');
+    expect(text).toContain('with no runnable reference at all');
+    // And the chart itself, which is the point of all of it.
+    expect(text).toContain('離');
+  });
+
+  it('is written in the locale it was handed', () => {
+    expect(destiny(createTranslator('it'))).toContain('moderna e minoritaria');
+  });
+});
