@@ -334,10 +334,6 @@ export const it: Record<MessageKey, string> = {
   'form.questionPlaceholder': 'Che cosa stai chiedendo a questa carta?',
   'form.questionNote':
     'La domanda non è un ornamento. Quale palazzo la riguardi è lo 用神, che il lettore sceglie per la domanda posta, e senza domanda non c\'è nulla verso cui leggere la carta — il prompt lo dice apertamente invece di lasciare che una domanda venga inventata.',
-  'form.suggest': 'Suggerisci una domanda',
-  'form.suggestScope': 'Riguardo a',
-  'form.suggestNote':
-    'Esempi, per mostrare come si formula una domanda — non domande da porre. Una che nessuno ha fatto non ha uno 用神, e una lettura fatta per essa è una lettura che non riguarda niente.',
 
   'step.shichen': 'doppia ora',
   'step.day': 'giorno',
@@ -355,6 +351,8 @@ export const it: Record<MessageKey, string> = {
   'step.year.back': 'L\'anno prima',
   'step.year.forward': 'L\'anno dopo',
 
+  'footer.disclaimer':
+    'Questo sito ha puro scopo di intrattenimento. Qualunque cosa venga fatta sulla base di una carta letta qui è interamente decisione, e responsabilità, di chi la fa.',
   'footer.data': 'Dati astronomici {ephemeris} · località {geonames} (CC BY 4.0)',
   'footer.licence': 'Codice sorgente sotto licenza AGPL-3.0',
   'footer.privacy': 'Privacy',
@@ -401,59 +399,13 @@ export const it: Record<MessageKey, string> = {
     'Se ti chiedono quanto tutto questo sia sicuro, la risposta non è la stessa per ogni parte. I termini solari, il calendario lunare e i quattro pilastri sono stati verificati contro tavole astronomiche pubblicate, attraverso un\'implementazione indipendente. La disposizione del Qi Men è stata confrontata con una sola implementazione aperta, il che significa coerente con essa e non verificata. Le configurazioni vengono da fonti in lingua cinese, senza alcun riferimento eseguibile. Non descrivere la terza come se fosse la prima.',
   'prompt.names':
     'Ogni nome è dato in cinese, in pinyin e con una glossa. Scrivi per chi il cinese non lo legge: metti avanti la glossa e tieni gli hanzi accanto la prima volta che ciascun nome compare.',
+  'prompt.disclaimer':
+    'Di\', con parole tue e senza relegarlo in fondo, che tutto questo ha puro scopo di intrattenimento: una carta non è una prova, e qualunque cosa la persona faccia sulla base della tua lettura è interamente una sua decisione e una sua responsabilità. Non sostituisce alcun parere medico, legale o finanziario. Se qualcuno sta andando verso uno di quelli, di\' apertamente da dove deve venire la risposta vera.',
   'prompt.source': 'La carta è all\'indirizzo {url}',
   'prompt.chart': 'La carta',
   'prompt.asked': 'La domanda posta è:',
   'prompt.noQuestion':
     'Nessuna domanda è stata posta. Descrivi come sta la carta — che cosa giace e che cosa sta in ciascun palazzo, e in quali configurazioni è caduta — e fermati lì. Non scegliere un palazzo, non leggere una fortuna per nessuno, e non dare consigli.',
-
-  'question.opening.1': 'Devo accettare il posto che mi hanno offerto?',
-  'question.opening.2': 'Come andrà questa attività se la apro in primavera?',
-  'question.opening.3': 'Che ne sarà della domanda che ho presentato in comune?',
-  'question.opening.4': 'Vale la pena fare il viaggio che sto progettando?',
-  'question.opening.5': 'Come mi accoglierà il cliente a cui mi sono rivolto?',
-
-  'question.meeting.1': 'Questa relazione reggerà?',
-  'question.meeting.2': 'Come prenderà la persona che sto per incontrare quello che ho da dirle?',
-  'question.meeting.3': 'Devo chiedere loro il favore di cui ho bisogno?',
-  'question.meeting.4': 'È il momento di fare pace con la persona con cui ho litigato?',
-  'question.meeting.5': 'Che cosa c\'è dietro il suo silenzio?',
-
-  'question.wealth.1': 'Questo investimento renderà quello che ci ho messo?',
-  'question.wealth.2': 'Come andrà la cura che sto per cominciare?',
-  'question.wealth.3': 'Devo comprare la casa che ho visto?',
-  'question.wealth.4': 'Da dove arriveranno i soldi di quest\'anno?',
-  'question.wealth.5': 'È questo il momento di ingrandire l\'attività?',
-
-  'question.documents.1': 'L\'esame andrà bene?',
-  'question.documents.2': 'Il contratto verrà firmato così com\'è?',
-  'question.documents.3': 'Come verrà accolto quello che sto per pubblicare?',
-  'question.documents.4': 'Il piano che ho scritto sta in piedi?',
-  'question.documents.5': 'Che cosa c\'è nella lettera che sto aspettando?',
-
-  'question.concealment.1': 'Per ora è meglio che tenga la cosa per me?',
-  'question.concealment.2': 'Da chi farei meglio a stare alla larga questo mese?',
-  'question.concealment.3': 'Quello che sto tenendo nascosto resterà nascosto?',
-  'question.concealment.4': 'Il lavoro che sto facendo con le mani verrà bene?',
-  'question.concealment.5': 'In questa faccenda mi si sta nascondendo qualcosa?',
-
-  'question.pursuit.1': 'Recupererò i soldi che mi devono?',
-  'question.pursuit.2': 'Come andrà la gara?',
-  'question.pursuit.3': 'Devo insistere con questa pretesa o lasciar perdere?',
-  'question.pursuit.4': 'Posso recuperare il terreno che ho perso?',
-  'question.pursuit.5': 'Che cosa mi trovo davanti in questa trattativa?',
-
-  'question.ending.1': 'È il momento di chiudere?',
-  'question.ending.2': 'Devo porre fine a questa società?',
-  'question.ending.3': 'Che cosa succede se lascio andare la cosa?',
-  'question.ending.4': 'Devo vendere quello che ho tenuto finora?',
-  'question.ending.5': 'Quello che è finito è finito davvero?',
-
-  'question.dispute.1': 'Come andrà la causa?',
-  'question.dispute.2': 'Dov\'è la cosa che ho perso?',
-  'question.dispute.3': 'Devo transigere o andare avanti?',
-  'question.dispute.4': 'Chi c\'è dietro i guai in cui mi trovo?',
-  'question.dispute.5': 'Questo litigio si ricomporrà?',
 
   'cli.heading.moment': 'Istante',
   'cli.heading.pillars': 'Quattro pilastri',

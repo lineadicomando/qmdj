@@ -920,14 +920,26 @@ settled to keep that true.
   two errands, and burying the first inside the second would make plain text
   unreachable to whoever wants nothing to do with a model. `/api/chart/text`
   and `/api/chart/prompt`, a light tools row and a section of its own.
-- **The examples are curated, not combinatorial.** A grammar assembling a
-  question from a domain, an action and a horizon writes nonsense — in two
-  languages instead of one, with Italian agreement to get wrong on top. Forty
-  hand-written strings grouped by the eight errands of `purposes.ts` cost less
-  than a grammar and are all well formed. They are labelled as examples and
-  said to be examples, because **a question nobody has asked has no 用神** and
-  a chart read towards one is a reading about nothing: this teaches the shape
-  of a question, it does not offer an oracle.
+- **The suggested questions were built and then taken out.** Forty of them,
+  hand-written in both languages and grouped by the eight errands of
+  `purposes.ts` — curated rather than combinatorial, since a grammar
+  assembling a question from a domain, an action and a horizon writes nonsense
+  in two languages instead of one, with Italian agreement to get wrong on top.
+  They were labelled as examples and said to be examples, and it was not
+  enough: **a question nobody has asked has no 用神**, and one sitting in the
+  field is indistinguishable from one the reader meant. A control that fills
+  the one field the whole prompt turns on is a control that answers for
+  somebody. The field is now typed into or left empty, and empty is a state
+  the prompt already reports honestly. Deleted rather than hidden: the keys,
+  `$lib/questions.ts` and the picker are all gone, and this note is what
+  remains, so that the idea is not had a second time without its answer.
+- **The disclaimer is in two places because it has to travel.** The footer
+  carries it for whoever is reading the site, and `prompt.disclaimer` tells
+  the reading to *say* it — a prompt goes somewhere else, and a disclaimer
+  left on the page it was copied from was written for somebody who is no
+  longer there. What it says is bounded the way everything else here is: the
+  calculations are checked and the divination is not a science, and the
+  second does not inherit the standing of the first.
 - **A fourth way to be plausibly wrong turned up while writing the prompt.**
   `docs/agent-prompt.md` listed three, all of them things passed *into* a
   tool: a place, a date, a birth time. The fourth is done with what comes

@@ -108,6 +108,11 @@ export function readingPrompt(
     '',
     t('prompt.names'),
     '',
+    // Last of the instructions, immediately before the data: it is the one
+    // the reading has to carry back out, and the last thing read before the
+    // chart is the likeliest to survive into the answer.
+    t('prompt.disclaimer'),
+    '',
     `## ${t('prompt.chart')}`,
     '',
     // Fenced, so that the column alignment survives and so that the boundary

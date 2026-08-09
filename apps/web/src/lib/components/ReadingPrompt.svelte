@@ -26,9 +26,7 @@
 -->
 <script lang="ts">
   import { Copier, fetchText } from '$lib/copy.svelte';
-  import { suggest, type Scope } from '$lib/questions';
-  import { PURPOSES } from '$lib/vocabulary';
-  import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { Translator } from '@qimendunjia/i18n';
 
   interface Props {
     t: Translator;
@@ -39,17 +37,9 @@
   let { t, query }: Props = $props();
 
   let question = $state('');
-  let scope = $state<Scope>('any');
-  /** The last example offered, so the next one is a different sentence. */
-  let offered = $state<MessageKey | undefined>();
 
   const copier = new Copier();
   const id = $props.id();
-
-  function example(): void {
-    offered = suggest(scope, offered);
-    question = t(offered);
-  }
 
   /**
    * The frame from the server, the question from here.
@@ -73,34 +63,9 @@
   <p>{t('form.promptCarries')}</p>
 
   <label for={id}>{t('form.question')}</label>
-  <textarea
-    {id}
-    bind:value={question}
-    rows="2"
-    placeholder={t('form.questionPlaceholder')}
-    oninput={() => (offered = undefined)}
+  <textarea {id} bind:value={question} rows="2" placeholder={t('form.questionPlaceholder')}
   ></textarea>
   <p class="note">{t('form.questionNote')}</p>
-
-  <!--
-    The examples, and what they are for. The face of every control here is a
-    word in the reader's language: `opening` and `dispute` are what the engine
-    calls the eight errands, and an option reading `concealment` is an option
-    nobody can choose on purpose.
-  -->
-  <div class="controls">
-    <label class="scope">
-      {t('form.suggestScope')}
-      <select bind:value={scope}>
-        <option value="any">{t('form.any')}</option>
-        {#each PURPOSES as purpose}
-          <option value={purpose.id}>{t(`label.purpose.${purpose.id}` as MessageKey)}</option>
-        {/each}
-      </select>
-    </label>
-    <button type="button" onclick={example}>{t('form.suggest')}</button>
-  </div>
-  <p class="note">{t('form.suggestNote')}</p>
 
   <div class="controls">
     <button type="button" class="copy" onclick={() => copier.run(copy)} disabled={copier.busy} aria-live="polite">
@@ -149,8 +114,6 @@
     margin-top: 0.5rem;
   }
   .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.75rem; }
-  .scope { display: flex; align-items: center; gap: 0.4rem; margin: 0; font-size: 0.8rem; }
-  select { font: inherit; font-size: 0.8rem; color: var(--ink); background: var(--ground); border: 1px solid var(--rule); padding: 0.2rem; max-width: 22rem; }
   button {
     font: inherit;
     font-size: 0.8rem;

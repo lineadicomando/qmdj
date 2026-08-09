@@ -399,10 +399,6 @@ export const en = {
   'form.questionPlaceholder': 'What are you asking this chart?',
   'form.questionNote':
     'The question is not an ornament. Which palace bears on it is the 用神, chosen by the reader for the question asked, and without one there is nothing to read the chart towards — the prompt says so plainly rather than letting a question be invented.',
-  'form.suggest': 'Suggest a question',
-  'form.suggestScope': 'About',
-  'form.suggestNote':
-    'Examples, to show how a question is put — not questions to ask. One nobody has asked has no 用神, and a reading made for it is a reading about nothing.',
 
   // The face of each step is the word, in the reader's language: these are
   // controls, and a control nobody can read is a control nobody can press.
@@ -425,6 +421,12 @@ export const en = {
   'step.year.back': 'The year before',
   'step.year.forward': 'The year after',
 
+  // The one line in the footer that is not about provenance. The calculations
+  // are checked and the divination is not a science, and the second does not
+  // inherit the standing of the first: what is exact here is where the Sun
+  // was, never what follows from it for anybody.
+  'footer.disclaimer':
+    'This site is for entertainment. Whatever is done on the strength of a chart read here is entirely the decision, and the responsibility, of whoever does it.',
   'footer.data': 'Astronomical data {ephemeris} · places {geonames} (CC BY 4.0)',
   'footer.licence': 'Source code under AGPL-3.0',
   'footer.privacy': 'Privacy',
@@ -486,6 +488,12 @@ export const en = {
     'If you are asked how sure any of this is, the answer is not the same for all of it. The solar terms, the lunar calendar and the four pillars were checked against published astronomical tables through an independent implementation. The Qi Men layout was checked against one open implementation, which means consistent with it and not verified. The configurations come from Chinese-language sources with no runnable reference at all. Do not describe the third as though it were the first.',
   'prompt.names':
     'Every name is given in Chinese, in pinyin and glossed. Write for someone who does not read Chinese: lead with the gloss and keep the hanzi beside it the first time each name appears.',
+  // Carried into the reading rather than left on the page it was copied
+  // from: the prompt travels, and this is the part that has to travel with
+  // it. The instruction is to *say* it — a disclaimer the reader never sees
+  // is a disclaimer that was written for somebody else.
+  'prompt.disclaimer':
+    'Say, in your own words and without burying it at the end, that this is for entertainment: a chart is not evidence, and whatever the person does on the strength of your reading is entirely their own decision and their own responsibility. It stands in for no medical, legal or financial advice. Where somebody is heading towards one of those, say plainly where the real answer has to come from.',
   'prompt.source': 'The chart is at {url}',
   'prompt.chart': 'The chart',
   'prompt.asked': 'The question asked is:',
@@ -500,53 +508,6 @@ export const en = {
   // These are not questions to ask. A question nobody has asked has no 用神,
   // which is why the interface offers them as a way of learning the shape of
   // one and says so beside the button.
-  'question.opening.1': 'Should I take the position I have been offered?',
-  'question.opening.2': 'How will this business go if I open it in the spring?',
-  'question.opening.3': 'What will come of the application I sent to the council?',
-  'question.opening.4': 'Is the journey I am planning worth making?',
-  'question.opening.5': 'How will the client I have approached receive me?',
-
-  'question.meeting.1': 'Will this relationship hold?',
-  'question.meeting.2': 'How will the person I am about to meet take what I have to say?',
-  'question.meeting.3': 'Should I ask them for the favour I need?',
-  'question.meeting.4': 'Is it time to make peace with the person I quarrelled with?',
-  'question.meeting.5': 'What is behind their silence?',
-
-  'question.wealth.1': 'Will this investment return what I put into it?',
-  'question.wealth.2': 'How will the treatment I am about to begin go?',
-  'question.wealth.3': 'Should I buy the house I have seen?',
-  'question.wealth.4': 'Where is this year\'s money going to come from?',
-  'question.wealth.5': 'Is this the moment to make the business bigger?',
-
-  'question.documents.1': 'Will the examination go well?',
-  'question.documents.2': 'Will the contract be signed as it stands?',
-  'question.documents.3': 'How will what I am about to publish be received?',
-  'question.documents.4': 'Is the plan I have written sound?',
-  'question.documents.5': 'What is in the letter I am waiting for?',
-
-  'question.concealment.1': 'Should I keep this to myself for now?',
-  'question.concealment.2': 'Who would I do better to stay away from this month?',
-  'question.concealment.3': 'Will what I am keeping quiet stay quiet?',
-  'question.concealment.4': 'Will the work I am doing with my hands come out well?',
-  'question.concealment.5': 'Is something in this being kept from me?',
-
-  'question.pursuit.1': 'Will I recover the money I am owed?',
-  'question.pursuit.2': 'How will the competition go?',
-  'question.pursuit.3': 'Should I press this claim or let it go?',
-  'question.pursuit.4': 'Can I make up the ground I have lost?',
-  'question.pursuit.5': 'What am I up against in this negotiation?',
-
-  'question.ending.1': 'Is it time to close this down?',
-  'question.ending.2': 'Should I end this partnership?',
-  'question.ending.3': 'What comes of letting this go?',
-  'question.ending.4': 'Should I sell what I have been holding on to?',
-  'question.ending.5': 'Is what has ended really over?',
-
-  'question.dispute.1': 'How will the lawsuit go?',
-  'question.dispute.2': 'Where is the thing I have lost?',
-  'question.dispute.3': 'Should I settle, or go on with it?',
-  'question.dispute.4': 'Who is behind the trouble I am in?',
-  'question.dispute.5': 'Will this argument be resolved?',
 
   'cli.heading.moment': 'Moment',
   'cli.heading.pillars': 'Four Pillars',

@@ -41,6 +41,9 @@
   <main>{@render children()}</main>
 
   <footer>
+    <!-- First of the three, and not in the small print at the end of them:
+         it is the one line here that is about what to do with any of this. -->
+    <p class="disclaimer">{t('footer.disclaimer')}</p>
     <p>
       {t('footer.data', { ephemeris: 'Swiss Ephemeris', geonames: 'GeoNames' })}
     </p>
@@ -89,5 +92,9 @@
     color: var(--faint);
     font-size: 0.85em;
   }
+  /* Darker than the two lines under it. A disclaimer set in the same grey as
+     a licence notice is a disclaimer nobody reads, and this one is the reason
+     the other two are allowed to be quiet. */
+  .disclaimer { color: var(--ink); max-width: 62ch; }
   footer p { margin: 0.3rem 0; }
 </style>

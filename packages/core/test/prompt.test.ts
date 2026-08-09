@@ -90,6 +90,20 @@ describe('the prompt', () => {
     expect(text).toContain('name what you are missing instead of filling it in');
   });
 
+  /**
+   * The prompt travels, and a disclaimer left on the page it was copied from
+   * does not travel with it. So the reading is told to carry it — to say it,
+   * not to have been told it.
+   */
+  it('tells the reading to say what it is for, and whose the decision is', () => {
+    const at = moment();
+    const text = readingPrompt(at, computeQimenChart(at, DEFAULT_OPTIONS), en);
+
+    expect(text).toContain('this is for entertainment');
+    expect(text).toContain('their own decision and their own responsibility');
+    expect(text).toContain('no medical, legal or financial advice');
+  });
+
   it('says no question was asked rather than inventing one', () => {
     const at = moment();
     const text = readingPrompt(at, computeQimenChart(at, DEFAULT_OPTIONS), en);

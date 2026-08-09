@@ -106,6 +106,12 @@ into every log between the two.
 This project talks to no model, holds no key and sends nothing anywhere. The
 prompt goes to a clipboard.
 
+The prompt also carries the disclaimer the site's footer carries, as an
+instruction to say it: this is for entertainment, and whatever anybody does on
+the strength of a reading is entirely their own decision and their own
+responsibility. A prompt travels, and a disclaimer left behind on the page it
+was copied from was written for somebody who is no longer there.
+
 ## Layout
 
 | | |
