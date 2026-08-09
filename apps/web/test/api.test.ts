@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { GET as chart } from '../src/routes/api/chart/+server';
 import { GET as plate } from '../src/routes/api/chart/plate/+server';
+import { GET as prompt } from '../src/routes/api/chart/prompt/+server';
+import { GET as text_ } from '../src/routes/api/chart/text/+server';
 import { GET as bazi } from '../src/routes/api/bazi/+server';
 import { GET as terms } from '../src/routes/api/terms/+server';
 import { GET as locations } from '../src/routes/api/locations/+server';
@@ -283,6 +285,73 @@ describe('GET /api/chart/plate', () => {
 
     expect(auto.text).toContain('prefers-color-scheme');
     expect(dark.text).not.toContain('prefers-color-scheme');
+  });
+});
+
+describe('GET /api/chart/text', () => {
+  it('says the chart in words, in the language it was asked for', async () => {
+    const { status, headers, text } = await call(text_, `${MOMENT}&lang=en`);
+
+    expect(status).toBe(200);
+    expect(headers['content-type']).toMatch(/text\/plain/);
+    expect(text).toContain('yang dun');
+    expect(text).toContain('休門');
+    expect((await call(text_, `${MOMENT}&lang=it`)).text).toContain('Riposo');
+  });
+
+  it('says where the chart can be cast again', async () => {
+    // The page and the API read the same query string, so the address of one
+    // is the address of the other with the section's path.
+    const { text } = await call(text_, `${MOMENT}&lang=it`);
+
+    expect(text).toContain('http://localhost/it?date=2024-06-15&time=14%3A00');
+    expect(text).not.toContain('lang=it');
+  });
+
+  it('is cacheable by the browser that asked, and by nothing else', async () => {
+    expect((await call(text_, MOMENT)).headers['cache-control']).toBe('private, max-age=86400');
+    expect((await call(text_, 'timezone=Asia/Shanghai')).headers['cache-control']).toBe('no-store');
+  });
+});
+
+describe('GET /api/chart/prompt', () => {
+  it('carries the chart and the rules for reading it', async () => {
+    const { status, headers, text } = await call(prompt, `${MOMENT}&lang=en`);
+
+    expect(status).toBe(200);
+    expect(headers['content-type']).toMatch(/text\/plain/);
+    // The chart itself, and not merely an instruction to cast one: a model
+    // given a date casts it from memory and gets it wrong.
+    expect(text).toContain('yang dun');
+    expect(text).toContain('用神');
+    expect(text).toContain('Do not rank the palaces');
+  });
+
+  /**
+   * The question is somebody's own, and a query string is written into every
+   * log between the browser and this handler. So the server is told only that
+   * one exists, and the prompt ends on the line the browser appends it to.
+   */
+  it('is told that a question exists, and never what it is', async () => {
+    const without = await call(prompt, `${MOMENT}&lang=en`);
+    const with_ = await call(prompt, `${MOMENT}&lang=en&asked=true`);
+
+    expect(without.text).toContain('No question was asked');
+    expect(with_.text.endsWith('The question asked is:\n')).toBe(true);
+  });
+
+  it('leaves the parameters only the API answers to out of the address it cites', async () => {
+    const { text } = await call(prompt, `${MOMENT}&lang=en&asked=true`);
+
+    expect(text).toContain('http://localhost/en?date=2024-06-15');
+    expect(text).not.toContain('asked=true');
+  });
+
+  it('fails with a code and parameters, as every other endpoint does', async () => {
+    const { status, body } = await call(prompt, 'date=15/06/2024');
+
+    expect(status).toBe(400);
+    expect(body).toMatchObject({ code: 'INVALID_DATE' });
   });
 });
 

@@ -5,7 +5,9 @@
   import { momentQuery, sayFailure, type MomentInput } from '$lib/moment';
   import { step, type Unit, type Wall } from '$lib/step';
   import ChartReading from '$lib/components/ChartReading.svelte';
+  import ChartTools from '$lib/components/ChartTools.svelte';
   import FormPanel from '$lib/components/FormPanel.svelte';
+  import ReadingPrompt from '$lib/components/ReadingPrompt.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
   import MomentSteps from '$lib/components/MomentSteps.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
@@ -43,6 +45,15 @@
   const plate = $derived(
     `/api/chart/plate?${momentQuery({ ...data.moment, ...cast }, { lang: t.locale, scheme: appearance.current })}`,
   );
+
+  /**
+   * The same chart, for whatever is asked of it in words.
+   *
+   * Pinned to the instant like the drawing, and for the same reason: what is
+   * copied has to be the chart on screen, and «now» is a different chart an
+   * hour later.
+   */
+  const address = $derived(momentQuery({ ...data.moment, ...cast }, { lang: t.locale }));
 
   /**
    * Where each step stands, shown on the step that moves it.
@@ -197,7 +208,14 @@
       onload={() => (drawn = plate)}
     />
 
-    <div><ChartReading {chart} {t} /></div>
+    <div>
+      <ChartReading {chart} {t} />
+      <!-- Two errands and two controls: the chart in words, and the chart in
+           the hands of something that will read it. Nobody looking for the
+           first should have to go through the second. -->
+      <ChartTools {t} query={address} />
+      <ReadingPrompt {t} query={address} />
+    </div>
   </section>
 {/if}
 

@@ -50,6 +50,25 @@ export function readLocale(params: URLSearchParams, header?: string | null): Loc
 }
 
 /**
+ * The address of the page a chart is read at, built from the API's own.
+ *
+ * The one place here that writes an address rather than reading one, and it
+ * is the same promise from the other side: the interface and the API take the
+ * same query string, so the page is this URL with the section's path and
+ * without the two parameters only the API answers to. It travels inside what
+ * gets copied, so that a reading pasted into a conversation somewhere else
+ * still says which chart it was made from — and so that anybody can cast it
+ * again and see whether it says what the reading claimed.
+ */
+export function pageAddress(url: URL, locale: Locale): string {
+  const page = new URL(url);
+  page.pathname = `/${locale}`;
+  page.searchParams.delete('lang');
+  page.searchParams.delete('asked');
+  return page.toString();
+}
+
+/**
  * Where the chart is cast from.
  *
  * A place is never inferred from a name here either: the API takes an
