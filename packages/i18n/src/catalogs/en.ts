@@ -405,17 +405,20 @@ export const en = {
   // is the whole of it: the instant of asking is the instant that is cast.
   'consult.natalNote':
     'Reading a Qi Men chart as a chart of a life is a modern and minority application — the classical uses are divination and the choosing of times.',
+  // The page explains itself here and nowhere else, in one line: the nav says
+  // which section this is, and the form says nothing about what comes out of
+  // it. What was cut from here was the statement of the stance — that lives in
+  // the footer, in the privacy note and in the notes — and not this, which is
+  // the only thing a newcomer needs before they start typing.
+  'consult.lead':
+    'Ask a question and get a prompt, ready to paste into ChatGPT, Claude or another assistant.',
   'consult.cast': 'Cast the chart',
-  'consult.uncast': 'The chart is cast when you ask for it, and is not in the address of this page: reloading does not bring it back, and there is no link to it.',
 
   // Under the board, where somebody who wants a reading will be looking. It
   // sends them on rather than offering a field here: the question belongs
   // before the casting, and this page has already cast.
   'form.toConsult': 'To have a chart read, with a question or as a chart of a birth:',
 
-  'form.promptTitle': 'A prompt for an AI',
-  'form.promptNote':
-    'Copies this chart together with the instructions for reading it, ready to paste into ChatGPT, Claude or another assistant.',
   'form.promptPrivacy':
     'What is copied carries the date, the time and the place of the chart, and the question you typed. Paste it somewhere you would tell those things to.',
   // Required, and said in the label rather than by a mark nobody can read

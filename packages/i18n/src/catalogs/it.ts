@@ -332,15 +332,12 @@ export const it: Record<MessageKey, string> = {
   'consult.mode.natal': 'La carta di una nascita',
   'consult.natalNote':
     'Leggere una carta di Qi Men come carta di una vita è un\'applicazione moderna e minoritaria — gli usi classici sono la divinazione e la scelta dei tempi.',
+  'consult.lead':
+    'Poni una domanda e ottieni un prompt pronto — da incollare in ChatGPT, Claude o un altro assistente.',
   'consult.cast': 'Poni la carta',
-  'consult.uncast':
-    'La carta è posta quando la chiedi, e non sta nell\'indirizzo di questa pagina: ricaricare non la riporta, e non esiste un collegamento a essa.',
 
   'form.toConsult': 'Per far leggere una carta, con una domanda o come carta di una nascita:',
 
-  'form.promptTitle': "Un prompt per un'AI",
-  'form.promptNote':
-    'Copia questa carta insieme alle istruzioni per leggerla, pronta da incollare in ChatGPT, Claude o un altro assistente.',
   'form.promptPrivacy':
     'Ciò che viene copiato contiene la data, l\'ora e il luogo della carta, e la domanda che hai scritto. Incollalo dove diresti quelle cose.',
   'form.question': 'La tua domanda',

@@ -207,6 +207,11 @@
   <!-- Named, not shown: the nav says which section this is, as on the chart. -->
   <h1 class="offscreen">{t('consult.title')}</h1>
 
+  <!-- The one line that says what comes out of this, before anybody types
+       into it. It stands where a heading would, under one that is spoken and
+       not seen. -->
+  <p class="lead">{t('consult.lead')}</p>
+
   <form onsubmit={consult}>
     <!-- The two errands, named in words. They are exclusive, so they are
          radios and not switches: choosing one is unchoosing the other.
@@ -297,6 +302,10 @@
 </article>
 
 <style>
+  /* One sentence, so it takes the width it is given: the measure that keeps a
+     paragraph readable is about coming back from one line to the next, and
+     there is no next one here. */
+  .lead { margin: 0 0 1rem; color: var(--faint); font-size: 0.9rem; line-height: 1.55; }
   .note { margin: 0; color: var(--faint); font-size: 0.8rem; line-height: 1.55; max-width: 62ch; }
   /*
    * The measure for prose, lifted for the one line that is not prose.
