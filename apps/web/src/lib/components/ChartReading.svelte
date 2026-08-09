@@ -24,7 +24,22 @@
    * the ephemerides and a native module into the browser bundle. What arrives
    * here has crossed HTTP as JSON in any case.
    */
-  let { chart, t }: { chart: any; t: Translator } = $props();
+  /**
+   * `palaces` is whether the nine palaces are part of this, or the caller's.
+   *
+   * Six columns of two lines is the widest thing a chart has to show, and it
+   * does not fit in a column beside a drawing — it scrolls sideways there
+   * before it has shown one palace whole, which is a table nobody can read.
+   * A caller laying the reading out in two columns takes the table off this
+   * and puts it under both, at the width it needs. It is still one component's
+   * worth of markup: `PalaceTable` was always its own, and what this exists to
+   * keep in one place is the ju, the horses and the configurations.
+   */
+  let {
+    chart,
+    t,
+    palaces = true,
+  }: { chart: any; t: Translator; palaces?: boolean } = $props();
 </script>
 
 <p class="ju">
@@ -67,7 +82,9 @@
 
 <!-- Six columns of two lines each: on a narrow screen the table scrolls
      inside its frame rather than taking the page with it. -->
-<div class="scroller"><PalaceTable palaces={chart.palaces} {t} /></div>
+{#if palaces}
+  <div class="scroller"><PalaceTable palaces={chart.palaces} {t} /></div>
+{/if}
 
 {#if chart.patterns.length > 0}
   <h2>{t('cli.heading.patterns')}</h2>

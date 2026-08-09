@@ -34,6 +34,7 @@
   import type { Translator } from '@qimendunjia/i18n';
   import { sayFailure, type Failure } from '$lib/moment';
   import ChartReading from './ChartReading.svelte';
+  import PalaceTable from './PalaceTable.svelte';
 
   interface Props {
     t: Translator;
@@ -194,15 +195,27 @@
         onload={() => (drawn = plate)}
       />
 
-      <div class="said">
-        {#await asked}
-          <p class="note">{t('form.working')}</p>
-        {:then found}
-          <ChartReading chart={found} {t} />
-        {:catch failure}
-          <p class="failure" role="alert">{failure.message}</p>
-        {/await}
-      </div>
+      {#await asked}
+        <p class="note">{t('form.working')}</p>
+      {:then found}
+        <div class="said"><ChartReading chart={found} {t} palaces={false} /></div>
+        <!--
+          Under the board and across the whole dialog, never beside it. See
+          the note on the two columns below.
+
+          Two elements and not one, and the nesting is load-bearing. `.scroller`
+          sets `overflow-x`, which makes the computed `overflow-y` a scroller
+          too — and a scroll container contributes nothing to the size of the
+          grid row it sits in, so as a grid item it came out exactly zero tall
+          with a whole chart inside it. The grid gets a plain block; the block
+          gets the frame that scrolls.
+        -->
+        <div class="palaces">
+          <div class="scroller"><PalaceTable palaces={found.palaces} {t} /></div>
+        </div>
+      {:catch failure}
+        <p class="failure" role="alert">{failure.message}</p>
+      {/await}
     </div>
   </div>
 </dialog>
@@ -307,20 +320,36 @@
   /* A shade quieter than the chart section's, which is a page's answer where
      this is a column beside a picture. Everything in `ChartReading` is sized
      in `em`, so one declaration moves all of it. */
-  .said { font-size: 0.95rem; }
+  .said, .palaces { font-size: 0.95rem; }
+  /*
+   * `0` and not the `auto` a grid item gets by default.
+   *
+   * A grid item will not shrink below its own min-content, and this one's is
+   * the whole table — so on a narrow window the column grew to the table's
+   * width and the *dialog* scrolled sideways, carrying the board and the
+   * heading off to the left. Which is the exact thing `.scroller` exists to
+   * prevent, one level further out. Given leave to shrink, the item takes the
+   * width it is offered and the frame inside it does the scrolling.
+   */
+  .palaces { min-inline-size: 0; }
   /*
    * Where there is room for a column of words beside a square. Below this the
    * enlargement is the width of the window and nothing else, which on a phone
    * the dialog already had.
    *
-   * The column is wider than it was: it used to hold the ju and a short list,
-   * and it now holds the table of the nine palaces as well. Six columns of
-   * two lines do not fit in seventeen rems — they scroll sideways inside
-   * `.scroller`, which is what they already do on a phone, but a column that
-   * scrolls before it has shown a single palace whole is not worth having.
+   * The words go beside the board. The nine palaces do not, and it was tried:
+   * six columns of two lines, each now carrying a gloss, a glyph and a
+   * reading, want something past fifty rems, and the column beside a board is
+   * twenty-four at its widest. What a reader got was a table cut down the
+   * middle with its right half behind a sideways scroll they had no reason to
+   * look for — half a chart, silently.
+   *
+   * So the table spans both columns and hangs under the board, where the width
+   * it needs is the width the dialog already has.
    */
   @media (min-width: 56rem) {
     dialog.large .body { grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem); }
+    dialog.large .palaces { grid-column: 1 / -1; }
     dialog.large img {
       /* The height budget buys eight sevenths of itself in width: what has to
          fit is everything down to the foot of the board, which is the
