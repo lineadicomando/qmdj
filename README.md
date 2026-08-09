@@ -22,8 +22,21 @@ Qi Men chart
   chief gate       Rest 休門 xiūmén → north 坎 kǎn
 
 Nine palaces
-  palace            earth            heaven             star                                        gate
-  1 north 坎 kǎn    Yin Earth 己 jǐ  Yang Water 壬 rén  Assistant resting · generated 生我 shēngwǒ  Rest imprisoned · same phase 比和 bǐhé
+  palace               earth               heaven
+  1 north 坎 kǎn       Yin Earth 己 jǐ     Yang Water 壬 rén
+  2 southwest 坤 kūn   Yang Metal 庚 gēng  Yin Earth 己 jǐ
+  …
+
+What stands in each
+  palace      star                   gate                spirit
+  1 坎 kǎn    Assistant 天輔 tiānfǔ  Rest 休門 xiūmén    Union 六合 liùhé
+  2 坤 kūn    Canopy 天蓬 tiānpéng   Death 死門 sǐmén    Chief 值符 zhífú
+  …
+
+How each of them stands
+  palace      star                              gate
+  1 坎 kǎn    resting · generated 生我 shēngwǒ  imprisoned · same phase 比和 bǐhé
+  2 坤 kūn    imprisoned · controlled 剋我 kèwǒ  supported · same phase 比和 bǐhé
   …
 ```
 

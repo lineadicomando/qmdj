@@ -210,37 +210,75 @@ export function formatQimenChart(chart: QimenChart, t: Translator): string {
       ],
       4,
     ),
-    '',
-    `${t('cli.heading.palaces')}`,
   ];
 
   const strong = (state: { id: string } | undefined): string =>
-    state ? ` ${t(`label.strength.${state.id}` as MessageKey)}` : '';
+    state ? t(`label.strength.${state.id}` as MessageKey) : '—';
   // How it stands to the ground it is on, after how it stands to the season.
   // The two are different questions of the same thing and are told apart by
   // the glyph, which names the second and never the first.
   const stands = (relation: { id: string; hanzi: string; pinyin: string } | undefined): string =>
     relation ? ` · ${named(relation, `label.relation.${relation.id}` as MessageKey, t)}` : '';
 
+  /**
+   * The palace, named in full for the first table and in short for the others.
+   *
+   * The direction is what a reader needs to find the palace on the board, and
+   * they need it once. Under the two tables that follow it, the first of which
+   * has just given it three lines above, it is nine repetitions of a word
+   * nobody is reading — and nine columns the tables cannot spare.
+   */
+  const where = (cell: (typeof chart.palaces)[number], full: boolean): string =>
+    full
+      ? `${cell.palace.number} ${named(cell.palace, `label.palace.${cell.palace.id}` as MessageKey, t)}`
+      : `${cell.palace.number} ${glyph(cell.palace)}`;
+
+  /**
+   * Three tables and not one, because a palace answers three questions.
+   *
+   * What lies in it — the two plates of stems, which the ju and the hour fix.
+   * What stands in it — the star, the gate and the spirit, which move. And how
+   * those stand, to the season and to the ground they came to rest on.
+   *
+   * It used to be one table of six columns, which was already the widest thing
+   * this prints and became unreadable once every name carried its reading as
+   * well as its glyph: a hundred and seventy-six columns, which no terminal
+   * shows and every terminal folds in half. Three tables of three or four are
+   * each under a hundred, and the seam between them falls where the reading
+   * has a seam anyway.
+   */
   lines.push(
+    '',
+    `${t('cli.heading.palaces')}`,
     ...table([
-      [
-        t('cli.column.palace'),
-        t('cli.column.earth'),
-        t('cli.column.heaven'),
-        t('cli.column.star'),
-        t('cli.column.gate'),
-        t('cli.column.spirit'),
-      ],
+      [t('cli.column.palace'), t('cli.column.earth'), t('cli.column.heaven')],
       ...chart.palaces.map((cell) => [
-        `${cell.palace.number} ${named(cell.palace, `label.palace.${cell.palace.id}` as MessageKey, t)}`,
+        where(cell, true),
         named(cell.earth, `label.stem.${cell.earth.id}` as MessageKey, t),
         named(cell.heaven, `label.stem.${cell.heaven.id}` as MessageKey, t),
-        `${t(`label.star.${cell.star.id}` as MessageKey)}${strong(cell.starStrength)}${stands(cell.starRelation)}`,
-        cell.gate
-          ? `${t(`label.gate.${cell.gate.id}` as MessageKey)}${strong(cell.gateStrength)}${stands(cell.gateRelation)}`
+      ]),
+    ]),
+    '',
+    `${t('cli.heading.standing')}`,
+    ...table([
+      [t('cli.column.palace'), t('cli.column.star'), t('cli.column.gate'), t('cli.column.spirit')],
+      ...chart.palaces.map((cell) => [
+        where(cell, false),
+        named(cell.star, `label.star.${cell.star.id}` as MessageKey, t),
+        cell.gate ? named(cell.gate, `label.gate.${cell.gate.id}` as MessageKey, t) : '—',
+        cell.spirit
+          ? named(cell.spirit, `label.spirit.${cell.spirit.id}` as MessageKey, t)
           : '—',
-        cell.spirit ? t(`label.spirit.${cell.spirit.id}` as MessageKey) : '—',
+      ]),
+    ]),
+    '',
+    `${t('cli.heading.weighed')}`,
+    ...table([
+      [t('cli.column.palace'), t('cli.column.star'), t('cli.column.gate')],
+      ...chart.palaces.map((cell) => [
+        where(cell, false),
+        `${strong(cell.starStrength)}${stands(cell.starRelation)}`,
+        cell.gate ? `${strong(cell.gateStrength)}${stands(cell.gateRelation)}` : '—',
       ]),
     ]),
   );
@@ -438,6 +476,12 @@ export function formatScan(matches: readonly ScanMatch[], t: Translator): string
         first ? ganzhi(run.chart.moment.pillars.hour, t) : '',
         first ? `${dun} ${run.chart.ju.number}` : '',
         `${cell.palace.number} ${named(cell.palace, `label.palace.${cell.palace.id}` as MessageKey, t)}`,
+        // Gloss and strength, without the glyph and the reading the chart's
+        // own tables now carry. Not an oversight and not the rule bending:
+        // this row already holds four named things behind four that identify
+        // the run, and naming all four in full takes it past two hundred
+        // columns. Closing it wants the two-level layout the chart got, which
+        // is a change to how a scan reads and not to what it says.
         cell.gate
           ? `${t(`label.gate.${cell.gate.id}` as MessageKey)}${strong(cell.gateStrength)}`
           : '—',

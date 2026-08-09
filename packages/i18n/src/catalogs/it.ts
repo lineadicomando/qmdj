@@ -358,6 +358,8 @@ export const it: Record<MessageKey, string> = {
   'cli.heading.pillars': 'Quattro pilastri',
   'cli.heading.chart': 'Carta Qi Men',
   'cli.heading.palaces': 'Nove palazzi',
+  'cli.heading.standing': 'Che cosa vi sta',
+  'cli.heading.weighed': 'Come vi stanno',
   'cli.heading.reading': 'Lettura',
   'cli.heading.luck': 'Cicli decennali',
   'cli.heading.terms': 'Termini solari del {year}',

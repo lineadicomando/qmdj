@@ -416,6 +416,8 @@ export const en = {
   'cli.heading.pillars': 'Four Pillars',
   'cli.heading.chart': 'Qi Men chart',
   'cli.heading.palaces': 'Nine palaces',
+  'cli.heading.standing': 'What stands in each',
+  'cli.heading.weighed': 'How each of them stands',
   'cli.heading.reading': 'Read out',
   'cli.heading.luck': 'Luck cycles',
   'cli.heading.terms': 'Solar terms of {year}',
