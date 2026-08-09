@@ -327,15 +327,11 @@ export const it: Record<MessageKey, string> = {
   'form.copyUnread': 'La carta non è stata riletta.',
 
   'consult.title': "Chiedere a un'AI di leggere una carta",
-  'consult.note':
-    'Questa pagina pone una carta e la consegna insieme alle istruzioni per leggerla. La lettura avviene nel tuo assistente, non qui: niente in questo sito legge una carta, e niente viene mandato da nessuna parte.',
   'consult.mode': 'Che cosa si chiede',
   'consult.mode.question': 'Una domanda, posta adesso',
   'consult.mode.natal': 'La carta di una nascita',
-  'consult.questionNote':
-    'La domanda viene prima perché la carta è posta per l\'istante in cui la fai. Scrivila, poi poni: una carta guardata per ozio e corredata di domanda dopo è una carta con una didascalia.',
   'consult.natalNote':
-    'Leggere una carta di Qi Men come carta di una vita è un\'applicazione moderna e minoritaria — gli usi classici sono la divinazione e la scelta dei tempi — e le scuole che la insegnano non concordano fra loro. Questo sito non prende posizione su quale palazzo corrisponda a quale parte di una vita, né qui né nel prompt. In questa modalità non si pone alcuna domanda: l\'assistente descrive la carta, e quello che vuoi sapere glielo chiedi dopo.',
+    'Leggere una carta di Qi Men come carta di una vita è un\'applicazione moderna e minoritaria — gli usi classici sono la divinazione e la scelta dei tempi.',
   'consult.cast': 'Poni la carta',
   'consult.uncast':
     'La carta è posta quando la chiedi, e non sta nell\'indirizzo di questa pagina: ricaricare non la riporta, e non esiste un collegamento a essa.',

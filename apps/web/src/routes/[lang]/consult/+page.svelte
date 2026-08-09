@@ -167,8 +167,8 @@
 <svelte:head><title>{t('consult.title')}</title></svelte:head>
 
 <article>
-  <h1>{t('consult.title')}</h1>
-  <p class="lead">{t('consult.note')}</p>
+  <!-- Named, not shown: the nav says which section this is, as on the chart. -->
+  <h1 class="offscreen">{t('consult.title')}</h1>
 
   <form onsubmit={consult}>
     <!-- The two errands, named in words. They are exclusive, so they are
@@ -195,7 +195,6 @@
         <textarea bind:value={question} rows="2" placeholder={t('form.questionPlaceholder')}
         ></textarea>
       </label>
-      <p class="note">{t('consult.questionNote')}</p>
     {/if}
 
     <MomentForm
@@ -215,33 +214,37 @@
   {#if said}<p class="failure" role="alert">{said}</p>{/if}
 
   {#if chart}
+    <!--
+      Directly under the fields, and above the board.
+
+      What this page is for is the taking away, not the looking: the chart
+      below is here so that somebody can see what they are about to hand over,
+      and it is long. A button at the foot of it would be the point of the
+      page reached by scrolling past everything that is not the point.
+    -->
+    <div class="take" class:stale={busy}>
+      <h2>{t('form.promptTitle')}</h2>
+      <p class="note">{t('form.promptNote')}</p>
+      <CopyText
+        {t}
+        lead
+        label="form.copyPrompt"
+        url={promptUrl}
+        suffix={natal ? undefined : question.trim()}
+      />
+      <p class="note">{t('form.promptPrivacy')}</p>
+      <p class="note">{t('consult.uncast')}</p>
+    </div>
+
     <section class="result" class:stale={busy} aria-busy={busy}>
       <img src={plate} alt="" width="900" height="1035" />
-      <div>
-        <ChartReading {chart} {t} />
-
-        <div class="take">
-          <h2>{t('form.promptTitle')}</h2>
-          <p class="note">{t('form.promptNote')}</p>
-          <CopyText
-            {t}
-            lead
-            label="form.copyPrompt"
-            url={promptUrl}
-            suffix={natal ? undefined : question.trim()}
-          />
-          <p class="note">{t('form.promptPrivacy')}</p>
-          <p class="note">{t('consult.uncast')}</p>
-        </div>
-      </div>
+      <div><ChartReading {chart} {t} /></div>
     </section>
   {/if}
 </article>
 
 <style>
-  h1 { font-size: 1.25rem; font-weight: 500; margin: 0 0 0.5rem; }
   h2 { font-size: 1rem; font-weight: 500; margin: 0 0 0.5rem; }
-  .lead { max-width: 62ch; color: var(--faint); font-size: 0.9rem; line-height: 1.55; }
   .note { margin: 0; color: var(--faint); font-size: 0.8rem; line-height: 1.55; max-width: 62ch; }
 
   /* The same box the other sections put their fields in, and for the same
@@ -253,7 +256,7 @@
     border-radius: 8px;
     background: var(--tint);
     padding: 1rem 1.1rem 1.2rem;
-    margin: 1.5rem 0 2rem;
+    margin: 0 0 2rem;
   }
   fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 0.3rem; }
   legend { padding: 0; font-size: 0.9em; color: var(--faint); }
@@ -281,16 +284,19 @@
     inline-size: min(100%, calc(100svh * 8 / 7));
     block-size: auto;
   }
+  /* Between the fields and the board, and parted from the board rather than
+     from the form: the box above it is already a boundary. */
   .take {
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--rule);
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
     max-width: 62ch;
     display: grid;
     justify-items: start;
     gap: 0.6rem;
   }
+  .take { transition: opacity 0.15s ease-out; }
   @media (prefers-reduced-motion: reduce) {
-    .result { transition: none; }
+    .result, .take { transition: none; }
   }
 </style>

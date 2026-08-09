@@ -398,17 +398,13 @@ export const en = {
   // question on it would be a third thing this project has already declined —
   // comparing a natal chart against the chart of a moment.
   'consult.title': 'Asking an AI to read a chart',
-  'consult.note':
-    'This page casts a chart and hands it over with the instructions for reading it. The reading happens in your own assistant, not here: nothing on this site reads a chart, and nothing is sent anywhere.',
   'consult.mode': 'What is being asked',
   'consult.mode.question': 'A question, asked now',
   'consult.mode.natal': 'A chart of a birth',
   // Why the question is above the moment and not below the chart. The order
   // is the whole of it: the instant of asking is the instant that is cast.
-  'consult.questionNote':
-    'The question comes first because the chart is cast for the moment you ask it. Write it, then cast: a chart looked at idly and given a question afterwards is a chart with a caption on it.',
   'consult.natalNote':
-    'Reading a Qi Men chart as a chart of a life is a modern and minority application — the classical uses are divination and the choosing of times — and the schools that teach it do not agree with one another. This site takes no position on which palace stands for which part of a life, here or in the prompt. No question is asked in this mode: the assistant describes the chart, and you ask it what you want to know afterwards.',
+    'Reading a Qi Men chart as a chart of a life is a modern and minority application — the classical uses are divination and the choosing of times.',
   'consult.cast': 'Cast the chart',
   'consult.uncast': 'The chart is cast when you ask for it, and is not in the address of this page: reloading does not bring it back, and there is no link to it.',
 
