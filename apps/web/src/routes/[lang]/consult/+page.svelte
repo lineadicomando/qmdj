@@ -44,8 +44,27 @@
   let { data } = $props();
   const t = $derived(data.t);
 
+  /**
+   * Whether the chart of a birth is offered here yet.
+   *
+   * It is not, for now. The frame is built and the prompt it produces is
+   * honest about what it will not say — but what came back from it read
+   * thinly, and a mode that yields a poor reading is worse than one that is
+   * absent: it teaches that this is what the method gives. It comes back when
+   * there is something better to hand the model than a frame and a warning.
+   *
+   * Withheld here and nowhere else. `readingPrompt` still takes the destiny
+   * frame, `/api/chart/prompt?frame=natal` still answers with it, and
+   * `qimen chart --natal` still prints it, with their tests. What is switched
+   * off is the offer in the interface, not the capability — so nothing has to
+   * be rebuilt when it returns, and nothing rots in the meantime.
+   */
+  const NATAL_OFFERED = false;
+
+  // Forced off rather than merely unshown: an address is a way in, and a mode
+  // that cannot be chosen should not be reachable by typing `?mode=natal`.
   // svelte-ignore state_referenced_locally
-  let natal = $state(data.natal);
+  let natal = $state(NATAL_OFFERED && data.natal);
   // svelte-ignore state_referenced_locally
   let asked = $state<MomentInput>({ ...data.moment });
   let question = $state('');
@@ -172,18 +191,22 @@
 
   <form onsubmit={consult}>
     <!-- The two errands, named in words. They are exclusive, so they are
-         radios and not switches: choosing one is unchoosing the other. -->
-    <fieldset>
-      <legend>{t('consult.mode')}</legend>
-      <label class="check">
-        <input type="radio" checked={!natal} onchange={() => choose(false)} />
-        {t('consult.mode.question')}
-      </label>
-      <label class="check">
-        <input type="radio" checked={natal} onchange={() => choose(true)} />
-        {t('consult.mode.natal')}
-      </label>
-    </fieldset>
+         radios and not switches: choosing one is unchoosing the other.
+         With one of the two withheld there is nothing to choose between, and
+         a group of one radio is a control that cannot be operated. -->
+    {#if NATAL_OFFERED}
+      <fieldset>
+        <legend>{t('consult.mode')}</legend>
+        <label class="check">
+          <input type="radio" checked={!natal} onchange={() => choose(false)} />
+          {t('consult.mode.question')}
+        </label>
+        <label class="check">
+          <input type="radio" checked={natal} onchange={() => choose(true)} />
+          {t('consult.mode.natal')}
+        </label>
+      </fieldset>
+    {/if}
 
     {#if natal}
       <p class="note">{t('consult.natalNote')}</p>

@@ -108,8 +108,14 @@ sources it names as unusable, and it is where a model invents most
 confidently. A chart of a birth carrying a question would be a third thing,
 and `--natal` refuses `--ask` rather than resolving it.
 
-In the interface both live in their own section, `/en/consult`, and not under
-the board. The reason is an order the chart section cannot keep: **the instant
+**The natal frame is not offered in the interface yet.** It is built, tested
+and reachable from the CLI and the API; what is switched off is the offer, in
+one constant in `[lang]/consult/+page.svelte`. The readings it produced were
+thin, and a mode that yields a poor reading teaches that this is what the
+method gives.
+
+The interface section is `/en/consult`, and it is not under the board. The
+reason is an order the chart section cannot keep: **the instant
 of asking is the instant that is cast**, so the question comes before the
 casting or it is a caption on a chart that was already there. There is nothing
 else on that page. The question never leaves the browser — the server is told

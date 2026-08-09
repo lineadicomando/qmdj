@@ -997,6 +997,19 @@ A natal chart carrying a question is a third thing — a chart of a life
 compared against the chart of a moment — which this file had already declined
 under the scan.
 
+**And then the natal mode was withheld from the interface, the day it was
+built.** What came back from it read thinly — a frame and a warning are not
+much for a model to work with, and the material that would make it more is
+exactly the material this project will not take on trust. A mode that yields a
+poor reading is worse than one that is absent, because it teaches that this is
+what the method gives. So `NATAL_OFFERED` in `[lang]/consult/+page.svelte` is
+`false`, and that constant is the whole of it: `readingPrompt` still takes the
+destiny frame, the endpoint still answers `frame=natal`, `qimen chart --natal`
+still prints it, and every test still runs. What was switched off is the
+offer, not the capability — so nothing has to be rebuilt when it returns, and
+nothing rots while it waits. The thing to fix first is what the prompt can
+honestly give a reader beyond a frame and a refusal.
+
 > Commits: `Says what a prompt for a model has to carry` · `Hands the chart over with the conditions attached` · `Asks the terminal for a prompt, and for the question it is read for` · `Puts the chart in the clipboard, as words and as a prompt` · `Poses a chart where the question can come first`
 
 ---
