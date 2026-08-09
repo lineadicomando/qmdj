@@ -276,7 +276,7 @@
         quiet={chart !== undefined && !spent}
       />
     </div>
-    <p class="note">{t('form.promptPrivacy')}</p>
+    <p class="note wide">{t('form.promptPrivacy')}</p>
   </form>
 
   {#if said}<p class="failure" role="alert">{said}</p>{/if}
@@ -298,6 +298,17 @@
 
 <style>
   .note { margin: 0; color: var(--faint); font-size: 0.8rem; line-height: 1.55; max-width: 62ch; }
+  /*
+   * The measure for prose, lifted for the one line that is not prose.
+   *
+   * 62ch is what a paragraph wants, and inside a box as wide as the page it
+   * broke this sentence in a place nothing on screen accounts for — narrower
+   * than the field above it, at a width the reader can neither see nor guess
+   * at. It is a caption under the buttons and is read at a glance rather than
+   * through, so it takes the box: one line where there is room for one, and a
+   * break at the edge of something visible where there is not.
+   */
+  .wide { max-width: none; }
 
   /* The same box the other sections put their fields in, and for the same
      reason: clearly not part of the answer, and out of the answer's way. */
