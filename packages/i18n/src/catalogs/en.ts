@@ -394,7 +394,7 @@ export const en = {
   // Required, and said in the label rather than by a mark nobody can read
   // aloud. It is not a formality: the chart is read *towards* a question, and
   // a prompt built without one asks a model to read towards nothing.
-  'form.question': 'Your question — required',
+  'form.question': 'Your question',
   'form.questionPlaceholder': 'What are you asking this chart?',
 
   // The face of each step is the word, in the reader's language: these are

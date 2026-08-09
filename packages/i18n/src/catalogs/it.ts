@@ -329,7 +329,7 @@ export const it: Record<MessageKey, string> = {
     'Copia questa carta insieme alle istruzioni per leggerla, pronta da incollare in ChatGPT, Claude o un altro assistente.',
   'form.promptPrivacy':
     'Ciò che viene copiato contiene la data, l\'ora e il luogo della carta, e la domanda che hai scritto. Incollalo dove diresti quelle cose.',
-  'form.question': 'La tua domanda — obbligatoria',
+  'form.question': 'La tua domanda',
   'form.questionPlaceholder': 'Che cosa stai chiedendo a questa carta?',
 
   'step.shichen': 'doppia ora',
