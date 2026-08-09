@@ -34,13 +34,13 @@ import { STEMS, type StemId } from './ganzhi.js';
 import {
   formatBazi,
   formatMoment,
-  formatQimenChart,
   formatScan,
   formatSolarTerms,
   formatWarnings,
 } from './format.js';
 import { lunarDate } from './lunar.js';
 import { resolveMoment } from './pillars.js';
+import { chartTranscript, readingPrompt } from './prompt.js';
 import { PURPOSES, purposeCriteria, type PurposeId } from './purposes.js';
 import { matchRuns, scanCharts, type ScanCriteria } from './scan.js';
 import { solarTermsOfYear } from './solar-terms.js';
@@ -70,6 +70,8 @@ interface Options {
   lang?: string;
   json: boolean;
   help: boolean;
+  prompt: boolean;
+  ask?: string;
   trueSolar?: boolean;
   dayBoundary?: string;
   method?: string;
@@ -115,6 +117,14 @@ Narrowing a scan
   --lang en|it           default: the environment, then English
   --json                 the data, unformatted and untranslated
   --help
+
+Handing a chart to a model
+  --prompt               for \`chart\`: the chart wrapped in the instructions
+                         for reading it, to paste into an assistant that has
+                         no connection to this engine
+  --ask "…"              the question it is to be read for; implies --prompt.
+                         Without one the prompt says none was asked, which is
+                         not the same as choosing a 用神 on nobody's behalf
 
 A note on what this prints
   The engine reports arrangements — which gate stands over which palace, how
@@ -238,9 +248,14 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
 
   const chart = computeQimenChart(moment, chartOptions);
   if (options.json) return JSON.stringify(chart, null, 2);
-  return [formatMoment(moment, t), '', formatQimenChart(chart, t), warningsOf(moment, t)].join(
-    '\n',
-  );
+
+  // A question asked is a question meant to be carried, so it turns the plain
+  // printing into the prompt by itself: `--ask` without `--prompt` that
+  // printed a chart and dropped the question would be a flag that did nothing.
+  if (options.prompt || options.ask !== undefined) {
+    return readingPrompt(moment, chart, t, options.ask ? { question: options.ask } : {});
+  }
+  return chartTranscript(moment, chart, t);
 }
 
 function warningsOf(moment: Parameters<typeof formatWarnings>[0], t: Parameters<typeof formatWarnings>[1]): string {
@@ -387,10 +402,11 @@ const FLAGS: Record<string, keyof Options> = {
   '--min-strength': 'minStrength',
   '--without': 'without',
   '--for': 'for',
+  '--ask': 'ask',
 };
 
 function parse(argv: string[]): { command?: Command; options: Options } {
-  const options: Options = { json: false, help: false };
+  const options: Options = { json: false, help: false, prompt: false };
   let command: Command | undefined;
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -402,6 +418,10 @@ function parse(argv: string[]): { command?: Command; options: Options } {
     }
     if (argument === '--json') {
       options.json = true;
+      continue;
+    }
+    if (argument === '--prompt') {
+      options.prompt = true;
       continue;
     }
     if (argument === '--true-solar') {
