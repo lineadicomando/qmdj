@@ -23,9 +23,9 @@ export const it: Record<MessageKey, string> = {
   'core.error.DATE_OUT_OF_RANGE':
     'La data {date} cade fuori dall\'intervallo coperto dalle effemeridi (dal {from} al {to}).',
   'core.error.METHOD_NOT_IMPLEMENTED':
-    'Il metodo {method} per la determinazione del ju non è implementato. Lo è soltanto chaibu, e nessun altro metodo gli viene sostituito: una carta posta con il metodo sbagliato sembra corretta e non lo è.',
+    'Il metodo {method} per la determinazione del ju non è implementato. Lo è soltanto chaibu, e nessun altro metodo viene messo al suo posto: una carta posta con il metodo sbagliato sembra giusta e non lo è.',
   'core.error.OPTION_NOT_IMPLEMENTED':
-    '"{value}" per {option} non è implementato. Lo è soltanto {implemented}, e nessun altro valore gli viene sostituito: una carta posta con l\'opzione sbagliata sembra corretta e non lo è.',
+    '"{value}" per {option} non è implementato. Lo è soltanto {implemented}, e nessun altro valore viene messo al suo posto: una carta posta con l\'opzione sbagliata sembra giusta e non lo è.',
   'core.error.EPHEMERIS_FAILURE':
     'Calcolo delle effemeridi fallito al giorno giuliano {julianDay}: {reason}',
   'core.error.EMPTY_INTERVAL':
@@ -33,14 +33,14 @@ export const it: Record<MessageKey, string> = {
   'core.error.INTERVAL_TOO_LONG':
     'Un intervallo di {days} giorni supera i {maximum} giorni che si possono scandire in una volta.',
   'core.error.UNKNOWN_IDENTIFIER':
-    '"{value}" non è un {parameter} che il motore conosce. Non controllato non corrisponderebbe a nulla, che si legge esattamente come una disposizione che non si è mai presentata.',
+    '"{value}" non è un {parameter} che il motore conosce. Se non venisse controllato non corrisponderebbe a nulla, il che si legge esattamente come una disposizione che non si è mai presentata.',
 
   'core.warning.AMBIGUOUS_LOCAL_TIME':
     'L\'ora locale {time} del {date} ricorre due volte in {timezone} (ritorno all\'ora solare). È stata usata la prima occorrenza, quella ancora in ora legale.',
   'core.warning.NONEXISTENT_LOCAL_TIME':
     'L\'ora locale {time} del {date} non è mai esistita in {timezone} (passaggio all\'ora legale). È stato usato l\'istante immediatamente successivo.',
   'core.warning.MOSHIER_FALLBACK':
-    'File di effemeridi non trovati in {path}: uso le effemeridi Moshier, che non richiedono file e sono accurate a circa un decimo di secondo d\'arco. Esegui `npm run ephe:download -w @qimendunjia/core` per i file completi.',
+    'File di effemeridi non trovati in {path}: si usano le effemeridi Moshier, che non richiedono file e sono accurate a circa un decimo di secondo d\'arco. Esegui `npm run ephe:download -w @qimendunjia/core` per i file completi.',
 
   'web.error.UNKNOWN_LOCATION': 'Nessun luogo ha l\'identificatore {id}.',
 
@@ -229,16 +229,18 @@ export const it: Record<MessageKey, string> = {
   'label.purpose.opening': 'Aprire, cominciare, trattare con un ufficio, viaggiare',
   'label.purpose.meeting': 'Incontrare qualcuno, matrimonio, chiedere un favore, riposare',
   'label.purpose.wealth': 'Denaro, commercio, cure, costruire',
-  'label.purpose.documents': 'Documenti, esami, progetti, far sapere una cosa',
-  'label.purpose.concealment': 'Restare defilati, evitare, lavoro delle mani',
+  'label.purpose.documents': 'Documenti, esami, progetti, far sapere qualcosa',
+  'label.purpose.concealment': 'Restare defilati, evitare, lavoro manuale',
   'label.purpose.pursuit': 'Riscuotere un credito, competere, incalzare qualcuno',
   'label.purpose.ending': 'Un funerale, una sepoltura, chiudere una cosa',
   'label.purpose.dispute': 'Una causa, una lite, ritrovare ciò che è perduto',
 
+  // Concordano con ciò che qualificano — una stella, una porta — e stanno
+  // quindi al femminile, come le relazioni qui sopra.
   'label.strength.wang': 'prospera',
-  'label.strength.xiang': 'sostenuto',
+  'label.strength.xiang': 'sostenuta',
   'label.strength.xiu': 'a riposo',
-  'label.strength.qiu': 'imprigionato',
+  'label.strength.qiu': 'imprigionata',
   'label.strength.si': 'morente',
 
   'label.layer.gate': 'porte',
@@ -285,10 +287,10 @@ export const it: Record<MessageKey, string> = {
   'form.looking': 'Che cosa cercare',
   'form.purpose': 'Per che cosa stai scegliendo il momento?',
   'form.purposeNote':
-    "Sceglierne uno compila la porta qui sotto, che puoi poi cambiare. È l'associazione che la tradizione fa fra un'impresa e una porta — le sole otto porte, e nulla oltre: sul resto di quella dottrina le scuole non concordano, e qui non si prende partito.",
+    "Sceglierne uno compila la porta qui sotto, che puoi poi cambiare. È l'associazione che la tradizione fa fra un'impresa e una porta — le sole otto porte, e nulla oltre: sul resto di quella dottrina le scuole non concordano, e qui non si prende posizione.",
   'form.any': 'qualsiasi',
   'form.towards': 'Verso',
-  'form.minStrength': 'Forza almeno',
+  'form.minStrength': 'Forza minima',
   'form.without': 'Escludendo',
   'form.criteriaNote':
     'Sono disposizioni, non raccomandazioni. Il motore riferisce dove ciascuna si trova; se sia un buon momento per agire è una lettura, e spetta a te farla.',
@@ -311,7 +313,8 @@ export const it: Record<MessageKey, string> = {
   'form.working': 'Calcolo in corso…',
   'form.needed.date': 'Manca ancora una data.',
   'form.needed.interval': "Mancano ancora le due date dell'intervallo.",
-  'form.needed.question': 'Manca ancora una domanda: il prompt è costruito per essere letto verso una.',
+  'form.needed.question':
+    'Manca ancora una domanda: il prompt è costruito perché la carta sia letta alla luce di una domanda.',
   'form.needed.birth': "Mancano ancora la data e l'ora di nascita: la carta dipende dal pilastro dell'ora.",
   'form.needed.gender':
     'I cicli decennali richiedono il sesso, perché la tradizione ne trae la direzione. Senza, i pilastri restano comunque completi.',
@@ -322,9 +325,9 @@ export const it: Record<MessageKey, string> = {
   'form.copied': 'Copiato',
   'form.copying': 'Preparo…',
   'form.copyFailed':
-    'Gli appunti non si sono lasciati scrivere — succede fuori da una connessione cifrata. Il testo è qui: selezionalo e copialo a mano.',
+    'Gli appunti non hanno accettato il testo — succede fuori da una connessione cifrata. Il testo è qui: selezionalo e copialo a mano.',
   'form.copyFallback': 'Il testo, da copiare a mano',
-  'form.copyUnread': 'La carta non è stata riletta.',
+  'form.copyUnread': 'Non è stato possibile rileggere la carta.',
 
   'consult.title': "Chiedere a un'AI di leggere una carta",
   'consult.mode': 'Che cosa si chiede',
@@ -370,9 +373,9 @@ export const it: Record<MessageKey, string> = {
   'notes.method':
     'Le carte sono poste con il metodo chaibu. Altre scuole dispongono altre carte dallo stesso istante; i metodi zhirun e maoshan non sono implementati, e vengono rifiutati invece che sostituiti in silenzio.',
   'notes.interpretation':
-    'Il motore riporta le disposizioni, e i nomi e le sorti che la tradizione vi attacca. Che una porta stia sopra un palazzo di cui controlla la fase è un fatto che chiunque può verificare sulle piastre; che quella disposizione si chiami 門迫 è il suo nome; e che 門迫 sia 凶 fa parte di quel nome, non è un giudizio sulla tua giornata: le fonti non nominano una configurazione per poi valutarla a parte. Ciò che il motore non fa è tutto quello che presuppone una domanda posta — non sceglie quale palazzo riguardi ciò che vuoi sapere, non ordina né i palazzi né le ore, non consiglia. La lettura è tua.',
+    'Il motore riporta le disposizioni, e i nomi e le sorti che la tradizione vi attacca. Che una porta stia sopra un palazzo di cui domina la fase è un fatto che chiunque può verificare sulle piastre; che quella disposizione si chiami 門迫 è il suo nome; e che 門迫 sia 凶 fa parte di quel nome, non è un giudizio sulla tua giornata: le fonti non nominano una configurazione per poi valutarla a parte. Ciò che il motore non fa è tutto quello che presuppone una domanda posta — non sceglie quale palazzo riguardi ciò che vuoi sapere, non ordina né i palazzi né le ore, non consiglia. La lettura è tua.',
   'notes.certainty':
-    'I numeri non sono ugualmente sicuri. Termini solari, calendario lunare e quattro pilastri sono stati verificati contro tabelle astronomiche pubblicate tramite un\'implementazione indipendente, su 1.926 date dal 1902 al 2098. La disposizione Qi Men è stata verificata contro una sola implementazione aperta: significa coerente con quella, non verificata. Le configurazioni vengono da fonti in cinese, senza alcun riferimento eseguibile.',
+    'I numeri non sono ugualmente sicuri. Termini solari, calendario lunare e quattro pilastri sono stati confrontati, tramite un\'implementazione indipendente, con tavole astronomiche pubblicate, su 1.926 date dal 1902 al 2098. La disposizione Qi Men è stata confrontata con una sola implementazione aperta: vuol dire coerente con quella, non verificata. Le configurazioni vengono da fonti in cinese, senza alcun riferimento eseguibile.',
   'notes.script':
     'I nomi sono mostrati nella tua lingua con il cinese accanto. Il cinese è il nome, non la sua traduzione: senza, nulla di quanto è qui può essere verificato contro un libro o una seconda implementazione.',
 
@@ -382,7 +385,7 @@ export const it: Record<MessageKey, string> = {
   'privacy.address':
     'Poiché i parametri stanno nell\'indirizzo, il collegamento a una carta si porta dietro una data, un\'ora e un luogo. Condividilo solo con qualcuno a cui diresti quelle cose.',
   'privacy.prompt':
-    'La domanda che scrivi per un prompt non esce dal tuo browser. Al server viene detto che una domanda esiste, perché il prompt possa finire sulla riga che la introduce, e mai quale sia; la frase la aggiunge il browser prima di mettere il tutto negli appunti. Questo sito non parla con nessuna AI e non le manda niente — dove lo incolli poi è cosa fra te e chi lo riceve.',
+    'La domanda che scrivi per un prompt non esce dal tuo browser. Al server viene detto che una domanda esiste — perché il prompt possa finire sulla riga che la introduce — e mai quale sia; la frase la aggiunge il browser prima di mettere il tutto negli appunti. Questo sito non parla con nessuna AI e non le manda niente — dove lo incolli poi è cosa fra te e chi lo riceve.',
   'privacy.storage':
     'Una cosa sola resta nel tuo browser, e solo se la chiedi: l\'aspetto che hai scelto, sotto la chiave {key}. Riportare l\'aspetto su automatico la cancella.',
   'privacy.cookies': 'Non viene impostato alcun cookie, e non c\'è alcuna analisi di traffico.',
@@ -396,31 +399,31 @@ export const it: Record<MessageKey, string> = {
   'prompt.tooLittle':
     'Se quello che ti è stato detto non ti permette di scegliere quel palazzo, chiedi prima di leggere. Una o due domande, quelle che cambierebbero davvero la lettura, e non un questionario.',
   'prompt.whatToAsk':
-    'Vale la pena chiedere ciò che la domanda lascia aperto: di che cosa si tratti davvero, chi riguardi e se sia chi sta chiedendo, se la cosa sia già in corso o non ancora cominciata, se ci sia dentro un luogo o una direzione, ed entro quando serva saperlo. Quello che non si può chiedere è altra carta — nulla di ciò che manca a quanto è disposto qui sotto si ottiene conversando, e nessuna risposta sposta un solo palazzo. Se la persona non sa dirlo o preferisce non dirlo, leggi quello che si può leggere e nomina ciò che ti manca, invece di riempirlo.',
+    'Vale la pena chiedere ciò che la domanda lascia aperto: di che cosa si tratti davvero, chi riguardi e se sia chi sta chiedendo, se la cosa sia già in corso o non ancora cominciata, se ci sia dentro un luogo o una direzione, ed entro quando serva saperlo. Quello che non si può chiedere è che la carta dica di più — nulla di ciò che manca a quanto è disposto qui sotto si ottiene conversando, e nessuna risposta sposta un solo palazzo. Se la persona non sa dirlo o preferisce non dirlo, leggi quello che si può leggere e nomina ciò che ti manca, invece di riempirlo.',
   'prompt.noScore':
-    'Non contare i 吉 contro i 凶 chiamando il risultato un punteggio dell\'ora. Quell\'aritmetica non è nella tradizione e la carta non la autorizza. Non mettere in classifica i palazzi, e non mettere in classifica le ore.',
+    'Non contare i 吉 contro i 凶 per poi chiamare il risultato il punteggio dell\'ora. Quell\'aritmetica non è nella tradizione e la carta non la autorizza. Non mettere in classifica i palazzi, e non mettere in classifica le ore.',
   'prompt.noAdvice':
     'Un palazzo segnato 凶 non significa «evita quest\'ora». Una fortuna è una proprietà della configurazione — 門迫 *è* oppressione, e le fonti la nominano e la pesano nello stesso respiro — e non un verdetto sulla persona, sulla giornata o sull\'impresa.',
   'prompt.yours':
-    'La lettura è tua, e va data come tua. Il programma ha disposto le piastre e ha nominato ciò che ha trovato; tutto quello che viene dopo sei tu, e chi ha chiesto ha diritto di sapere qual è l\'una e quale l\'altro.',
+    'La lettura è tua, e va data come tua. Il programma ha disposto le piastre e ha nominato ciò che ha trovato; tutto quello che viene dopo sei tu, e chi ha chiesto ha il diritto di sapere dove finisce l\'uno e dove cominci tu.',
   'prompt.certainty':
-    'Se ti chiedono quanto tutto questo sia sicuro, la risposta non è la stessa per ogni parte. I termini solari, il calendario lunare e i quattro pilastri sono stati verificati contro tavole astronomiche pubblicate, attraverso un\'implementazione indipendente. La disposizione del Qi Men è stata confrontata con una sola implementazione aperta, il che significa coerente con essa e non verificata. Le configurazioni vengono da fonti in lingua cinese, senza alcun riferimento eseguibile. Non descrivere la terza come se fosse la prima.',
+    'Se ti chiedono quanto tutto questo sia sicuro, la risposta non è la stessa per ogni parte. I termini solari, il calendario lunare e i quattro pilastri sono stati confrontati con tavole astronomiche pubblicate, attraverso un\'implementazione indipendente. La disposizione del Qi Men è stata confrontata con una sola implementazione aperta, il che significa coerente con essa e non verificata. Le configurazioni vengono da fonti in lingua cinese, senza alcun riferimento eseguibile. Non descrivere la terza come se fosse la prima.',
   'prompt.names':
-    'Ogni nome è dato in cinese, in pinyin e con una glossa. Scrivi per chi il cinese non lo legge: metti avanti la glossa e tieni gli hanzi accanto la prima volta che ciascun nome compare.',
+    'Ogni nome è dato in cinese, in pinyin e con una glossa. Scrivi per chi non legge il cinese: metti avanti la glossa e tieni gli hanzi accanto la prima volta che ciascun nome compare.',
   'prompt.disclaimer':
     'Di\', con parole tue e senza relegarlo in fondo, che tutto questo ha puro scopo di intrattenimento: una carta non è una prova, e qualunque cosa la persona faccia sulla base della tua lettura è interamente una sua decisione e una sua responsabilità. Non sostituisce alcun parere medico, legale o finanziario. Se qualcuno sta andando verso uno di quelli, di\' apertamente da dove deve venire la risposta vera.',
   'prompt.destiny.heading': 'Leggere una carta di Qi Men Dun Jia posta per una nascita',
   'prompt.destiny.frame':
     'La carta qui sotto è posta per un istante di nascita e va letta come carta di una vita. Di\' una volta, subito e apertamente, che questa è un\'applicazione moderna e minoritaria del Qi Men Dun Jia — gli usi classici sono la divinazione e la scelta dei tempi — e che le scuole che la insegnano non concordano fra loro.',
   'prompt.destiny.noMapping':
-    'Nulla qui sotto dice quale palazzo corrisponda a quale parte di una vita, e l\'omissione è voluta: è lì che le scuole divergono di più, e molto di ciò che circola in Occidente è materiale didattico di lignaggi particolari. Se usi una tale corrispondenza, di\' apertamente che è tua e non di questo programma, e di\' di chi è se lo sai.',
+    'Nulla qui sotto dice quale palazzo corrisponda a quale parte di una vita, e l\'omissione è voluta: è lì che le scuole divergono di più, e molto di ciò che circola in Occidente è materiale didattico di lignaggi particolari. Se usi una corrispondenza del genere, di\' apertamente che è tua e non di questo programma, e di\' di chi è se lo sai.',
   'prompt.destiny.task':
-    'Nessuna domanda è stata posta, e qui non ne serve una. Descrivi come sta questa carta — che cosa giace e che cosa sta in ciascun palazzo, e in quali configurazioni è caduta — nell\'ordine che la rende leggibile, non in quello che la rende suggestiva. Poi fermati, e lascia che la persona chieda. Questa è una conversazione e non un documento: qualunque cosa voglia sapere su una parte della sua vita è una domanda che può farti dopo, con la carta già davanti a entrambi.',
+    'Nessuna domanda è stata posta, e qui non ne serve una. Descrivi come si presenta questa carta — che cosa giace e che cosa sta in ciascun palazzo, e in quali configurazioni è caduta — nell\'ordine che la rende leggibile, non in quello che la rende suggestiva. Poi fermati, e lascia che la persona chieda. Questa è una conversazione e non un documento: qualunque cosa voglia sapere su una parte della sua vita è una domanda che può farti dopo, con la carta già davanti a entrambi.',
   'prompt.source': 'La carta è all\'indirizzo {url}',
   'prompt.chart': 'La carta',
   'prompt.asked': 'La domanda posta è:',
   'prompt.noQuestion':
-    'Nessuna domanda è stata posta. Descrivi come sta la carta — che cosa giace e che cosa sta in ciascun palazzo, e in quali configurazioni è caduta — e fermati lì. Non scegliere un palazzo, non leggere una fortuna per nessuno, e non dare consigli.',
+    'Nessuna domanda è stata posta. Descrivi come si presenta la carta — che cosa giace e che cosa sta in ciascun palazzo, e in quali configurazioni è caduta — e fermati lì. Non scegliere un palazzo, non leggere una fortuna per nessuno, e non dare consigli.',
 
   'cli.heading.moment': 'Istante',
   'cli.heading.pillars': 'Quattro pilastri',
@@ -499,7 +502,7 @@ export const it: Record<MessageKey, string> = {
   'cli.error.exclusive':
     'Le opzioni "{option}" e "{other}" non possono stare insieme: chiedono due letture diverse della stessa carta. Togline una.',
   'cli.error.unknownValue':
-    'L\'opzione "{option}" non accetta il valore "{value}". Non controllato non corrisponderebbe a nulla, che si legge esattamente come una disposizione che non si è mai presentata.',
+    'L\'opzione "{option}" non accetta il valore "{value}". Se non venisse controllato non corrisponderebbe a nulla, il che si legge esattamente come una disposizione che non si è mai presentata.',
   'cli.error.genderRequired':
     'I cicli decennali richiedono --gender, perché la tradizione ne trae la direzione. Senza, i pilastri restano comunque completi.',
 };
