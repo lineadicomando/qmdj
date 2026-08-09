@@ -32,9 +32,18 @@
      * of no date is the chart of now, so nothing there can be missing.
      */
     needed?: MessageKey;
+    /**
+     * There is already an answer in hand, and this is no longer the thing to
+     * press.
+     *
+     * The fourth state, and it exists in one place: where a form has produced
+     * something and what to do with that something is the button beside this
+     * one. Filled, it would go on claiming an attention it has spent.
+     */
+    quiet?: boolean;
   }
 
-  let { t, label, busy = false, needed }: Props = $props();
+  let { t, label, busy = false, needed, quiet = false }: Props = $props();
 
   const id = $props.id();
 </script>
@@ -42,7 +51,8 @@
 <div class="ask">
   <button
     type="submit"
-    class:ready={!needed}
+    class:ready={!needed && !quiet}
+    class:quiet
     disabled={busy}
     aria-busy={busy}
     aria-describedby={needed ? id : undefined}
@@ -70,6 +80,13 @@
     color: var(--ground);
   }
   .ready:hover { background: var(--faint); border-color: var(--faint); }
+  /* Spent, not disabled: still pressable, and still the way to ask again. */
+  .quiet {
+    border-style: solid;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.8rem;
+  }
+  .quiet:hover { color: var(--ink); border-color: var(--edge); }
   button:disabled { cursor: progress; opacity: 0.65; }
   .needed { margin: 0; font-size: 0.8em; color: var(--faint); }
 </style>

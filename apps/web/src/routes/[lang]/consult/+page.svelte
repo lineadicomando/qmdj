@@ -101,6 +101,23 @@
   );
 
   /**
+   * Everything the answer on screen was cast from, as one string.
+   *
+   * Compared against what was asked, it says whether the chart still answers
+   * the fields — and that is not a nicety. The prompt is built from the chart
+   * the server cast and the question this browser holds, and those are read at
+   * different moments: ask A, cast, correct it to B, copy, and out comes the
+   * chart of the instant A was put with B written underneath. Which is the
+   * one thing this section exists to prevent.
+   *
+   * So a moved field puts the answer away rather than warning about it. The
+   * button to copy is simply not there, and the button to cast is.
+   */
+  const fields = $derived(`${momentQuery(asked)}|${natal ? '' : question.trim()}`);
+  let castFrom = $state('');
+  const spent = $derived(chart !== undefined && castFrom !== fields);
+
+  /**
    * The setup, kept in the address so a reload finds the fields as they were.
    *
    * The question is not in it and never will be, and neither is the chart:
@@ -152,6 +169,7 @@
       // the instant of the press, and it is the whole point of the mode: the
       // consultation belongs to that minute and not to whenever this is read.
       cast = { date: chart.moment.input.date, time: chart.moment.input.time };
+      castFrom = fields;
     } catch {
       chart = undefined;
       cast = undefined;
@@ -231,35 +249,47 @@
       bind:method={asked.method}
     />
 
-    <SubmitButton {t} label="consult.cast" {busy} needed={needed ?? undefined} />
+    <!--
+      One thing to do at a time, and the box says which.
+
+      Nothing cast, or a field moved since: the only thing to press is the
+      casting. Cast and standing: the point of the page is the copying, so it
+      leads, and the casting stays beside it — quiet, and still the way to put
+      the same question again at a later instant, which is a second
+      consultation rather than the same one seen twice.
+    -->
+    <div class="actions">
+      {#if chart && !spent}
+        <CopyText
+          {t}
+          lead
+          label="form.copyPrompt"
+          url={promptUrl}
+          suffix={natal ? undefined : question.trim()}
+        />
+      {/if}
+      <SubmitButton
+        {t}
+        label="consult.cast"
+        {busy}
+        needed={needed ?? undefined}
+        quiet={chart !== undefined && !spent}
+      />
+    </div>
+    <p class="note">{t('form.promptPrivacy')}</p>
   </form>
 
   {#if said}<p class="failure" role="alert">{said}</p>{/if}
 
   {#if chart}
     <!--
-      Directly under the fields, and above the board.
+      The board is shown, and is not what the page is for.
 
-      What this page is for is the taking away, not the looking: the chart
-      below is here so that somebody can see what they are about to hand over,
-      and it is long. A button at the foot of it would be the point of the
-      page reached by scrolling past everything that is not the point.
+      It is here so that somebody can see what they are about to hand over —
+      after the button and not before it, because the taking away is the
+      errand and the looking is the check on it.
     -->
-    <div class="take" class:stale={busy}>
-      <h2>{t('form.promptTitle')}</h2>
-      <p class="note">{t('form.promptNote')}</p>
-      <CopyText
-        {t}
-        lead
-        label="form.copyPrompt"
-        url={promptUrl}
-        suffix={natal ? undefined : question.trim()}
-      />
-      <p class="note">{t('form.promptPrivacy')}</p>
-      <p class="note">{t('consult.uncast')}</p>
-    </div>
-
-    <section class="result" class:stale={busy} aria-busy={busy}>
+    <section class="result" class:stale={busy || spent} aria-busy={busy}>
       <img src={plate} alt="" width="900" height="1035" />
       <div><ChartReading {chart} {t} /></div>
     </section>
@@ -267,7 +297,6 @@
 </article>
 
 <style>
-  h2 { font-size: 1rem; font-weight: 500; margin: 0 0 0.5rem; }
   .note { margin: 0; color: var(--faint); font-size: 0.8rem; line-height: 1.55; max-width: 62ch; }
 
   /* The same box the other sections put their fields in, and for the same
@@ -307,19 +336,10 @@
     inline-size: min(100%, calc(100svh * 8 / 7));
     block-size: auto;
   }
-  /* Between the fields and the board, and parted from the board rather than
-     from the form: the box above it is already a boundary. */
-  .take {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--rule);
-    max-width: 62ch;
-    display: grid;
-    justify-items: start;
-    gap: 0.6rem;
-  }
-  .take { transition: opacity 0.15s ease-out; }
+  /* The one or two things there are to press, on a line, with the leading one
+     first. They wrap on a narrow screen rather than shrinking. */
+  .actions { display: flex; flex-wrap: wrap; align-items: start; gap: 0.6rem 0.9rem; }
   @media (prefers-reduced-motion: reduce) {
-    .result, .take { transition: none; }
+    .result { transition: none; }
   }
 </style>
