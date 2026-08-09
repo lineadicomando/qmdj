@@ -74,6 +74,38 @@ chart holding four 凶 configurations is not a bad time to do anything — bad i
 a word about an undertaking, and no undertaking is known here.
 See [`docs/agent-prompt.md`](docs/agent-prompt.md).
 
+## Handing a chart to something that will read it
+
+The refusal above has a consequence: somebody who wants a reading takes the
+date to a model, and a model handed a date and a place casts the chart from
+memory and gets it wrong. A wrong chart read well is the worst thing this
+project can produce, because nothing downstream catches it — it looks exactly
+like a right one.
+
+So the chart travels **already computed**, and the conditions travel with it:
+
+```sh
+qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai \
+            --ask "Will the contract be signed as it stands?"
+```
+
+What comes out is the chart set out in full inside a fence, wrapped in what
+whoever reads it has to be told — that the 用神 belongs to the reader and is
+chosen for the question asked, that the fortunes do not add up to a score,
+that a 凶 is not advice, that the reading belongs to whoever gives it, and
+which of the three tiers of certainty each number sits in. It is
+[`docs/agent-prompt.md`](docs/agent-prompt.md) said to a model that will never
+read it.
+
+The interface offers the same thing under the board, next to the plainer
+control that copies the chart as words. The question is typed there and stays
+there: the browser tells the server only that one exists, and appends the
+sentence itself — a question is somebody's own, and a query string is written
+into every log between the two.
+
+This project talks to no model, holds no key and sends nothing anywhere. The
+prompt goes to a clipboard.
+
 ## Layout
 
 | | |
@@ -83,7 +115,7 @@ See [`docs/agent-prompt.md`](docs/agent-prompt.md).
 | `packages/core` | the engine, and the `qimen` command |
 | `packages/plate` | the drawing: nine palaces framed by the compass, the configurations listed under them, SVG and PNG |
 | `packages/mcp` | MCP server, seven tools, stdio |
-| `apps/web` | SvelteKit: interface at `/en` and `/it`, six endpoints under `/api` |
+| `apps/web` | SvelteKit: interface at `/en` and `/it`, eight endpoints under `/api` |
 
 npm workspaces, Node ≥ 22, ESM, TypeScript.
 
@@ -115,6 +147,7 @@ qimen bazi  --date 1968-03-12 --time 14:30 --tz Europe/Rome --gender male
 qimen terms --year 2024 --tz Asia/Shanghai
 qimen calendar --date 2023-04-01
 qimen scan  --date 2026-09-01 --until 2026-09-08 --tz Europe/Rome --gate kaimen --towards se,s
+qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --ask "Will it be signed?"
 
 npm run dev -w @qimendunjia/web    # http://localhost:5173
 npm start   -w @qimendunjia/web    # http://localhost:3000, after build

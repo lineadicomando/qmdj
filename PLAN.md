@@ -886,6 +886,54 @@ provenance now lives in `docs/sources.md` and the README points at it. See
 
 > Commits: `Says how a gate stands to the palace it rests in` · `Finds the post horse of the day and of the hour` · `Lets the school that lodges the centre be named` · `Names the stem pairs the sources agree on` · `Records where every number comes from`
 
+### Phase 10 — The chart, handed to something that will read it
+
+The refusal to interpret has a consequence nobody had followed to the end.
+Somebody who wants a reading was always going to take the date to a model,
+and a model handed a date and a place casts the chart **from memory** and gets
+it wrong — the same failure `docs/agent-prompt.md` calls inventing a place,
+arriving from the other direction. A wrong chart read well is the worst thing
+this project can produce: nothing downstream catches it, because it looks
+exactly like a right one. Refusing to help was not neutrality; it was leaving
+the likeliest use of this engine to be served badly by something else.
+
+So the chart travels **already computed**, and the conditions travel with it.
+`readingPrompt` puts the transcript inside a fence and this repository's own
+document around it, condensed and addressed to a model that will never read
+it. `chartTranscript` is the one rendering the CLI, the endpoint and the
+prompt all use — three that drifted apart would mean the text somebody pasted
+was not the chart they were looking at.
+
+What this is *not* is the site reading a chart. Nothing is sent anywhere,
+there is no key to spend and no chat on the page: the prompt goes to a
+clipboard and the reader decides where it goes next. Four things had to be
+settled to keep that true.
+
+- **The question never reaches the server.** `/api/chart/prompt` is told
+  `asked=true` and nothing else, and the prompt ends on the line that
+  introduces a question for the browser to append. A question is somebody's
+  own — *will the illness pass*, *should I leave* — and one in a query string
+  is one written into every access log between the two. This is why
+  `ReadingRequest.question` distinguishes `undefined` from `''`, which reads
+  as a flourish until you ask where the alternative would have put the text.
+- **Two controls, not one.** The chart as words and the chart as a prompt are
+  two errands, and burying the first inside the second would make plain text
+  unreachable to whoever wants nothing to do with a model. `/api/chart/text`
+  and `/api/chart/prompt`, a light tools row and a section of its own.
+- **The examples are curated, not combinatorial.** A grammar assembling a
+  question from a domain, an action and a horizon writes nonsense — in two
+  languages instead of one, with Italian agreement to get wrong on top. Forty
+  hand-written strings grouped by the eight errands of `purposes.ts` cost less
+  than a grammar and are all well formed. They are labelled as examples and
+  said to be examples, because **a question nobody has asked has no 用神** and
+  a chart read towards one is a reading about nothing: this teaches the shape
+  of a question, it does not offer an oracle.
+- **MCP got nothing, deliberately.** An agent holding the chart over MCP has
+  read the contract and does not need it read to it. The prompt exists for the
+  model that is not connected to any of this.
+
+> Commits: `Says what a prompt for a model has to carry` · `Hands the chart over with the conditions attached` · `Asks the terminal for a prompt, and for the question it is read for` · `Puts the chart in the clipboard, as words and as a prompt`
+
 ---
 
 ## 5. Risks, worst first

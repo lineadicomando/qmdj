@@ -10,6 +10,7 @@
   <h1>{t('privacy.title')}</h1>
   <p>{t('privacy.nothing')}</p>
   <p>{t('privacy.address')}</p>
+  <p>{t('privacy.prompt')}</p>
   <p>{t('privacy.storage', { key: COLOR_SCHEME_KEY })}</p>
   <p>{t('privacy.cookies')}</p>
 </article>

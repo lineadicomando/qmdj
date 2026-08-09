@@ -148,7 +148,21 @@ GET /api/bazi?date=1968-03-12&time=14:30&locationId=3169070&gender=male
 GET /api/terms?year=2024&timezone=Asia/Shanghai
 GET /api/chart/plate?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/moments?from=2026-09-01&to=2026-09-08&locationId=3169070&gate=kaimen&towards=se,s
+GET /api/chart/text?date=2024-06-15&time=14:00&locationId=1816670
+GET /api/chart/prompt?date=2024-06-15&time=14:00&locationId=1816670&asked=true
 ```
+
+The last two answer `text/plain` rather than JSON. `text` is the chart said in
+words, exactly as the CLI prints it. `prompt` is that chart wrapped in this
+document, condensed and addressed to a model with no connection to any of
+this — what the interface copies to a clipboard for somebody to paste
+elsewhere. **You do not need either of them**: you are holding the data, and
+you have read this. They exist for the model that is not.
+
+`asked` is a yes or a no and never the question itself. With it the answer
+ends on the line that introduces a question, for the caller to append; without
+it the prompt says plainly that none was asked. A question is somebody's own,
+and one in a query string is one written into every log along the way.
 
 Failures come back with a `code`, a `messageKey` and `params` rather than a
 sentence to parse:

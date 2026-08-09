@@ -14,7 +14,7 @@ anything.
 | `packages/core` | calculation engine and the `qimen` CLI: solar terms, lunar calendar, sexagenary cycles, Four Pillars, Qi Men charts, scanning an interval |
 | `packages/plate` | the drawing: nine palaces, glyphs, SVG and PNG |
 | `packages/mcp` | MCP server: seven tools, three resources, stdio transport |
-| `apps/web` | SvelteKit: interface at `/en` and `/it`, plus six GET endpoints under `/api` |
+| `apps/web` | SvelteKit: interface at `/en` and `/it`, plus eight GET endpoints under `/api` |
 
 npm workspaces monorepo, Node ≥ 22, ESM, TypeScript.
 
@@ -113,6 +113,18 @@ the engine falls back to Moshier, which needs no files.
   place of birth. The solar terms are `public`; they are about the sky.
 - **Errors cross HTTP as `code` + `messageKey` + `params`.** The surface
   translates; nobody parses prose. See `lib/server/errors.ts`.
+- **A chart handed to a model travels computed, and never as a date.** A model
+  given a date and a place casts the chart from memory and gets it wrong, and
+  a wrong chart read well is unfalsifiable. `readingPrompt` in
+  `core/src/prompt.ts` puts the chart inside a fence and `docs/agent-prompt.md`
+  around it — the 用神 is the reader's, the fortunes are not a score, a 凶 is
+  not advice, and each number's tier of certainty is named. Handing over the
+  chart without that would be this project outsourcing in a paragraph what it
+  declines to do in code.
+- **The question never reaches the server.** `/api/chart/prompt` is told
+  `asked=true` and nothing more, and the prompt ends on the line that
+  introduces a question for the browser to append. What somebody asks a chart
+  is theirs, and a query string is written into every log along the way.
 - **The lunar calendar is reckoned on 120°E, never on the chart's zone.** It
   is a published artefact: the same instant carries the same lunar date in
   Rome and in Beijing. Chinese wartime and summer clocks do not move it. The

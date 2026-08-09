@@ -445,6 +445,9 @@ export const en = {
     'Nothing you type is stored. Dates, times and places travel in the address of the page, are used to compute an answer, and are not written to any database or log kept by this site.',
   'privacy.address':
     'Because the parameters are in the address, a link to a chart carries a date, a time and a place with it. Share one only with someone you would tell those things to.',
+  // The one thing on this site somebody types that is not a date or a place.
+  'privacy.prompt':
+    'The question you write for a prompt does not leave your browser. The server is told that a question exists, so that the prompt can end on the line that introduces one, and never what it is; the browser adds the sentence itself before putting the whole thing in your clipboard. This site talks to no AI and sends nothing to one — where you paste it afterwards is between you and whoever receives it.',
   'privacy.storage':
     'One thing is kept in your browser, and only if you ask for it: the appearance you chose, under the key {key}. Setting the appearance back to automatic deletes it.',
   'privacy.cookies': 'No cookies are set, and there is no analytics of any kind.',

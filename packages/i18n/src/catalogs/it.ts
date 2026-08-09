@@ -375,6 +375,8 @@ export const it: Record<MessageKey, string> = {
     'Nulla di ciò che digiti viene conservato. Date, ore e luoghi viaggiano nell\'indirizzo della pagina, servono a calcolare una risposta, e non vengono scritti in alcuna base di dati né in alcun registro tenuto da questo sito.',
   'privacy.address':
     'Poiché i parametri stanno nell\'indirizzo, il collegamento a una carta si porta dietro una data, un\'ora e un luogo. Condividilo solo con qualcuno a cui diresti quelle cose.',
+  'privacy.prompt':
+    'La domanda che scrivi per un prompt non esce dal tuo browser. Al server viene detto che una domanda esiste, perché il prompt possa finire sulla riga che la introduce, e mai quale sia; la frase la aggiunge il browser prima di mettere il tutto negli appunti. Questo sito non parla con nessuna AI e non le manda niente — dove lo incolli poi è cosa fra te e chi lo riceve.',
   'privacy.storage':
     'Una cosa sola resta nel tuo browser, e solo se la chiedi: l\'aspetto che hai scelto, sotto la chiave {key}. Riportare l\'aspetto su automatico la cancella.',
   'privacy.cookies': 'Non viene impostato alcun cookie, e non c\'è alcuna analisi di traffico.',
