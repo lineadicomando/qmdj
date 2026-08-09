@@ -387,6 +387,10 @@ export const it: Record<MessageKey, string> = {
   'prompt.language': 'Rispondi in italiano.',
   'prompt.yongshen':
     'Quale palazzo riguardi la domanda è lo 用神, e lo sceglie il lettore per la domanda posta. Nulla qui sotto lo sceglie, e il programma che ha prodotto questa carta non conosce la domanda. Di\' quale palazzo stai leggendo, e perché quello.',
+  'prompt.tooLittle':
+    'Se quello che ti è stato detto non ti permette di scegliere quel palazzo, chiedi prima di leggere. Una o due domande, quelle che cambierebbero davvero la lettura, e non un questionario.',
+  'prompt.whatToAsk':
+    'Vale la pena chiedere ciò che la domanda lascia aperto: di che cosa si tratti davvero, chi riguardi e se sia chi sta chiedendo, se la cosa sia già in corso o non ancora cominciata, se ci sia dentro un luogo o una direzione, ed entro quando serva saperlo. Quello che non si può chiedere è altra carta — nulla di ciò che manca a quanto è disposto qui sotto si ottiene conversando, e nessuna risposta sposta un solo palazzo. Se la persona non sa dirlo o preferisce non dirlo, leggi quello che si può leggere e nomina ciò che ti manca, invece di riempirlo.',
   'prompt.noScore':
     'Non contare i 吉 contro i 凶 chiamando il risultato un punteggio dell\'ora. Quell\'aritmetica non è nella tradizione e la carta non la autorizza. Non mettere in classifica i palazzi, e non mettere in classifica le ore.',
   'prompt.noAdvice':

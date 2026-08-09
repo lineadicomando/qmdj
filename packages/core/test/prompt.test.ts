@@ -71,6 +71,25 @@ describe('the prompt', () => {
     expect(text).toContain('Will the contract be signed?');
   });
 
+  /**
+   * A question arrives short — *will it go well* — and a palace cannot be
+   * chosen from it. Guessing one is the same failure as inventing a place,
+   * reached from the other side, so the reader is told to ask. Bounded on
+   * both sides: not a questionnaire, and never a request for chart the
+   * conversation cannot supply.
+   */
+  it('tells the reader to ask for what would change which palace is read', () => {
+    const at = moment();
+    const text = readingPrompt(at, computeQimenChart(at, DEFAULT_OPTIONS), en, { question: '' });
+
+    expect(text).toContain('ask before you read');
+    expect(text).toContain('not a questionnaire');
+    expect(text).toContain('What cannot be asked for is more chart');
+    // And the fallback for when nobody answers: the prompt can end up
+    // pasted where there is no one to ask.
+    expect(text).toContain('name what you are missing instead of filling it in');
+  });
+
   it('says no question was asked rather than inventing one', () => {
     const at = moment();
     const text = readingPrompt(at, computeQimenChart(at, DEFAULT_OPTIONS), en);

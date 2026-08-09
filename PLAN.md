@@ -928,6 +928,19 @@ settled to keep that true.
   said to be examples, because **a question nobody has asked has no 用神** and
   a chart read towards one is a reading about nothing: this teaches the shape
   of a question, it does not offer an oracle.
+- **A fourth way to be plausibly wrong turned up while writing the prompt.**
+  `docs/agent-prompt.md` listed three, all of them things passed *into* a
+  tool: a place, a date, a birth time. The fourth is done with what comes
+  back. Questions arrive short — *will it go well* names no undertaking, no
+  other party, no place, no horizon — and a 用神 cannot be chosen from one, so
+  whatever palace gets read is the one the sentence happened to suggest.
+  Nothing in the answer records that it was picked, which is what makes it the
+  hardest of the four to catch. So both the document and the prompt now say:
+  ask. Bounded on both sides — one or two questions and not a questionnaire,
+  never a request for chart that no answer could supply, and if nobody
+  answers, read what can be read and name what is missing rather than filling
+  it in. That last clause is not politeness: a prompt can be pasted where
+  there is no one to ask.
 - **MCP got nothing, deliberately.** An agent holding the chart over MCP has
   read the contract and does not need it read to it. The prompt exists for the
   model that is not connected to any of this.

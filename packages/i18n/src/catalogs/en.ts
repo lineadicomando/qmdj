@@ -469,6 +469,13 @@ export const en = {
   'prompt.language': 'Answer in English.',
   'prompt.yongshen':
     'Which palace bears on the question is the 用神, and it is chosen by the reader for the question asked. Nothing below chooses it, and the software that produced this does not know the question. Say which palace you are reading, and why that one.',
+  // A question arrives short — *will it go well* — and a palace cannot be
+  // chosen from it. The reader's job is to ask, not to guess and not to give
+  // a reading of whatever the sentence happened to suggest.
+  'prompt.tooLittle':
+    'If what you have been told does not let you choose that palace, ask before you read. One or two questions, whichever would actually change the reading, and not a questionnaire.',
+  'prompt.whatToAsk':
+    'What is worth asking for is what the question leaves open: what the matter is really about, whom it concerns and whether that is the person asking, whether it is already under way or not yet begun, whether a place or a direction is part of it, and by when they need to know. What cannot be asked for is more chart — nothing missing from what is set out below can be got by conversation, and no answer moves a single palace. If the person cannot say or would rather not, read what can be read and name what you are missing instead of filling it in.',
   'prompt.noScore':
     'Do not count 吉 against 凶 and call the result a score for the hour. That arithmetic is not in the tradition and the chart does not license it. Do not rank the palaces, and do not rank the hours.',
   'prompt.noAdvice':

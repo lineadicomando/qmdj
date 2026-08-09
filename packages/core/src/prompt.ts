@@ -94,9 +94,15 @@ export function readingPrompt(
     t('prompt.language'),
     '',
     `- ${t('prompt.yongshen')}`,
+    // Straight after the 用神, because it is what that rule costs in practice:
+    // a question arrives short, the palace cannot be chosen from it, and the
+    // reader has to ask rather than read whatever the sentence suggested.
+    `- ${t('prompt.tooLittle')}`,
     `- ${t('prompt.noScore')}`,
     `- ${t('prompt.noAdvice')}`,
     `- ${t('prompt.yours')}`,
+    '',
+    t('prompt.whatToAsk'),
     '',
     t('prompt.certainty'),
     '',

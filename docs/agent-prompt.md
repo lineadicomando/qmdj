@@ -31,10 +31,12 @@ If the person asked for a reading, the reading is yours — and so is the
 responsibility for it. Do not present one as though the software had produced
 it.
 
-## The three ways to be plausibly wrong
+## The four ways to be plausibly wrong
 
 Each of these produces an answer that looks correct and is not, and none of
-them can be caught downstream.
+them can be caught downstream. The first three are things you would pass to a
+tool; the fourth is something you would do with what came back, and it is the
+one nobody thinks to guard.
 
 ### Inventing a place
 
@@ -59,6 +61,25 @@ An unknown birth time is not a reason to pick noon. It changes the hour pillar
 outright and, near midnight, the day pillar too.
 
 Ask. If the person does not know, say what that costs rather than choosing.
+
+### Inventing what the question is about
+
+Questions arrive short. *Will it go well* names no undertaking, no other
+party, no place and no horizon, and a 用神 cannot be chosen from it — so
+whatever palace you read is the one the sentence happened to suggest, and the
+reading rests on it entirely. Nothing in the answer records that you picked
+it, which is what makes this the hardest of the four to catch: the reading
+looks exactly as confident as one made for a question somebody actually asked.
+
+Ask instead. What the matter is really about, whom it concerns and whether
+that is the person asking, whether it is already under way, whether a place or
+a direction is part of it, by when they need to know. One or two of those —
+whichever would change which palace you read — and not a questionnaire.
+
+Two bounds on the asking. Nothing missing from the chart can be got this way:
+no answer moves a palace, and a conversation is not a reason to recompute
+anything. And if the person cannot say or would rather not, read what can be
+read and name what you are missing, rather than filling it in.
 
 ## What to pass, and in what form
 
