@@ -268,9 +268,12 @@ export const en = {
   'nav.chart': 'Qi Men',
   'nav.bazi': 'Four Pillars',
   'nav.moments': 'Choosing a time',
-  // Named by where the reading happens, which is not here. A section called
-  // "Reading" would be this project claiming the one thing it declines to do.
-  'nav.consult': 'Asking an AI',
+  // Named by what it produces, not by what it does with it. A section called
+  // "Reading" would be this project claiming the one thing it declines to do,
+  // and the word for the artefact has been common currency since 2022 — for
+  // anybody it is not, the line under the nav says it in full at the first
+  // click, which is a shorter way to learn a word than a longer label.
+  'nav.consult': 'AI prompt',
   'nav.sections': 'Sections',
 
   'scheme.label': 'Appearance',

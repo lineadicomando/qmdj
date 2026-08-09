@@ -248,7 +248,7 @@ export const it: Record<MessageKey, string> = {
   'nav.chart': 'Qi Men',
   'nav.bazi': 'Quattro pilastri',
   'nav.moments': 'Scegliere il momento',
-  'nav.consult': 'Chiedere a un\'AI',
+  'nav.consult': 'Prompt AI',
   'nav.sections': 'Sezioni',
 
   'scheme.label': 'Aspetto',
