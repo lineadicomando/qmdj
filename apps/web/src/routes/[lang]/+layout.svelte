@@ -85,16 +85,29 @@
   nav a:hover { color: var(--ink); }
   nav a.current { color: var(--ink); border-bottom: 2px solid var(--ink); }
 
+  /*
+   * Centred, and across the whole shell.
+   *
+   * Three short lines set flush left under a page of tables read as a fourth
+   * column of it. Centred they read as what they are — the foot of the page,
+   * and not the last thing the chart had to say.
+   *
+   * No measure on them either. A `max-width` here is the width of a paragraph
+   * somebody reads through, and these are not that: bounded to 62ch the
+   * disclaimer broke into three ragged lines in the middle of a shell twice
+   * as wide, which is a line break the reader has to account for and cannot.
+   */
   footer {
     margin-top: 4rem;
     padding-top: 1rem;
     border-top: 1px solid var(--rule);
     color: var(--faint);
     font-size: 0.85em;
+    text-align: center;
   }
   /* Darker than the two lines under it. A disclaimer set in the same grey as
      a licence notice is a disclaimer nobody reads, and this one is the reason
      the other two are allowed to be quiet. */
-  .disclaimer { color: var(--ink); max-width: 62ch; }
+  .disclaimer { color: var(--ink); }
   footer p { margin: 0.3rem 0; }
 </style>

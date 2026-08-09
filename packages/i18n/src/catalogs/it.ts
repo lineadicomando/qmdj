@@ -310,6 +310,7 @@ export const it: Record<MessageKey, string> = {
   'form.working': 'Calcolo in corso…',
   'form.needed.date': 'Manca ancora una data.',
   'form.needed.interval': "Mancano ancora le due date dell'intervallo.",
+  'form.needed.question': 'Manca ancora una domanda: il prompt è costruito per essere letto verso una.',
   'form.needed.gender':
     'I cicli decennali richiedono il sesso, perché la tradizione ne trae la direzione. Senza, i pilastri restano comunque completi.',
   'form.jumpDate': 'Il giorno per cui la carta è posta',
@@ -325,15 +326,11 @@ export const it: Record<MessageKey, string> = {
 
   'form.promptTitle': "Un prompt per un'AI",
   'form.promptNote':
-    'Copia questa carta insieme alle istruzioni per leggerla, pronta da incollare in ChatGPT, Claude o un altro assistente: la lettura la scrive lui, sui palazzi calcolati qui. Questa pagina non parla con nessun modello e non manda niente a nessuno — il prompt finisce negli appunti, e dove vada poi lo decidi tu.',
-  'form.promptCarries':
-    'La carta entra nel prompt già calcolata. Chiedere a un modello la carta di una data ottiene invece una carta che si è inventato, identica a vedersi a questa.',
+    'Copia questa carta insieme alle istruzioni per leggerla, pronta da incollare in ChatGPT, Claude o un altro assistente.',
   'form.promptPrivacy':
     'Ciò che viene copiato contiene la data, l\'ora e il luogo della carta, e la domanda che hai scritto. Incollalo dove diresti quelle cose.',
-  'form.question': 'La tua domanda',
+  'form.question': 'La tua domanda — obbligatoria',
   'form.questionPlaceholder': 'Che cosa stai chiedendo a questa carta?',
-  'form.questionNote':
-    'La domanda non è un ornamento. Quale palazzo la riguardi è lo 用神, che il lettore sceglie per la domanda posta, e senza domanda non c\'è nulla verso cui leggere la carta — il prompt lo dice apertamente invece di lasciare che una domanda venga inventata.',
 
   'step.shichen': 'doppia ora',
   'step.day': 'giorno',

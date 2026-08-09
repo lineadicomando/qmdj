@@ -359,6 +359,7 @@ export const en = {
   'form.working': 'Working…',
   'form.needed.date': 'A date is still needed.',
   'form.needed.interval': 'Both dates of the interval are still needed.',
+  'form.needed.question': 'A question is still needed: the prompt is built to be read towards one.',
   // The same thing `cli.error.genderRequired` says, without naming a command
   // line option to somebody looking at a form.
   'form.needed.gender':
@@ -387,18 +388,14 @@ export const en = {
 
   'form.promptTitle': 'A prompt for an AI',
   'form.promptNote':
-    'Copies this chart together with the instructions for reading it, ready to paste into ChatGPT, Claude or another assistant: the reading is written there, on the palaces computed here. This page talks to no model and sends nothing anywhere — the prompt goes to your clipboard, and where it goes next you decide.',
-  // Why the chart travels with the prompt and not merely a date: a model
-  // given a date and a place will cast the chart from memory and get it
-  // wrong, and a wrong chart read well is unfalsifiable.
-  'form.promptCarries':
-    'The chart goes in the prompt already computed. Asking a model for the chart of a date instead gets a chart it made up, which looks exactly like this one.',
+    'Copies this chart together with the instructions for reading it, ready to paste into ChatGPT, Claude or another assistant.',
   'form.promptPrivacy':
     'What is copied carries the date, the time and the place of the chart, and the question you typed. Paste it somewhere you would tell those things to.',
-  'form.question': 'Your question',
+  // Required, and said in the label rather than by a mark nobody can read
+  // aloud. It is not a formality: the chart is read *towards* a question, and
+  // a prompt built without one asks a model to read towards nothing.
+  'form.question': 'Your question — required',
   'form.questionPlaceholder': 'What are you asking this chart?',
-  'form.questionNote':
-    'The question is not an ornament. Which palace bears on it is the 用神, chosen by the reader for the question asked, and without one there is nothing to read the chart towards — the prompt says so plainly rather than letting a question be invented.',
 
   // The face of each step is the word, in the reader's language: these are
   // controls, and a control nobody can read is a control nobody can press.

@@ -37,9 +37,25 @@
   let { t, query }: Props = $props();
 
   let question = $state('');
+  /** Pressed with the field empty: what is missing, said where it is missing. */
+  let missing = $state(false);
 
   const copier = new Copier();
   const id = $props.id();
+  /** Derived from it: `$props.id()` is one to a component. */
+  const alert = `${id}-needed`;
+
+  /**
+   * Nothing is copied without a question, and the button says why.
+   *
+   * It stays pressable rather than going dead, as the one on the form does:
+   * a control greyed out with no reason given leaves the reader with nowhere
+   * to go, and a colour is not a message.
+   */
+  function attempt(): void {
+    missing = question.trim() === '';
+    if (!missing) void copier.run(copy);
+  }
 
   /**
    * The frame from the server, the question from here.
@@ -47,31 +63,38 @@
    * `asked` says a question exists; the prompt then ends on the line that
    * introduces one and this appends it. What somebody asks a chart is theirs,
    * and a query string is written into every log between here and the server.
+   * It is always true from this surface — `attempt` has already refused an
+   * empty field — and the endpoint still answers without it, for the CLI and
+   * for anybody calling it directly.
    */
   async function copy(): Promise<string> {
-    const asked = question.trim();
-    const frame = await fetchText(
-      `/api/chart/prompt?${query}${asked ? '&asked=true' : ''}`,
-    );
-    return asked ? `${frame}${asked}\n` : frame;
+    const frame = await fetchText(`/api/chart/prompt?${query}&asked=true`);
+    return `${frame}${question.trim()}\n`;
   }
 </script>
 
 <section class="prompt">
   <h2>{t('form.promptTitle')}</h2>
   <p>{t('form.promptNote')}</p>
-  <p>{t('form.promptCarries')}</p>
 
   <label for={id}>{t('form.question')}</label>
-  <textarea {id} bind:value={question} rows="2" placeholder={t('form.questionPlaceholder')}
+  <textarea
+    {id}
+    bind:value={question}
+    rows="2"
+    required
+    aria-required="true"
+    aria-describedby={missing ? alert : undefined}
+    placeholder={t('form.questionPlaceholder')}
+    oninput={() => (missing = false)}
   ></textarea>
-  <p class="note">{t('form.questionNote')}</p>
 
   <div class="controls">
-    <button type="button" class="copy" onclick={() => copier.run(copy)} disabled={copier.busy} aria-live="polite">
+    <button type="button" class="copy" onclick={attempt} disabled={copier.busy} aria-live="polite">
       {copier.busy ? t('form.copying') : copier.copied ? t('form.copied') : t('form.copyPrompt')}
     </button>
   </div>
+  {#if missing}<p class="needed" id={alert} role="alert">{t('form.needed.question')}</p>{/if}
   <p class="note">{t('form.promptPrivacy')}</p>
 
   {#if copier.failed}<p class="failure" role="alert">{t('form.copyUnread')}</p>{/if}
@@ -97,6 +120,9 @@
   h2 { font-size: 1rem; font-weight: 500; margin: 0 0 0.5rem; }
   p { margin: 0 0 0.6rem; font-size: 0.85rem; line-height: 1.55; color: var(--faint); }
   .note { font-size: 0.8rem; }
+  /* Under the button that was pressed, not under the field: it answers the
+     press, and it is the press that has to be told it did nothing. */
+  .needed { margin-top: 0.4rem; font-size: 0.8rem; color: var(--ink); }
   label { display: block; font-size: 0.85rem; margin: 1rem 0 0.3rem; }
   textarea {
     width: 100%;
