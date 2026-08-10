@@ -96,14 +96,30 @@ describe('the prompt', () => {
    * The prompt travels, and a disclaimer left on the page it was copied from
    * does not travel with it. So the reading is told to carry it — to say it,
    * not to have been told it.
+   *
+   * In fixed words, first, once. A disclaimer written in the model's own
+   * words comes out written about the question, which is a reading with a
+   * caveat's manners; and an opening line is the only one a model can check
+   * it already said, which is what keeps it from coming back under every
+   * answer until nobody reads it.
    */
   it('tells the reading to say what it is for, and whose the decision is', () => {
     const at = moment();
     const text = readingPrompt(at, computeQimenChart(at, DEFAULT_OPTIONS), en);
 
-    expect(text).toContain('this is for entertainment');
-    expect(text).toContain('their own decision and their own responsibility');
-    expect(text).toContain('no medical, legal or financial advice');
+    expect(text).toContain('food for thought and as entertainment');
+    // Not a softer way of saying nothing: the line has to deny that a reading
+    // settles what is the case, which is what somebody asking about another
+    // person's feelings will otherwise take from it.
+    expect(text).toContain('establishes no facts');
+    expect(text).toContain('in no way a substitute for medical, legal or financial advice');
+    expect(text).toContain('remains yours alone, and your responsibility');
+    expect(text).toContain('Those words and no others');
+    expect(text).toContain('do not name the person or the matter inside it');
+    expect(text).toContain('Open your first reply');
+    expect(text).toContain('Then never again');
+    // The test the model can actually run on itself.
+    expect(text).toContain('already somewhere in this conversation');
   });
 
   /**
@@ -213,7 +229,7 @@ describe('the prompt for a chart of a birth', () => {
     const text = destiny();
 
     expect(text).toContain('Do not rank the palaces');
-    expect(text).toContain('this is for entertainment');
+    expect(text).toContain('food for thought and as entertainment');
     // And the chart itself, which is the point of all of it.
     expect(text).toContain('離');
   });

@@ -529,8 +529,18 @@ export const en = {
   // from: the prompt travels, and this is the part that has to travel with
   // it. The instruction is to *say* it — a disclaimer the reader never sees
   // is a disclaimer that was written for somebody else.
+  //
+  // Fixed words, first, once. Told to say it in its own words, a model writes
+  // the disclaimer *about* the question — naming the person, ruling on what
+  // the chart cannot establish about them — and that is a reading wearing a
+  // caveat's clothes, arriving where nothing licenses it.
+  //
+  // First rather than last, and it is the once that the position buys: an
+  // opening line is either there or it is not, and the model can see in the
+  // conversation whether it already said it. A closing line has no such
+  // test, so it comes back under every answer until nobody reads it.
   'prompt.disclaimer':
-    'Say, in your own words and without burying it at the end, that this is for entertainment: a chart is not evidence, and whatever the person does on the strength of your reading is entirely their own decision and their own responsibility. It stands in for no medical, legal or financial advice. Where somebody is heading towards one of those, say plainly where the real answer has to come from.',
+    'Open your first reply with this line, before anything else you write: "Offered purely as food for thought and as entertainment. This reading establishes no facts and is in no way a substitute for medical, legal or financial advice; every choice and every action from here remains yours alone, and your responsibility." Those words and no others. Do not fit it to the question, do not name the person or the matter inside it, do not add to it and do not explain it. Then never again: it opens the conversation and it stands for all of it. Every later reply begins with the answer and carries no notice at the top or the bottom — not a reminder, not a shortened version, not a sentence that does its job in other words. If the line is already somewhere in this conversation, you have said it: go straight to the answer.',
   // The other frame: a chart cast for a birth and read as a chart of a life.
   //
   // A frame and never a method. The engine will not say which palace stands
