@@ -153,8 +153,6 @@ export function readingPrompt(
     // Only under divination: it is about drawing the question out, and under
     // destiny there is no question to draw out.
     ...(destiny ? [] : [t('prompt.whatToAsk'), '']),
-    t('prompt.certainty'),
-    '',
     t('prompt.names'),
     '',
     // Last of the instructions, immediately before the data: it is the one

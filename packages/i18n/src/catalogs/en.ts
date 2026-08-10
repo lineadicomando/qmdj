@@ -514,8 +514,6 @@ export const en = {
     'A palace marked 凶 does not mean "avoid this time". A fortune is a property of the arrangement — 門迫 is oppression, and the sources name it and weigh it in one breath — and not a verdict about the person, the day, or the undertaking.',
   'prompt.yours':
     'The reading is yours, and it must be given as yours. What the software did was lay out the plates and name what it found; everything past that is you, and the person asking is entitled to know which is which.',
-  'prompt.certainty':
-    'If you are asked how sure any of this is, the answer is not the same for all of it. The solar terms, the lunar calendar and the four pillars were checked against published astronomical tables through an independent implementation. The Qi Men layout was checked against one open implementation, which means consistent with it and not verified. The configurations come from Chinese-language sources with no runnable reference at all. Do not describe the third as though it were the first.',
   'prompt.names':
     'Every name is given in Chinese, in pinyin and glossed. Write for someone who does not read Chinese: lead with the gloss and keep the hanzi beside it the first time each name appears.',
   // Carried into the reading rather than left on the page it was copied

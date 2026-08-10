@@ -185,7 +185,6 @@ describe('the prompt for a chart of a birth', () => {
 
     expect(text).toContain('Do not rank the palaces');
     expect(text).toContain('this is for entertainment');
-    expect(text).toContain('with no runnable reference at all');
     // And the chart itself, which is the point of all of it.
     expect(text).toContain('離');
   });

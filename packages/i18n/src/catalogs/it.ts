@@ -406,8 +406,6 @@ export const it: Record<MessageKey, string> = {
     'Un palazzo segnato 凶 non significa «evita quest\'ora». Una fortuna è una proprietà della configurazione — 門迫 *è* oppressione, e le fonti la nominano e la pesano nello stesso respiro — e non un verdetto sulla persona, sulla giornata o sull\'impresa.',
   'prompt.yours':
     'La lettura è tua, e va data come tua. Il programma ha disposto le piastre e ha nominato ciò che ha trovato; tutto quello che viene dopo sei tu, e chi ha chiesto ha il diritto di sapere dove finisce l\'uno e dove cominci tu.',
-  'prompt.certainty':
-    'Se ti chiedono quanto tutto questo sia sicuro, la risposta non è la stessa per ogni parte. I termini solari, il calendario lunare e i quattro pilastri sono stati confrontati con tavole astronomiche pubblicate, attraverso un\'implementazione indipendente. La disposizione del Qi Men è stata confrontata con una sola implementazione aperta, il che significa coerente con essa e non verificata. Le configurazioni vengono da fonti in lingua cinese, senza alcun riferimento eseguibile. Non descrivere la terza come se fosse la prima.',
   'prompt.names':
     'Ogni nome è dato in cinese, in pinyin e con una glossa. Scrivi per chi non legge il cinese: metti avanti la glossa e tieni gli hanzi accanto la prima volta che ciascun nome compare.',
   'prompt.disclaimer':

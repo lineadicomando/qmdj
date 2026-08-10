@@ -118,9 +118,12 @@ the engine falls back to Moshier, which needs no files.
   a wrong chart read well is unfalsifiable. `readingPrompt` in
   `core/src/prompt.ts` puts the chart inside a fence and `docs/agent-prompt.md`
   around it — the 用神 is the reader's, the fortunes are not a score, a 凶 is
-  not advice, and each number's tier of certainty is named. Handing over the
-  chart without that would be this project outsourcing in a paragraph what it
-  declines to do in code.
+  not advice, and the reading says what it is for. Handing over the chart
+  without that would be this project outsourcing in a paragraph what it
+  declines to do in code. How sure each number is stays in
+  `docs/agent-prompt.md`, for an agent that can look it up: in the pasted
+  prompt it was a paragraph the model recited unasked, beside a disclaimer
+  that already says this is entertainment.
 - **The question never reaches the server.** `/api/chart/prompt` is told
   `asked=true` and nothing more, and the prompt ends on the line that
   introduces a question for the browser to append. What somebody asks a chart
