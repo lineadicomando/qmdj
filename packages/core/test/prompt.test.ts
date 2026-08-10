@@ -106,6 +106,33 @@ describe('the prompt', () => {
     expect(text).toContain('no medical, legal or financial advice');
   });
 
+  /**
+   * The rule the whole project is written on, said to the one surface that
+   * could break it — and obeyed by the instructions that say it, because the
+   * strongest instruction a model has is the example in front of it. A glyph
+   * without its reading is, to the reader this is built for, a shape with no
+   * sound: unsayable, unsearchable, unaskable.
+   */
+  it('asks for a reading beside every glyph, and carries one beside its own', () => {
+    const at = moment();
+    const chart = computeQimenChart(at, DEFAULT_OPTIONS);
+
+    for (const t of [en, createTranslator('it')]) {
+      for (const request of [{}, { frame: 'destiny' } as const]) {
+        const text = readingPrompt(at, chart, t, request);
+        // Everything before the fence: what the reading is told to do, as
+        // opposed to the transcript, which is data and pairs them already.
+        const instructions = text.slice(0, text.indexOf('```'));
+
+        expect(instructions).toContain('pinyin');
+        for (const glyphs of instructions.matchAll(/[一-鿿]+/gu)) {
+          const beside = instructions.slice(glyphs.index, glyphs.index + glyphs[0].length + 2);
+          expect(beside).toMatch(/[一-鿿] \p{Script=Latin}/u);
+        }
+      }
+    }
+  });
+
   it('says no question was asked rather than inventing one', () => {
     const at = moment();
     const text = readingPrompt(at, computeQimenChart(at, DEFAULT_OPTIONS), en);

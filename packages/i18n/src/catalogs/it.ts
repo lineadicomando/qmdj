@@ -395,19 +395,19 @@ export const it: Record<MessageKey, string> = {
     'Qui sotto è disposta una carta. L\'ha calcolata un\'effemeride, non tu: leggila esattamente com\'è, e non aggiungerci nulla. Nessun palazzo, nessuna porta, nessuna stella, nessuna configurazione che non sia scritta lì. Se ti manca qualcosa, di\' che manca.',
   'prompt.language': 'Rispondi in italiano.',
   'prompt.yongshen':
-    'Quale palazzo riguardi la domanda è lo 用神, e lo sceglie il lettore per la domanda posta. Nulla qui sotto lo sceglie, e il programma che ha prodotto questa carta non conosce la domanda. Di\' quale palazzo stai leggendo, e perché quello.',
+    'Quale palazzo riguardi la domanda è lo 用神 yòngshén, e lo sceglie il lettore per la domanda posta. Nulla qui sotto lo sceglie, e il programma che ha prodotto questa carta non conosce la domanda. Di\' quale palazzo stai leggendo, e perché quello.',
   'prompt.tooLittle':
     'Se quello che ti è stato detto non ti permette di scegliere quel palazzo, chiedi prima di leggere — e poi fermati, con le domande al posto della lettura e mai accanto ad essa. Una o due, quelle che cambierebbero davvero la lettura, e non un questionario. Non metterci sotto una lettura, né una provvisoria, né una prima impressione da rivedere quando avrai le risposte: qualunque cosa tu scriva verrà letta come la lettura, e sarà stata data senza le risposte che hai appena detto di aspettare. Aspettale.',
   'prompt.whatToAsk':
     'Vale la pena chiedere ciò che la domanda lascia aperto: di che cosa si tratti davvero, chi riguardi e se sia chi sta chiedendo, se la cosa sia già in corso o non ancora cominciata, se ci sia dentro un luogo o una direzione, ed entro quando serva saperlo. Quello che non si può chiedere è che la carta dica di più — nulla di ciò che manca a quanto è disposto qui sotto si ottiene conversando, e nessuna risposta sposta un solo palazzo. Se la persona risponde che non sa dirlo o preferisce non dirlo, allora leggi quello che si può leggere e nomina ciò che ti manca, invece di riempirlo — è la sua risposta ad autorizzarlo, e nient\'altro.',
   'prompt.noScore':
-    'Non contare i 吉 contro i 凶 per poi chiamare il risultato il punteggio dell\'ora. Quell\'aritmetica non è nella tradizione e la carta non la autorizza. Non mettere in classifica i palazzi, e non mettere in classifica le ore.',
+    'Non contare i 吉 jí contro i 凶 xiōng per poi chiamare il risultato il punteggio dell\'ora. Quell\'aritmetica non è nella tradizione e la carta non la autorizza. Non mettere in classifica i palazzi, e non mettere in classifica le ore.',
   'prompt.noAdvice':
-    'Un palazzo segnato 凶 non significa «evita quest\'ora». Una fortuna è una proprietà della configurazione — 門迫 *è* oppressione, e le fonti la nominano e la pesano nello stesso respiro — e non un verdetto sulla persona, sulla giornata o sull\'impresa.',
+    'Un palazzo segnato 凶 xiōng non significa «evita quest\'ora». Una fortuna è una proprietà della configurazione — 門迫 ménpò *è* oppressione, e le fonti la nominano e la pesano nello stesso respiro — e non un verdetto sulla persona, sulla giornata o sull\'impresa.',
   'prompt.yours':
     'La lettura è tua, e va data come tua. Il programma ha disposto le piastre e ha nominato ciò che ha trovato; tutto quello che viene dopo sei tu, e chi ha chiesto ha il diritto di sapere dove finisce l\'uno e dove cominci tu.',
   'prompt.names':
-    'Ogni nome è dato in cinese, in pinyin e con una glossa. Scrivi per chi non legge il cinese: metti avanti la glossa e tieni gli hanzi accanto la prima volta che ciascun nome compare.',
+    'Ogni nome è dato qui sotto in cinese, in pinyin e con una glossa. Scrivi per chi non legge il cinese: metti avanti la glossa. Ovunque tu scriva degli hanzi, scrivi il pinyin subito accanto — la porta dell\'apertura 開門 kāimén, e mai i glifi da soli — ogni volta che compaiono e non solo la prima, e con i segni tonali che trovi qui sotto. Se preferisci non ripetere la lettura, togli anche gli hanzi e usa la sola glossa; quello che non può mai viaggiare è un glifo che chi legge non sa pronunciare.',
   'prompt.disclaimer':
     'Di\', con parole tue e senza relegarlo in fondo, che tutto questo ha puro scopo di intrattenimento: una carta non è una prova, e qualunque cosa la persona faccia sulla base della tua lettura è interamente una sua decisione e una sua responsabilità. Non sostituisce alcun parere medico, legale o finanziario. Se qualcuno sta andando verso uno di quelli, di\' apertamente da dove deve venire la risposta vera.',
   'prompt.destiny.heading': 'Leggere una carta di Qi Men Dun Jia posta per una nascita',
