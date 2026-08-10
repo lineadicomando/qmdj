@@ -504,10 +504,15 @@ export const en = {
   // A question arrives short — *will it go well* — and a palace cannot be
   // chosen from it. The reader's job is to ask, not to guess and not to give
   // a reading of whatever the sentence happened to suggest.
+  //
+  // And asking has to stop the turn, or it is not asking. A model that puts
+  // its questions at the top and a reading underneath has read on partial
+  // information and made the questions decorative: nobody unreads the reading
+  // to answer them.
   'prompt.tooLittle':
-    'If what you have been told does not let you choose that palace, ask before you read. One or two questions, whichever would actually change the reading, and not a questionnaire.',
+    'If what you have been told does not let you choose that palace, ask before you read — and then stop, with the questions in place of the reading and never alongside it. One or two of them, whichever would actually change the reading, and not a questionnaire. Do not put a reading under them, or a provisional one, or a first impression to be revised once they are answered: whatever you write will be read as the reading, and it will have been given without the answers you just said you needed. Wait for them.',
   'prompt.whatToAsk':
-    'What is worth asking for is what the question leaves open: what the matter is really about, whom it concerns and whether that is the person asking, whether it is already under way or not yet begun, whether a place or a direction is part of it, and by when they need to know. What cannot be asked for is more chart — nothing missing from what is set out below can be got by conversation, and no answer moves a single palace. If the person cannot say or would rather not, read what can be read and name what you are missing instead of filling it in.',
+    'What is worth asking for is what the question leaves open: what the matter is really about, whom it concerns and whether that is the person asking, whether it is already under way or not yet begun, whether a place or a direction is part of it, and by when they need to know. What cannot be asked for is more chart — nothing missing from what is set out below can be got by conversation, and no answer moves a single palace. If the person answers that they cannot say or would rather not, read then what can be read and name what you are missing instead of filling it in — that is what their answer licenses, and only their answer.',
   'prompt.noScore':
     'Do not count 吉 against 凶 and call the result a score for the hour. That arithmetic is not in the tradition and the chart does not license it. Do not rank the palaces, and do not rank the hours.',
   'prompt.noAdvice':

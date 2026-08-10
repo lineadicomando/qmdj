@@ -85,8 +85,10 @@ describe('the prompt', () => {
     expect(text).toContain('ask before you read');
     expect(text).toContain('not a questionnaire');
     expect(text).toContain('What cannot be asked for is more chart');
-    // And the fallback for when nobody answers: the prompt can end up
-    // pasted where there is no one to ask.
+    // Asking has to end the turn, or it is a caption on a reading that was
+    // given anyway, on the information the reader just called insufficient.
+    expect(text).toContain('in place of the reading and never alongside it');
+    // And the fallback, which their answer licenses and nothing else does.
     expect(text).toContain('name what you are missing instead of filling it in');
   });
 
