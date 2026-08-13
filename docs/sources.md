@@ -79,7 +79,20 @@ eight gates, the eight spirits, 值符, 值使, 旬首, 空亡 and 驛馬.
 *What it corrected here*: this engine wrote the second spirit 滕蛇 in
 `plates.ts` and 螣蛇夭矯 in `patterns.ts` — the same creature under two
 glyphs, of which the table above had already settled 螣. The reference writes
-螣蛇, and 滕 is a surname. Fixed to 螣蛇.
+螣蛇, and 滕 is a surname. Fixed to 螣蛇. It also showed 寄宮 as a reading and
+not only as a rule: it prints the centre's stem in the host palace, where this
+engine computed the lodging and reported only its consequence for the chief
+gate. `PalaceContents.lodged` now says it. The two still part on the heaven
+plate, where that reference turns the lodged stem with its host and this one
+leaves the centre out of the turn — a divergence in the derivation of the
+plate, not in the lodging.
+
+*Three conventions it does not share, none of them a defect in either*: it
+merges 天芮 and 天禽 into one cell and leaves the centre starless where this
+engine keeps 天禽 at the centre; it writes 白虎 and 玄武 in both dun where this
+engine follows the 陰陽異名 convention and renames them 勾陳 and 朱雀 in a yang
+chart, which the `qimen-dunjia` entry above already notes as one convention
+among several; and it corrects no clock time to the Sun.
 
 *Two defects found in it, for whoever uses it next*: its month pillar turns on
 the **civil day** of the jie rather than at the jie, so a chart cast between

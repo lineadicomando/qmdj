@@ -43,6 +43,27 @@ export interface PalaceContents {
   starRelation: Relation;
   /** How the gate does (門宮). Absent with the gate. */
   gateRelation?: Relation;
+  /**
+   * The centre's stem, when this is the palace the centre lodges in (寄宮).
+   * Present on exactly one palace of every chart, and on the centre never.
+   *
+   * The centre has no direction, no gate and no spirit, so what the ju puts
+   * there is read at its host — which is why `chiefGate` and the flight of
+   * the gates already pass through `lodge`. Without this the consequence was
+   * computed and not reported: a reader standing at 坤 saw one stem where the
+   * doctrine gives them two, and nothing in the chart said the centre lodges
+   * here at all.
+   *
+   * **One stem and not two**, because under 轉盤 the turn runs along the ring
+   * of eight and never reaches the centre: what the ju puts there stands on
+   * both plates, so `palace 5` reports the same stem twice and there is only
+   * one thing to lodge. Schools that instead glue the lodged stem to its
+   * host and turn the two together get a heaven plate that carries it
+   * elsewhere — a divergence in how the plate is derived, not one this field
+   * decides. It is said here in the second place it is read, and not moved
+   * out of the first: `palace 5` still carries it.
+   */
+  lodged?: Stem;
 }
 
 export interface QimenChart {
@@ -163,6 +184,11 @@ export function computeQimenChart(moment: Moment, options: ChartOptions): QimenC
       contents.gateRelation = relationOf(gateElement, current.element);
     }
     if (spiritHere) contents.spirit = spiritHere;
+    // Read off `lodge` rather than off the constant, so that the palace named
+    // here and the palace the chief gate is read at can never come apart.
+    if (current.number !== 5 && lodge(5) === current.number) {
+      contents.lodged = earth[5] as Stem;
+    }
     return contents;
   });
 

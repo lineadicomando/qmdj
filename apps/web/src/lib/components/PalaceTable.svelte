@@ -35,6 +35,15 @@
         <td>
           <span>{gloss('stem', cell.earth.id)}</span>
           <span class="glyph">{glyph(cell.earth)}</span>
+          <!-- 寄宮, on the one palace that hosts the centre. In the cell and
+               not in a footnote: whoever reads this row is the person the
+               lodging is for. Guarded like the relations above — a chart is
+               cached private for a day, so this meets charts cast before the
+               field existed. -->
+          {#if cell.lodged}
+            <span class="gloss">{t('cli.field.lodgedShort', { stem: gloss('stem', cell.lodged.id) })}</span>
+            <span class="glyph">{glyph(cell.lodged)}</span>
+          {/if}
         </td>
         <td>
           <span>{gloss('stem', cell.heaven.id)}</span>

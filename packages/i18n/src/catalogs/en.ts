@@ -593,6 +593,11 @@ export const en = {
   'cli.heading.calendar': 'Lunar date',
   'cli.heading.patterns': 'Configurations',
   // `{branch}` is the branch the horse stands on, said in words and in hanzi.
+  // 寄宮: the centre has no palace of its own, so its stem is read at one
+  // that has a direction, a gate and a spirit.
+  'cli.field.lodged': 'The centre lodges in {palace}, where its {stem} is read.',
+  // The same fact in a table cell, where there is no room for the sentence.
+  'cli.field.lodgedShort': 'the centre lodges here: {stem}',
   'cli.field.horse': '{from}: {branch}, palace {palace}',
   'cli.heading.scan': 'Charts from {from} to {to}',
   'cli.heading.criteria': 'Asked for',

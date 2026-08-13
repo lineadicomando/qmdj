@@ -258,6 +258,9 @@ export function formatQimenChart(chart: QimenChart, t: Translator): string {
         named(cell.heaven, `label.stem.${cell.heaven.id}` as MessageKey, t),
       ]),
     ]),
+    // Under the table and not in it: a fourth column empty on eight rows of
+    // nine would cost every reader width to tell one of them something.
+    ...lodging(chart, t),
     '',
     `${t('cli.heading.standing')}`,
     ...table([
@@ -333,6 +336,27 @@ export function formatQimenChart(chart: QimenChart, t: Translator): string {
 }
 
 /** `4 巽 southeast`, for naming where a configuration fell. */
+/**
+ * Where the centre lodges, and with what (寄宮).
+ *
+ * A line rather than a column, and printed under the plates it is about. The
+ * centre has no direction, no gate and no spirit, so its stem is read at a
+ * palace that has all three — and a chart that showed the host's own stem and
+ * nothing else left the reader to know that from somewhere other than the
+ * chart.
+ */
+function lodging(chart: QimenChart, t: Translator): string[] {
+  const host = chart.palaces.find((cell) => cell.lodged);
+  if (!host?.lodged) return [];
+
+  return [
+    `  ${t('cli.field.lodged', {
+      palace: `${host.palace.number} ${named(host.palace, `label.palace.${host.palace.id}` as MessageKey, t)}`,
+      stem: named(host.lodged, `label.stem.${host.lodged.id}` as MessageKey, t),
+    })}`,
+  ];
+}
+
 function palaceOf(chart: QimenChart, number: number, t: Translator): string {
   const cell = chart.palaces.find((candidate) => candidate.palace.number === number);
   if (!cell) return String(number);

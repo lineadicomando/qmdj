@@ -116,6 +116,12 @@ read and name what you are missing, rather than filling it in.
   and 己. They disagree on most days, both are held by schools that call
   themselves 拆補, and the default is `term`. The same rule as above holds:
   do not switch it between charts you are comparing.
+- **The centre is read somewhere else (寄宮).** It has no direction, no gate
+  and no spirit, so the stem the ju puts there is read at its host — 坤 by
+  default — and the host's palace says so with `lodged`. That palace therefore
+  carries two stems on the earth plate, its own and the centre's, and both are
+  in play there. Do not drop either, and do not move the centre's out of the
+  centre: it is one stem read in two places, not two stems.
 - **三奇得使 is not computed.** The sources consulted do not agree on which
   pairings count. Its absence is deliberate; do not fill the gap yourself.
 - **No table says which gate suits which undertaking.** The transmitted

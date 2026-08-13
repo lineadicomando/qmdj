@@ -273,6 +273,49 @@ describe('the yuan read from the futou', () => {
   });
 });
 
+describe('the centre lodges, and the chart says where', () => {
+  const at = (): QimenChart => cast('2020-03-15', '10:00');
+  const hostOf = (chart: QimenChart) => chart.palaces.find((cell) => cell.lodged);
+  const centreOf = (chart: QimenChart) =>
+    chart.palaces.find((cell) => cell.palace.number === 5);
+
+  it('names exactly one host, and it is not the centre', () => {
+    const chart = at();
+
+    expect(chart.palaces.filter((cell) => cell.lodged)).toHaveLength(1);
+    expect(hostOf(chart)?.palace.number).toBe(CENTRE_HOST);
+    expect(centreOf(chart)?.lodged).toBeUndefined();
+  });
+
+  it('lodges the centre’s own stem, and leaves it in the centre too', () => {
+    const chart = at();
+
+    expect(hostOf(chart)?.lodged?.hanzi).toBe('丙');
+    expect(centreOf(chart)?.earth.hanzi).toBe('丙');
+    expect(hostOf(chart)?.earth.hanzi).toBe('壬');
+  });
+
+  it('lodges wherever the chief gate is read from', () => {
+    // Both go through `lodge`, and a chart where they parted would read the
+    // centre at one palace and its gate at another.
+    for (const date of ['2001-03-07', '2009-08-19', '2017-11-30', '2023-05-05']) {
+      const other = cast(date, '13:00');
+      expect(other.palaces.find((cell) => cell.lodged)?.palace.number).toBe(lodge(5));
+    }
+  });
+
+  it('is one stem because the turn never reaches the centre', () => {
+    // Under 轉盤 the ring of eight turns and the centre does not, so what the
+    // ju put there stands on both plates. Two lodged stems would mean the
+    // heaven plate had moved it, which is another school's derivation.
+    for (const date of ['2001-03-07', '2009-08-19', '2017-11-30', '2023-05-05']) {
+      const other = cast(date, '13:00');
+      const its = other.palaces.find((cell) => cell.palace.number === 5);
+      expect(its?.heaven.hanzi).toBe(its?.earth.hanzi);
+    }
+  });
+});
+
 describe('what every chart must satisfy', () => {
   const SAMPLES = ['2001-03-07', '2009-08-19', '2017-11-30', '2023-05-05'];
 

@@ -854,6 +854,20 @@ are. Like those two it stays off the surfaces: a parameter with one working
 value is offered nowhere and exists in the type, which is what keeps the API,
 the MCP schema and every shared link from breaking when the second arrives.
 
+**寄宮 was computed and not reported**, which comparison found later. The
+lodging already decided which palace the chief gate is read at, and every path
+that needed it went through `lodge` — but the chart printed the host's own
+stem and nothing else, so a reader standing at 坤 saw one stem where the
+doctrine gives them two and had no way to learn from the chart that the centre
+lodges there at all. `PalaceContents.lodged` says it now, on the host's row.
+**One stem and not two**: 轉盤 turns the ring of eight and never the centre, so
+what the ju put there stands on both plates. Schools that instead glue the
+lodged stem to its host and turn the pair together get a heaven plate carrying
+it elsewhere — a divergence in how the plate is derived, and one for `plate`
+rather than for this field. The drawing does not show it: its cell has six
+registers and all six are full on the host, and a picture is not where notes
+go.
+
 Also moved: `BRANCH_PALACE` and `branchesOf` from `patterns.ts` to
 `palaces.ts`. Which palace a branch falls in is a fact about the board, and by
 now three unrelated things ask it — the void palaces of a decade, the post

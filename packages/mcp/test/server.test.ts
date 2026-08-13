@@ -135,6 +135,14 @@ describe('compute_qimen_chart', () => {
     expect(zhirun).not.toContain('chaibu');
   });
 
+  it('says where the centre lodges', async () => {
+    // The centre has no gate and no spirit, so its stem is read elsewhere.
+    // An agent that could not see where would have to know it from outside.
+    const text = await call('compute_qimen_chart', BEIJING);
+
+    expect(text).toContain('The centre lodges in 2 southwest 坤');
+  });
+
   it('reads the yuan from the futou when asked, and says it did', async () => {
     // The two readings part company on this day; see the CLI test for why.
     const at = { ...BEIJING, date: '1999-01-06', time: '12:00' };

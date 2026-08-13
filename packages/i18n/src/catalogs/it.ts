@@ -439,6 +439,8 @@ export const it: Record<MessageKey, string> = {
   'cli.heading.terms': 'Termini solari del {year}',
   'cli.heading.calendar': 'Data lunare',
   'cli.heading.patterns': 'Configurazioni',
+  'cli.field.lodged': 'Il centro si alloggia nel palazzo {palace}, dove si legge il suo {stem}.',
+  'cli.field.lodgedShort': 'qui si alloggia il centro: {stem}',
   'cli.field.horse': '{from}: {branch}, palazzo {palace}',
   'cli.heading.scan': 'Carte dal {from} al {to}',
   'cli.heading.criteria': 'Richiesto',

@@ -26,6 +26,7 @@ Nine palaces
   1 north 坎 kǎn       Yin Earth 己 jǐ     Yang Water 壬 rén
   2 southwest 坤 kūn   Yang Metal 庚 gēng  Yin Earth 己 jǐ
   …
+  The centre lodges in 2 southwest 坤 kūn, where its Yin Water 癸 guǐ is read.
 
 What stands in each
   palace      star                   gate                spirit
@@ -256,6 +257,15 @@ under 置閏, where the yuan is the 符頭's by construction.
 substituted, because a
 chart cast by the wrong method looks right and is not; the same refusal
 covers the unimplemented values of `plate` and `system`.
+
+`centreLodging` is a reading and not only a rule: the centre has no direction,
+no gate and no spirit, so what the ju puts there is read at its host. The
+chart says so on the host's own row — `lodged` in the data, a line under the
+plates on the command line, the cell itself in the interface — because
+computing the consequence and printing only the host's own stem left it to be
+known from somewhere other than the chart. The centre keeps it too: 轉盤 turns
+the ring of eight and never the centre, so the stem stands on both plates and
+there is one of it, said in both places it is read.
 
 A chart carries the options that produced it, so a saved one reproduces
 identically.
