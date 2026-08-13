@@ -121,12 +121,19 @@ export function scanCharts(
     const julianDay = Math.min(opens + i * step, closes);
     const chart = cast(julianDay);
 
-    if (!sameChart(chart, previous.chart)) {
-      const boundary = firstChange(previous.julianDay, julianDay, previous.chart, cast);
-      if (boundary < closes) {
-        (runs.at(-1) as ScanRun).end = say(boundary);
-        runs.push({ start: say(boundary), end: say(closes), chart: cast(boundary) });
-      }
+    // One probe window can hold more than one boundary: a yuan turning in the
+    // middle of a double hour opens a run shorter than the probe, and the
+    // hour's own turn then falls inside the same window. Each bisection finds
+    // the first change after `held`; the search resumes from there until the
+    // chart standing agrees with the probe's.
+    let held = previous;
+    while (!sameChart(chart, held.chart)) {
+      const boundary = firstChange(held.julianDay, julianDay, held.chart, cast);
+      if (boundary >= closes) break;
+      const opened = cast(boundary);
+      (runs.at(-1) as ScanRun).end = say(boundary);
+      runs.push({ start: say(boundary), end: say(closes), chart: opened });
+      held = { julianDay: boundary, chart: opened };
     }
 
     previous = { julianDay, chart };
@@ -140,9 +147,10 @@ export function scanCharts(
  * does not.
  *
  * Bisection, to within a minute. Nothing here is continuous — a chart is one
- * thing and then another — but it is monotonic across a single change, which
- * is all a bisection needs. Two changes inside one probe would need the probe
- * to be shorter than the shortest run, and the shortest run is a double hour.
+ * thing and then another — but a chart once left is never returned to inside
+ * a probe window, so "still the chart that holds" is monotonic, which is all
+ * a bisection needs. It finds the first change only; when a window holds two,
+ * the caller searches again from the boundary.
  */
 function firstChange(
   holds: number,
@@ -185,14 +193,17 @@ function clockAt(julianDay: number, timezone: string): LocalMoment {
 /**
  * Whether two instants stand under the same chart.
  *
- * The hour pillar and the ju settle it between them: everything else on the
- * plates is derived from those two, so two instants agreeing on both agree
- * everywhere. Comparing the whole chart would be comparing nine palaces to
- * learn what two numbers already say.
+ * The hour pillar and the ju settle the plates between them, but not quite
+ * the chart: the day pillar rules the horse and 五不遇時, and under a
+ * `midnight` day boundary it turns in the middle of the double hour of 子,
+ * where the hour pillar does not. So the day is compared too. Comparing the
+ * whole chart would be comparing nine palaces to learn what three numbers
+ * already say.
  */
 function sameChart(a: QimenChart, b: QimenChart): boolean {
   return (
     a.moment.pillars.hour.index === b.moment.pillars.hour.index &&
+    a.moment.pillars.day.index === b.moment.pillars.day.index &&
     a.ju.number === b.ju.number &&
     a.ju.yang === b.ju.yang
   );

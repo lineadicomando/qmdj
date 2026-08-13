@@ -52,14 +52,30 @@ describe('scanCharts', () => {
 
   it('gives a clock day twelve runs, one to a double hour', () => {
     // From 01:00 so the day opens on a boundary: the hour of the Rat straddles
-    // midnight, and a day counted from 00:00 begins halfway through it.
-    const runs = scan('2026-09-01T01:00', '2026-09-02T01:00');
+    // midnight, and a day counted from 00:00 begins halfway through it. Under
+    // 子時 the day pillar turns with the hour, so nothing splits the Rat.
+    const runs = scan('2026-09-01T01:00', '2026-09-02T01:00', BEIJING, {
+      ...CLOCK,
+      dayBoundary: 'zishi',
+    });
 
     expect(runs).toHaveLength(12);
     for (const run of runs) {
       const hours = (Date.parse(run.end) - Date.parse(run.start)) / 3_600_000;
       expect(hours).toBe(2);
     }
+  });
+
+  it('splits the hour of the Rat at midnight, where the day pillar turns', () => {
+    // Under a midnight day boundary the day pillar turns at 00:00 and the
+    // hour pillar does not: the two halves of the double hour carry different
+    // days, and the day rules the horse and 五不遇時.
+    const runs = scan('2026-09-01T23:00', '2026-09-02T01:00');
+
+    expect(runs).toHaveLength(2);
+    expect(runs[1]?.start).toMatch(/^2026-09-02T00:00/);
+    expect(new Set(runs.map((run) => run.chart.moment.pillars.hour.hanzi)).size).toBe(1);
+    expect(runs[0]?.chart.moment.pillars.day.hanzi).not.toBe(runs[1]?.chart.moment.pillars.day.hanzi);
   });
 
   it('reports for each run the chart the engine casts for its opening instant', () => {
@@ -107,6 +123,43 @@ describe('scanCharts', () => {
     // And the split is where the yuan turns, to the minute the bisection promises.
     const found = Date.parse(runs[1]?.start as string);
     expect(Math.abs(found - turns.toMillis())).toBeLessThan(60_000);
+  });
+
+  it('finds both boundaries when a yuan turn and an hour turn share a probe window', () => {
+    // The same yuan turn, 42 minutes into the double hour of 巳: the probe at
+    // 11:00 sees a chart that differs from the one at 10:00 by two changes,
+    // not one, and each must open a run of its own. A single bisection would
+    // report 11:00–13:00 under the chart of 10:19, which no instant of those
+    // two hours holds.
+    const runs = scan('2026-09-02T09:00', '2026-09-02T15:00');
+
+    expect(runs.map((run) => run.chart.moment.pillars.hour.hanzi)).toEqual([
+      '己巳',
+      '己巳',
+      '庚午',
+      '辛未',
+    ]);
+    expect(runs[2]?.start).toMatch(/^2026-09-02T11:00/);
+
+    // Every run holds the chart the engine casts directly for any instant of it.
+    for (const run of runs) {
+      const middle = new Date((Date.parse(run.start) + Date.parse(run.end)) / 2);
+      const clock = new Intl.DateTimeFormat('sv-SE', {
+        timeZone: BEIJING.timezone,
+        dateStyle: 'short',
+        timeStyle: 'medium',
+      }).format(middle);
+      const [date, time] = clock.split(' ') as [string, string];
+      const direct = computeQimenChart(
+        resolveMoment({ date, time, timezone: BEIJING.timezone }, BEIJING, CLOCK, context),
+        CLOCK,
+      );
+
+      expect(run.chart.moment.pillars.hour.hanzi).toBe(direct.moment.pillars.hour.hanzi);
+      // `daysIntoTerm` runs with the clock; the discrete part is the chart's.
+      expect(run.chart.ju.number).toBe(direct.ju.number);
+      expect(run.chart.ju.yang).toBe(direct.ju.yang);
+    }
   });
 
   it('walks the instant and not the clock, across a change of summer time', () => {
