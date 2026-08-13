@@ -670,6 +670,33 @@ moment. Five findings:
   exactly like a chart, of somewhere else. Found by driving the browser, not
   by a test; there is a test now.
 
+**The pillars came back under the board, where the terminal always had them.**
+The services this is measured against show a chart of the four pillars beside
+every Qi Men chart, and the reason they do is worth separating from the way
+they do it. The four pillars of the *instant* are not an addition: the ju is
+counted from the term and the hour, the chief from the day, both horses from a
+branch below — `formatMoment` prints them above every chart the CLI draws, and
+the drawing's caption has carried them since it had one. The page had them
+nowhere else: inside an `alt=""` picture, uncopyable and unreadable aloud.
+They are in `ChartReading` now, so all three places that show a chart show
+them, and the pair alone — no concealed stems, no gods, no stages.
+
+**What those services do beside it is the thing this declines.** A chart of
+*birth* shown against a chart of the moment is there to pick the 用神 — the
+consultant's day stem carried into the Qi Men board — which is choosing the
+用神 and mapping a life onto palaces, the doctrine `purposes.ts` refuses and
+the `destiny` frame names as modern and school-divergent. Two charts set side
+by side are already an assertion: the reader builds the bridge, or a model
+does. So the chart leads to `/[lang]/bazi` with its own instant in the
+address, and nothing is folded in — `method` and `yuan` are left behind, since
+they decide how Qi Men counts a ju and mean nothing to the pillars, while
+`dayBoundary` and the solar correction travel, because a moment handed over
+under one boundary and read under another comes back on a different day
+pillar than the chart was cast on. The link earns its place even beside a nav
+that already carries the moment: the nav hands on the *address*, and the
+address of the present chart says nothing, where the pillars have no "now" to
+fall back on.
+
 ### Phase 7 — Distribution and documentation
 
 Multi-stage `Dockerfile` and `compose.yaml` on the reference's model: a single

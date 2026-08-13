@@ -429,6 +429,7 @@ export const en = {
   // Under the board, where somebody who wants a reading will be looking. It
   // sends them on rather than offering a field here: the question belongs
   // before the casting, and this page has already cast.
+  'form.toPillars': 'The same instant as four pillars, with the stems they conceal:',
   'form.toConsult': 'To have a chart read, with a question or as a chart of a birth:',
 
   'form.promptPrivacy':

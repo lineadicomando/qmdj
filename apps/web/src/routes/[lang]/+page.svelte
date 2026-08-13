@@ -56,6 +56,24 @@
   const address = $derived(momentQuery({ ...data.moment, ...cast }, { lang: t.locale }));
 
   /**
+   * The same instant, in the section that opens its pillars out.
+   *
+   * Pinned like the other two: a link that said «now» would land on a
+   * different moment than the one whose pillars are on screen — and worse,
+   * the pillars page has no «now» at all, since a chart of birth cast for
+   * whoever opened it is a wrong answer rather than a lesser one.
+   *
+   * The ju is left behind on purpose. `method` and `yuan` decide how Qi Men
+   * counts its ju and mean nothing to the four pillars; carried across they
+   * would sit in an address that never reads them, looking like settings that
+   * bear on the answer. `dayBoundary` and the solar correction do go, because
+   * both sections reckon the same day and the same hour from them — a moment
+   * handed over under one boundary and read under another would come back
+   * with a different day pillar than the chart was cast on.
+   */
+  const pillars = $derived(momentQuery({ ...data.moment, ...cast, method: '', yuan: '' }));
+
+  /**
    * Where each step stands, shown on the step that moves it.
    *
    * Cut from the instant the answer was cast for, not from the fields: the
@@ -231,6 +249,20 @@
       -->
       <div class="tools">
         <CopyText {t} label="form.copyChart" url="/api/chart/text?{address}" />
+        <!--
+          The pillars above, said in full one section over.
+
+          Nothing is computed twice for it: the four pairs are already in the
+          reading, and what this leads to is the concealed stems, the gods and
+          the stages — the Four Pillars' own questions, kept where they are
+          answered. A link and not a panel, because the two are separate
+          methods and a page that folded one into the other would be reading
+          the chart for somebody.
+        -->
+        <p class="note">
+          {t('form.toPillars')}
+          <a href="/{t.locale}/bazi?{pillars}">{t('nav.bazi')}</a>
+        </p>
         <p class="note">
           {t('form.toConsult')}
           <a href="/{t.locale}/consult">{t('nav.consult')}</a>

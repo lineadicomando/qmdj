@@ -40,6 +40,9 @@
     t,
     palaces = true,
   }: { chart: any; t: Translator; palaces?: boolean } = $props();
+
+  /** Largest to smallest, as every almanac and the drawing's caption have it. */
+  const PILLARS = ['year', 'month', 'day', 'hour'] as const;
 </script>
 
 <p class="ju">
@@ -54,6 +57,34 @@
       : t(`label.term.${chart.ju.term.id}` as MessageKey)}
   {/if}
 </p>
+
+<!--
+  The four pillars of the instant.
+
+  Not an addition to the chart: they are what it was cast from. The ju is
+  counted from the term and the hour, the chief and the gate from the day,
+  both post horses from a branch below — so a board read without them is a
+  board whose every number has to be taken on trust. The drawing has carried
+  them in its caption since it had one; the page had them only in the picture,
+  which is `alt=""`, uncopyable, and unreadable to a screen reader.
+
+  The pair and nothing beside it. What a pillar conceals, which god it is and
+  where it stands in the twelve stages are the Four Pillars' questions, and
+  they are answered in that section — putting them here would let a reader
+  take a whole second method for part of the chart. The link under the board
+  leads there, with this same instant in its address.
+-->
+<ul class="pillars">
+  {#each PILLARS as position}
+    {@const pair = chart.moment.pillars[position]}
+    <li>
+      <span class="what">{t(`cli.column.${position}` as MessageKey)}</span>
+      {t(`label.stem.${pair.stem.id}` as MessageKey)} ·
+      {t(`label.branch.${pair.branch.id}` as MessageKey)}
+      <span class="glyph">{glyph(pair)}</span>
+    </li>
+  {/each}
+</ul>
 
 <!--
   Both post horses, never one of them.
@@ -118,6 +149,25 @@
    * element that holds this moves all of it together.
    */
   .ju { font-size: 1.1em; margin: 0 0 0.35rem; }
+  /*
+   * Between the ju and the horses, and set between them too: what the chart
+   * was cast from outranks what it happens to contain, and reads before it.
+   *
+   * Four items of some five words, so they wrap where the column is narrow —
+   * a dialog's, or a phone's — and stand on one line where it is not. The
+   * name of the pillar is faint and the pair is not: down a column of four,
+   * `year` `month` `day` `hour` is the part a reader already knows.
+   */
+  .pillars {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0.4rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 1.25rem;
+    font-size: 0.95em;
+  }
+  .pillars .what { color: var(--faint); }
   /* Under the ju and above the board: they qualify the whole chart, as the ju
      does, and neither belongs to any one palace of it. */
   .horses {

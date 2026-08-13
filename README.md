@@ -188,6 +188,13 @@ locationId=1816670` is a chart, a link, and the same query string the API
 takes. Which is also how the moment follows a reader from the chart to the
 four pillars and back.
 
+The two are shown together, up to a point. The chart names the four pillars it
+was cast from — the terminal always printed them, the page had them only in
+the drawing's caption — and leads to the section where the same instant is
+opened out into concealed stems, gods and stages. It leads there and does not
+fold it in: what a pillar conceals is another method's question, and a page
+that answered it under the board would be reading the chart for somebody.
+
 The third section is the other question. The chart and the pillars ask what
 stands *now*; `/it/moments` asks *when, in a stretch of days, does a thing
 stand — and which way is it*. That second half is not decoration: a chart is

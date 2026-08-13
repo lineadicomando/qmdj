@@ -344,6 +344,7 @@ export const it: Record<MessageKey, string> = {
     'Poni una domanda e ottieni un prompt pronto — da incollare in ChatGPT, Claude o un altro assistente.',
   'consult.cast': 'Poni la carta',
 
+  'form.toPillars': 'Lo stesso istante nei quattro pilastri, con i gan che nascondono:',
   'form.toConsult': 'Per far leggere una carta, con una domanda o come carta di una nascita:',
 
   'form.promptPrivacy':
