@@ -7,6 +7,7 @@ import { twelveStage } from '../src/bazi/hidden-stems.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
 import { BRANCHES, STEMS, ganzhiOf } from '../src/ganzhi.js';
 import { resolveMoment } from '../src/pillars.js';
+import { fromJulianDay } from '../src/time.js';
 import { DEFAULT_OPTIONS, type ChartOptions, type Place } from '../src/types.js';
 
 let context: EphemerisContext;
@@ -187,6 +188,23 @@ describe('the luck cycles', () => {
     expect(bazi.luck?.forward).toBe(true);
     expect(bazi.luck?.cycles[0]?.ganzhi.hanzi).toBe('丙寅');
     expect(bazi.luck?.start).toEqual({ years: 0, months: 9, days: 20 });
+  });
+
+  it('opens each decade on the date the one before it opened', () => {
+    // Counted in calendar years, not in multiples of the mean year: over ten
+    // cycles the second reckoning slides a day or two off the date, and
+    // `startAge` would then name an instant that is not the one it means.
+    const bazi = chart('1968-03-12', '14:30', { gender: 'male', cycles: 10 });
+    const cycles = bazi.luck?.cycles as NonNullable<Bazi['luck']>['cycles'];
+    const dayOf = (julianDay: number): string =>
+      fromJulianDay(julianDay, BEIJING.timezone).toFormat('MM-dd HH:mm');
+
+    expect(cycles).toHaveLength(10);
+    for (const cycle of cycles) expect(dayOf(cycle.startJD)).toBe(dayOf(cycles[0]?.startJD ?? 0));
+    // And the years themselves still step by ten.
+    expect(fromJulianDay(cycles[9]?.startJD ?? 0, BEIJING.timezone).year).toBe(
+      fromJulianDay(cycles[0]?.startJD ?? 0, BEIJING.timezone).year + 90,
+    );
   });
 
   it('measures the start more finely when asked', () => {

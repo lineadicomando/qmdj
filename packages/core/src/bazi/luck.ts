@@ -2,7 +2,7 @@ import { sunCrossing, type EphemerisContext } from '../ephemeris.js';
 import { ganzhiOf, type Ganzhi } from '../ganzhi.js';
 import type { Moment } from '../pillars.js';
 import { SOLAR_TERMS } from '../solar-terms.js';
-import { fromJulianDay } from '../time.js';
+import { fromJulianDay, julianDayFromMillis } from '../time.js';
 
 /**
  * Whose reckoning the luck cycles follow.
@@ -88,19 +88,22 @@ export function luckCycles(
       ? byMinute(to - from)
       : byShichen(from, to, moment.input.timezone);
 
-  const startJD =
-    fromJulianDay(moment.julianDayUT, moment.input.timezone)
-      .plus({ years, months, days })
-      .toMillis() /
-      86_400_000 +
-    2440587.5;
+  const opens = fromJulianDay(moment.julianDayUT, moment.input.timezone).plus({
+    years,
+    months,
+    days,
+  });
+  const startJD = julianDayFromMillis(opens.toMillis());
 
   const cycles: LuckCycle[] = [];
   for (let step = 1; step <= count; step += 1) {
     cycles.push({
       ganzhi: ganzhiOf(moment.pillars.month.index + (forward ? step : -step)),
       startAge: years + (step - 1) * 10,
-      startJD: startJD + (step - 1) * 3652.425,
+      // Ten years of the calendar, counted as the first ten were. A multiple
+      // of the mean year would put the eighth cycle a day or two off the date
+      // it opens on, and `startAge` would then name a date that is not it.
+      startJD: julianDayFromMillis(opens.plus({ years: (step - 1) * 10 }).toMillis()),
     });
   }
 

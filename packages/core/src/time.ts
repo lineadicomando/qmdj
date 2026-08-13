@@ -177,6 +177,11 @@ export function julianDayToMillis(julianDayUT: number): number {
   return Math.round((julianDayUT - 2440587.5) * 86_400_000);
 }
 
+/** A Julian Day in UT, from milliseconds since the Unix epoch. The inverse. */
+export function julianDayFromMillis(millis: number): number {
+  return millis / 86_400_000 + 2440587.5;
+}
+
 /**
  * Julian Day from the Gregorian calendar (Meeus, *Astronomical Algorithms*,
  * chapter 7).
