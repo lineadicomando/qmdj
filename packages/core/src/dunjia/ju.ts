@@ -24,7 +24,7 @@ export interface Ju {
   number: number;
   /** The moment's third of its term or, under zhirun, of its block. */
   yuan: Yuan;
-  /** Days elapsed since the term began. Under chaibu it fixes the yuan. */
+  /** Days elapsed since the term began. It fixes the yuan under `term`. */
   daysIntoTerm: number;
   /**
    * The term whose ju was taken. Under chaibu, always the term in force;
@@ -77,18 +77,32 @@ const JU_TABLE: Record<SolarTermId, { yang: boolean; ju: [number, number, number
 const YUAN_ORDER: Yuan[] = ['shang', 'zhong', 'xia'];
 
 /**
+ * Three five-day stretches, each headed by a 甲 or 己 day.
+ *
+ * Fifteen divides sixty, so the cycle of the days carries the three yuan
+ * round exactly four times and a day's place in it is a fact about the day
+ * pillar alone.
+ */
+const FUTOU_CYCLE = 15;
+
+/**
  * Determines the dun and the ju number.
  *
  * This is the most divisive step in the whole art, and the parameter that
  * governs it is `method`.
  *
- * Under `chaibu` (拆補) the term is simply split into three equal parts of
- * five days each, counted from the exact instant the term began: the first
- * five days are the upper yuan, the next five the middle, the rest the lower.
- * The name means "split and patch", and the patching is precisely this — the
- * fifteen days of a term and the sixty-day cycle of the days do not divide
- * into one another, and rather than carry the drift, this method re-divides
- * the term each time.
+ * Under `chaibu` (拆補) the term is split into three parts of five days and
+ * the ju is read off the term in force. The name means "split and patch", and
+ * the patching is precisely this — the fifteen days of a term and the
+ * sixty-day cycle of the days do not divide into one another, and rather than
+ * carry the drift, this method re-divides the term each time.
+ *
+ * *Where the three parts are cut* is `yuan`, and the two schools that cut
+ * them differently do not agree on most days. Under `term` the cut is made
+ * from the exact instant the term began: first five days upper, next five
+ * middle, the rest lower. Under `futou` it is made on the days themselves —
+ * where the day pillar stands in the fifteen-day cycle headed by 甲 and 己 is
+ * the yuan, and the term's own edge does not move it.
  *
  * Under `zhirun` (置閏) the drift is carried instead of re-divided: the yuan
  * follows the day's futou through the sexagenary cycle, whole fifteen-day
@@ -127,7 +141,15 @@ export function determineJu(moment: Moment, options: ChartOptions): Ju {
     throw new ChartError('METHOD_NOT_IMPLEMENTED', { method: options.method });
   }
 
-  const index = Math.min(2, Math.max(0, Math.floor(daysIntoTerm / 5)));
+  // Two readings, and the term is the same under both: only where the yuan
+  // is read from differs. `futou` needs nothing but the day pillar's place in
+  // the sexagenary cycle, which the moment already carries — the same number
+  // `zhirun.ts` heads its blocks by, read the same way and for the same
+  // reason, so the two cannot drift apart.
+  const index =
+    options.yuan === 'futou'
+      ? Math.floor((moment.pillars.day.index % FUTOU_CYCLE) / 5)
+      : Math.min(2, Math.max(0, Math.floor(daysIntoTerm / 5)));
   const entry = JU_TABLE[moment.solarTerm.term.id];
 
   return {

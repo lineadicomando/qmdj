@@ -323,6 +323,12 @@ export function formatQimenChart(chart: QimenChart, t: Translator): string {
   }
 
   lines.push(`  ${t('cli.note.method', { method: chart.options.method })}`);
+  // Said only when it is not the default, and only under the method it bears
+  // on: a line about the futou beside a zhirun chart would read as a choice
+  // where the method has already made one.
+  if (chart.options.method === 'chaibu' && chart.options.yuan === 'futou') {
+    lines.push(`  ${t('cli.note.yuanFutou')}`);
+  }
   return lines.join('\n');
 }
 

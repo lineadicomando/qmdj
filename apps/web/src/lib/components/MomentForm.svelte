@@ -3,7 +3,7 @@
   import type { Location } from '$lib/moment';
   import LocationSearch from './LocationSearch.svelte';
 
-  import { METHODS } from '$lib/vocabulary';
+  import { METHODS, YUAN_READINGS } from '$lib/vocabulary';
 
   let {
     t,
@@ -13,6 +13,7 @@
     trueSolarTime = $bindable(true),
     dayBoundary = $bindable('zishi'),
     method = $bindable<string | undefined>(undefined),
+    yuan = $bindable<string | undefined>(undefined),
     instant = true,
   }: {
     t: Translator;
@@ -23,6 +24,8 @@
     dayBoundary?: string;
     /** Bound only where a ju is cast: the pillars have no method to choose. */
     method?: string | undefined;
+    /** Bound with `method`, and shown only beside chaibu. */
+    yuan?: string | undefined;
     /**
      * Whether the moment is asked for at all.
      *
@@ -82,6 +85,22 @@
         </select>
       </label>
       <p class="note">{t('cli.note.method', { method: method ?? 'chaibu' })}</p>
+      <!-- Only beside chaibu. Under zhirun the yuan is the futou's because
+           that is what the method is, and a control that changed nothing
+           would read as a choice where none is left. -->
+      {#if yuan !== undefined && method === 'chaibu'}
+        <label>
+          {t('form.yuan')}
+          <select bind:value={yuan}>
+            {#each YUAN_READINGS as id}
+              <option value={id}>{t(`form.yuan.${id}` as MessageKey)}</option>
+            {/each}
+          </select>
+        </label>
+        {#if yuan === 'futou'}
+          <p class="note">{t('cli.note.yuanFutou')}</p>
+        {/if}
+      {/if}
     {/if}
   </details>
 

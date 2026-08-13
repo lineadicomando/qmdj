@@ -76,6 +76,7 @@ interface Options {
   trueSolar?: boolean;
   dayBoundary?: string;
   method?: string;
+  yuan?: string;
   until?: string;
   gate?: string;
   star?: string;
@@ -115,6 +116,8 @@ Narrowing a scan
   --true-solar, --no-true-solar   default: on
   --day-boundary zishi|midnight   default: zishi
   --method chaibu|zhirun          how the ju is determined; default: chaibu
+  --yuan term|futou               under chaibu, where the third of the term is
+                                  counted from; default: term
   --lang en|it           default: the environment, then English
   --json                 the data, unformatted and untranslated
   --help
@@ -396,6 +399,14 @@ function resolveOptions(options: Options, t: Translator): ChartOptions {
     }
     chartOptions.method = options.method;
   }
+  // Strict for the same reason: a yuan read from the wrong end moves the ju
+  // on most days, and a misspelling that fell back would do it silently.
+  if (options.yuan !== undefined) {
+    if (options.yuan !== 'term' && options.yuan !== 'futou') {
+      throw new UsageError(t('cli.error.unknownValue', { option: '--yuan', value: options.yuan }));
+    }
+    chartOptions.yuan = options.yuan;
+  }
   return chartOptions;
 }
 
@@ -411,6 +422,7 @@ const FLAGS: Record<string, keyof Options> = {
   '--lang': 'lang',
   '--day-boundary': 'dayBoundary',
   '--method': 'method',
+  '--yuan': 'yuan',
   '--until': 'until',
   '--gate': 'gate',
   '--star': 'star',

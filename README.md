@@ -229,6 +229,7 @@ from the first release:
 | | | default |
 |---|---|---|
 | `method` | 拆補 / 置閏 / 茅山 | `chaibu` |
+| `yuan` | under 拆補, the third of the term is counted from the term or from the day's 符頭 | `term` |
 | `plate` | 轉盤 / 飛盤 | `zhuan` |
 | `centreLodging` | the centre lodges in 坤, or in 坤 by yang dun and 艮 by yin | `kun` |
 | `trueSolarTime` | correct clock time to the Sun | `true` |
@@ -241,8 +242,18 @@ five-day thirds from the instant it begins, while under 置閏 the yuan follows
 the day's 符頭 through whole fifteen-day blocks and the drift is paid off with
 an intercalated 芒種 or 大雪 — so around a term's edges the two disagree even
 about which term the ju belongs to, and occasionally about the dun itself.
-A zhirun chart names the term its ju was taken from. `maoshan` raises
-`METHOD_NOT_IMPLEMENTED` rather than being silently substituted, because a
+A zhirun chart names the term its ju was taken from.
+
+`yuan` is a divergence *inside* 拆補, and it moves the ju on most days: `term`
+counts the three fives from the instant the term began, `futou` reads them off
+the days instead — where the day pillar stands in the fifteen-day cycle headed
+by 甲 and 己 is the yuan, and the term's own edge does not move it. Both
+readings are held by schools that name themselves 拆補, and both are checked
+against a runnable implementation; see `docs/sources.md`. It has no bearing
+under 置閏, where the yuan is the 符頭's by construction.
+
+`maoshan` raises `METHOD_NOT_IMPLEMENTED` rather than being silently
+substituted, because a
 chart cast by the wrong method looks right and is not; the same refusal
 covers the unimplemented values of `plate` and `system`.
 
@@ -253,9 +264,9 @@ identically.
 
 Not uniformly, and the difference is worth stating. The solar terms are
 published astronomy, checked against an almanac over 1 926 dates; the Qi Men
-layout is consistent with one implementation of a contested tradition, checked
-over 160 charts; the configurations come from Chinese-language sources with no
-runnable reference at all.
+layout is consistent with two independent implementations of a contested
+tradition, checked over 160 charts and over 266; the configurations come from
+Chinese-language sources with no runnable reference at all.
 
 **[`docs/sources.md`](docs/sources.md) holds the whole register**: every
 source by name, what each was checked against, the licences, and — where two

@@ -88,6 +88,15 @@ export const PATTERN_IDS = [
  */
 export const METHODS = ['chaibu', 'zhirun'] as const;
 
+/**
+ * Where the third of the term is counted from, under 拆補.
+ *
+ * Offered only beside `chaibu`: under 置閏 the yuan is the 符頭's because
+ * that is what the method is, and a control that changed nothing would be
+ * one nobody could use on purpose.
+ */
+export const YUAN_READINGS = ['term', 'futou'] as const;
+
 /** The eight outward directions. The centre faces none and is not offered. */
 export const DIRECTIONS = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'] as const;
 

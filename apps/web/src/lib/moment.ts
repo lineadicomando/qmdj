@@ -32,6 +32,9 @@ export interface MomentInput {
    * it does not know, where a silent fallback would cast a chaibu chart under
    * whatever name the address had misspelt. */
   method: string;
+  /** Where the third of the term is counted from, under chaibu. Carried
+   * verbatim for the same reason as `method`. */
+  yuan: string;
 }
 
 /** A failure as it crosses HTTP: a code with parameters, never prose. */
@@ -55,6 +58,7 @@ export function readMoment(url: URL): {
       trueSolarTime: params.get('trueSolarTime') !== 'false',
       dayBoundary: params.get('dayBoundary') === 'midnight' ? 'midnight' : 'zishi',
       method: params.get('method') ?? 'chaibu',
+      yuan: params.get('yuan') ?? 'term',
     },
     locationId: params.get('locationId'),
   };
@@ -78,6 +82,7 @@ export function momentQuery(
   if (!input.trueSolarTime) params.set('trueSolarTime', 'false');
   if (input.dayBoundary !== 'zishi') params.set('dayBoundary', input.dayBoundary);
   if (input.method && input.method !== 'chaibu') params.set('method', input.method);
+  if (input.yuan && input.yuan !== 'term') params.set('yuan', input.yuan);
 
   for (const [key, value] of Object.entries(extra)) {
     if (value) params.set(key, value);

@@ -133,7 +133,8 @@ export function registerComputeQimenChart(server: McpServer, context: ToolContex
         'latitude + longitude + timezone together. ' +
         'The chart is cast by the chaibu method unless method says otherwise; zhirun is the ' +
         'other one implemented, the two are different schools, and the answer says which one ' +
-        'cast it.',
+        'cast it. Inside chaibu, yuan says whether the third of the term is counted from the ' +
+        'term or from the day\'s futou — two schools again, and they disagree on most days.',
       inputSchema: {
         date: dateSchema,
         time: timeSchema,

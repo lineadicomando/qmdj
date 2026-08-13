@@ -135,6 +135,17 @@ describe('compute_qimen_chart', () => {
     expect(zhirun).not.toContain('chaibu');
   });
 
+  it('reads the yuan from the futou when asked, and says it did', async () => {
+    // The two readings part company on this day; see the CLI test for why.
+    const at = { ...BEIJING, date: '1999-01-06', time: '12:00' };
+
+    expect(await call('compute_qimen_chart', at)).toContain('upper yuan');
+
+    const futou = await call('compute_qimen_chart', { ...at, yuan: 'futou' });
+    expect(futou).toContain('middle yuan');
+    expect(futou).toContain('futou cycle');
+  });
+
   it('answers in the language it was asked in', async () => {
     const italian = await call('compute_qimen_chart', { ...BEIJING, lang: 'it' });
 

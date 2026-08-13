@@ -145,6 +145,15 @@ export function readOptions(params: URLSearchParams): ChartOptions {
     options.method = method;
   }
 
+  // Strict for the same reason: it moves the ju on most days.
+  const yuan = params.get('yuan');
+  if (yuan !== null) {
+    if (yuan !== 'term' && yuan !== 'futou') {
+      throw new ChartError('UNKNOWN_IDENTIFIER', { parameter: 'yuan', value: yuan });
+    }
+    options.yuan = yuan;
+  }
+
   return options;
 }
 

@@ -203,6 +203,76 @@ describe('the yuan', () => {
   });
 });
 
+describe('the yuan read from the futou', () => {
+  const FUTOU: ChartOptions = { ...CLOCK, yuan: 'futou' };
+
+  function futou(date: string, time: string): QimenChart {
+    return computeQimenChart(
+      resolveMoment({ date, time, timezone: 'Asia/Shanghai' }, BEIJING, FUTOU, context),
+      FUTOU,
+    );
+  }
+
+  /**
+   * Charts from fengshui-hacks.com, which reads the yuan this way. Six of 266
+   * sampled moments disagree, all inside a 超神 window; these are not among
+   * them. See `docs/sources.md`.
+   */
+  const REFERENCE: [string, string, string, boolean, number][] = [
+    ['1999-01-06', '12:00', 'zhong', true, 8],
+    ['1984-01-31', '12:00', 'shang', true, 3],
+    ['2019-04-06', '12:00', 'zhong', true, 1],
+    ['1948-08-02', '02:17', 'xia', false, 4],
+    ['2011-05-26', '22:48', 'shang', true, 5],
+    ['1961-01-26', '07:05', 'xia', true, 6],
+    ['2019-07-25', '17:33', 'xia', false, 4],
+  ];
+
+  it.each(REFERENCE)('%s %s is the %s yuan', (date, time, yuan, yang, number) => {
+    const { ju } = futou(date, time);
+    expect(ju.yuan).toBe(yuan);
+    expect(ju.yang).toBe(yang);
+    expect(ju.number).toBe(number);
+  });
+
+  it('reads the yuan off the day and not off the term', () => {
+    // Xiaohan 1999 fell on 5 January. Under `term` the first five days are
+    // the upper yuan; the 符頭 had already carried the day to the middle.
+    expect(cast('1999-01-06', '12:00').ju.yuan).toBe('shang');
+    expect(futou('1999-01-06', '12:00').ju.yuan).toBe('zhong');
+  });
+
+  it('turns the yuan on a futou day and on no other', () => {
+    // The stretch runs 甲寅 to 戊午, and 己未 opens the next. Xiaohan began on
+    // the 5th and moved nothing.
+    const held = ['1999-01-02', '1999-01-03', '1999-01-04', '1999-01-05', '1999-01-06'];
+    for (const date of held) expect(futou(date, '12:00').ju.yuan).toBe('zhong');
+    expect(futou('1999-01-07', '12:00').ju.yuan).toBe('xia');
+    expect(futou('1999-01-07', '12:00').moment.pillars.day.hanzi).toBe('己未');
+  });
+
+  it('agrees with the zhirun bookkeeping, which heads its blocks the same way', () => {
+    // Both read the 符頭 off the day pillar, so they can differ about which
+    // term a day serves but never about where in the three it stands.
+    for (const date of ['1999-01-06', '2011-05-26', '2019-07-25', '2024-02-05']) {
+      const moment = resolveMoment(
+        { date, time: '12:00', timezone: 'Asia/Shanghai' },
+        BEIJING,
+        FUTOU,
+        context,
+      );
+      const order = ['shang', 'zhong', 'xia'];
+      expect(futou(date, '12:00').ju.yuan).toBe(order[moment.zhirun.yuanIndex]);
+    }
+  });
+
+  it('leaves the term alone: only the yuan moves', () => {
+    for (const [date, time] of REFERENCE) {
+      expect(futou(date, time).ju.term.id).toBe(cast(date, time).ju.term.id);
+    }
+  });
+});
+
 describe('what every chart must satisfy', () => {
   const SAMPLES = ['2001-03-07', '2009-08-19', '2017-11-30', '2023-05-05'];
 

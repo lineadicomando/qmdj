@@ -275,6 +275,9 @@ export const it: Record<MessageKey, string> = {
   'form.method': 'Il ju si determina',
   'form.method.chaibu': 'per terzi del termine — chaibu 拆補',
   'form.method.zhirun': 'per blocchi interi, con l\'intercalazione — zhirun 置閏',
+  'form.yuan': 'Con chaibu, il terzo del termine si conta',
+  'form.yuan.term': 'dall\'istante in cui il termine è cominciato',
+  'form.yuan.futou': 'dal giorno, per tratti di cinque — futou 符頭',
   'form.gender': 'Sesso — ne dipende solo la direzione dei cicli decennali',
   'form.gender.unset': 'non indicato',
   'form.gender.male': 'maschile',
@@ -491,6 +494,8 @@ export const it: Record<MessageKey, string> = {
   'cli.value.everyPalace': 'ogni palazzo, nessuna richiesta particolare',
   'cli.value.leapTerm': '{term} intercalato',
 
+  'cli.note.yuanFutou':
+    'Lo yuan si legge dalla posizione del giorno nel ciclo di quindici del futou, non dall\'istante in cui il termine è cominciato. È una divergenza interna al chaibu, e sposta il ju nella maggior parte dei giorni.',
   'cli.note.method':
     'Posta con il metodo {method}. Altre scuole dispongono altre carte dallo stesso istante.',
 

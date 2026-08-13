@@ -77,6 +77,34 @@ describe('chart', () => {
     expect(code).toBe(2);
     expect(err).toContain('zhirn');
   });
+
+  it('reads the yuan from the futou when asked, and says it did', async () => {
+    // 1999-01-06 stands in the middle of a futou stretch and in the first
+    // five days of Xiaohan, so the two readings part company.
+    const at = ['--date', '1999-01-06', '--time', '12:00', '--tz', 'Asia/Shanghai',
+                '--no-true-solar', '--lang', 'en'];
+
+    await run(['chart', ...at]);
+    expect(out).toContain('upper yuan');
+
+    out = '';
+    await run(['chart', ...at, '--yuan', 'futou']);
+    expect(out).toContain('middle yuan');
+    expect(out).toContain('futou cycle');
+  });
+
+  it('says nothing about the futou when it was not asked for', async () => {
+    await run(['chart', ...MOMENT, '--lang', 'en']);
+
+    expect(out).not.toContain('futou');
+  });
+
+  it('refuses a yuan it has never heard of', async () => {
+    const code = await run(['chart', ...MOMENT, '--yuan', 'futuo', '--lang', 'en']);
+
+    expect(code).toBe(2);
+    expect(err).toContain('futuo');
+  });
 });
 
 describe('bazi', () => {

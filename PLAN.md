@@ -157,6 +157,7 @@ day one — as `house_system` is in undicesimacasa.
 | Parameter | Values | Proposed default |
 |---|---|---|
 | `method` | `chaibu` (拆補), `zhirun` (置閏), `maoshan` (茅山) | `chaibu` |
+| `yuan` | `term`, `futou` (符頭) — inside 拆補 | `term` |
 | `plate` | `zhuan` (轉盤), `fei` (飛盤) | `zhuan` |
 | `centreLodging` | `kun` (寄坤二), `dun` (陽遁寄二 · 陰遁寄八) | `kun` |
 | `trueSolarTime` | boolean | `true` |
@@ -389,6 +390,29 @@ thirteenth block between two pins *is* the intercalation, repeating 芒種 or
   here and in `kinqimen`; some sources say ten, and a Japanese tradition
   says "the futou nearest the solstice", each shifting the window by a day.
   One value is implemented and the comment on `MAX_CHAOSHEN` declares it.
+
+**拆補 itself splits in two, and the split was found by comparison.** A second
+runnable reference — fengshui-hacks.com — was read cell for cell over 266
+moments and matched nothing this engine cast: 26% under `chaibu`, 56% under
+`zhirun`. The measurement that explained it is that the disagreement alternated
+**every five days and not every fifteen**, which is a yuan and not a block, so
+it could not be a 置閏 whose intercalation was pinned differently. The term in
+force plus the yuan read from the day's place in the fifteen-day 符頭 cycle
+reproduces that reference on 260 of the 266, the six exceptions all falling in
+超神 windows. That is the divergence `docs/sources.md` had already recorded
+inside 拆補 from `kinqimen`, and finding it a second time independently is what
+let it be shipped: `yuan`, defaulting to `term`. Two further things fell out:
+
+- **Hold the ju equal and the layout engine is confirmed.** On the 150 moments
+  where the two agreed on the ju, all 150 charts agreed cell for cell — plates,
+  stars, gates, spirits, 值符, 值使, 旬首, 空亡, 驛馬. A disagreement about the
+  ju had been masking a complete agreement about everything else, which is the
+  argument for comparing a chart layer by layer rather than as a whole.
+- **The engine wrote one creature under two glyphs.** 滕蛇 on the spirit plate
+  against 螣蛇夭矯 among the configurations, where `docs/sources.md` had already
+  settled 螣 from three sources. Nothing internal caught it — the identifier
+  `tengshe` is the same either way, and the pinyin test only asserts a reading
+  exists. Comparing hanzi against an outside implementation did.
 
 Still to come: `maoshan`. `determineJu` throws `METHOD_NOT_IMPLEMENTED` for
 it rather than quietly substituting, because a chart cast by the wrong method
@@ -1061,8 +1085,9 @@ honestly give a reader beyond a frame and a refusal.
      consistent. So the method the two references share by name they do not
      share in fact, and a `zhirun` implementation checked against `kinqimen`
      inherits its futou-based reading of the yuan with it. That is a school
-     divergence inside `chaibu` itself; if both readings are ever shipped,
-     the split is a new explicit parameter, not a correction.
+     divergence inside `chaibu` itself, and a second reference —
+     fengshui-hacks.com — reads it the same way, which is the two agreeing
+     sources this document asks for. It is shipped as `yuan`.
 
    **The weight of this evidence is not the weight of phase 1's.** An almanac
    encodes published astronomical fact; a Qi Men implementation encodes one

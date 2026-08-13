@@ -302,6 +302,9 @@ export const en = {
   'form.method': 'The ju is determined',
   'form.method.chaibu': 'by thirds of the term — chaibu 拆補',
   'form.method.zhirun': 'by whole blocks, with the leap — zhirun 置閏',
+  'form.yuan': 'Under chaibu, the third of the term is counted',
+  'form.yuan.term': 'from the instant the term began',
+  'form.yuan.futou': 'from the day, by five-day stretches — futou 符頭',
   'form.gender': 'Sex — only the direction of the luck cycles depends on it',
   'form.gender.unset': 'not given',
   'form.gender.male': 'male',
@@ -645,6 +648,8 @@ export const en = {
   'cli.value.everyPalace': 'every palace, nothing asked for in particular',
   'cli.value.leapTerm': 'intercalated {term}',
 
+  'cli.note.yuanFutou':
+    'The yuan is read from the day\'s place in the fifteen-day futou cycle, not from the instant the term began. It is a divergence inside chaibu, and it moves the ju on most days.',
   'cli.note.method':
     'Cast by the {method} method. Other schools lay out other charts from the same instant.',
 

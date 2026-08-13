@@ -253,6 +253,7 @@
       bind:trueSolarTime={asked.trueSolarTime}
       bind:dayBoundary={asked.dayBoundary}
       bind:method={asked.method}
+      bind:yuan={asked.yuan}
     />
 
     <!--

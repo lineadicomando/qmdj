@@ -148,6 +148,7 @@
       bind:trueSolarTime={asked.trueSolarTime}
       bind:dayBoundary={asked.dayBoundary}
       bind:method={asked.method}
+      bind:yuan={asked.yuan}
     />
     <!-- Nothing here can be missing: a chart of no date is the chart of now. -->
     <SubmitButton {t} label="cli.heading.chart" {busy} />

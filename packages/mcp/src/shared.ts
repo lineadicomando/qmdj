@@ -124,6 +124,12 @@ export const optionSchema = {
     .describe(
       'How the ju of a Qi Men chart is determined. Default chaibu, which splits each term into three five-day thirds from the instant it begins. zhirun follows the day\'s futou through whole fifteen-day blocks and pays the drift off with an intercalated Mangzhong or Daxue; its ju can belong to a term the Sun has not reached yet, and the answer says which. The two are different schools, not approximations of one another. Does not affect the Four Pillars.',
     ),
+  yuan: z
+    .enum(['term', 'futou'])
+    .optional()
+    .describe(
+      'Under chaibu, where the third of the term is counted from. Default term, counting from the instant the term began. futou counts from the days instead: where the day pillar stands in the fifteen-day cycle headed by Jia and Ji is the yuan, whatever the term is doing. A divergence inside chaibu, and it moves the ju on most days. No bearing under zhirun, where the yuan is the futou\'s by construction. Does not affect the Four Pillars.',
+    ),
 };
 
 export interface ResolvedInput {
@@ -143,6 +149,7 @@ interface RawInput {
   day_boundary?: 'zishi' | 'midnight' | undefined;
   year_boundary?: 'lichun' | 'chunjie' | undefined;
   method?: 'chaibu' | 'zhirun' | undefined;
+  yuan?: 'term' | 'futou' | undefined;
 }
 
 /**
@@ -168,6 +175,7 @@ export function resolveInput(raw: RawInput, context: ToolContext): ResolvedInput
   if (raw.day_boundary) options.dayBoundary = raw.day_boundary;
   if (raw.year_boundary) options.yearBoundary = raw.year_boundary;
   if (raw.method) options.method = raw.method;
+  if (raw.yuan) options.yuan = raw.yuan;
 
   const ephemeris: EphemerisContext = initEphemeris(context.ephemerisPath);
   return {

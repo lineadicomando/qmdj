@@ -22,6 +22,27 @@ export interface ChartOptions {
   method: 'chaibu' | 'zhirun' | 'maoshan';
 
   /**
+   * Where the yuan is read from, under 拆補.
+   *
+   * A divergence *inside* 拆補, and one that changes the ju of most days.
+   * `term` cuts the fifteen days of the term into three fives from the
+   * instant it began, so the yuan turns with the term. `futou` reads it from
+   * the day instead: the days run in five-day stretches headed by a 甲 or 己
+   * day (the 符頭), and where the day stands in that fifteen-day cycle is the
+   * yuan, whatever the term is doing. The two agree only when a term happens
+   * to open on a 符頭.
+   *
+   * `term` is the default because it is what this engine shipped and what
+   * `qimen-dunjia` computes; `futou` is what `kinqimen` and
+   * fengshui-hacks.com compute, which is the two independent sources
+   * `docs/sources.md` asks for before a reading is offered at all.
+   *
+   * It has no bearing under 置閏, where the yuan is the 符頭's by
+   * construction — that is what the method *is*, not a choice inside it.
+   */
+  yuan: 'term' | 'futou';
+
+  /**
    * How the heaven plate is derived: rotating (轉盤) or flying (飛盤).
    */
   plate: 'zhuan' | 'fei';
@@ -92,6 +113,7 @@ export interface ChartOptions {
  */
 export const DEFAULT_OPTIONS: ChartOptions = {
   method: 'chaibu',
+  yuan: 'term',
   plate: 'zhuan',
   trueSolarTime: true,
   yearBoundary: 'lichun',

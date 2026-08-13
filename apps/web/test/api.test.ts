@@ -142,6 +142,36 @@ describe('GET /api/chart', () => {
     });
   });
 
+  it('reads the yuan from the futou when the address asks', async () => {
+    // 1999-01-06 stands in the middle of a futou stretch and in the first
+    // five days of 小寒: the term is the same under both readings and the
+    // yuan is not, which is exactly what this parameter governs.
+    const at = 'date=1999-01-06&time=12:00&timezone=Asia/Shanghai&trueSolarTime=false';
+    const ju = async (query: string) =>
+      (
+        (await call(chart, query)).body as {
+          chart: { ju: Record<string, unknown>; options: { yuan: string } };
+        }
+      ).chart;
+
+    expect((await ju(at)).ju).toMatchObject({ yang: true, number: 2, yuan: 'shang' });
+
+    const futou = await ju(`${at}&yuan=futou`);
+    expect(futou.options.yuan).toBe('futou');
+    expect(futou.ju).toMatchObject({ yang: true, number: 8, yuan: 'zhong' });
+    expect(futou.ju['term']).toMatchObject({ id: 'xiaohan' });
+  });
+
+  it('refuses a yuan it has never heard of', async () => {
+    const { status, body } = await call(chart, `${MOMENT}&yuan=futuo`);
+
+    expect(status).toBe(400);
+    expect(body).toMatchObject({
+      code: 'UNKNOWN_IDENTIFIER',
+      params: { parameter: 'yuan', value: 'futuo' },
+    });
+  });
+
   it('answers maoshan with a refusal, not a substitute', async () => {
     const { status, body } = await call(chart, `${MOMENT}&method=maoshan`);
 

@@ -110,6 +110,12 @@ read and name what you are missing, rather than filling it in.
   `METHOD_NOT_IMPLEMENTED` rather than silently substituted, because a chart
   cast by the wrong method looks right and is not; if someone asks for it,
   say it is not available.
+- **拆補 itself splits in two, and `yuan` says which.** `term` counts the
+  three fives from the instant the term began; `futou` reads them off the
+  days, by where the day pillar stands in the fifteen-day cycle headed by 甲
+  and 己. They disagree on most days, both are held by schools that call
+  themselves 拆補, and the default is `term`. The same rule as above holds:
+  do not switch it between charts you are comparing.
 - **三奇得使 is not computed.** The sources consulted do not agree on which
   pairings count. Its absence is deliberate; do not fill the gap yourself.
 - **No table says which gate suits which undertaking.** The transmitted
@@ -129,10 +135,11 @@ Not uniformly, and the difference matters when you are asked to justify one.
   astronomical tables through an independent implementation, over 1 926 dates
   from 1902 to 2098, agreeing on every one. These are as solid as the
   ephemerides.
-- **The Qi Men layout** — checked against one open implementation over 160
-  charts, agreeing on every quantity compared. That means *consistent with a
-  common implementation*, not *verified*: no authority publishes Qi Men charts
-  the way an observatory publishes solstices.
+- **The Qi Men layout** — checked against two open implementations, over 160
+  charts and over 266, agreeing on every quantity compared once both were
+  asked for the same ju. That means *consistent with common implementations*,
+  not *verified*: no authority publishes Qi Men charts the way an observatory
+  publishes solstices.
 - **The configurations** (門迫, 擊刑, 入墓, 伏吟, 反吟, 五不遇時 …) — from
   Chinese-language sources, with each rule tested against the transmitted list
   it should reproduce. There is no runnable reference at all.
