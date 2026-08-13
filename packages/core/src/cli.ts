@@ -18,7 +18,7 @@ import { computeBazi, type Gender } from './bazi/index.js';
 import {
   GATES,
   PATTERN_IDS,
-  SPIRITS_YANG,
+  SPIRIT_IDS,
   STARS,
   computeQimenChart,
   type Direction,
@@ -230,10 +230,13 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
     if (!options.until) throw new UsageError(t('cli.error.missingValue', { option: '--until' }));
 
     // `--date 2026-09-01 --until 2026-09-03` names two days and means all of
-    // them. Falling back to the present hour, as a single chart does, would
-    // open the interval wherever the command happened to be typed.
+    // them: the interval closes where the day after `--until` opens, so the
+    // named day is scanned whole. Falling back to the present hour, as a
+    // single chart does, would open the interval wherever the command
+    // happened to be typed.
     const opens = { ...input, time: options.time ?? '00:00' };
-    const runs = scanCharts(opens, { ...opens, date: options.until }, place, chartOptions, context);
+    const closes = { ...opens, time: '00:00', date: dayAfter(options.until) };
+    const runs = scanCharts(opens, closes, place, chartOptions, context);
     const criteria = resolveCriteria(options, t);
     // 本命 as a criterion like the others, which is what 《遁甲演義》 asks a
     // scan for: the hours in which the person's own year stands somewhere
@@ -273,7 +276,7 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
   if (command === 'bazi') {
     const gender = options.gender as Gender | undefined;
     if (gender && gender !== 'male' && gender !== 'female') {
-      throw new UsageError(t('cli.error.missingValue', { option: '--gender' }));
+      throw new UsageError(t('cli.error.unknownValue', { option: '--gender', value: gender }));
     }
     const bazi = computeBazi(moment, gender ? { gender } : {}, context);
     if (options.json) return JSON.stringify({ moment, bazi }, null, 2);
@@ -418,6 +421,24 @@ function expansionOf(options: Options, t: ReturnType<typeof createTranslator>): 
   return `  ${t('cli.heading.criteria')}: ${t(`label.purpose.${options.for}` as MessageKey)} → ${t(`label.gate.${gate}` as MessageKey)} ${named.hanzi} ${named.pinyin}`;
 }
 
+/** The civil day after an ISO date. Set, not constructed: `Date.UTC` reads a
+ * year under 100 as one under 2000, and the engine admits any year. */
+function dayAfter(date: string): string {
+  // The shape the engine itself asks of a date, checked here so that what a
+  // mistyped `--until` is refused by is the value typed, not its arithmetic.
+  const parts = /^(-?\d{4,})-(\d{2})-(\d{2})$/.exec(date);
+  if (!parts) throw new ChartError('INVALID_DATE', { date });
+  const [year, month, day] = parts.slice(1).map(Number) as [number, number, number];
+  const next = new Date(0);
+  next.setUTCFullYear(year, month - 1, day + 1);
+  const sign = next.getUTCFullYear() < 0 ? '-' : '';
+  return [
+    sign + String(Math.abs(next.getUTCFullYear())).padStart(4, '0'),
+    String(next.getUTCMonth() + 1).padStart(2, '0'),
+    String(next.getUTCDate()).padStart(2, '0'),
+  ].join('-');
+}
+
 const DIRECTIONS = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'] as const;
 const STRENGTHS = ['wang', 'xiang', 'xiu', 'qiu', 'si'] as const;
 
@@ -466,7 +487,9 @@ function resolveCriteria(options: Options, t: ReturnType<typeof createTranslator
 
   const gate = one<GateId>(options.gate ?? fromErrand, GATES, '--gate');
   const star = one<StarId>(options.star, STARS, '--star');
-  const spirit = one<SpiritId>(options.spirit, SPIRITS_YANG, '--spirit');
+  // The full list of ten, not either dun's eight: a scan crosses terms, and
+  // 白虎 is unaskable for half the charts of the year on the yang list alone.
+  const spirit = one<SpiritId>(options.spirit, SPIRIT_IDS, '--spirit');
   const stem = one<StemId>(options.stem, STEMS, '--stem');
   const directions = many<Direction>(options.towards, DIRECTIONS, '--towards');
   const minStrength = one<StrengthId>(options.minStrength, STRENGTHS, '--min-strength');

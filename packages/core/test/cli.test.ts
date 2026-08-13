@@ -228,6 +228,24 @@ describe('scan', () => {
     expect(out).toContain('2026-09-01 00:00');
   });
 
+  it('scans the day `--until` names whole, not up to where it begins', async () => {
+    // Two days named are all of them: the evening of the second must be in
+    // the answer, and nothing may open on the day after. Its midnight still
+    // appears once, as the close of the last run.
+    expect(await run(INTERVAL)).toBe(0);
+    expect(out).toContain('2026-09-02 23:00');
+    expect(out.split('2026-09-03').length - 1).toBe(1);
+  });
+
+  it('accepts the spirits of a yin chart, not one plate of them', async () => {
+    // baihu stands only in a yin chart; September charts are yin, so the
+    // question is answerable — and a list built from the yang plate alone
+    // would refuse it as a typo.
+    expect(await run([...INTERVAL, '--spirit', 'baihu'])).toBe(0);
+    expect(err).toBe('');
+    expect(out).toContain('White Tiger');
+  });
+
   it('narrows as more is asked of it, and never widens', async () => {
     await run([...INTERVAL, '--gate', 'kaimen']);
     const loose = out.split('\n').length;
