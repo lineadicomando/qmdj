@@ -377,6 +377,12 @@ export const en = {
   // own: beside the steps there is no label above it to say what it sets.
   'form.jumpDate': 'The day the chart is cast for',
 
+  // The key to the drawing, which writes the five states as a ramp of marks
+  // and nowhere says what they mean. The words for the states themselves are
+  // `label.strength.*`; this is the line that says what they qualify — the
+  // star and the gate, against the season, and nothing else in the palace.
+  'form.strengthLegend': 'How the star and the gate stand to the season',
+
   // Taking a chart away: as words, and as a prompt for a model that will be
   // asked to read it. Two controls and not one, because they are two
   // different errands — the first is the chart in a form that can be pasted

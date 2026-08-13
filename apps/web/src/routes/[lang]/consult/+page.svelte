@@ -38,6 +38,7 @@
   import ChartReading from '$lib/components/ChartReading.svelte';
   import CopyText from '$lib/components/CopyText.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
+  import StrengthLegend from '$lib/components/StrengthLegend.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
   import type { MessageKey } from '@qimendunjia/i18n';
 
@@ -295,7 +296,11 @@
       errand and the looking is the check on it.
     -->
     <section class="result" class:stale={busy || spent} aria-busy={busy}>
-      <img src={plate} alt="" width="900" height="1035" />
+      <!-- The board and the key to its marks together, as on the chart. -->
+      <div class="board">
+        <img src={plate} alt="" width="900" height="1035" />
+        <StrengthLegend {t} />
+      </div>
       <div><ChartReading {chart} {t} /></div>
     </section>
   {/if}
@@ -345,6 +350,8 @@
 
   .failure { color: var(--alarm); }
   .result { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1fr); }
+  /* The picture and its legend, as one item of that grid. See the chart. */
+  .board { min-inline-size: 0; }
   .result { transition: opacity 0.15s ease-out; }
   .stale { opacity: 0.5; }
   /* As on the chart: the board has to fit a window, the words under it may

@@ -320,6 +320,8 @@ export const it: Record<MessageKey, string> = {
     'I cicli decennali richiedono il sesso, perché la tradizione ne trae la direzione. Senza, i pilastri restano comunque completi.',
   'form.jumpDate': 'Il giorno per cui la carta è posta',
 
+  'form.strengthLegend': 'Come stanno la stella e la porta rispetto alla stagione',
+
   'form.copyChart': 'Copia la carta come testo',
   'form.copyPrompt': 'Copia il prompt',
   'form.copied': 'Copiato',

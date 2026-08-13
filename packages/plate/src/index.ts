@@ -28,7 +28,7 @@ export {
   type Layout,
 } from './geometry.js';
 export { FONT_STACK, PALETTES, styleSheet, type Palette, type Scheme } from './palette.js';
-export { renderChartSvg } from './svg.js';
+export { renderChartSvg, STRENGTH_MARKS } from './svg.js';
 export type {
   Named,
   PlateCaptions,

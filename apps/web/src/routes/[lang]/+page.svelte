@@ -9,6 +9,7 @@
   import FormPanel from '$lib/components/FormPanel.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
   import MomentSteps from '$lib/components/MomentSteps.svelte';
+  import StrengthLegend from '$lib/components/StrengthLegend.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
 
   let { data } = $props();
@@ -198,14 +199,23 @@
       of a middling chart, which is what the browser holds the space at until
       the real one arrives and settles it.
     -->
-    <img
-      src={plate}
-      alt=""
-      width="900"
-      height="1035"
-      class:settling={drawn !== plate}
-      onload={() => (drawn = plate)}
-    />
+    <!-- The board and the key to its marks are one thing in this grid: the
+         gap between the picture and the reading is two rems, and a legend
+         standing in it would belong to neither. -->
+    <div class="board">
+      <img
+        src={plate}
+        alt=""
+        width="900"
+        height="1035"
+        class:settling={drawn !== plate}
+        onload={() => (drawn = plate)}
+      />
+      <!-- Under the picture and above the words: the marks it explains are in
+           the picture, and a key that came after the reading would be found
+           by whoever had already given up on them. -->
+      <StrengthLegend {t} />
+    </div>
 
     <div>
       <ChartReading {chart} {t} />
@@ -244,6 +254,10 @@
    * a picture first, then the same thing said in full.
    */
   .result { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1fr); }
+  /* The picture and its legend, as one item of that grid. Allowed to shrink:
+     a grid item will not go below its own min-content otherwise, and the
+     picture's is nine hundred pixels. */
+  .board { min-inline-size: 0; }
   .result, img { transition: opacity 0.15s ease-out; }
   .stale { opacity: 0.5; }
   .settling { opacity: 0.35; }

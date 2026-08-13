@@ -35,6 +35,7 @@
   import { sayFailure, type Failure } from '$lib/moment';
   import ChartReading from './ChartReading.svelte';
   import PalaceTable from './PalaceTable.svelte';
+  import StrengthLegend from './StrengthLegend.svelte';
 
   interface Props {
     t: Translator;
@@ -184,16 +185,26 @@
 
     <!-- The one thing that scrolls. See the note on `.body` below. -->
     <div class="body">
-      <!-- A middling chart's shape, to reserve the box with. See the chart
-           section, where the same attributes carry the same caveat. -->
-      <img
-        src={plate}
-        alt=""
-        width="900"
-        height="1035"
-        class:settling={drawn !== plate}
-        onload={() => (drawn = plate)}
-      />
+      <!--
+        The board and the key to its marks, as one item of the grid.
+
+        Not two: enlarged, `.body` is two columns, and a legend placed on its
+        own would be laid out beside the board with the reading pushed under
+        both — a key to the marks in the next column over from them.
+      -->
+      <div class="board">
+        <!-- A middling chart's shape, to reserve the box with. See the chart
+             section, where the same attributes carry the same caveat. -->
+        <img
+          src={plate}
+          alt=""
+          width="900"
+          height="1035"
+          class:settling={drawn !== plate}
+          onload={() => (drawn = plate)}
+        />
+        <StrengthLegend {t} />
+      </div>
 
       {#await asked}
         <p class="note">{t('form.working')}</p>
@@ -350,7 +361,10 @@
   @media (min-width: 56rem) {
     dialog.large .body { grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem); }
     dialog.large .palaces { grid-column: 1 / -1; }
-    dialog.large img {
+    /* The item of the grid is the board and its legend together, so what used
+       to be the picture's own placement is the pair's. */
+    dialog.large .board { align-self: start; }
+    dialog.large .board img {
       /* The height budget buys eight sevenths of itself in width: what has to
          fit is everything down to the foot of the board, which is the
          caption's eighth plus the grid's three quarters — see the same sum in
@@ -359,8 +373,6 @@
       inline-size: min(calc(96vw - 28rem), calc((90vh - 5rem) * 8 / 7));
       block-size: auto;
       max-inline-size: 100%;
-      justify-self: center;
-      align-self: start;
     }
   }
   .head button {
@@ -389,6 +401,10 @@
   @media (max-width: 42rem) {
     .size { display: none; }
   }
+  /* The picture centred in whatever room the pair is given, and allowed to
+     shrink below its own nine hundred pixels — see `.palaces` above for why a
+     grid item that may not shrink takes the dialog sideways with it. */
+  .board { display: grid; justify-items: center; min-inline-size: 0; }
   img { display: block; width: 100%; height: auto; transition: opacity 0.15s ease-out; }
   .settling { opacity: 0.35; }
   @media (prefers-reduced-motion: reduce) {

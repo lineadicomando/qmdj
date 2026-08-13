@@ -7,7 +7,9 @@ import {
   SPIRITS_YIN,
   SPIRIT_IDS as ENGINE_SPIRIT_IDS,
   STARS,
+  strengthOf,
 } from '@qimendunjia/core';
+import { STRENGTH_MARKS } from '@qimendunjia/plate';
 import { describe, expect, it } from 'vitest';
 import type { ChartOptions } from '@qimendunjia/core';
 import {
@@ -20,6 +22,8 @@ import {
   PURPOSES,
   SPIRIT_IDS,
   STAR_IDS,
+  STRENGTHS,
+  STRENGTH_KEY,
 } from '../src/lib/vocabulary';
 
 /**
@@ -100,6 +104,39 @@ describe('the identifiers a form offers', () => {
     expect(PALACE_OF.se).toBe('xun');
     // The centre is a palace and not a direction: it can be kept, never faced.
     expect(Object.values(PALACE_OF)).not.toContain('zhong');
+  });
+
+  it('key the five states as the engine names them and the drawing marks them', () => {
+    // The five come out of one season: what rules it prospers, what it
+    // generates is supported, what generates it rests, what controls it is
+    // imprisoned, and what it controls dies. Wood as the season gives all
+    // five in one line each, which is a shorter way to get them than a table
+    // this test would then be asserting against itself.
+    const engine = {
+      wang: strengthOf('mu', 'mu'),
+      xiang: strengthOf('huo', 'mu'),
+      xiu: strengthOf('shui', 'mu'),
+      qiu: strengthOf('jin', 'mu'),
+      si: strengthOf('tu', 'mu'),
+    };
+
+    // The ramp's order, 旺相休囚死, which is what the marks are read for.
+    expect(STRENGTH_KEY.map((state) => state.id)).toEqual([...STRENGTHS]);
+
+    for (const state of STRENGTH_KEY) {
+      const named = engine[state.id];
+      expect(named.id, state.id).toBe(state.id);
+      // The name and its reading: a legend that printed 相 as xiāng would be
+      // saying "each other" where the engine says "supported".
+      expect({ hanzi: named.hanzi, pinyin: named.pinyin }, state.id).toEqual({
+        hanzi: state.hanzi,
+        pinyin: state.pinyin,
+      });
+      // And the shape the board actually draws for it. A ramp changed in the
+      // drawing and not here would leave a legend explaining marks that are
+      // no longer on the picture above it.
+      expect(STRENGTH_MARKS[state.id], state.id).toBe(state.mark);
+    }
   });
 
   it('offer only the methods the engine implements', () => {

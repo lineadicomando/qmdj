@@ -26,8 +26,13 @@ import type {
  * thing they say is an ordering — five steps from full to spent. A ramp says
  * that at a glance and in no language, which is what the rest of the cell is
  * trying to be.
+ *
+ * Exported because a surface showing the drawing has to say in words what a
+ * shape means, and the two copies of the ramp would otherwise drift apart
+ * with nothing to notice. Not for a browser to import — this is the package
+ * that draws, and a page pulls it in only to be told what it drew.
  */
-const STRENGTH_MARK: Record<string, string> = {
+export const STRENGTH_MARKS: Record<string, string> = {
   wang: '▲',
   xiang: '△',
   xiu: '○',
@@ -312,7 +317,7 @@ function register(
   // seventh thing standing in the palace. Not on the name itself, because a
   // mark hanging off 天輔 pushes it off centre, and six names all pushed by a
   // different amount are what stops a column looking like a column.
-  const mark = strength ? ` ${STRENGTH_MARK[strength.id] ?? strength.hanzi}` : '';
+  const mark = strength ? ` ${STRENGTH_MARKS[strength.id] ?? strength.hanzi}` : '';
 
   const lines = [
     text(x, glyphLine, [{ text: thing.hanzi, className: thing.element }], geometry.font.glyph, {

@@ -126,6 +126,33 @@ export const PALACE_OF: Record<string, string> = Object.fromEntries(
 export const STRENGTHS = ['wang', 'xiang', 'xiu', 'qiu', 'si'] as const;
 
 /**
+ * The same five, with what it takes to explain them under a drawing.
+ *
+ * The board writes a state as a shape — ▲ down to ▼, a ramp from full to
+ * spent — and a shape says the ordering to everybody and the meaning to
+ * nobody. So the legend names each one: the word, then the name it renders
+ * with its reading, as every other name on this surface is written.
+ *
+ * Three copies meet here and none of them may drift: the ids are `STRENGTHS`
+ * above, the hanzi and the readings are the engine's `strengthOf`, and the
+ * marks are `STRENGTH_MARKS` in `@qimendunjia/plate`. All three are values
+ * this page may not import — the engine because a value import drags the
+ * ephemerides into the browser, the drawing because it would arrive whole to
+ * print five glyphs — so they are written out and `test/vocabulary.test.ts`
+ * holds the copy against each of the originals.
+ *
+ * In the ramp's order, 旺相休囚死, because the order is half of what the marks
+ * say.
+ */
+export const STRENGTH_KEY = [
+  { id: 'wang', hanzi: '旺', pinyin: 'wàng', mark: '▲' },
+  { id: 'xiang', hanzi: '相', pinyin: 'xiàng', mark: '△' },
+  { id: 'xiu', hanzi: '休', pinyin: 'xiū', mark: '○' },
+  { id: 'qiu', hanzi: '囚', pinyin: 'qiú', mark: '▽' },
+  { id: 'si', hanzi: '死', pinyin: 'sǐ', mark: '▼' },
+] as const;
+
+/**
  * What somebody is choosing a time for, and the gate the tradition gives it.
  *
  * Redeclared like the rest, and paired: the form needs the gate a purpose

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { WRITTEN_ORDER, cells, layout } from '../src/geometry.js';
-import { renderChartSvg } from '../src/svg.js';
+import { STRENGTH_MARKS, renderChartSvg } from '../src/svg.js';
 import type { PlateChart } from '../src/types.js';
 
 /** A stem *is* a phase, and a real `Stem` says which. So does the fixture. */
@@ -181,6 +181,22 @@ describe('renderChartSvg', () => {
     expect(Number(word?.[3])).toBeLessThan(Number(gate?.[3]));
     // What it was not given a word for stands as its name alone.
     expect(worded).toContain('值符');
+  });
+
+  it('hangs the state of a star and of a gate off the word line, as the ramp it publishes', () => {
+    const svg = renderChartSvg(CHART, {
+      labels: { star: { tianying: 'Hero' }, gate: { shengmen: 'Life' } },
+    });
+
+    // 天英 stands in 旺 in the fixture and 生門 in 相. The mark rides at the
+    // end of the line under the name — it qualifies what is above it and is
+    // not a seventh thing standing in the palace.
+    expect(svg).toContain(`>Hero ${STRENGTH_MARKS.wang}</text>`);
+    expect(svg).toContain(`>Life ${STRENGTH_MARKS.xiang}</text>`);
+    // A surface glosses the ramp in words, and this is where it reads it
+    // from: a mark changed here without the legend following would be a
+    // shape nothing on the page explains.
+    expect(Object.keys(STRENGTH_MARKS)).toEqual(['wang', 'xiang', 'xiu', 'qiu', 'si']);
   });
 
   it('lays a palace out in two columns, the plates apart from what stands over them', () => {
