@@ -1,6 +1,14 @@
 import { beforeAll, describe, expect, it } from 'vitest';
+import { ChartError } from '../src/errors.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
-import { SOLAR_TERMS, jieAt, solarTermAt, solarTermsOfYear } from '../src/solar-terms.js';
+import {
+  MAX_TERMS,
+  SOLAR_TERMS,
+  jieAt,
+  solarTermAt,
+  solarTermsBetween,
+  solarTermsOfYear,
+} from '../src/solar-terms.js';
 import { fromJulianDay, resolveTime } from '../src/time.js';
 
 let context: EphemerisContext;
@@ -103,6 +111,24 @@ describe('solarTermAt', () => {
   it('switches exactly at the crossing', () => {
     expect(solarTermAt(at('2024-02-04', '16:26'), context).term.id).toBe('dahan');
     expect(solarTermAt(at('2024-02-04', '16:28'), context).term.id).toBe('lichun');
+  });
+});
+
+describe('solarTermsBetween', () => {
+  it('refuses an interval too wide to answer, rather than cutting the list', () => {
+    // A list stopped at four hundred reads exactly like an interval that held
+    // four hundred, and nothing downstream could tell the two apart.
+    expect(() => solarTermsBetween(at('2000-01-01', '00:00'), at('2100-01-01', '00:00'), context))
+      .toThrow(ChartError);
+    expect(() => solarTermsBetween(at('2000-01-01', '00:00'), at('2100-01-01', '00:00'), context))
+      .toThrow(expect.objectContaining({ code: 'INTERVAL_TOO_LONG' }));
+  });
+
+  it('answers the widest interval it does admit', () => {
+    const terms = solarTermsBetween(at('2000-01-01', '00:00'), at('2016-01-01', '00:00'), context);
+
+    expect(terms.length).toBeGreaterThan(380);
+    expect(terms.length).toBeLessThanOrEqual(MAX_TERMS);
   });
 });
 

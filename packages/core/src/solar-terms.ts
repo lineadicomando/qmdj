@@ -1,4 +1,5 @@
 import { normalize360, sunCrossing, sunLongitude, type EphemerisContext } from './ephemeris.js';
+import { ChartError } from './errors.js';
 import { fromJulianDay } from './time.js';
 
 /**
@@ -133,6 +134,17 @@ export function jieAt(julianDayUT: number, context: EphemerisContext): SolarTerm
 }
 
 /**
+ * The most terms that may be asked for at once.
+ *
+ * Twenty-four to a year, so a little over sixteen years. The bound is here
+ * rather than at a surface for the reason `MAX_SCAN_DAYS` is: an unbounded
+ * loop in a pure function is a trap laid for whoever calls it next. It is
+ * **refused** rather than truncated — a list cut off at four hundred reads
+ * exactly like an interval that held four hundred.
+ */
+export const MAX_TERMS = 400;
+
+/**
  * Every term beginning within a Julian Day interval, in chronological order.
  *
  * The bounds are half-open, `[from, to)`, so that consecutive intervals
@@ -143,13 +155,23 @@ export function solarTermsBetween(
   to: number,
   context: EphemerisContext,
 ): SolarTerm[] {
+  // Checked against the widest a term ever runs, so the interval that is
+  // refused is one that could not have fitted under the bound however the
+  // terms fell inside it.
+  if (to - from > MAX_TERMS * MAX_TERM_LENGTH) {
+    throw new ChartError('INTERVAL_TOO_LONG', {
+      days: Math.round(to - from),
+      maximum: MAX_TERMS * MAX_TERM_LENGTH,
+    });
+  }
+
   const terms: SolarTerm[] = [];
   let index = SOLAR_TERMS.indexOf(definitionAt(sunLongitude(from, context)));
   let cursor = from;
 
   // A crossing search never returns an instant before its starting point, so
   // stepping the cursor forward each time both advances and terminates.
-  while (terms.length < 400) {
+  while (terms.length < MAX_TERMS) {
     index = (index + 1) % SOLAR_TERMS.length;
     const definition = SOLAR_TERMS[index] as SolarTermDefinition;
     const instant = sunCrossing(definition.longitude, cursor, context);
