@@ -67,10 +67,16 @@
 
   let busy = $state(false);
   let needed = $state<MessageKey | undefined>();
-  let failure = $state<Failure | undefined>();
-  /** The chart as it came back, and the instant it turned out to be cast for. */
+  /**
+   * Starts on what the load refused: an address naming a place there is none
+   * of. The other sections stop before casting for that — see the chart's
+   * load — and here nothing is cast until the press, so the refusal is said
+   * up front, where the reader corrects the place the press will use.
+   */
+  // svelte-ignore state_referenced_locally
+  let failure = $state<Failure | undefined>(data.failure);
+  /** The chart as it came back. */
   let chart = $state<any>();
-  let cast = $state<{ date: string; time: string } | undefined>();
 
   const said = $derived(failure ? sayFailure(t, failure) : '');
 
@@ -84,15 +90,16 @@
     question.trim() === '' ? 'form.needed.question' : undefined,
   );
 
-  /** The address of the chart that was cast, for the drawing and the prompt. */
-  const address = $derived(
-    cast
-      ? momentQuery(
-          { ...asked, ...cast },
-          { lang: t.locale, born: born || undefined, gender: (born && gender) || undefined },
-        )
-      : '',
-  );
+  /**
+   * The address of the chart that was cast, for the drawing and the prompt.
+   *
+   * Written once at the cast and never derived: the fields stay editable
+   * after the press, and a board that followed them would quietly redraw as
+   * a chart nobody cast while the reading beside it still answered the one
+   * they did. A moved field already puts the copy button away; the drawing
+   * holds still the same way, until the next press replaces both.
+   */
+  let address = $state('');
 
   /**
    * Everything the answer on screen was cast from, as one string.
@@ -166,7 +173,7 @@
 
       if (!response.ok) {
         chart = undefined;
-        cast = undefined;
+        address = '';
         failure = body as Failure;
         return;
       }
@@ -175,11 +182,15 @@
       // Pinned to what the engine actually cast for. Under a question that is
       // the instant of the press, and it is the whole point of the mode: the
       // consultation belongs to that minute and not to whenever this is read.
-      cast = { date: chart.moment.input.date, time: chart.moment.input.time };
+      const cast = { date: chart.moment.input.date, time: chart.moment.input.time };
+      address = momentQuery(
+        { ...asked, ...cast },
+        { lang: t.locale, born: born || undefined, gender: (born && gender) || undefined },
+      );
       castFrom = fields;
     } catch {
       chart = undefined;
-      cast = undefined;
+      address = '';
       // The request itself failed, so there is no code to translate — and it
       // may well be the first press, when nothing was ever cast to be "read
       // again": what failed is the casting, and the message says so.

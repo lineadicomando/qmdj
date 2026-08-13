@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { load as chart } from '../src/routes/[lang]/+page';
 import { load as bazi } from '../src/routes/[lang]/bazi/+page';
+import { load as consult } from '../src/routes/[lang]/consult/+page';
 import { load as moments } from '../src/routes/[lang]/moments/+page';
 
 /**
@@ -114,6 +115,31 @@ describe('the pillars page', () => {
 
     expect(data.result).toBeUndefined();
     expect(data.failure).toMatchObject({ code: 'UNKNOWN_LOCATION' });
+  });
+});
+
+describe('the consult page', () => {
+  it('loads the setup and casts nothing', async () => {
+    // A consultation is an act, not an address: the chart waits for the press.
+    const { data, urls } = await open(consult, '/en?locationId=1816670&born=1990-06-01&gender=male', {
+      '1816670': BEIJING,
+    });
+
+    expect((data.moment as { place?: unknown }).place).toMatchObject({ id: 1816670 });
+    expect(data.born).toBe('1990-06-01');
+    expect(data.gender).toBe('male');
+    expect(data.failure).toBeUndefined();
+    expect(urls.some((url) => url.startsWith('/api/chart'))).toBe(false);
+  });
+
+  it('reports a place it cannot find, for the page to show', async () => {
+    // Nothing is cast at load, so there is nothing to refuse to cast — the
+    // failure travels in the data instead, and the page says it before the
+    // press that would otherwise cast for the server's own zone.
+    const { data } = await open(consult, '/en?locationId=999999999');
+
+    expect(data.failure).toMatchObject({ code: 'UNKNOWN_LOCATION' });
+    expect((data.moment as { place?: unknown }).place).toBeUndefined();
   });
 });
 
