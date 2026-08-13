@@ -559,4 +559,11 @@ export const it: Record<MessageKey, string> = {
     'L\'opzione "{option}" non accetta il valore "{value}". Se non venisse controllato non corrisponderebbe a nulla, il che si legge esattamente come una disposizione che non si è mai presentata.',
   'cli.error.genderRequired':
     'I cicli decennali richiedono --gender, perché la tradizione ne trae la direzione. Senza, i pilastri restano comunque completi.',
+
+  'search.none': 'Nessun luogo trovato per "{query}".',
+  'search.coverage':
+    'L\'archivio comprende i luoghi abitati sopra i cinquecento abitanti, più ogni capoluogo amministrativo di qualunque dimensione. Vale la pena provare: la grafia locale, il nome del comune invece della frazione, o un luogo più grande lì vicino.',
+  'search.candidates': '{count} candidati per "{query}".',
+  'search.candidate': 'Un candidato per "{query}".',
+  'search.column': 'La prima colonna è location_id.',
 };

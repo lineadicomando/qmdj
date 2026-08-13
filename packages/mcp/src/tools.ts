@@ -87,10 +87,7 @@ export function registerSearchLocation(server: McpServer, context: ToolContext):
         const results = searchLocations(args.query, options);
         if (results.length === 0) {
           return ok(
-            `No place found for "${args.query}".\n\n` +
-              'The dataset covers populated places above five hundred inhabitants, plus every ' +
-              'administrative seat whatever its size. Worth trying: the local spelling, the ' +
-              'name of the municipality rather than the hamlet, or a larger place nearby.',
+            `${t('search.none', { query: args.query })}\n\n${t('search.coverage')}`,
           );
         }
 
@@ -101,11 +98,12 @@ export function registerSearchLocation(server: McpServer, context: ToolContext):
             (place.population > 0 ? `  pop ${place.population.toLocaleString('en')}` : ''),
         );
 
-        return ok(
-          `${results.length} candidate${results.length === 1 ? '' : 's'} for "${args.query}".\n` +
-            'The first column is location_id.\n\n' +
-            lines.join('\n'),
-        );
+        const heading =
+          results.length === 1
+            ? t('search.candidate', { query: args.query })
+            : t('search.candidates', { count: results.length, query: args.query });
+
+        return ok(`${heading}\n${t('search.column')}\n\n${lines.join('\n')}`);
       } catch (error) {
         return fail(describeError(error, t));
       }

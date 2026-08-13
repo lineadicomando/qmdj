@@ -730,6 +730,17 @@ export const en = {
     'Option "{option}" does not take the value "{value}". Left unchecked it would match nothing, which reads exactly like an arrangement that never occurred.',
   'cli.error.genderRequired':
     'The luck cycles need --gender, since the tradition takes their direction from it. Without it the pillars are still complete.',
+
+  // The place search, as the MCP server words it. The reader here is a model
+  // relaying an answer to somebody, so `lang` has to reach the prose too: a
+  // tool that returned Italian place names under an English sentence would
+  // have translated the half nobody was asking about.
+  'search.none': 'No place found for "{query}".',
+  'search.coverage':
+    'The dataset covers populated places above five hundred inhabitants, plus every administrative seat whatever its size. Worth trying: the local spelling, the name of the municipality rather than the hamlet, or a larger place nearby.',
+  'search.candidates': '{count} candidates for "{query}".',
+  'search.candidate': 'One candidate for "{query}".',
+  'search.column': 'The first column is location_id.',
 };
 
 export type MessageKey = keyof typeof en;

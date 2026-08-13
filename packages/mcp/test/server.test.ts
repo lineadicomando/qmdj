@@ -135,6 +135,22 @@ describe('compute_qimen_chart', () => {
     expect(zhirun).not.toContain('chaibu');
   });
 
+  it('reads a date given without a time as noon, not as the hour it is asked in', async () => {
+    // Falling back to the clock made the same call answer differently every
+    // time it ran. A chart is a pure function of its input and a saved one
+    // has to reproduce; noon is the convention `born_time` already declares.
+    const text = await call('compute_qimen_chart', {
+      latitude: BEIJING.latitude,
+      longitude: BEIJING.longitude,
+      timezone: BEIJING.timezone,
+      date: '2024-06-15',
+      day_boundary: 'midnight',
+      true_solar_time: false,
+    });
+
+    expect(text).toContain('2024-06-15T12:00:00+08:00');
+  });
+
   it('says where the centre lodges', async () => {
     // The centre has no gate and no spirit, so its stem is read elsewhere.
     // An agent that could not see where would have to know it from outside.
@@ -283,6 +299,20 @@ describe('the other tools', () => {
     // passed on which way it faces, which is half of what was asked.
     expect(text).toContain('>NE<');
     expect(text).toContain('>子<');
+  });
+
+  it('says a place search in the language it was asked in', async () => {
+    // Every other tool translates its scaffolding; this one used to answer in
+    // English whatever `lang` said, so a model relaying the result handed
+    // somebody Italian place names under an English sentence.
+    const found = await call('search_location', { query: 'Roma', lang: 'it' });
+    expect(found).toMatch(/candidat/i);
+    expect(found).toContain('location_id');
+    expect(found).not.toMatch(/The first column/);
+
+    const missing = await call('search_location', { query: 'Zzzzzq', lang: 'it' });
+    expect(missing).toMatch(/Nessun luogo trovato/);
+    expect(missing).not.toMatch(/No place found/);
   });
 });
 
