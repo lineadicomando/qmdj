@@ -572,7 +572,7 @@ never instead of it.
 
 `packages/mcp` exposes seven tools — `search_location`, `compute_qimen_chart`,
 `compute_bazi`, `draw_qimen_chart`, `solar_terms`, `lunar_date`,
-`scan_moments` — and three
+`scan_moments` — and four
 reference resources rendered from the engine's own tables rather than from a
 copy. Tested through a real client over an in-memory transport, so the schemas
 and descriptions asserted are the ones a client actually receives.
@@ -596,8 +596,9 @@ Two findings:
 
 **The web application is done too.**
 
-`apps/web` serves six GET endpoints — `/api/chart`, `/api/bazi`, `/api/terms`,
-`/api/locations`, `/api/chart/plate`, `/api/moments` — and an interface at
+`apps/web` serves eight GET endpoints — `/api/chart`, `/api/chart/plate`,
+`/api/chart/text`, `/api/chart/prompt`, `/api/bazi`, `/api/terms`,
+`/api/locations`, `/api/moments` — and an interface at
 `/en` and `/it`.
 Every parameter travels in the query string, so a chart is a shareable address
 and the interface and the API read exactly the same one.

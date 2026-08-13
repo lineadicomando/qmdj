@@ -30,6 +30,15 @@ Agreement with it means *consistent with a common implementation*, never
 **`lunar-javascript`** — 1 926 dates from 1902 to 2098. Year, month, day and
 hour pillars and the lunar date agree on every one.
 
+The same reference checked the reading layer of the pillars — the 納音 images,
+the concealed stems, the ten gods, the twelve stages, the void branches, the
+direction and start of the luck cycles — on 479 charts spread over the same
+two centuries, agreeing on every one once it is given a zone whose offset
+never moves; `PLAN.md`, Phase 2, records the check and the eleven
+disagreements that all fell inside China's moving clocks. These quantities are
+transmitted tables and derivations from them, not published astronomy: the
+agreement is tier 2, consistency with a runnable reference.
+
 Working from memory was tried first and abandoned: recalled almanac values
 were wrong more often than right. Nothing in this repository is anchored on
 recollection, and this is the rule the rest of the document exists to keep.

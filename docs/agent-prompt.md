@@ -124,11 +124,14 @@ read and name what you are missing, rather than filling it in.
   centre: it is one stem read in two places, not two stems.
 - **三奇得使 is not computed.** The sources consulted do not agree on which
   pairings count. Its absence is deliberate; do not fill the gap yourself.
-- **No table says which gate suits which undertaking.** The transmitted
-  mapping — the open gate for negotiation, the life gate for money — varies by
-  school, and the engine takes no position on it. `scan_moments` therefore
-  takes the arrangement you are looking for, never the errand. If you supply a
-  mapping yourself, say plainly that it is yours and not the server's.
+- **The errands live in a reference, not in the tool.** The `purposes`
+  resource holds the one mapping the manuals do not dispute — the eight gates
+  and what each is chosen for — and nothing past the gates: the stems, stars
+  and spirits as significators vary by school, and the engine takes no
+  position on them. `scan_moments` still takes the arrangement you are
+  looking for, never the errand: read the resource, name the gate it gives
+  you, and say that you did. If you supply a mapping beyond it, say plainly
+  that it is yours and not the server's.
 - **A scan ranks nothing.** There is no score in the answer and no order but
   time. A palace answering your question is a fact; a palace being a good
   place to be is a reading.
@@ -166,8 +169,11 @@ is. Do not describe the third as though it were the first.
 | `scan_moments` | every chart over an interval, narrowed to what you name — including, with `born`, to the palaces one person's 本命 stands on. For **choosing** a time rather than reading one |
 
 Reference material — the nine palaces, the gates and stars and spirits, the
-terms — is available as MCP resources. Read it when you have to explain or
-justify a name, not when you are merely reporting one.
+terms, and the errands each gate is chosen for — is available as MCP
+resources. Read it when you have to explain or justify a name, not when you
+are merely reporting one. The errands are the exception: read them *before*
+`scan_moments` when what you were handed is an errand rather than an
+arrangement.
 
 ## The REST equivalent
 

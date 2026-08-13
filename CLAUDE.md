@@ -13,7 +13,7 @@ anything.
 | `packages/geo` | location lookup over a local GeoNames dataset (SQLite) |
 | `packages/core` | calculation engine and the `qimen` CLI: solar terms, lunar calendar, sexagenary cycles, Four Pillars, Qi Men charts, scanning an interval |
 | `packages/plate` | the drawing: nine palaces, glyphs, SVG and PNG |
-| `packages/mcp` | MCP server: seven tools, three resources, stdio transport |
+| `packages/mcp` | MCP server: seven tools, four resources, stdio transport |
 | `apps/web` | SvelteKit: four sections at `/en` and `/it`, plus eight GET endpoints under `/api` |
 
 npm workspaces monorepo, Node ≥ 22, ESM, TypeScript.
@@ -177,4 +177,4 @@ dropping the tone would collide, and only there, the tone number is kept:
 ## Adding a feature
 
 A feature crosses several surfaces and has a procedure of its own — see the
-`new-feature` skill, once phase 6 exists.
+`new-feature` skill.
