@@ -556,6 +556,7 @@ export const it: Record<MessageKey, string> = {
   'cli.error.unknownCommand': 'Comando "{command}" sconosciuto. Prova `qimen --help`.',
   'cli.error.unknownOption': 'Opzione "{option}" sconosciuta. Prova `qimen --help`.',
   'cli.error.missingValue': 'L\'opzione "{option}" richiede un valore.',
+  'cli.error.numberRequired': 'L\'opzione "{option}" richiede un numero intero, e "{value}" non lo è.',
   'cli.error.contradiction':
     'L\'opzione "{option}" dice già quale porta cercare, e "{other}" ne dice un\'altra. Togline una.',
   'cli.error.exclusive':

@@ -49,7 +49,14 @@ import { chartTranscript, readingPrompt } from './prompt.js';
 import { PURPOSES, purposeCriteria, type PurposeId } from './purposes.js';
 import { matchRuns, scanCharts, type ScanCriteria } from './scan.js';
 import { solarTermsOfYear } from './solar-terms.js';
-import { currentMoment, systemTimezone, zoneMeridian, type LocalMoment } from './time.js';
+import {
+  currentMoment,
+  fromJulianDay,
+  resolveTime,
+  systemTimezone,
+  zoneMeridian,
+  type LocalMoment,
+} from './time.js';
 import { DEFAULT_OPTIONS, type ChartOptions, type Place } from './types.js';
 
 /**
@@ -216,7 +223,19 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
   };
 
   if (command === 'terms') {
-    const year = Number(options.year ?? input.date.slice(0, 4));
+    // Strict, like --method and --yuan: `Number` alone would read a mistyped
+    // year as NaN and hand it to the calendar, which answers with a stack
+    // trace addressed to nobody.
+    if (options.year !== undefined && !/^-?\d+$/.test(options.year)) {
+      throw new UsageError(t('cli.error.numberRequired', { option: '--year', value: options.year }));
+    }
+    // The year of the resolved date, never a slice of the string: an ISO year
+    // runs to six digits and a sign either side of our era, and `-000044`
+    // sliced to four characters reads as the year zero.
+    const year =
+      options.year !== undefined
+        ? Number(options.year)
+        : fromJulianDay(resolveTime(input).time.julianDayUT, timezone).year;
     const terms = solarTermsOfYear(year, timezone, context);
     if (options.json) {
       return JSON.stringify({ year, timezone, terms }, null, 2);

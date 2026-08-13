@@ -139,6 +139,29 @@ describe('terms and calendar', () => {
 
     expect(out).toContain('leap month 2/11');
   });
+
+  it('refuses a year that is not a number, rather than throwing it at the reader', async () => {
+    // `Number('20x4')` is NaN, and unchecked it reached the calendar and came
+    // back as a stack trace addressed to nobody.
+    const code = await run(['terms', '--year', '20x4', '--tz', 'Asia/Shanghai', '--lang', 'en']);
+
+    expect(code).toBe(2);
+    expect(err).toContain('20x4');
+    expect(err).not.toContain('at ');
+    expect(out).toBe('');
+  });
+
+  it('reads the year of a date before our era whole, not its first four characters', async () => {
+    // An ISO year runs to six digits and a sign: `-000044` sliced to four
+    // characters is `-000`, and the terms printed were the year zero's.
+    const code = await run(['terms', '--date', '-000044-06-01', '--time', '12:00',
+                            '--tz', 'Asia/Shanghai', '--json']);
+
+    expect(code).toBe(0);
+    const printed = JSON.parse(out);
+    expect(printed.year).toBe(-44);
+    expect(printed.terms).toHaveLength(24);
+  });
 });
 
 describe('--json', () => {

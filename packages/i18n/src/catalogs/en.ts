@@ -726,6 +726,7 @@ export const en = {
   'cli.error.unknownCommand': 'Unknown command "{command}". Try `qimen --help`.',
   'cli.error.unknownOption': 'Unknown option "{option}". Try `qimen --help`.',
   'cli.error.missingValue': 'Option "{option}" needs a value.',
+  'cli.error.numberRequired': 'Option "{option}" needs a whole number, and "{value}" is not one.',
   'cli.error.contradiction':
     'Option "{option}" already says which gate to look for, and "{other}" says a different one. Drop one of them.',
   // Not a contradiction about a value: two frames that do not overlap. A
