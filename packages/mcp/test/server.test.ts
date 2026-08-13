@@ -360,6 +360,25 @@ describe('scan_moments', () => {
       expect(text).not.toContain(word);
     }
   });
+
+  it('reads a birth on its own clock, even when the place came as a location_id', async () => {
+    // 立春 2024 falls at 16:27 Beijing time, 09:27 in Rome. Ten in the
+    // morning is on one side of it in Rome and the other in Beijing, so the
+    // zone of the birth decides the year pillar: 甲辰 born in Rome, 癸卯 born
+    // in Beijing. A resolution that let the interval's place override
+    // `born_timezone` would admit the other year's palaces.
+    const interval = { location_id: 1816670, from: INTERVAL.from, to: INTERVAL.to };
+    const birth = { born: '2024-02-04', born_time: '10:00' };
+
+    const rome = await call('scan_moments', { ...interval, ...birth, born_timezone: 'Europe/Rome' });
+    const beijing = await call('scan_moments', { ...interval, ...birth });
+    expect(rome).not.toBe(beijing);
+
+    // And each admits exactly the palaces its year's stem stands on: 甲辰 is
+    // looked for under 壬, the instrument of its decade, and 癸 under itself.
+    expect(rome).toBe(await call('scan_moments', { ...interval, stem: 'ren' }));
+    expect(beijing).toBe(await call('scan_moments', { ...interval, stem: 'gui' }));
+  });
 });
 
 

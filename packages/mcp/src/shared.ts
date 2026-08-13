@@ -250,20 +250,7 @@ export function resolveNianming(
   if (!raw.born) return undefined;
 
   const options: NianmingOptions = { count: raw.years_count ?? 'sui' };
-  const input: LocalMoment = {
-    date: raw.born,
-    // Noon for a date given alone; it decides nothing but a birth within
-    // hours of 立春, and there the hour has to be given.
-    time: raw.born_time ?? '12:00',
-    timezone: raw.born_timezone ?? chart.moment.input.timezone,
-  };
-  const { place } = resolvePlace({ ...raw, timezone: input.timezone }, context);
-  const birth = resolveMoment(
-    input,
-    { ...place, timezone: input.timezone, longitude: zoneMeridian(input) },
-    chart.moment.options,
-    initEphemeris(context.ephemerisPath),
-  );
+  const birth = resolveBirth(raw, chart.moment.input.timezone, chart.moment.options, context);
 
   return nianmingOf(
     chart,
@@ -272,6 +259,37 @@ export function resolveNianming(
       ...(raw.gender ? { years: yearsLived(birth, chart.moment, options), gender: raw.gender } : {}),
     },
     options,
+  );
+}
+
+/**
+ * The moment of a birth, read on its own clock.
+ *
+ * The zone is the birth's own when given, the fallback's otherwise — and it
+ * wins over whatever `resolvePlace` answers, because a `location_id` names
+ * where the question is asked, not where the birth was. The place is then
+ * pinned to the zone's meridian so the true-solar correction is exactly
+ * zero: a birth is a calendar fact, and the calendar runs on the clock.
+ * Noon for a date given alone; it decides nothing but a birth within hours
+ * of 立春, and there the hour has to be given.
+ */
+export function resolveBirth(
+  raw: RawInput,
+  timezone: string,
+  options: ChartOptions,
+  context: ToolContext,
+): Moment {
+  const input: LocalMoment = {
+    date: raw.born as string,
+    time: raw.born_time ?? '12:00',
+    timezone: raw.born_timezone ?? timezone,
+  };
+  const { place } = resolvePlace({ ...raw, timezone: input.timezone }, context);
+  return resolveMoment(
+    input,
+    { ...place, timezone: input.timezone, longitude: zoneMeridian(input) },
+    options,
+    initEphemeris(context.ephemerisPath),
   );
 }
 

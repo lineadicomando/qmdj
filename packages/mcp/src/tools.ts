@@ -37,6 +37,7 @@ import {
   ok,
   optionSchema,
   placeSchema,
+  resolveBirth,
   resolveInput,
   resolveNianming,
   timeSchema,
@@ -497,15 +498,12 @@ export function registerScanMoments(server: McpServer, context: ToolContext): vo
         if (args.min_strength) criteria.minStrength = args.min_strength;
         if (args.without?.length) criteria.excludes = args.without as ScanCriteria['excludes'];
         if (args.born) {
-          criteria.benming = resolveInput(
-            {
-              ...args,
-              date: args.born,
-              time: args.born_time ?? '12:00',
-              ...(args.born_timezone ? { timezone: args.born_timezone } : {}),
-            },
-            context,
-          ).moment.pillars.year;
+          // The same resolution the chart tool's 年命 uses: the birth's own
+          // zone wins over the interval's place, and the birth is read on the
+          // clock, not the sun. Resolving it like the interval would let a
+          // `location_id` zone, or the solar correction, move a birth near
+          // 立春 across it — and admit another year's palaces.
+          criteria.benming = resolveBirth(args, zone, moment.options, context).pillars.year;
         }
 
         const matches = matchRuns(runs, criteria);
