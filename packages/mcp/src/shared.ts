@@ -89,7 +89,7 @@ export const timeSchema = z
   .regex(/^\d{2}:\d{2}(:\d{2})?$/)
   .optional()
   .describe(
-    'Local clock time, HH:mm. As it was read on a clock at the place; the conversion to Universal Time is done here, using the historical rules of the zone. Do not convert it yourself. Omit for the present moment.',
+    'Local clock time, HH:mm. As it was read on a clock at the place; the conversion to Universal Time is done here, using the historical rules of the zone. Do not convert it yourself. Omit for the present moment; omitted beside a date, it is noon on that date.',
   );
 
 export const placeSchema = {
@@ -209,13 +209,20 @@ interface RawInput {
  * name — that is what `search_location` is for, and choosing among the dozens
  * of Romes would produce a chart that is plausible and wrong. And the current
  * date is supplied here rather than by the agent, which does not know it.
+ *
+ * **A date without a time is noon on that date, not the hour it is asked in.**
+ * Falling back to the clock would make the same call return a different chart
+ * every time it ran, which is the one thing a chart may never do: it is a pure
+ * function of its input, and a saved one has to reproduce. Noon is the
+ * convention `born_time` already declares. Omitting *both* is the other case
+ * entirely — there the instant of asking is the instant that is cast.
  */
 export function resolveInput(raw: RawInput, context: ToolContext): ResolvedInput {
   const { place, meridianAssumed } = resolvePlace(raw, context);
   const now = currentMoment(place.timezone);
   const input: LocalMoment = {
     date: raw.date ?? now.date,
-    time: raw.time ?? now.time,
+    time: raw.time ?? (raw.date === undefined ? now.time : '12:00'),
     timezone: place.timezone,
   };
   if (meridianAssumed) place.longitude = zoneMeridian(input);
