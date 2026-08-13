@@ -186,7 +186,9 @@ export function yearsLived(
  * 立春 — and only one of them bears the pillar the moment already computed.
  */
 function sexagenaryYearOf(moment: Moment): number {
-  const civil = Number(moment.local.slice(0, 4));
+  // Up to the first date separator, not four characters: an ISO year runs to
+  // six digits and a sign either side of our era, and both are admitted.
+  const civil = Number(/^[+-]?\d+/.exec(moment.local)?.[0]);
   return yearGanzhi(civil).index === moment.pillars.year.index ? civil : civil - 1;
 }
 
