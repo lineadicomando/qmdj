@@ -353,6 +353,12 @@ function stemPairs(earth: ByPalace<Stem>, heaven: ByPalace<Stem>): Pattern[] {
   const found: Pattern[] = [];
   for (const [key, above] of Object.entries(heaven)) {
     const number = Number(key);
+    // The centre is left out: the turn neither moves it nor reaches it, so
+    // its heaven stem is its earth stem by construction. A pairing is the
+    // stem the plate brought standing over the one below, and nothing is
+    // brought to the centre — counting it would make 戰格 a fixture of every
+    // ju that seats 庚 there, one hour in each, all term long.
+    if (number === 5) continue;
     const below = earth[number] as Stem;
     for (const pair of STEM_PAIRS) {
       if (above.id === pair.above && below.id === pair.below) {

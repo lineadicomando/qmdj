@@ -89,6 +89,20 @@ describe('十干克應 — the stem above over the stem below', { timeout: 30_00
     expect(found.get('zhange')).toEqual({ above: 'geng', below: 'geng' });
   });
 
+  it('never reports a pairing in the centre, where nothing was brought', () => {
+    // The turn neither moves the centre nor reaches it, so its heaven stem is
+    // its earth stem by construction: a ju seating 庚 there would otherwise
+    // carry 戰格 in the centre every hour of the term. Yang ju 3 is such a ju.
+    for (const hour of ['01:00', '07:00', '13:00', '19:00']) {
+      const chart = cast('2024-03-21', hour);
+      const centre = chart.palaces.find((cell) => cell.palace.number === 5);
+      expect(centre?.earth.id).toBe('geng');
+      for (const pattern of chart.patterns) {
+        if (PAIR_IDS.includes(pattern.id)) expect(pattern.palace).not.toBe(5);
+      }
+    }
+  });
+
   it('gives every pairing of the table a fortune, and every one of them 凶 but two', () => {
     const pairings = PATTERN_IDS.filter((id) => found.has(id));
     // The two the tradition marks 吉 are the two that were already here; the
