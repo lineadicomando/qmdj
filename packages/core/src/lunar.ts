@@ -257,9 +257,10 @@ export function lunarDate(julianDayUT: number, context: EphemerisContext): Lunar
  */
 function lunarYearOf(starts: readonly number[], leapIndex: number, index: number): number {
   // Position of month one within the span: two months after month eleven,
-  // plus one if the intercalary month falls in between.
+  // plus one if the intercalary month falls in between — a leap eleventh
+  // month at index 1, or a leap twelfth at index 2, both push month one back.
   let firstMonthIndex = 2;
-  if (leapIndex >= 0 && leapIndex < 2) firstMonthIndex += 1;
+  if (leapIndex >= 0 && leapIndex <= 2) firstMonthIndex += 1;
 
   const reference = fromJulianDay(starts[firstMonthIndex] as number, CALENDAR_ZONE);
   return index >= firstMonthIndex ? reference.year : reference.year - 1;
