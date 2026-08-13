@@ -384,11 +384,6 @@ export const en = {
   'form.working': 'Working…',
   'form.needed.date': 'A date is still needed.',
   'form.needed.interval': 'Both dates of the interval are still needed.',
-  // The hour, and not only the day. A Qi Men chart turns on the hour pillar,
-  // so a birth without a time is not a rougher chart — it is a different one.
-  'form.needed.birth': 'A date and a time of birth are still needed: the chart turns on the hour.',
-  // The same thing `cli.error.genderRequired` says, without naming a command
-  // line option to somebody looking at a form.
   'form.needed.question': 'A question is still needed: the prompt is built to be read towards one.',
   // The hour, and not only the day. A Qi Men chart turns on the hour pillar,
   // so a birth without a time is not a rougher chart — it is a different one.
@@ -434,18 +429,6 @@ export const en = {
   // produces is a 年命: the chart stays the chart of the moment and the birth
   // is looked up inside it, which is what 《遁甲演義》 prescribes and the
   // reverse of a natal chart.
-  'consult.mode': 'What is being asked',
-  'consult.mode.question': 'A question, asked now',
-  'consult.mode.natal': 'A chart of a birth',
-  // Why the question is above the moment and not below the chart. The order
-  // is the whole of it: the instant of asking is the instant that is cast.
-  'consult.natalNote':
-    'Reading a Qi Men chart as a chart of a life is a modern and minority application — the classical uses are divination and the choosing of times.',
-  // The page explains itself here and nowhere else, in one line: the nav says
-  // which section this is, and the form says nothing about what comes out of
-  // it. What was cut from here was the statement of the stance — that lives in
-  // the footer, in the privacy note and in the notes — and not this, which is
-  // the only thing a newcomer needs before they start typing.
   'consult.birth': 'Your birth, if you want it in the chart',
   'consult.birthDate': 'Date of birth',
   'consult.birthGender': 'Sex — only the direction of the 行年 count depends on it',
@@ -465,12 +448,18 @@ export const en = {
   // Under the board, where somebody who wants a reading will be looking. It
   // sends them on rather than offering a field here: the question belongs
   // before the casting, and this page has already cast.
-  'form.toConsult': 'To have a chart read, with a question or as a chart of a birth:',
+  'form.toConsult': 'To have a chart read, with a question:',
 
+  // Beside it, the other section that answers about this same instant. The
+  // four pillars are already under the board — the chart is cast on them —
+  // and what the other section adds is what they conceal and how they stand.
+  // It says *this instant* because the section it leads to is more often
+  // asked about a birth, and arriving there with a chart's moment in the
+  // fields should not read as one.
   'form.toPillars': 'The same instant as four pillars, with the stems they conceal:',
 
   'form.promptPrivacy':
-    'What is copied carries the date, the time and the place of the chart, and the question you typed. Paste it somewhere you would tell those things to.',
+    'What is copied carries the date, the time and the place of the chart, the question you typed, and — if you gave one — the year pillar of your birth. Paste it somewhere you would tell those things to.',
   // Required, and said in the label rather than by a mark nobody can read
   // aloud. It is not a formality: the chart is read *towards* a question, and
   // a prompt built without one asks a model to read towards nothing.
@@ -521,7 +510,7 @@ export const en = {
 
   'privacy.title': 'Privacy',
   'privacy.nothing':
-    'Nothing you type is stored. Dates, times and places travel in the address of the page, are used to compute an answer, and are not written to any database or log kept by this site.',
+    'Nothing you type is stored. Dates, times and places — including a date of birth, if you give one so that a chart can say where it falls — travel in the address of the page, are used to compute an answer, and are not written to any database or log kept by this site.',
   'privacy.address':
     'Because the parameters are in the address, a link to a chart carries a date, a time and a place with it. Share one only with someone you would tell those things to.',
   // The one thing on this site somebody types that is not a date or a place.
@@ -594,22 +583,6 @@ export const en = {
   // offer where two pairs fell, and still refuse the mapping.
   'prompt.nianming':
     'The transcript carries a 年命 niánmìng: the year pillar of the person asking (本命 běnmìng) and, where it was given, the year they are living (行年 xíngnián), each looked up inside this chart. **It is who is asking, and not a second reading.** Do not give it a section of its own, and do not list its palace, star, gate, spirit and image back to the reader — the tables above already say all of that. Use it where it bears on the question: where the person stands in relation to the palace you chose for the matter, whether the two are the same palace, whether one generates or controls the other, whether the person stands in the palace the matter has to pass through. That relation is what the pair adds; everything else about it is already on the board. 遁甲演義 dùnjiǎ yǎnyì, the treatise this comes from, has a reading weigh 本命 and 行年 before anything else and looks for the person\'s year to ride a palace where a good star and a good gate stand in strength — that is the tradition\'s criterion, said as theirs, and it is a thing to weigh and not a score to compute. This is not a chart of a birth and no life is to be read from it: nothing here says which palace stands for which part of a life, and none is implied — that mapping is where the schools diverge most and where most of what circulates is one lineage\'s teaching material. If you go further, say plainly that the step is yours.',
-  // The other frame: a chart cast for a birth and read as a chart of a life.
-  //
-  // A frame and never a method. The engine will not say which palace stands
-  // for which part of a life, for the reason `purposes.ts` gives about
-  // everything past the eight gates: there the schools genuinely diverge, and
-  // what reached the West most widely reached it as the teaching material of
-  // particular commercial lineages. That is exactly the natal material — and
-  // exactly what a model will produce most confidently, because there is so
-  // much of it about. So the warning is louder here than anywhere else.
-  'prompt.destiny.heading': 'Reading a Qi Men Dun Jia chart cast for a birth',
-  'prompt.destiny.frame':
-    'The chart below is cast for a moment of birth and is to be read as a chart of a life. Say once, early and plainly that this is a modern and minority application of Qi Men Dun Jia — the classical uses are divination and the choosing of times — and that the schools which teach it do not agree with one another.',
-  'prompt.destiny.noMapping':
-    'Nothing below says which palace stands for which part of a life, and the omission is deliberate: that is where the schools diverge most, and much of what circulates in the West is the teaching material of particular lineages. If you use such a mapping, say plainly that it is yours and not this software\'s, and name whose it is if you can.',
-  'prompt.destiny.task':
-    'No question has been asked, and none is needed here. Describe how this chart stands — what lies and what stands in each palace, and the configurations it fell into — in the order that makes it legible rather than the order that makes it striking. Then stop, and let the person ask. This is a conversation and not a document: whatever they want to know about one part of their life is a question they can put to you next, with the chart already in front of you both.',
   'prompt.source': 'The chart is at {url}',
   'prompt.chart': 'The chart',
   'prompt.asked': 'The question asked is:',

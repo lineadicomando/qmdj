@@ -1,8 +1,10 @@
 import { createTranslator } from '@qimendunjia/i18n';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { computeQimenChart } from '../src/dunjia/index.js';
+import { ganzhiOf } from '../src/ganzhi.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
 import { resolveMoment, type Moment } from '../src/pillars.js';
+import { nianmingOf } from '../src/nianming.js';
 import { chartTranscript, readingPrompt } from '../src/prompt.js';
 import { DEFAULT_OPTIONS, type Place } from '../src/types.js';
 
@@ -32,6 +34,16 @@ function moment(): Moment {
 
 const en = createTranslator('en');
 
+/** A birth of 庚午 placed in the chart above, with the year it is living. */
+function placed() {
+  const at = moment();
+  return nianmingOf(
+    computeQimenChart(at, DEFAULT_OPTIONS),
+    { birthYear: ganzhiOf(6), years: 35, gender: 'male' },
+    { count: 'sui' },
+  );
+}
+
 describe('the transcript', () => {
   it('carries the instant, the ju and all nine palaces', () => {
     const at = moment();
@@ -51,9 +63,9 @@ describe('the transcript', () => {
     const chart = computeQimenChart(at, DEFAULT_OPTIONS);
 
     expect(chartTranscript(at, chart, en)).not.toContain('http');
-    expect(chartTranscript(at, chart, en, 'https://example.org/en?date=2024-06-15')).toContain(
-      'https://example.org/en?date=2024-06-15',
-    );
+    expect(
+      chartTranscript(at, chart, en, { source: 'https://example.org/en?date=2024-06-15' }),
+    ).toContain('https://example.org/en?date=2024-06-15');
   });
 });
 
@@ -134,7 +146,7 @@ describe('the prompt', () => {
     const chart = computeQimenChart(at, DEFAULT_OPTIONS);
 
     for (const t of [en, createTranslator('it')]) {
-      for (const request of [{}, { frame: 'destiny' } as const]) {
+      for (const request of [{}, { nianming: placed() }]) {
         const text = readingPrompt(at, chart, t, request);
         // Everything before the fence: what the reading is told to do, as
         // opposed to the transcript, which is data and pairs them already.
@@ -184,57 +196,69 @@ describe('the prompt', () => {
 });
 
 /**
- * The other frame: a chart cast for a birth, read as a chart of a life.
+ * 年命 — a birth looked up inside the chart of a moment.
  *
- * What is asserted is that it is a frame and not a method — the application
- * is named as modern and minority, the mapping of palaces to parts of a life
- * is refused, and nothing that belongs to a question survives into it.
+ * What is asserted is what the prompt has to hold around it: the two pairs
+ * are in the fence with the chart, the reading is told what this is not, and
+ * the mapping of palaces onto parts of a life is refused as loudly here as
+ * the natal frame this replaced refused it.
  */
-describe('the prompt for a chart of a birth', () => {
-  function destiny(t = en): string {
+describe('the prompt with a 年命 in it', () => {
+  function withBirth(t = en): string {
     const at = moment();
-    return readingPrompt(at, computeQimenChart(at, DEFAULT_OPTIONS), t, { frame: 'destiny' });
+    return readingPrompt(at, computeQimenChart(at, DEFAULT_OPTIONS), t, {
+      question: 'Should I take the offer?',
+      nianming: placed(),
+    });
   }
 
-  it('says what this application is, and that the schools disagree', () => {
-    expect(destiny()).toContain('modern and minority application');
-    expect(destiny()).toContain('do not agree with one another');
+  it('puts the two pairs inside the fence, with the chart', () => {
+    const text = withBirth();
+    const fenced = text.slice(text.indexOf('```'), text.lastIndexOf('```'));
+
+    expect(fenced).toContain('本命');
+    expect(fenced).toContain('行年');
+    expect(fenced).toContain('庚午');
   });
 
-  it('refuses the mapping of palaces onto parts of a life', () => {
-    const text = destiny();
+  it('says what it is not, before the fence', () => {
+    const instructions = withBirth().slice(0, withBirth().indexOf('```'));
 
-    expect(text).toContain('which palace stands for which part of a life');
-    expect(text).toContain('say plainly that it is yours');
+    expect(instructions).toContain('not a chart of a birth');
+    expect(instructions).toContain('which palace stands for which part of a life');
   });
 
-  it('describes and then hands the turn back, rather than answering nobody', () => {
-    const text = destiny();
+  /**
+   * The mistake the first wording produced, and the one worth a test: a model
+   * told to say where the pairs fell wrote a section of its own describing
+   * them, which is the palace table said twice and a reading that answers
+   * nobody. A 年命 is who is asking, and it belongs in the answer.
+   */
+  it('refuses it a section of its own', () => {
+    const instructions = withBirth().slice(0, withBirth().indexOf('```'));
 
-    expect(text).toContain('let the person ask');
-    // A prompt is pasted into a conversation: the questions come after.
-    expect(text).toContain('conversation and not a document');
+    expect(instructions).toContain('not a second reading');
+    expect(instructions).toContain('Do not give it a section of its own');
   });
 
-  it('carries nothing that belongs to a question', () => {
-    const text = destiny();
+  it('still carries the question and every bound the prompt has', () => {
+    const text = withBirth();
 
-    expect(text).not.toContain('用神');
-    expect(text).not.toContain('The question asked is');
-    expect(text).not.toContain('No question was asked');
-    expect(text).not.toContain('ask before you read');
-  });
-
-  it('keeps every bound the other frame has', () => {
-    const text = destiny();
-
+    expect(text).toContain('用神');
+    expect(text).toContain('The question asked is');
     expect(text).toContain('Do not rank the palaces');
     expect(text).toContain('food for thought and as entertainment');
-    // And the chart itself, which is the point of all of it.
-    expect(text).toContain('離');
+  });
+
+  it('says nothing about a 年命 when none was placed', () => {
+    const at = moment();
+    const text = readingPrompt(at, computeQimenChart(at, DEFAULT_OPTIONS), en);
+
+    expect(text).not.toContain('本命');
+    expect(text).not.toContain('niánmìng');
   });
 
   it('is written in the locale it was handed', () => {
-    expect(destiny(createTranslator('it'))).toContain('moderna e minoritaria');
+    expect(withBirth(createTranslator('it'))).toContain('Non è la carta di una nascita');
   });
 });

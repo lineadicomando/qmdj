@@ -378,27 +378,57 @@ describe('GET /api/chart/prompt', () => {
   });
 
   /**
-   * The other frame: a chart of a birth read as a chart of a life. A frame
-   * and never a method — which palace stands for which part of a life is the
-   * doctrine this project declines to carry, and the prompt says so.
+   * 年命: the birth looked up inside the chart of the moment. The chart does
+   * not move for it, it sits inside the fence with the chart, and the prompt
+   * says what it is not — which palace stands for which part of a life is the
+   * doctrine this project declines to carry, here as everywhere.
    */
-  it('frames a chart of a birth without supplying a natal method', async () => {
-    const { text } = await call(prompt, `${MOMENT}&lang=en&frame=natal`);
+  it('places a birth inside the fence when one is given', async () => {
+    const { text } = await call(prompt, `${MOMENT}&lang=en&asked=true&born=1990-06-01`);
 
-    expect(text).toContain('modern and minority application');
+    expect(text).toContain('本命');
+    expect(text).toContain('not a chart of a birth');
     expect(text).toContain('which palace stands for which part of a life');
-    // Nothing that belongs to a question survives into it.
-    expect(text).not.toContain('用神');
-    expect(text).not.toContain('The question asked is');
+    // And it is an addition to a consultation, not a mode replacing it.
+    expect(text).toContain('用神');
+    expect(text.endsWith('The question asked is:\n')).toBe(true);
   });
 
-  it('takes no question under the natal frame, whatever the address says', async () => {
-    // The two do not overlap: a natal chart carrying a question is a third
-    // thing, and `asked` is simply not read here.
-    const { text } = await call(prompt, `${MOMENT}&lang=en&frame=natal&asked=true`);
+  it('places the year being lived only when the direction of the count is given', async () => {
+    // Read inside the fence: the instruction above it names both pairs
+    // whatever was placed, and what is asserted here is what was computed.
+    const fenced = (text: string) => text.slice(text.indexOf('```'), text.lastIndexOf('```'));
+    const without = await call(prompt, `${MOMENT}&lang=en&born=1990-06-01`);
+    const both = await call(prompt, `${MOMENT}&lang=en&born=1990-06-01&gender=male`);
 
-    expect(text.endsWith('The question asked is:\n')).toBe(false);
-    expect(text).toContain('let the person ask');
+    expect(fenced(without.text)).toContain('本命');
+    expect(fenced(without.text)).not.toContain('行年');
+    expect(fenced(both.text)).toContain('行年');
+  });
+
+  it('says nothing of a birth when none was given', async () => {
+    const { text } = await call(prompt, `${MOMENT}&lang=en&asked=true`);
+
+    expect(text).not.toContain('本命');
+    expect(text).not.toContain('niánmìng');
+  });
+
+  it('keeps the birth out of the address it cites', async () => {
+    // The link is there so the chart can be cast again and checked, and the
+    // chart is the chart of its moment. A date of birth in it would put
+    // somebody's birthday into whatever the reading is pasted into.
+    const { text } = await call(prompt, `${MOMENT}&lang=en&born=1990-06-01&gender=male`);
+
+    expect(text).toContain('http://localhost/en?date=2024-06-15');
+    expect(text).not.toContain('born=');
+    expect(text).not.toContain('gender=');
+  });
+
+  it('refuses a birth it cannot read rather than dropping it', async () => {
+    const { status, body } = await call(prompt, `${MOMENT}&born=01/06/1990`);
+
+    expect(status).toBe(400);
+    expect(body).toMatchObject({ code: 'INVALID_DATE' });
   });
 
   it('fails with a code and parameters, as every other endpoint does', async () => {

@@ -37,6 +37,12 @@ export interface CriteriaInput {
   minStrength: string;
   towards: string[];
   without: string[];
+  /**
+   * 本命 — a date of birth, admitting only the palaces its year pillar stands
+   * on. A criterion like the others and not a mode: it says which palaces are
+   * this person's, and the rest say what makes one worth standing in.
+   */
+  born: string;
 }
 
 export const EMPTY_CRITERIA: CriteriaInput = {
@@ -46,6 +52,7 @@ export const EMPTY_CRITERIA: CriteriaInput = {
   minStrength: '',
   towards: [],
   without: [],
+  born: '',
 };
 
 /**
@@ -155,6 +162,7 @@ export function readInterval(url: URL): {
       minStrength: params.get('minStrength') ?? '',
       towards: list('towards'),
       without: list('without'),
+      born: params.get('born') ?? '',
     },
     locationId: params.get('locationId'),
   };
@@ -169,6 +177,7 @@ function criteriaFields(criteria: CriteriaInput): Record<string, string | undefi
     minStrength: criteria.minStrength,
     towards: criteria.towards.join(','),
     without: criteria.without.join(','),
+    born: criteria.born,
   };
 }
 

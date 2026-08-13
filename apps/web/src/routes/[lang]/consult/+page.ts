@@ -11,8 +11,8 @@ import type { PageLoad } from './$types';
  * question, and it is not reproducible by reloading — which is what a
  * consultation is, rather than a shortcoming of this page.
  *
- * So what the address carries is the setup — the mode, the place, the options,
- * and under the natal mode the birth — and what it never carries is the
+ * So what the address carries is the setup — the place, the options, and the
+ * birth if one was given for a 年命 — and what it never carries is the
  * question or the chart. Reloading finds the fields as they were and the page
  * uncast, which is the honest state.
  */
@@ -21,11 +21,15 @@ export const load: PageLoad = async ({ url, fetch, parent }) => {
   const { input, locationId } = readMoment(url);
   const { place, failure } = await lookupPlace(fetch, locationId, locale);
 
+  const gender = url.searchParams.get('gender');
+
   return {
     moment: { ...input, place },
-    // The two frames do not overlap, so this is a choice of one and not a
-    // pair of switches. Anything but `natal` is the question.
-    natal: url.searchParams.get('mode') === 'natal',
+    // The birth, when one was given. It is setup and not the question: what
+    // it produces is a 年命 inside the chart of the moment, and the chart is
+    // still cast for the instant of the press.
+    born: url.searchParams.get('born') ?? '',
+    gender: gender === 'male' || gender === 'female' ? gender : '',
     failure: failure as Failure | undefined,
   };
 };

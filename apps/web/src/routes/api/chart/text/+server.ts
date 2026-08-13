@@ -1,6 +1,13 @@
-import { chartTranscript, computeQimenChart } from '@qimendunjia/core';
+import { chartTranscript, computeQimenChart, nianmingOf } from '@qimendunjia/core';
 import { createTranslator } from '@qimendunjia/i18n';
-import { momentIsFixed, pageAddress, readLocale, readMoment } from '$lib/server/params';
+import {
+  momentIsFixed,
+  pageAddress,
+  readLocale,
+  readMoment,
+  readNianming,
+  readNianmingOptions,
+} from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
@@ -17,12 +24,20 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
     const locale = readLocale(url.searchParams, request.headers.get('accept-language'));
     const { moment } = readMoment(url.searchParams);
     const chart = computeQimenChart(moment, moment.options);
+    const birth = readNianming(url.searchParams, chart);
 
     setHeaders({
       'cache-control': momentIsFixed(url.searchParams) ? 'private, max-age=86400' : 'no-store',
     });
     return new Response(
-      chartTranscript(moment, chart, createTranslator(locale), pageAddress(url, locale)),
+      chartTranscript(moment, chart, createTranslator(locale), {
+        source: pageAddress(url, locale),
+        // Inside the transcript, where it belongs: a 年命 is placed in this
+        // chart, and the two copied apart could be paired wrongly later.
+        ...(birth
+          ? { nianming: nianmingOf(chart, birth, readNianmingOptions(url.searchParams)) }
+          : {}),
+      }),
       { headers: { 'content-type': 'text/plain; charset=utf-8' } },
     );
   } catch (cause) {

@@ -1,6 +1,13 @@
-import { computeQimenChart, readingPrompt } from '@qimendunjia/core';
+import { computeQimenChart, nianmingOf, readingPrompt } from '@qimendunjia/core';
 import { createTranslator } from '@qimendunjia/i18n';
-import { momentIsFixed, pageAddress, readLocale, readMoment } from '$lib/server/params';
+import {
+  momentIsFixed,
+  pageAddress,
+  readLocale,
+  readMoment,
+  readNianming,
+  readNianmingOptions,
+} from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
@@ -19,15 +26,17 @@ import type { RequestHandler } from './$types';
  * leave it. Without `asked` the prompt says plainly that nothing was asked,
  * which is the honest answer and not the same as choosing a 用神 for somebody.
  *
- * `frame=natal` asks for the other reading: a chart cast for a birth and read
- * as a chart of a life. It takes no question — the two do not overlap — and
- * `asked` is not read under it.
+ * `born=1990-06-01` places a 年命 inside the prompt's fence, with the line
+ * that says what it is not: not a chart of a birth, and no palace standing
+ * for a part of a life. It sits beside a question rather than excluding one —
+ * the birth is who is asking, and the chart is still the chart of the moment.
  */
 export const GET: RequestHandler = ({ url, request, setHeaders }) => {
   try {
     const locale = readLocale(url.searchParams, request.headers.get('accept-language'));
     const { moment } = readMoment(url.searchParams);
     const chart = computeQimenChart(moment, moment.options);
+    const birth = readNianming(url.searchParams, chart);
 
     setHeaders({
       'cache-control': momentIsFixed(url.searchParams) ? 'private, max-age=86400' : 'no-store',
@@ -37,12 +46,13 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
         moment,
         chart,
         createTranslator(locale),
-        url.searchParams.get('frame') === 'natal'
-          ? { frame: 'destiny', source: pageAddress(url, locale) }
-          : {
-              source: pageAddress(url, locale),
-              ...(url.searchParams.get('asked') === 'true' ? { question: '' } : {}),
-            },
+        {
+          source: pageAddress(url, locale),
+          ...(url.searchParams.get('asked') === 'true' ? { question: '' } : {}),
+          ...(birth
+            ? { nianming: nianmingOf(chart, birth, readNianmingOptions(url.searchParams)) }
+            : {}),
+        },
       ),
       { headers: { 'content-type': 'text/plain; charset=utf-8' } },
     );

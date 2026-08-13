@@ -143,6 +143,44 @@ describe('compute_qimen_chart', () => {
     expect(text).toContain('The centre lodges in 2 southwest 坤');
   });
 
+  /**
+   * 年命 — the birth looked up inside the chart, which is the classical
+   * direction. The chart is not recast for it, and the 行年 is left out
+   * rather than guessed when the direction of its count is unknown.
+   */
+  it('places a birth in the chart when one is given', async () => {
+    const text = await call('compute_qimen_chart', { ...BEIJING, born: '1990-06-01' });
+
+    expect(text).toContain('本命');
+    expect(text).toContain('庚午');
+    expect(text).not.toContain('行年');
+    // The chart itself is the chart of the moment, unmoved.
+    expect(text).toContain('yang dun 9');
+  });
+
+  it('places the year being lived only with the direction its count runs in', async () => {
+    const text = await call('compute_qimen_chart', {
+      ...BEIJING,
+      born: '1990-06-01',
+      gender: 'male',
+    });
+
+    expect(text).toContain('行年');
+    expect(text).toContain('虛歲');
+  });
+
+  it('says nothing of a birth when none was given', async () => {
+    expect(await call('compute_qimen_chart', BEIJING)).not.toContain('本命');
+  });
+
+  it('tells an agent that this is not a chart of a birth', async () => {
+    const { tools } = await client.listTools();
+    const chart = tools.find((tool) => tool.name === 'compute_qimen_chart');
+
+    expect(chart?.description).toMatch(/It is not a chart of a birth/);
+    expect(chart?.description).toMatch(/no palace here stands for a part of one/);
+  });
+
   it('reads the yuan from the futou when asked, and says it did', async () => {
     // The two readings part company on this day; see the CLI test for why.
     const at = { ...BEIJING, date: '1999-01-06', time: '12:00' };

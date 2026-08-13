@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Snippet } from 'svelte';
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
   import type { Location } from '$lib/moment';
   import LocationSearch from './LocationSearch.svelte';
@@ -15,6 +16,7 @@
     method = $bindable<string | undefined>(undefined),
     yuan = $bindable<string | undefined>(undefined),
     instant = true,
+    extra,
   }: {
     t: Translator;
     date?: string;
@@ -35,6 +37,14 @@
      * comes from.
      */
     instant?: boolean;
+    /**
+     * Anything else a section wants under the same disclosure.
+     *
+     * Rendered last, inside the options: a field that changes what is asked
+     * rather than how the moment is read belongs beside the other things a
+     * reader opens on purpose, not above the button in the plain form.
+     */
+    extra?: Snippet;
   } = $props();
 </script>
 
@@ -102,6 +112,7 @@
         {/if}
       {/if}
     {/if}
+    {#if extra}{@render extra()}{/if}
   </details>
 
 <style>

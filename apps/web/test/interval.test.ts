@@ -40,6 +40,7 @@ const LOOKING: CriteriaInput = {
   minStrength: 'wang',
   towards: ['se', 'e'],
   without: ['fugan'],
+  born: '1990-06-01',
 };
 
 describe('the criteria as address fields', () => {
@@ -58,6 +59,9 @@ describe('the criteria as address fields', () => {
 
     expect(params.get('towards')).toBe('se,e');
     expect(params.get('without')).toBe('fugan');
+    // 本命 travels as the date it was given as: the year pillar is read off
+    // it on the server, where the solar terms are.
+    expect(params.get('born')).toBe('1990-06-01');
     expect(params.get('gate')).toBe('kaimen');
     expect(params.get('minStrength')).toBe('wang');
   });

@@ -345,6 +345,7 @@
     data.criteria.minStrength && gloss('strength', data.criteria.minStrength),
     ...data.criteria.towards.map((id: string) => gloss('palace', PALACE_OF[id] as string)),
     ...data.criteria.without.map((id: string) => `− ${gloss('pattern', id)}`),
+    data.criteria.born && `本命 ${data.criteria.born}`,
   ].filter(Boolean));
 </script>
 
@@ -460,6 +461,16 @@
           </label>
         {/each}
       </div>
+
+      <!-- 本命 as a criterion, under the ones about the board: it says which
+           palaces are this person's, and the ones above say what makes a
+           palace worth standing in. -->
+      <p class="group">{t('form.benming')}</p>
+      <label class="birth">
+        {t('consult.birthDate')}
+        <input type="date" bind:value={looking.born} />
+      </label>
+      <p class="note">{t('form.benmingNote')}</p>
 
       <p class="note">{t('form.criteriaNote')}</p>
     </fieldset>

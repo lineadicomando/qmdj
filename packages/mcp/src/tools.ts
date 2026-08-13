@@ -11,6 +11,7 @@ import {
   computeQimenChart,
   formatBazi,
   formatMoment,
+  formatNianming,
   formatQimenChart,
   formatScan,
   formatSolarTerms,
@@ -27,6 +28,7 @@ import { searchLocations } from '@qimendunjia/geo';
 import { renderChartSvg } from '@qimendunjia/plate';
 import { z } from 'zod';
 import {
+  birthSchema,
   dateSchema,
   describeError,
   ephemerisOf,
@@ -36,6 +38,7 @@ import {
   optionSchema,
   placeSchema,
   resolveInput,
+  resolveNianming,
   timeSchema,
   translatorFor,
   type ToolContext,
@@ -134,11 +137,18 @@ export function registerComputeQimenChart(server: McpServer, context: ToolContex
         'The chart is cast by the chaibu method unless method says otherwise; zhirun is the ' +
         'other one implemented, the two are different schools, and the answer says which one ' +
         'cast it. Inside chaibu, yuan says whether the third of the term is counted from the ' +
-        'term or from the day\'s futou — two schools again, and they disagree on most days.',
+        'term or from the day\'s futou — two schools again, and they disagree on most days. ' +
+        'Pass born, and gender for the 行年, to place a 年命 in the chart: a birth looked up ' +
+        'inside the chart of the moment, which is the classical direction and comes from ' +
+        '《遁甲演義》. It is not a chart of a birth. The answer says which palaces the two pairs ' +
+        'fell in and what stands there, and nothing about what that means for a life: ' +
+        'no palace here stands for a part of one, and that mapping is not the server\'s to ' +
+        'supply. If you use one, say whose it is.',
       inputSchema: {
         date: dateSchema,
         time: timeSchema,
         ...placeSchema,
+        ...birthSchema,
         ...optionSchema,
         lang: langSchema,
       },
@@ -148,6 +158,9 @@ export function registerComputeQimenChart(server: McpServer, context: ToolContex
       try {
         const { moment, label } = resolveInput(args, context);
         const chart = computeQimenChart(moment, moment.options);
+        // 年命, when a birth was given: two pairs looked up in the chart that
+        // was just laid. The chart is not recast for it.
+        const nianming = resolveNianming(args, chart, context);
 
         return ok(
           [
@@ -156,6 +169,7 @@ export function registerComputeQimenChart(server: McpServer, context: ToolContex
             formatMoment(moment, t),
             '',
             formatQimenChart(chart, t),
+            nianming ? `\n${formatNianming(nianming, t)}` : '',
             formatWarnings(moment, t),
           ]
             .filter((part) => part !== '')
@@ -437,6 +451,22 @@ export function registerScanMoments(server: McpServer, context: ToolContext): vo
           .describe(
             'Configurations that rule a palace out — or the whole hour, for fuyin and fanyin, which belong to the board.',
           ),
+        born: z
+          .string()
+          .regex(/^\d{4}-\d{2}-\d{2}$/)
+          .optional()
+          .describe(
+            'Date of birth. Admits only the palaces the 本命 stands on — the year pillar of that birth, on either plate — which is the criterion 《遁甲演義》 asks a scan for. The other criteria say what makes a palace worth standing in; this one says which palaces are that person\'s. It reports no verdict about them.',
+          ),
+        born_time: z
+          .string()
+          .regex(/^\d{2}:\d{2}(:\d{2})?$/)
+          .optional()
+          .describe('Clock time of the birth. Default noon; it decides the year pillar only for a birth within hours of 立春.'),
+        born_timezone: z
+          .string()
+          .optional()
+          .describe('IANA zone of the birth. Default the interval\'s own.'),
         ...placeSchema,
         ...optionSchema,
         lang: langSchema,
@@ -466,6 +496,17 @@ export function registerScanMoments(server: McpServer, context: ToolContext): vo
         if (args.towards?.length) criteria.directions = args.towards;
         if (args.min_strength) criteria.minStrength = args.min_strength;
         if (args.without?.length) criteria.excludes = args.without as ScanCriteria['excludes'];
+        if (args.born) {
+          criteria.benming = resolveInput(
+            {
+              ...args,
+              date: args.born,
+              time: args.born_time ?? '12:00',
+              ...(args.born_timezone ? { timezone: args.born_timezone } : {}),
+            },
+            context,
+          ).moment.pillars.year;
+        }
 
         const matches = matchRuns(runs, criteria);
 

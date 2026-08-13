@@ -2,14 +2,19 @@ import {
   ChartError,
   currentMoment,
   initEphemeris,
+  nianmingOf,
   resolveMoment,
   systemTimezone,
+  yearsLived,
   zoneMeridian,
   type ChartOptions,
   type EphemerisContext,
   type LocalMoment,
   type Moment,
+  type Nianming,
+  type NianmingOptions,
   type Place,
+  type QimenChart,
 } from '@qimendunjia/core';
 import { DEFAULT_OPTIONS } from '@qimendunjia/core';
 import { GeoError, getLocation } from '@qimendunjia/geo';
@@ -101,6 +106,46 @@ export const placeSchema = {
     .describe('IANA identifier, e.g. Asia/Shanghai. Required with raw coordinates.'),
 };
 
+/**
+ * 年命 — the birth to be looked up inside the chart, when one is wanted.
+ *
+ * The classical direction and the reverse of a natal chart: the chart stays
+ * the chart of its moment, and the birth is placed in it. Only the year
+ * pillar is read from the date given.
+ */
+export const birthSchema = {
+  born: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional()
+    .describe(
+      'Date of birth, YYYY-MM-DD, to place a 年命 inside the chart: 本命, the year pillar of the birth. The chart itself does not move — this is not a chart of a birth, and nothing in the answer says which palace stands for which part of a life.',
+    ),
+  born_time: z
+    .string()
+    .regex(/^\d{2}:\d{2}(:\d{2})?$/)
+    .optional()
+    .describe(
+      'Clock time of the birth. Default noon, and it decides nothing except for a birth within hours of 立春, where it decides which year pillar the birth belongs to.',
+    ),
+  born_timezone: z
+    .string()
+    .optional()
+    .describe('IANA zone of the birth. Default the chart\'s own, and it matters for the same reason born_time does.'),
+  gender: z
+    .enum(['male', 'female'])
+    .optional()
+    .describe(
+      'Read for the direction of the 行年 count and for nothing else: the traditional rule runs forward from 寅 for a man and back from 申 for a woman. Without it only the 本命 is placed, and the year being lived is left out rather than guessed.',
+    ),
+  years_count: z
+    .enum(['sui', 'turns'])
+    .optional()
+    .describe(
+      'How the years are counted for the 行年: sui is 虛歲, counting the year of the birth itself, and is the count the rule was written for; turns counts the turns of the year pillar and is one less. Default sui.',
+    ),
+};
+
 export const optionSchema = {
   true_solar_time: z
     .boolean()
@@ -150,6 +195,11 @@ interface RawInput {
   year_boundary?: 'lichun' | 'chunjie' | undefined;
   method?: 'chaibu' | 'zhirun' | undefined;
   yuan?: 'term' | 'futou' | undefined;
+  born?: string | undefined;
+  born_time?: string | undefined;
+  born_timezone?: string | undefined;
+  gender?: 'male' | 'female' | undefined;
+  years_count?: 'sui' | 'turns' | undefined;
 }
 
 /**
@@ -183,6 +233,46 @@ export function resolveInput(raw: RawInput, context: ToolContext): ResolvedInput
     place,
     label: labelFor(raw, place, context),
   };
+}
+
+/**
+ * The 年命 an agent asked for, placed on a chart already cast.
+ *
+ * Nothing is inferred: without `born` there is no 年命, and without `gender`
+ * there is no 行年 — the count runs one way from 寅 and the other from 申, and
+ * a direction guessed is a pair placed in the wrong palace.
+ */
+export function resolveNianming(
+  raw: RawInput,
+  chart: QimenChart,
+  context: ToolContext,
+): Nianming | undefined {
+  if (!raw.born) return undefined;
+
+  const options: NianmingOptions = { count: raw.years_count ?? 'sui' };
+  const input: LocalMoment = {
+    date: raw.born,
+    // Noon for a date given alone; it decides nothing but a birth within
+    // hours of 立春, and there the hour has to be given.
+    time: raw.born_time ?? '12:00',
+    timezone: raw.born_timezone ?? chart.moment.input.timezone,
+  };
+  const { place } = resolvePlace({ ...raw, timezone: input.timezone }, context);
+  const birth = resolveMoment(
+    input,
+    { ...place, timezone: input.timezone, longitude: zoneMeridian(input) },
+    chart.moment.options,
+    initEphemeris(context.ephemerisPath),
+  );
+
+  return nianmingOf(
+    chart,
+    {
+      birthYear: birth.pillars.year,
+      ...(raw.gender ? { years: yearsLived(birth, chart.moment, options), gender: raw.gender } : {}),
+    },
+    options,
+  );
 }
 
 function resolvePlace(

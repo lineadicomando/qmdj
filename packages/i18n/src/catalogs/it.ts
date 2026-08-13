@@ -332,7 +332,6 @@ export const it: Record<MessageKey, string> = {
   'form.working': 'Calcolo in corso…',
   'form.needed.date': 'Manca ancora una data.',
   'form.needed.interval': "Mancano ancora le due date dell'intervallo.",
-  'form.needed.birth': "Mancano ancora la data e l'ora di nascita: la carta dipende dal pilastro dell'ora.",
   'form.needed.question':
     'Manca ancora una domanda: il prompt è costruito perché la carta sia letta alla luce di una domanda.',
   'form.needed.gender':
@@ -355,11 +354,6 @@ export const it: Record<MessageKey, string> = {
   // produce è un 年命: la carta resta quella dell'istante e la nascita vi si
   // cerca dentro, che è ciò che prescrive il 《遁甲演義》 ed è il rovescio di
   // una carta natale.
-  'consult.mode': 'Che cosa si chiede',
-  'consult.mode.question': 'Una domanda, posta adesso',
-  'consult.mode.natal': 'La carta di una nascita',
-  'consult.natalNote':
-    'Leggere una carta di Qi Men come carta di una vita è un\'applicazione moderna e minoritaria — gli usi classici sono la divinazione e la scelta dei tempi.',
   'consult.birth': 'La tua nascita, se la vuoi nella carta',
   'consult.birthDate': 'Data di nascita',
   'consult.birthGender': 'Sesso — ne dipende solo il verso del conteggio dello 行年',
@@ -369,12 +363,12 @@ export const it: Record<MessageKey, string> = {
     'Poni una domanda e ottieni un prompt pronto — da incollare in ChatGPT, Claude o un altro assistente.',
   'consult.cast': 'Poni la carta',
 
-  'form.toConsult': 'Per far leggere una carta, con una domanda o come carta di una nascita:',
+  'form.toConsult': 'Per far leggere una carta, con una domanda:',
 
   'form.toPillars': 'Lo stesso istante nei quattro pilastri, con i gan che nascondono:',
 
   'form.promptPrivacy':
-    'Ciò che viene copiato contiene la data, l\'ora e il luogo della carta, e la domanda che hai scritto. Incollalo dove diresti quelle cose.',
+    'Ciò che viene copiato contiene la data, l\'ora e il luogo della carta, la domanda che hai scritto e, se l\'hai indicata, il pilastro dell\'anno della tua nascita. Incollalo dove diresti quelle cose.',
   'form.question': 'La tua domanda',
   'form.questionPlaceholder': 'Che cosa stai chiedendo a questa carta?',
 
@@ -413,7 +407,7 @@ export const it: Record<MessageKey, string> = {
 
   'privacy.title': 'Privacy',
   'privacy.nothing':
-    'Nulla di ciò che digiti viene conservato. Date, ore e luoghi viaggiano nell\'indirizzo della pagina, servono a calcolare una risposta, e non vengono scritti in alcuna base di dati né in alcun registro tenuto da questo sito.',
+    'Nulla di ciò che digiti viene conservato. Date, ore e luoghi — compresa una data di nascita, se ne indichi una perché una carta dica dove cade — viaggiano nell\'indirizzo della pagina, servono a calcolare una risposta, e non vengono scritti in alcuna base di dati né in alcun registro tenuto da questo sito.',
   'privacy.address':
     'Poiché i parametri stanno nell\'indirizzo, il collegamento a una carta si porta dietro una data, un\'ora e un luogo. Condividilo solo con qualcuno a cui diresti quelle cose.',
   'privacy.prompt':
@@ -449,13 +443,6 @@ export const it: Record<MessageKey, string> = {
   // può offrire dove sono cadute due coppie, e rifiutare ancora la mappatura.
   'prompt.nianming':
     'La trascrizione porta un 年命 niánmìng: il pilastro dell\'anno di chi sta chiedendo (本命 běnmìng) e, se è stato indicato, l\'anno che sta vivendo (行年 xíngnián), cercati dentro questa carta. **È chi sta chiedendo, non una seconda lettura.** Non dedicargli una sezione a parte e non rielencare il suo palazzo, la stella, la porta, lo spirito e l\'immagine — le tabelle qui sopra li dicono già tutti. Usalo dove tocca la domanda: come sta la persona rispetto al palazzo che hai scelto per la faccenda, se i due sono lo stesso palazzo, se l\'uno genera o domina l\'altro, se la persona sta nel palazzo per cui la faccenda deve passare. Quella relazione è ciò che la coppia aggiunge; tutto il resto è già sul quadro. Il 遁甲演義 dùnjiǎ yǎnyì, il trattato da cui questo viene, vuole che una lettura pesi 本命 e 行年 prima di ogni altra cosa e cerca che l\'anno della persona cavalchi un palazzo dove una stella buona e una porta buona stiano in forza — è il criterio della tradizione, detto come suo, ed è cosa da pesare e non un punteggio da calcolare. Non è la carta di una nascita e non se ne legge una vita: nulla qui dice quale palazzo stia per quale parte di una vita, e nulla lo lascia intendere — quella mappatura è dove le scuole divergono di più e dove quasi tutto ciò che circola è il materiale didattico di una singola linea. Se vai oltre, di\' chiaramente che il passo è tuo.',
-  'prompt.destiny.heading': 'Leggere una carta di Qi Men Dun Jia posta per una nascita',
-  'prompt.destiny.frame':
-    'La carta qui sotto è posta per un istante di nascita e va letta come carta di una vita. Di\' una volta, subito e apertamente, che questa è un\'applicazione moderna e minoritaria del Qi Men Dun Jia — gli usi classici sono la divinazione e la scelta dei tempi — e che le scuole che la insegnano non concordano fra loro.',
-  'prompt.destiny.noMapping':
-    'Nulla qui sotto dice quale palazzo corrisponda a quale parte di una vita, e l\'omissione è voluta: è lì che le scuole divergono di più, e molto di ciò che circola in Occidente è materiale didattico di lignaggi particolari. Se usi una corrispondenza del genere, di\' apertamente che è tua e non di questo programma, e di\' di chi è se lo sai.',
-  'prompt.destiny.task':
-    'Nessuna domanda è stata posta, e qui non ne serve una. Descrivi come si presenta questa carta — che cosa giace e che cosa sta in ciascun palazzo, e in quali configurazioni è caduta — nell\'ordine che la rende leggibile, non in quello che la rende suggestiva. Poi fermati, e lascia che la persona chieda. Questa è una conversazione e non un documento: qualunque cosa voglia sapere su una parte della sua vita è una domanda che può farti dopo, con la carta già davanti a entrambi.',
   'prompt.source': 'La carta è all\'indirizzo {url}',
   'prompt.chart': 'La carta',
   'prompt.asked': 'La domanda posta è:',

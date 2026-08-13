@@ -22,24 +22,27 @@ import {
   STARS,
   computeQimenChart,
   type Direction,
+  type QimenChart,
   type GateId,
   type PatternId,
   type SpiritId,
   type StarId,
   type StrengthId,
 } from './dunjia/index.js';
-import { initEphemeris } from './ephemeris.js';
+import { initEphemeris, type EphemerisContext } from './ephemeris.js';
 import { ChartError } from './errors.js';
 import { STEMS, type StemId } from './ganzhi.js';
 import {
   formatBazi,
   formatMoment,
+  formatNianming,
   formatScan,
   formatSolarTerms,
   formatWarnings,
 } from './format.js';
 import { lunarDate } from './lunar.js';
-import { resolveMoment } from './pillars.js';
+import { nianmingOf, yearsLived, type Nianming, type NianmingOptions } from './nianming.js';
+import { resolveMoment, type Moment } from './pillars.js';
 import { chartTranscript, readingPrompt } from './prompt.js';
 import { PURPOSES, purposeCriteria, type PurposeId } from './purposes.js';
 import { matchRuns, scanCharts, type ScanCriteria } from './scan.js';
@@ -72,7 +75,6 @@ interface Options {
   help: boolean;
   prompt: boolean;
   ask?: string;
-  natal: boolean;
   trueSolar?: boolean;
   dayBoundary?: string;
   method?: string;
@@ -86,6 +88,10 @@ interface Options {
   minStrength?: string;
   without?: string;
   for?: string;
+  born?: string;
+  bornTime?: string;
+  bornTz?: string;
+  years?: string;
 }
 
 const HELP = `qimen — Qi Men Dun Jia charts and Four Pillars
@@ -103,7 +109,9 @@ Options
   --tz  IANA-zone        default: the system zone
   --lat, --lon degrees   default: the meridian the zone is named for
   --year N               for \`terms\`; default: the year of --date
-  --gender male|female   for \`bazi\`; only the luck cycles need it
+  --gender male|female   for \`bazi\`, where the luck cycles need it, and for
+                         the 行年 of \`chart --born\`. In both it is read for
+                         the traditional rule and for nothing else
 
 Narrowing a scan
   --until YYYY-MM-DD     the end of the interval; --date opens it
@@ -113,6 +121,10 @@ Narrowing a scan
   --towards n,ne,e,se,s,sw,w,nw      one or more; the centre faces none
   --min-strength wang|xiang|xiu|qiu|si   the weakest state admitted
   --without id,id        configurations that rule a palace out, e.g. kongwang
+  --born YYYY-MM-DD      only the palaces the 本命 stands on — the year pillar
+                         of that birth, on either plate. The other criteria
+                         say what makes a palace worth standing in; this one
+                         says which palaces are the person's
   --true-solar, --no-true-solar   default: on
   --day-boundary zishi|midnight   default: zishi
   --method chaibu|zhirun          how the ju is determined; default: chaibu
@@ -129,11 +141,23 @@ Handing a chart to a model
   --ask "…"              the question it is to be read for; implies --prompt.
                          Without one the prompt says none was asked, which is
                          not the same as choosing a 用神 on nobody's behalf
-  --natal                frame the prompt as a chart of a life rather than of
-                         a question — a modern, minority and school-divergent
-                         application, which the prompt says. Refuses --ask:
-                         a chart of a birth carrying a question is a third
-                         thing, and not one this engine takes a position on
+  --born, with --prompt  the 年命 travels inside the prompt with the chart,
+                         and the prompt says what it is not: not a chart of a
+                         birth, and no palace standing for a part of a life
+
+Placing a birth in the chart (年命)
+  --born YYYY-MM-DD      for \`chart\`: look the birth up inside the chart —
+                         本命, the year pillar of the birth, and with --gender
+                         also 行年, the year being lived. The chart stays the
+                         chart of its own moment: this is the classical
+                         direction, and it is not a chart of a birth
+  --born-time HH:mm      default: 12:00. It bears on nothing but a birth
+                         within hours of 立春, where it decides the year
+  --born-tz IANA-zone    default: the chart's zone, for the same reason
+  --years sui|turns      how the years are counted for 行年: 虛歲, counting
+                         the year of the birth itself, or the turns of the
+                         year pillar. Default: sui, which is the count the
+                         rule was written for
 
 A note on what this prints
   The engine reports arrangements — which gate stands over which palace, how
@@ -211,6 +235,13 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
     const opens = { ...input, time: options.time ?? '00:00' };
     const runs = scanCharts(opens, { ...opens, date: options.until }, place, chartOptions, context);
     const criteria = resolveCriteria(options, t);
+    // 本命 as a criterion like the others, which is what 《遁甲演義》 asks a
+    // scan for: the hours in which the person's own year stands somewhere
+    // worth standing. It narrows the palaces; what makes one worth standing
+    // in is the rest of the criteria, set by whoever is asking.
+    if (options.born) {
+      criteria.benming = birthMoment(options, chartOptions, context).pillars.year;
+    }
     const matches = matchRuns(runs, criteria);
 
     if (options.json) return JSON.stringify({ criteria, matches }, null, 2);
@@ -256,27 +287,95 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
   }
 
   const chart = computeQimenChart(moment, chartOptions);
-  if (options.json) return JSON.stringify(chart, null, 2);
-
-  // The two frames do not overlap: a chart of a birth carrying a question is
-  // a natal chart compared against a chart of a moment, which is a third
-  // thing and a modern, minority one. Refused rather than resolved.
-  if (options.natal && options.ask !== undefined) {
-    throw new UsageError(t('cli.error.exclusive', { option: '--natal', other: '--ask' }));
+  // The birth is looked up inside the chart, which does not move: 年命 is the
+  // classical direction, and the chart stays the chart of its own moment.
+  const nianming = options.born
+    ? placeBirth(options, chart, chartOptions, context, t)
+    : undefined;
+  if (options.json) {
+    return JSON.stringify(nianming ? { ...chart, nianming } : chart, null, 2);
   }
 
   // A question asked is a question meant to be carried, so it turns the plain
   // printing into the prompt by itself: `--ask` without `--prompt` that
   // printed a chart and dropped the question would be a flag that did nothing.
-  if (options.prompt || options.natal || options.ask !== undefined) {
-    return readingPrompt(
-      moment,
-      chart,
-      t,
-      options.natal ? { frame: 'destiny' } : options.ask ? { question: options.ask } : {},
-    );
+  if (options.prompt || options.ask !== undefined) {
+    return readingPrompt(moment, chart, t, {
+      ...(options.ask !== undefined ? { question: options.ask } : {}),
+      // A 年命 travels inside the prompt's fence when one was asked for: it
+      // is part of the chart that was laid, not a remark about it.
+      ...(nianming ? { nianming } : {}),
+    });
   }
-  return chartTranscript(moment, chart, t);
+  return [chartTranscript(moment, chart, t), ...(nianming ? ['', formatNianming(nianming, t)] : [])]
+    .join('\n');
+}
+
+/**
+ * The moment a birth was, resolved with the chart's own options.
+ *
+ * The pillars a birth is read for are the same pillars: a year that turned at
+ * 立春 for the chart turned at 立春 for the birth. What is not shared is the
+ * instant — the hour of the birth is nobody's business here, only its year.
+ */
+function birthMoment(
+  options: Options,
+  chartOptions: ChartOptions,
+  context: EphemerisContext,
+): Moment {
+  const born = {
+    date: options.born as string,
+    // Noon, so that a date given alone lands in the middle of its day. It
+    // decides nothing but a birth within hours of 立春, and there the hour
+    // has to be given.
+    time: options.bornTime ?? '12:00',
+    timezone: options.bornTz ?? options.timezone ?? systemTimezone(),
+  };
+  return resolveMoment(born, resolvePlace(options, born), chartOptions, context);
+}
+
+/**
+ * Resolves the birth and places it on the chart.
+ *
+ * The birth is resolved with the chart's own options, because the pillars it
+ * is read for are the same pillars — a year that turned at 立春 for the chart
+ * turned at 立春 for the birth. What it does not share is the moment: the
+ * hour of the birth is nobody's here, only its year.
+ */
+function placeBirth(
+  options: Options,
+  chart: QimenChart,
+  chartOptions: ChartOptions,
+  context: EphemerisContext,
+  t: ReturnType<typeof createTranslator>,
+): Nianming {
+  if (options.years !== undefined && options.years !== 'sui' && options.years !== 'turns') {
+    throw new UsageError(t('cli.error.unknownValue', { option: '--years', value: options.years }));
+  }
+  const nianmingOptions: NianmingOptions = { count: (options.years as 'sui' | 'turns') ?? 'sui' };
+
+  const gender = options.gender as Gender | undefined;
+  if (gender && gender !== 'male' && gender !== 'female') {
+    throw new UsageError(t('cli.error.unknownValue', { option: '--gender', value: gender }));
+  }
+
+  const birth = birthMoment(
+    { ...options, bornTz: options.bornTz ?? chart.moment.input.timezone },
+    chartOptions,
+    context,
+  );
+  return nianmingOf(
+    chart,
+    {
+      birthYear: birth.pillars.year,
+      // 行年 needs the direction of the count as much as the count itself,
+      // and there is no reading of the rule that does without it.
+      ...(gender
+        ? { years: yearsLived(birth, chart.moment, nianmingOptions), gender }
+        : {}),
+    },
+    nianmingOptions,
+  );
 }
 
 function warningsOf(moment: Parameters<typeof formatWarnings>[0], t: Parameters<typeof formatWarnings>[1]): string {
@@ -433,10 +532,14 @@ const FLAGS: Record<string, keyof Options> = {
   '--without': 'without',
   '--for': 'for',
   '--ask': 'ask',
+  '--born': 'born',
+  '--born-time': 'bornTime',
+  '--born-tz': 'bornTz',
+  '--years': 'years',
 };
 
 function parse(argv: string[]): { command?: Command; options: Options } {
-  const options: Options = { json: false, help: false, prompt: false, natal: false };
+  const options: Options = { json: false, help: false, prompt: false };
   let command: Command | undefined;
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -452,10 +555,6 @@ function parse(argv: string[]): { command?: Command; options: Options } {
     }
     if (argument === '--prompt') {
       options.prompt = true;
-      continue;
-    }
-    if (argument === '--natal') {
-      options.natal = true;
       continue;
     }
     if (argument === '--true-solar') {

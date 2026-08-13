@@ -9,14 +9,18 @@ import {
   initEphemeris,
   resolveMoment,
   systemTimezone,
+  yearsLived,
   zoneMeridian,
   DEFAULT_OPTIONS,
   type ChartOptions,
   type Direction,
   type EphemerisContext,
+  type Ganzhi,
   type GateId,
+  type Gender,
   type LocalMoment,
   type Moment,
+  type NianmingOptions,
   type PatternId,
   type Place,
   type ScanCriteria,
@@ -63,7 +67,14 @@ export function readLocale(params: URLSearchParams, header?: string | null): Loc
 export function pageAddress(url: URL, locale: Locale): string {
   const page = new URL(url);
   page.pathname = `/${locale}`;
-  for (const only of ['lang', 'asked', 'frame']) page.searchParams.delete(only);
+  // The parameters only the API answers to — and the birth, which the chart
+  // section does not take and which nobody's address should carry: the link
+  // is there so the chart can be cast again and checked, and the chart is the
+  // chart of its moment. The 年命 is already written out in the transcript
+  // this address travels inside.
+  for (const only of ['lang', 'asked', 'born', 'bornTime', 'bornTz', 'gender', 'years']) {
+    page.searchParams.delete(only);
+  }
   return page.toString();
 }
 
@@ -180,6 +191,67 @@ export function readMoment(params: URLSearchParams): ReadMoment {
 }
 
 /**
+ * 年命 — the birth to be looked up inside a chart, when one is asked for.
+ *
+ * `born=1990-06-01` is the whole of what is required; `bornTime` and `bornTz`
+ * exist because a birth within hours of 立春 belongs to the year before, and
+ * there the hour and the zone decide it. Everything else about the birth is
+ * never asked for and never sent: only the year pillar is read from it.
+ *
+ * `gender` is read for the direction of the 行年 count and for nothing else —
+ * the rule runs forward from 寅 or back from 申 — and without it only the
+ * 本命 is placed.
+ *
+ * Nothing here is inferred. No birth, no 年命, and an unreadable one is an
+ * error rather than a silently dropped parameter: a chart that quietly lost
+ * the birth it was asked to place looks exactly like one that never had it.
+ */
+export function readNianming(
+  params: URLSearchParams,
+  chart: { moment: Moment },
+): { birthYear: Ganzhi; years?: number; gender?: Gender } | undefined {
+  const born = params.get('born');
+  if (!born) return undefined;
+
+  const place = readPlace(params).place;
+  const input: LocalMoment = {
+    date: born,
+    // Noon for a date given alone: it decides nothing but a birth within
+    // hours of 立春, and there the hour has to be given.
+    time: params.get('bornTime') ?? '12:00',
+    timezone: params.get('bornTz') ?? place.timezone,
+  };
+  const birth = resolveMoment(
+    { ...input },
+    { ...place, timezone: input.timezone, longitude: zoneMeridian(input) },
+    chart.moment.options,
+    ephemerisContext(),
+  );
+
+  const gender = params.get('gender');
+  if (gender !== null && gender !== 'male' && gender !== 'female') {
+    throw new ChartError('UNKNOWN_IDENTIFIER', { parameter: 'gender', value: gender });
+  }
+
+  const count = params.get('years');
+  if (count !== null && count !== 'sui' && count !== 'turns') {
+    throw new ChartError('UNKNOWN_IDENTIFIER', { parameter: 'years', value: count });
+  }
+  const options: NianmingOptions = { count: count ?? 'sui' };
+
+  return {
+    birthYear: birth.pillars.year,
+    ...(gender ? { years: yearsLived(birth, chart.moment, options), gender } : {}),
+  };
+}
+
+/** The count of years the 行年 steps by, read the same way everywhere. */
+export function readNianmingOptions(params: URLSearchParams): NianmingOptions {
+  const count = params.get('years');
+  return { count: count === 'turns' ? 'turns' : 'sui' };
+}
+
+/**
  * The longest interval this surface will scan.
  *
  * The engine allows a year; a request is not the place to spend the seconds
@@ -267,6 +339,25 @@ export function readCriteria(params: URLSearchParams): ScanCriteria {
   };
 
   const ids = (entries: readonly { id: string }[]): string[] => entries.map((entry) => entry.id);
+
+  // 本命 as a criterion: the palaces the person's own year stands on, which
+  // is the half of 「年命乘本局吉星奇門生旺之方」 that can be computed. What
+  // makes a palace worth standing on is the other criteria.
+  const born = params.get('born');
+  if (born) {
+    const place = readPlace(params).place;
+    const input: LocalMoment = {
+      date: born,
+      time: params.get('bornTime') ?? '12:00',
+      timezone: params.get('bornTz') ?? place.timezone,
+    };
+    criteria.benming = resolveMoment(
+      input,
+      { ...place, timezone: input.timezone, longitude: zoneMeridian(input) },
+      readOptions(params),
+      ephemerisContext(),
+    ).pillars.year;
+  }
 
   const gate = one<GateId>('gate', ids(GATES));
   const star = one<StarId>('star', ids(STARS));

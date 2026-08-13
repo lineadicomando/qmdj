@@ -14,16 +14,13 @@
   and whose empty address means now, there is nowhere to put a question that
   is not after the fact. Here there is nothing else on the page.
 
-  Two errands, and they do not overlap:
-
-  - **a question, asked now** — the classical use. Cast at the instant of
-    pressing;
-  - **a chart of a birth** — read as a chart of a life. A modern, minority and
-    school-divergent application, widespread enough to be worth framing
-    honestly and disputed enough that a frame is all that can be offered. It
-    takes no question, because a natal chart carrying a question is a third
-    thing — comparing a chart of a life against the chart of a moment — that
-    this project has declined.
+  One errand: a question, asked now, which is the classical use. A birth may
+  be given with it, and then the chart carries a 年命 — 本命, the year pillar
+  of that birth, and 行年, the year being lived, both looked up *inside* the
+  chart of the moment. That is the classical direction and the reverse of a
+  natal chart, which this section offered once and no longer does: what a
+  natal frame could honestly give a model was a warning, and 《遁甲演義》 gives
+  two pairs and the palaces they fall in. See `docs/sources.md`.
 
   Nothing here is in the address but the setup. The chart is fetched on a
   press and held in this component, and the question never leaves the browser
@@ -45,30 +42,21 @@
   let { data } = $props();
   const t = $derived(data.t);
 
-  /**
-   * Whether the chart of a birth is offered here yet.
-   *
-   * It is not, for now. The frame is built and the prompt it produces is
-   * honest about what it will not say — but what came back from it read
-   * thinly, and a mode that yields a poor reading is worse than one that is
-   * absent: it teaches that this is what the method gives. It comes back when
-   * there is something better to hand the model than a frame and a warning.
-   *
-   * Withheld here and nowhere else. `readingPrompt` still takes the destiny
-   * frame, `/api/chart/prompt?frame=natal` still answers with it, and
-   * `qimen chart --natal` still prints it, with their tests. What is switched
-   * off is the offer in the interface, not the capability — so nothing has to
-   * be rebuilt when it returns, and nothing rots in the meantime.
-   */
-  const NATAL_OFFERED = false;
-
-  // Forced off rather than merely unshown: an address is a way in, and a mode
-  // that cannot be chosen should not be reachable by typing `?mode=natal`.
-  // svelte-ignore state_referenced_locally
-  let natal = $state(NATAL_OFFERED && data.natal);
   // svelte-ignore state_referenced_locally
   let asked = $state<MomentInput>({ ...data.moment });
   let question = $state('');
+  /**
+   * The birth, which is optional and stays optional.
+   *
+   * A date alone places the 本命. The 行年 needs the direction its count runs
+   * in as well, which the tradition sets by sex — forward from 寅, back from
+   * 申 — so without that field the year being lived is simply not placed,
+   * rather than guessed at.
+   */
+  // svelte-ignore state_referenced_locally
+  let born = $state(data.born);
+  // svelte-ignore state_referenced_locally
+  let gender = $state<string>(data.gender);
 
   let busy = $state(false);
   let needed = $state<MessageKey | undefined>();
@@ -82,23 +70,21 @@
   /**
    * What is still missing, checked before anything is asked of the server.
    *
-   * The two modes want different things and neither wants the other's: a
-   * consultation has a question and no moment, a chart of a birth has a
-   * moment and no question.
+   * Only the question. The birth is an addition and never a requirement:
+   * a consultation without one is the whole of the classical use.
    */
   const missing = $derived<MessageKey | undefined>(
-    natal
-      ? !asked.date || !asked.time
-        ? 'form.needed.birth'
-        : undefined
-      : question.trim() === ''
-        ? 'form.needed.question'
-        : undefined,
+    question.trim() === '' ? 'form.needed.question' : undefined,
   );
 
   /** The address of the chart that was cast, for the drawing and the prompt. */
   const address = $derived(
-    cast ? momentQuery({ ...asked, ...cast }, { lang: t.locale }) : '',
+    cast
+      ? momentQuery(
+          { ...asked, ...cast },
+          { lang: t.locale, born: born || undefined, gender: (born && gender) || undefined },
+        )
+      : '',
   );
 
   /**
@@ -114,7 +100,7 @@
    * So a moved field puts the answer away rather than warning about it. The
    * button to copy is simply not there, and the button to cast is.
    */
-  const fields = $derived(`${momentQuery(asked)}|${natal ? '' : question.trim()}`);
+  const fields = $derived(`${momentQuery(asked)}|${born}|${gender}|${question.trim()}`);
   let castFrom = $state('');
   const spent = $derived(chart !== undefined && castFrom !== fields);
 
@@ -127,9 +113,13 @@
    */
   function mark(): void {
     const next = new URL(page.url);
-    const query = momentQuery(natal ? asked : { ...asked, date: '', time: '' });
-    next.search = query;
-    if (natal) next.searchParams.set('mode', 'natal');
+    next.search = momentQuery(
+      { ...asked, date: '', time: '' },
+      // The birth is setup and survives a reload with the rest of it. The
+      // question never does, and that is the line: what was typed to get
+      // here comes back, what was asked does not.
+      { born: born || undefined, gender: (born && gender) || undefined },
+    );
     replaceState(next, page.state);
   }
 
@@ -138,8 +128,7 @@
    *
    * Everywhere else in this interface asking is navigating, because there the
    * address is the answer. Here it cannot be: the answer is cast for the
-   * instant of the press under one mode, and holds a question that must not
-   * travel under the other.
+   * instant of the press, and it holds a question that must not travel.
    */
   async function consult(event: SubmitEvent): Promise<void> {
     event.preventDefault();
@@ -152,9 +141,14 @@
       // A consultation says no date, which the engine reads as the present in
       // the place's own zone — never the browser's clock, which would be an
       // hour out for a chart cast in Beijing and asked for in Rome.
-      const query = momentQuery(natal ? asked : { ...asked, date: '', time: '' }, {
-        lang: t.locale,
-      });
+      const query = momentQuery(
+        { ...asked, date: '', time: '' },
+        {
+          lang: t.locale,
+          born: born || undefined,
+          gender: (born && gender) || undefined,
+        },
+      );
       const response = await fetch(`/api/chart?${query}`);
       const body = await response.json();
 
@@ -181,25 +175,19 @@
     }
   }
 
-  /** Changing the errand puts the other one's answer away with it. */
-  function choose(to: boolean): void {
-    if (to === natal) return;
-    natal = to;
-    chart = undefined;
-    cast = undefined;
-    needed = undefined;
-    failure = undefined;
-    mark();
-  }
-
   const plate = $derived(
     `/api/chart/plate?${address}&scheme=${appearance.current}`,
   );
 
-  /** Where the prompt comes from, which is the only thing the two modes differ in. */
-  const promptUrl = $derived(
-    natal ? `/api/chart/prompt?${address}&frame=natal` : `/api/chart/prompt?${address}&asked=true`,
-  );
+  /**
+   * Where the prompt comes from.
+   *
+   * `asked=true` and never the question: the server is told one exists, so
+   * that the prompt can end on the line introducing it, and the browser adds
+   * the line itself. The birth travels — it is what the 年命 is computed
+   * from — and the question does not.
+   */
+  const promptUrl = $derived(`/api/chart/prompt?${address}&asked=true`);
 </script>
 
 <svelte:head><title>{t('consult.title')}</title></svelte:head>
@@ -214,39 +202,16 @@
   <p class="lead">{t('consult.lead')}</p>
 
   <form onsubmit={consult}>
-    <!-- The two errands, named in words. They are exclusive, so they are
-         radios and not switches: choosing one is unchoosing the other.
-         With one of the two withheld there is nothing to choose between, and
-         a group of one radio is a control that cannot be operated. -->
-    {#if NATAL_OFFERED}
-      <fieldset>
-        <legend>{t('consult.mode')}</legend>
-        <label class="check">
-          <input type="radio" checked={!natal} onchange={() => choose(false)} />
-          {t('consult.mode.question')}
-        </label>
-        <label class="check">
-          <input type="radio" checked={natal} onchange={() => choose(true)} />
-          {t('consult.mode.natal')}
-        </label>
-      </fieldset>
-    {/if}
-
-    {#if natal}
-      <p class="note">{t('consult.natalNote')}</p>
-    {:else}
-      <!-- Above the moment and above the button, because that is the order:
-           the chart is cast for the instant the question is put. -->
-      <label class="question">
-        {t('form.question')}
-        <textarea bind:value={question} rows="2" placeholder={t('form.questionPlaceholder')}
-        ></textarea>
-      </label>
-    {/if}
+    <!-- Above the moment and above the button, because that is the order:
+         the chart is cast for the instant the question is put. -->
+    <label class="question">
+      {t('form.question')}
+      <textarea bind:value={question} rows="2" placeholder={t('form.questionPlaceholder')}
+      ></textarea>
+    </label>
 
     <MomentForm
       {t}
-      instant={natal}
       bind:date={asked.date}
       bind:time={asked.time}
       bind:place={asked.place}
@@ -254,7 +219,27 @@
       bind:dayBoundary={asked.dayBoundary}
       bind:method={asked.method}
       bind:yuan={asked.yuan}
-    />
+    >
+      <!-- The birth, under the same disclosure as the options: it is an
+           addition to a consultation and never a requirement, and the form
+           read to the button has one thing in it, which is the question. -->
+      {#snippet extra()}
+        <p class="group">{t('consult.birth')}</p>
+        <label class="birthField">
+          {t('consult.birthDate')}
+          <input type="date" bind:value={born} />
+        </label>
+        <label class="birthField">
+          {t('consult.birthGender')}
+          <select bind:value={gender} disabled={!born}>
+            <option value="">{t('form.gender.unset')}</option>
+            <option value="male">{t('form.gender.male')}</option>
+            <option value="female">{t('form.gender.female')}</option>
+          </select>
+        </label>
+        <p class="note">{t('consult.birthNote')}</p>
+      {/snippet}
+    </MomentForm>
 
     <!--
       One thing to do at a time, and the box says which.
@@ -267,13 +252,7 @@
     -->
     <div class="actions">
       {#if chart && !spent}
-        <CopyText
-          {t}
-          lead
-          label="form.copyPrompt"
-          url={promptUrl}
-          suffix={natal ? undefined : question.trim()}
-        />
+        <CopyText {t} lead label="form.copyPrompt" url={promptUrl} suffix={question.trim()} />
       {/if}
       <SubmitButton
         {t}
@@ -336,10 +315,12 @@
     padding: 1rem 1.1rem 1.2rem;
     margin: 0 0 2rem;
   }
-  fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 0.3rem; }
-  legend { padding: 0; font-size: 0.9em; color: var(--faint); }
-  .check { display: flex; gap: 0.45rem; align-items: center; font-size: 0.9em; }
   .question { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 46rem; }
+  /* The birth, rendered inside the options of `MomentForm`. A snippet is
+     styled where it is written, so its two fields are dressed here to match
+     the ones it stands among. */
+  .group { margin: 0.4rem 0 0; font-size: 0.9em; color: var(--faint); }
+  .birthField { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 26rem; }
   textarea {
     font: inherit;
     font-size: 0.95rem;
