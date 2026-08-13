@@ -1,5 +1,5 @@
 import { ChartError } from '../errors.js';
-import { STEMS, type Stem } from '../ganzhi.js';
+import type { Stem } from '../ganzhi.js';
 import type { Moment } from '../pillars.js';
 import type { ChartOptions, Element } from '../types.js';
 import { horseOf, type Horse } from './horse.js';
@@ -12,6 +12,7 @@ import {
   chiefGate,
   chiefGatePalace,
   chiefStar,
+  decadeInstrument,
   earthPlate,
   gatePlate,
   heavenPlate,
@@ -142,7 +143,7 @@ export function computeQimenChart(moment: Moment, options: ChartOptions): QimenC
   const earth = earthPlate(ju.yang, ju.number);
 
   const hourGanzhi = moment.pillars.hour;
-  const instrument = decadeInstrumentOf(hourGanzhi.index);
+  const instrument = decadeInstrument(hourGanzhi);
   // 甲 never appears on a plate: where the hour's stem is 甲, the instrument
   // concealing it stands in. That is what 遁甲 names.
   const hourStem = hourGanzhi.stem.id === 'jia' ? instrument : hourGanzhi.stem;
@@ -219,12 +220,6 @@ export function computeQimenChart(moment: Moment, options: ChartOptions): QimenC
     patterns,
     options,
   };
-}
-
-/** 甲子戊, 甲戌己, 甲申庚, 甲午辛, 甲辰壬, 甲寅癸. */
-function decadeInstrumentOf(ganzhiIndex: number): Stem {
-  const order = ['wu', 'ji', 'geng', 'xin', 'ren', 'gui'];
-  return STEMS.find((stem) => stem.id === order[Math.floor(ganzhiIndex / 10)]) as Stem;
 }
 
 export { determineJu, YUAN_HANZI, YUAN_PINYIN, type Ju, type Yuan } from './ju.js';
