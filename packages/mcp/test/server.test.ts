@@ -221,10 +221,23 @@ describe('compute_qimen_chart', () => {
 
     expect(text).toMatch(/incomplete/i);
     expect(text).toMatch(/search_location/);
+
+    // The refusal is a coded error like any other, so it arrives in the
+    // language the agent asked for.
+    const italian = await failing('compute_qimen_chart', {
+      latitude: 39.9,
+      date: '2024-06-15',
+      lang: 'it',
+    });
+    expect(italian).toMatch(/Le coordinate sono incomplete/);
   });
 
   it('refuses an invented location id', async () => {
     expect(await failing('compute_qimen_chart', { location_id: 1 })).toMatch(/do not invent/i);
+
+    expect(await failing('compute_qimen_chart', { location_id: 1, lang: 'it' })).toMatch(
+      /non inventarlo/,
+    );
   });
 
   it('rejects a malformed date at the schema, before any calculation', async () => {

@@ -61,6 +61,13 @@ export const en = {
   // through a min/max clamp to be served as garbage that looks like an answer.
   'web.error.INVALID_NUMBER': '"{value}" is not a valid number for {parameter}.',
 
+  // The reader here is a model, and each message says what to do instead:
+  // an agent told only that its input was refused invents the correction.
+  'mcp.error.UNKNOWN_LOCATION':
+    'No place has the GeoNames identifier {id}. Use search_location to get one; do not invent it.',
+  'mcp.error.INCOMPLETE_COORDINATES':
+    'Coordinates are incomplete. Pass latitude, longitude and timezone together, or pass location_id from search_location instead.',
+
   'label.stem.jia': 'Yang Wood',
   'label.stem.yi': 'Yin Wood',
   'label.stem.bing': 'Yang Fire',

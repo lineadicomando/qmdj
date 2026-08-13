@@ -49,6 +49,11 @@ export const it: Record<MessageKey, string> = {
   'web.error.UNKNOWN_LOCATION': 'Nessun luogo ha l\'identificatore {id}.',
   'web.error.INVALID_NUMBER': '"{value}" non è un numero valido per {parameter}.',
 
+  'mcp.error.UNKNOWN_LOCATION':
+    'Nessun luogo ha l\'identificatore GeoNames {id}. Usa search_location per ottenerne uno; non inventarlo.',
+  'mcp.error.INCOMPLETE_COORDINATES':
+    'Le coordinate sono incomplete. Passa latitude, longitude e timezone insieme, oppure passa il location_id ottenuto da search_location.',
+
   'label.stem.jia': 'Legno yang',
   'label.stem.yi': 'Legno yin',
   'label.stem.bing': 'Fuoco yang',

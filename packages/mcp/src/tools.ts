@@ -2,7 +2,6 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import {
   GATES,
   PATTERN_IDS,
-  SPIRITS_YANG,
   SPIRIT_IDS,
   STARS,
   STEMS,

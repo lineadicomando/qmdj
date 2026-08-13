@@ -18,7 +18,15 @@ import {
 } from '@qimendunjia/core';
 import { DEFAULT_OPTIONS } from '@qimendunjia/core';
 import { GeoError, getLocation } from '@qimendunjia/geo';
-import { createTranslator, resolveLocale, type Translator } from '@qimendunjia/i18n';
+import {
+  DEFAULT_LOCALE,
+  createTranslator,
+  resolveLocale,
+  translate,
+  type MessageKey,
+  type MessageParams,
+  type Translator,
+} from '@qimendunjia/i18n';
 import { z } from 'zod';
 
 export interface ToolContext {
@@ -49,6 +57,32 @@ export function fail(text: string): ToolResult {
   return { content: [{ type: 'text', text }], isError: true };
 }
 
+export type McpErrorCode = 'UNKNOWN_LOCATION' | 'INCOMPLETE_COORDINATES';
+
+/**
+ * A usage error of this server's own: input that never reaches an engine, so
+ * no engine can name what is wrong with it.
+ *
+ * It carries a `code` and the `params` that describe the failure, never a
+ * sentence chosen for one language. `message` is an English rendering meant
+ * for logs and stack traces; `describeError` translates `messageKey` with
+ * `params` in the locale the agent asked for.
+ */
+export class McpError extends Error {
+  readonly code: McpErrorCode;
+  readonly params: MessageParams;
+  readonly messageKey: MessageKey;
+
+  constructor(code: McpErrorCode, params: MessageParams = {}) {
+    const messageKey = `mcp.error.${code}` as MessageKey;
+    super(translate(DEFAULT_LOCALE, messageKey, params));
+    this.name = 'McpError';
+    this.code = code;
+    this.params = params;
+    this.messageKey = messageKey;
+  }
+}
+
 /**
  * Turns whatever went wrong into something an agent can act on.
  *
@@ -58,7 +92,7 @@ export function fail(text: string): ToolResult {
  * unexpected failure will retry forever.
  */
 export function describeError(error: unknown, t: Translator): string {
-  if (error instanceof ChartError || error instanceof GeoError) {
+  if (error instanceof ChartError || error instanceof GeoError || error instanceof McpError) {
     return t(error.messageKey, error.params);
   }
   return error instanceof Error ? error.message : String(error);
@@ -310,9 +344,7 @@ function resolvePlace(
       context.databasePath ? { databasePath: context.databasePath } : {},
     );
     if (!found) {
-      throw new Error(
-        `No place has the GeoNames identifier ${raw.location_id}. Use search_location to get one; do not invent it.`,
-      );
+      throw new McpError('UNKNOWN_LOCATION', { id: raw.location_id });
     }
     return {
       place: { latitude: found.latitude, longitude: found.longitude, timezone: found.timezone },
@@ -324,9 +356,7 @@ function resolvePlace(
   }
 
   if (raw.latitude !== undefined || raw.longitude !== undefined) {
-    throw new Error(
-      'Coordinates are incomplete. Pass latitude, longitude and timezone together, or pass location_id from search_location instead.',
-    );
+    throw new McpError('INCOMPLETE_COORDINATES');
   }
 
   // A timezone on its own is a complete answer for the calendar and the
