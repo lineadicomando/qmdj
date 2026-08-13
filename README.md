@@ -138,10 +138,11 @@ This project talks to no model, holds no key and sends nothing anywhere. The
 prompt goes to a clipboard.
 
 The prompt also carries the disclaimer the site's footer carries, as an
-instruction to say it: this is for entertainment, and whatever anybody does on
-the strength of a reading is entirely their own decision and their own
-responsibility. A prompt travels, and a disclaimer left behind on the page it
-was copied from was written for somebody who is no longer there.
+instruction to say it: this is food for thought and entertainment, it is no
+substitute for professional advice on anything, and the power over a person's
+choices and their path stays theirs. A prompt travels, and a disclaimer left
+behind on the page it was copied from was written for somebody who is no
+longer there.
 
 ## Layout
 

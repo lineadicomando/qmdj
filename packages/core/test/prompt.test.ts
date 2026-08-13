@@ -119,13 +119,13 @@ describe('the prompt', () => {
     const at = moment();
     const text = readingPrompt(at, computeQimenChart(at, DEFAULT_OPTIONS), en);
 
-    expect(text).toContain('food for thought and as entertainment');
+    expect(text).toContain('food for thought and entertainment');
     // Not a softer way of saying nothing: the line has to deny that a reading
     // settles what is the case, which is what somebody asking about another
     // person's feelings will otherwise take from it.
-    expect(text).toContain('establishes no facts');
-    expect(text).toContain('in no way a substitute for medical, legal or financial advice');
-    expect(text).toContain('remains yours alone, and your responsibility');
+    expect(text).toContain('not as a source of absolute truths');
+    expect(text).toContain('a substitute for professional advice');
+    expect(text).toContain('the power over your choices and your path is always yours');
     expect(text).toContain('Those words and no others');
     expect(text).toContain('do not name the person or the matter inside it');
     expect(text).toContain('Open your first reply');
@@ -247,7 +247,7 @@ describe('the prompt with a 年命 in it', () => {
     expect(text).toContain('用神');
     expect(text).toContain('The question asked is');
     expect(text).toContain('Do not rank the palaces');
-    expect(text).toContain('food for thought and as entertainment');
+    expect(text).toContain('food for thought and entertainment');
   });
 
   it('says nothing about a 年命 when none was placed', () => {

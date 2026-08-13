@@ -367,8 +367,7 @@ export const it: Record<MessageKey, string> = {
 
   'form.toPillars': 'Lo stesso istante nei quattro pilastri, con i gan che nascondono:',
 
-  'form.promptPrivacy':
-    'Ciò che viene copiato contiene la data, l\'ora e il luogo della carta, la domanda che hai scritto e, se l\'hai indicata, il pilastro dell\'anno della tua nascita. Incollalo dove diresti quelle cose.',
+  'form.promptPrivacy': 'I dati inseriti verranno inclusi nel prompt.',
   'form.question': 'La tua domanda',
   'form.questionPlaceholder': 'Che cosa stai chiedendo a questa carta?',
 
@@ -389,7 +388,7 @@ export const it: Record<MessageKey, string> = {
   'step.year.forward': 'L\'anno dopo',
 
   'footer.disclaimer':
-    'Questo sito ha puro scopo di intrattenimento. Qualunque cosa venga fatta sulla base di una carta letta qui è interamente decisione, e responsabilità, di chi la fa.',
+    'Questo sito ha il solo scopo di offrire spunti di riflessione e intrattenimento, in nessun caso sostituisce il parere di professionisti per questioni mediche, legali, finanziarie o altro.',
   'footer.data': 'Dati astronomici {ephemeris} · località {geonames} (CC BY 4.0)',
   'footer.licence': 'Codice sorgente sotto licenza AGPL-3.0',
   'footer.privacy': 'Privacy',
@@ -435,7 +434,7 @@ export const it: Record<MessageKey, string> = {
   'prompt.names':
     'Ogni nome è dato qui sotto in cinese, in pinyin e con una glossa. Scrivi per chi non legge il cinese: metti avanti la glossa. Ovunque tu scriva degli hanzi, scrivi il pinyin subito accanto — la porta dell\'apertura 開門 kāimén, e mai i glifi da soli — ogni volta che compaiono e non solo la prima, e con i segni tonali che trovi qui sotto. Se preferisci non ripetere la lettura, togli anche gli hanzi e usa la sola glossa; quello che non può mai viaggiare è un glifo che chi legge non sa pronunciare.',
   'prompt.disclaimer':
-    'Apri la tua prima risposta con questa riga, prima di qualunque altra cosa tu scriva: «Contenuto pensato esclusivamente come spunto di riflessione e intrattenimento. La presente lettura non stabilisce fatti e non sostituisce in alcun modo consulenze mediche, legali o finanziarie; ogni scelta e azione futura resta sotto la tua esclusiva responsabilità.» Queste parole e nessun\'altra. Non adattarla alla domanda, non nominarci dentro la persona né la faccenda, non aggiungerci nulla e non spiegarla. Poi mai più: apre la conversazione e vale per tutta la conversazione. Ogni risposta successiva comincia dalla risposta e non porta alcun avviso, né in cima né in fondo — non un promemoria, non una versione accorciata, non una frase che faccia lo stesso lavoro con altre parole. Se la riga è già da qualche parte in questa conversazione, l\'hai già detta: vai dritto alla risposta.',
+    'Apri la tua prima risposta con questa riga, prima di qualunque altra cosa tu scriva: «Considera questo contenuto come spunto di riflessione e intrattenimento, non come fonte di verità assolute. In nessun caso la presente lettura sostituisce il parere di professionisti per questioni mediche, legali, finanziarie o altro. Il libero arbitrio è uno strumento prezioso che va coltivato consapevolmente: sei sempre tu ad avere il potere sulle tue scelte e sul tuo cammino.» Queste parole e nessun\'altra. Non adattarla alla domanda, non nominarci dentro la persona né la faccenda, non aggiungerci nulla e non spiegarla. Poi mai più: apre la conversazione e vale per tutta la conversazione. Ogni risposta successiva comincia dalla risposta e non porta alcun avviso, né in cima né in fondo — non un promemoria, non una versione accorciata, non una frase che faccia lo stesso lavoro con altre parole. Se la riga è già da qualche parte in questa conversazione, l\'hai già detta: vai dritto alla risposta.',
 
   // 年命 — una nascita collocata dentro una carta di un momento, che è il verso
   // classico e la sola cosa che andava detta attorno. Il frame natale che

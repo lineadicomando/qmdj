@@ -458,8 +458,7 @@ export const en = {
   // fields should not read as one.
   'form.toPillars': 'The same instant as four pillars, with the stems they conceal:',
 
-  'form.promptPrivacy':
-    'What is copied carries the date, the time and the place of the chart, the question you typed, and — if you gave one — the year pillar of your birth. Paste it somewhere you would tell those things to.',
+  'form.promptPrivacy': 'What you entered goes into the prompt.',
   // Required, and said in the label rather than by a mark nobody can read
   // aloud. It is not a formality: the chart is read *towards* a question, and
   // a prompt built without one asks a model to read towards nothing.
@@ -492,7 +491,7 @@ export const en = {
   // inherit the standing of the first: what is exact here is where the Sun
   // was, never what follows from it for anybody.
   'footer.disclaimer':
-    'This site is for entertainment. Whatever is done on the strength of a chart read here is entirely the decision, and the responsibility, of whoever does it.',
+    'This site exists only to offer food for thought and entertainment; in no case is it a substitute for professional advice on medical, legal, financial or other matters.',
   'footer.data': 'Astronomical data {ephemeris} · places {geonames} (CC BY 4.0)',
   'footer.licence': 'Source code under AGPL-3.0',
   'footer.privacy': 'Privacy',
@@ -576,7 +575,7 @@ export const en = {
   // conversation whether it already said it. A closing line has no such
   // test, so it comes back under every answer until nobody reads it.
   'prompt.disclaimer':
-    'Open your first reply with this line, before anything else you write: "Offered purely as food for thought and as entertainment. This reading establishes no facts and is in no way a substitute for medical, legal or financial advice; every choice and every action from here remains yours alone, and your responsibility." Those words and no others. Do not fit it to the question, do not name the person or the matter inside it, do not add to it and do not explain it. Then never again: it opens the conversation and it stands for all of it. Every later reply begins with the answer and carries no notice at the top or the bottom — not a reminder, not a shortened version, not a sentence that does its job in other words. If the line is already somewhere in this conversation, you have said it: go straight to the answer.',
+    'Open your first reply with this line, before anything else you write: "Take this as food for thought and entertainment, not as a source of absolute truths. In no case is this reading a substitute for professional advice on medical, legal, financial or other matters. Free will is a precious instrument and is to be cultivated deliberately: the power over your choices and your path is always yours." Those words and no others. Do not fit it to the question, do not name the person or the matter inside it, do not add to it and do not explain it. Then never again: it opens the conversation and it stands for all of it. Every later reply begins with the answer and carries no notice at the top or the bottom — not a reminder, not a shortened version, not a sentence that does its job in other words. If the line is already somewhere in this conversation, you have said it: go straight to the answer.',
   // 年命 — a birth placed inside a chart of a moment, which is the classical
   // direction and the one thing that had to be said around it. The natal
   // frame this replaced could offer a warning and nothing else; this can

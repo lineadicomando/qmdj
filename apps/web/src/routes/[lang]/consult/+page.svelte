@@ -206,7 +206,11 @@
          the chart is cast for the instant the question is put. -->
     <label class="question">
       {t('form.question')}
-      <textarea bind:value={question} rows="2" placeholder={t('form.questionPlaceholder')}
+      <!-- Five lines rather than two. What is typed here is the one thing on
+           the page the reader composes rather than picks, and a box the size
+           of a caption says to keep it to a caption — when what makes a
+           question readable is the circumstance around it. -->
+      <textarea bind:value={question} rows="5" placeholder={t('form.questionPlaceholder')}
       ></textarea>
     </label>
 
