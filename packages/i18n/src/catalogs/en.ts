@@ -258,15 +258,17 @@ export const en = {
   // What somebody is choosing a time for. These are not names of gates: they
   // are the errands the transmitted lists put under each one, phrased as the
   // thing a reader recognises as their own. "Open" says a door is open and
-  // tells nobody which line to pick; this says which.
-  'label.purpose.opening': 'Opening, starting, dealing with an office, travelling',
+  // tells nobody which line to pick; this says which. Each line says what the
+  // sources in `docs/sources.md` say and stops there — the modern manuals put
+  // more under several of these gates, and the surplus is not shipped.
+  'label.purpose.opening': 'Opening, travelling, an office or an official, trade',
   'label.purpose.meeting': 'Meeting somebody, marriage, asking a favour, resting',
-  'label.purpose.wealth': 'Money, trade, treatment, building',
-  'label.purpose.documents': 'Documents, examinations, plans, making a thing known',
-  'label.purpose.concealment': 'Keeping out of sight, avoiding, work of the hands',
+  'label.purpose.wealth': 'Money, profit, seeing a thing grow',
+  'label.purpose.documents': 'Documents, a proposal, an appointment, a banquet',
+  'label.purpose.concealment': 'Keeping out of sight, avoiding, blocking a thing off',
   'label.purpose.pursuit': 'Recovering a debt, competing, going after somebody',
   'label.purpose.ending': 'A funeral, a burial, closing a thing',
-  'label.purpose.dispute': 'Litigation, a dispute, finding what is lost',
+  'label.purpose.dispute': 'Catching a thief, recovering what was stolen, alarm',
 
   'label.strength.wang': 'prospering',
   'label.strength.xiang': 'supported',

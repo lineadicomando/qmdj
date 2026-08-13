@@ -334,6 +334,130 @@ ignorance of it — not because anything imports it.
 
 ---
 
+## 八門 — what each gate is chosen for
+
+`PURPOSES` in `purposes.ts` is the one table in the engine that says anything
+about human affairs, so it carries the heaviest burden of citation here. Three
+witnesses, and they are independent of one another: a Tang treatise, a Daozang
+verse, and a Ming–Qing compilation that transmits both the verse and a prose
+table of its own.
+
+### The Tang witness — the domains
+
+《太乙金鏡式經》, 唐 王希明, c. 730, 卷二 推八門所主法, 四庫全書本
+([Wikisource](https://zh.wikisource.org/wiki/太乙金鏡式經_(四庫全書本)/卷02)):
+
+> 𤣥女云：天有八門以通八風也……開門直乾，位在西北，主開向通達。休門直坎，
+> 位正北，主休息安居。生門直艮，位東北，主生育萬物。傷門直震，位正東，主疾
+> 病灾殃。杜門直巽，位東南，主閉塞不通。景門直離，位正南，主鬼怪亡遺、驚恐
+> 奔走。死門直坤，位在西南，主死喪葬埋。驚門直兑，位正西，主驚恐奔走。
+
+The earliest of the three by some seven centuries. It gives each gate a
+**domain** rather than a list of errands, which is what makes it the check on
+the other two: an errand belongs where the domain already was.
+
+### The verse — the errands, in two independent redactions
+
+《黃帝太一八門逆順生死訣》, 《正統道藏》洞玄部眾術類, author unknown, so
+before 1445 ([Wikisource](https://zh.wikisource.org/wiki/黃帝太一八門逆順生死訣)),
+under 發用出門訣:
+
+> 欲求財利往生方、捕獵先知死路強。若與遠行開上去，盜捉逢驚因向得，
+> 休門最好遇君王。杜門有事好逃藏。取債旦憑傷上去，思量酒食問景方。
+
+《奇門遁甲統宗》卷一, 論八門執事歌 — the same eight lines, transmitted
+separately ([ctext](https://ctext.org/wiki.pl?if=gb&chapter=666094)):
+
+> 欲求財利往生方。葬獵須知死路強。／征戰遠行開門吉。休門見貴最爲良。
+> 捉賊驚門無不獲。杜門無事好逃藏。／索債須防傷上去。思量飲酒景門高。
+
+Two witnesses, centuries apart, assigning the same eight errands to the same
+eight gates. The variants are lexical and none of them moves an errand:
+捕獵 · 葬獵, 若與遠行 · 征戰遠行, 盜捉逢驚 · 捉賊驚門, 遇君王 · 見貴,
+有事 · 無事好逃藏, 取債 · 索債, 酒食 · 飲酒. **This is what the two-source
+standard was written for**, and it is why the table ships where the rest of
+the 用神 doctrine does not.
+
+### The prose table
+
+《奇門遁甲統宗》卷二, 八門所主
+([ctext](https://ctext.org/wiki.pl?if=gb&chapter=491157)):
+
+> 開門宜征討謀望、入官見貴、應舉遠行、嫁娶移徙、商賈營建，不宜治政，有私人
+> 窺伺。／休門宜面君謁貴、上官到任、嫁娶移徙、商賈營建，諸事皆吉，不宜行刑
+> 斷獄。／生門宜征討謀望、入官見貴、嫁娶移徙，諸事皆吉，不宜埋葬治喪。／
+> 傷門宜漁獵、討捕索債、博戲、收斂貨財，餘俱不宜。／杜門宜捕盜剪凶、決隱獄
+> 形、填塞溝壑，餘俱不宜。／景門宜上書獻策、招賢謁貴、拜職遣使、行誅突陣、
+> 破齒等事，餘俱不宜。／死門宜決斷刑獄、吊喪埋葬等事。／驚門宜掩捕盜賊、恐
+> 惑亂眾等事。／右八門最怕迫制，吉門有氣益吉，無氣減吉；凶門有氣益凶，無氣
+> 減凶。
+
+**Both 統宗 passages were checked against a printed edition**, not against the
+transcription: 上海文明書局, 第一冊, 卷一 頁一三 and 卷二 頁一五–一六. The
+transcription agrees character for character, with one variant — the print
+reads 招賢**調**貴 where ctext reads 招賢**謁**貴.
+
+### What each entry stands on
+
+| id | gate | 金鏡 | verse | 統宗 卷二 |
+|---|---|---|---|---|
+| `opening` | 開門 | 主開向通達 | 遠行 | 入官見貴 · 應舉遠行 · 商賈營建 |
+| `meeting` | 休門 | 主休息安居 | 遇君王 · 見貴 | 面君謁貴 · 上官到任 · 嫁娶 |
+| `wealth` | 生門 | 主生育萬物 | 欲求財利 | — |
+| `documents` | 景門 | 主鬼怪亡遺 | 酒食 · 飲酒 | 上書獻策 · 招賢 · 拜職遣使 |
+| `concealment` | 杜門 | 主閉塞不通 | 好逃藏 | 捕盜剪凶 · 填塞溝壑 |
+| `pursuit` | 傷門 | 主疾病灾殃 | 取債 · 索債 | 漁獵 · 討捕索債 · 博戲 |
+| `ending` | 死門 | 主死喪葬埋 | 捕獵 · 葬獵 | 決斷刑獄 · 吊喪埋葬 |
+| `dispute` | 驚門 | 主驚恐奔走 | 盜捉 · 捉賊 | 掩捕盜賊 · 恐惑亂眾 |
+
+### What was cut, and why
+
+The labels used to carry more than any of this. The surplus came from the
+modern manuals — 《圖解奇門遁甲大全》, 唐頤, 陝西師範大學出版社, is
+representative and was consulted — and it was cut rather than shipped:
+
+| Cut | Where the tradition actually puts it |
+|---|---|
+| 生門 · trade, building | 商賈營建 is 開門's and 休門's, in the same 統宗 list |
+| 生門 · treatment | a **star**, not a gate: 「求仙合藥見天心」, 《遁甲演義》卷三 |
+| 景門 · examinations | 應舉 is 開門's |
+| 景門 · making a thing known | no witness carries it |
+| 杜門 · work of the hands | no witness carries it |
+| 驚門 · litigation, dispute | 刑獄 is 死門's and 獄形 is 杜門's. Only the modern manuals moved it, and 《圖解》 does: 驚門宜斗訟官司 |
+
+**Hunting is left off both gates it belongs to.** The verse puts it under 死門
+(捕獵 · 葬獵) and the 統宗 under 傷門 (漁獵); the modern manual carries it under
+both. That is not a divergence to resolve — the domain genuinely overlaps — but
+an errand offered under two options is not a choice, so it names neither label.
+
+**景門 is the one gate whose witnesses name different errands**: 鬼怪亡遺 in
+the Tang text, 酒食 in the verse, 上書獻策 in the 統宗. They do not contradict
+so much as bound a domain wider than any one of them, and the modern manual
+lists both the document and the banquet under it. The label carries both and
+this file says why, which is the alternative the standard allows to refusing
+the entry.
+
+### What is not here
+
+《遁甲演義》, the text this file leans on for 年命, **carries no gate-purpose
+table at all** — not the verse, not a prose list, nothing under 所主. It was
+searched for every phrase above. The absence is recorded because the reader
+would otherwise expect the project's own primary text to be the source, and it
+is not.
+
+《奇門遁甲統宗》卷十二 玄機賦下 does carry a per-gate reading —
+開門主豁達開暢, 驚門主驚惶不安, and so on — but it carries it *inside* the
+natal doctrine this file already refuses, qualified 父母逢生 · 財帛逢傷 palace
+by palace. Nothing is taken from it, for the reason given in the 年命 section.
+
+**The identifier `dispute` now outruns its label.** The sources put catching a
+thief under 驚門 and litigation under 死門 and 杜門; the label was corrected and
+the identifier was not, because it reaches the CLI's `--for` and the errand
+list of the MCP reference. It is a wart, and it is written down here rather
+than fixed quietly.
+
+---
+
 ## What is refused, and why
 
 | | Reason |

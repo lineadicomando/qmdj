@@ -237,14 +237,14 @@ export const it: Record<MessageKey, string> = {
   'label.nianming.benming': 'anno della nascita',
   'label.nianming.xingnian': 'anno che si vive',
 
-  'label.purpose.opening': 'Aprire, cominciare, trattare con un ufficio, viaggiare',
+  'label.purpose.opening': 'Aprire, viaggiare, un ufficio o un funzionario, commercio',
   'label.purpose.meeting': 'Incontrare qualcuno, matrimonio, chiedere un favore, riposare',
-  'label.purpose.wealth': 'Denaro, commercio, cure, costruire',
-  'label.purpose.documents': 'Documenti, esami, progetti, far sapere qualcosa',
-  'label.purpose.concealment': 'Restare defilati, evitare, lavoro manuale',
+  'label.purpose.wealth': 'Denaro, guadagno, far crescere qualcosa',
+  'label.purpose.documents': 'Documenti, una proposta, una nomina, un banchetto',
+  'label.purpose.concealment': 'Restare defilati, evitare, ostruire qualcosa',
   'label.purpose.pursuit': 'Riscuotere un credito, competere, incalzare qualcuno',
   'label.purpose.ending': 'Un funerale, una sepoltura, chiudere una cosa',
-  'label.purpose.dispute': 'Una causa, una lite, ritrovare ciò che è perduto',
+  'label.purpose.dispute': 'Prendere un ladro, recuperare il maltolto, allarme',
 
   // Concordano con ciò che qualificano — una stella, una porta — e stanno
   // quindi al femminile, come le relazioni qui sopra.
