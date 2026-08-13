@@ -40,6 +40,9 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
 
     setHeaders({
       'cache-control': momentIsFixed(url.searchParams) ? 'private, max-age=86400' : 'no-store',
+      // The locale falls back to the Accept-Language header, so a cached copy
+      // is only right for the language it was asked in.
+      vary: 'Accept-Language',
     });
     return new Response(
       readingPrompt(

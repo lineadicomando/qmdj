@@ -28,6 +28,7 @@
     STAR_IDS,
     STRENGTHS,
   } from '$lib/vocabulary';
+  import { Copier } from '$lib/copy.svelte';
   import FormPanel from '$lib/components/FormPanel.svelte';
   import LocationSearch from '$lib/components/LocationSearch.svelte';
   import MomentTable from '$lib/components/MomentTable.svelte';
@@ -298,23 +299,22 @@
    * The address is the other way of taking it away, and the note under the
    * buttons says so — a link carries the list *and* reopens the scan behind
    * it, which no amount of text can.
+   *
+   * Through `Copier`, as every other copy on the site: the clipboard does not
+   * exist outside a secure context, and this runs on local networks in the
+   * clear. A button that silently did nothing there would leave somebody
+   * pasting whatever they copied last.
    */
-  let copied = $state(false);
+  const copier = new Copier();
 
-  async function copy(): Promise<void> {
-    if (!navigator.clipboard) return;
-
-    const lines = kept.map(
-      (entry) =>
-        `${entry.start.slice(0, 10)} ${entry.start.slice(11, 16)} · ${palaceOf(entry.palace).number} ${gloss('palace', entry.palace)} ${glyph(palaceOf(entry.palace))}`,
-    );
-    await navigator.clipboard.writeText(
-      [data.interval.place?.name, ...lines].filter(Boolean).join('\n'),
-    );
-
-    copied = true;
-    setTimeout(() => (copied = false), 2000);
-  }
+  const copy = (): Promise<void> =>
+    copier.run(async () => {
+      const lines = kept.map(
+        (entry) =>
+          `${entry.start.slice(0, 10)} ${entry.start.slice(11, 16)} · ${palaceOf(entry.palace).number} ${gloss('palace', entry.palace)} ${glyph(palaceOf(entry.palace))}`,
+      );
+      return [data.interval.place?.name, ...lines].filter(Boolean).join('\n');
+    });
 
   /** The choice, written where somebody can copy it out of the address bar. */
   function mark(): void {
@@ -345,7 +345,11 @@
     data.criteria.minStrength && gloss('strength', data.criteria.minStrength),
     ...data.criteria.towards.map((id: string) => gloss('palace', PALACE_OF[id] as string)),
     ...data.criteria.without.map((id: string) => `− ${gloss('pattern', id)}`),
-    data.criteria.born && `本命 ${data.criteria.born}`,
+    // The word, then the name it renders with its reading, as every other
+    // name on this surface is written: a bare glyph is, to the reader this is
+    // built for, a shape with no sound.
+    data.criteria.born &&
+      `${t('label.nianming.benming')} 本命 běnmìng · ${data.criteria.born}`,
   ].filter(Boolean));
 </script>
 
@@ -532,11 +536,19 @@
     </ul>
 
     <p class="actions">
-      <button type="button" onclick={copy}>
-        {copied ? t('form.keptCopied') : t('form.keptCopy')}
+      <!-- `aria-live` on the button itself, as on `CopyText`: the
+           confirmation is the button changing its word. -->
+      <button type="button" onclick={copy} disabled={copier.busy} aria-live="polite">
+        {copier.copied ? t('form.keptCopied') : t('form.keptCopy')}
       </button>
       <button type="button" onclick={empty}>{t('form.keptClear')}</button>
     </p>
+    {#if copier.fallback}
+      <!-- The clipboard refused — outside a secure context it always does —
+           so the list arrives as text to be selected by hand. -->
+      <p class="note">{t('form.copyFailed')}</p>
+      <textarea readonly rows="4" aria-label={t('form.copyFallback')}>{copier.fallback}</textarea>
+    {/if}
     <p class="note">{t('form.keptNote')}</p>
   </details>
 {/if}
@@ -705,6 +717,18 @@
   .kept li button:hover { color: var(--alarm); background: none; }
   .actions { display: flex; gap: 0.5rem; margin: 0.6rem 0 0; }
   .actions button { font-size: 0.85em; cursor: pointer; padding: 0.15rem 0.5rem; }
+  .actions button:disabled { cursor: progress; opacity: 0.6; }
+  /* The list the clipboard refused, dressed as `CopyText` dresses its own. */
+  .kept textarea {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: var(--tint);
+    color: var(--ink);
+    border: 1px solid var(--rule);
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+  }
   /*
    * The board is over the list and not in it — see `PlateDialog`.
    *

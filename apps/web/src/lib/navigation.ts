@@ -29,6 +29,25 @@ export function href(locale: string, slug: string, search = ''): string {
 }
 
 /**
+ * The search string a section link may carry across.
+ *
+ * The moment travels — that is what carrying `search` is for — and the birth
+ * does not. `born` and its companions are the parameters `pageAddress` keeps
+ * out of every shareable address for the same reason: they are somebody's
+ * birth, they belong to the section that asked for them, and a header link
+ * that hauled them along would write them into the address of every section
+ * visited after a consultation.
+ */
+export function carriedSearch(search: string): string {
+  const params = new URLSearchParams(search);
+  for (const only of ['born', 'bornTime', 'bornTz', 'gender', 'years']) {
+    params.delete(only);
+  }
+  const query = params.toString();
+  return query ? `?${query}` : '';
+}
+
+/**
  * Whether a click on a link meant *here*, or meant *somewhere else*.
  *
  * A modifier, or any button but the first, is how a person says "open this

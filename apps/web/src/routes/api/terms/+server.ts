@@ -1,6 +1,6 @@
 import { solarTermsOfYear, systemTimezone } from '@qimendunjia/core';
 import { json } from '@sveltejs/kit';
-import { ephemerisContext } from '$lib/server/params';
+import { ephemerisContext, readInteger } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
@@ -13,7 +13,12 @@ import type { RequestHandler } from './$types';
  */
 export const GET: RequestHandler = ({ url, setHeaders }) => {
   try {
-    const year = Number(url.searchParams.get('year') ?? new Date().getUTCFullYear());
+    // Bounded to the years a date here can write: the engine computes far
+    // beyond them, but a refusal is better than a week of caches holding
+    // whatever the ephemeris makes of year 999999.
+    const year =
+      readInteger(url.searchParams, 'year', { least: 1, most: 9999 }) ??
+      new Date().getUTCFullYear();
     const timezone = url.searchParams.get('timezone') ?? systemTimezone();
     const terms = solarTermsOfYear(year, timezone, ephemerisContext());
 

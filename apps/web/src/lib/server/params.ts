@@ -31,6 +31,7 @@ import {
 } from '@qimendunjia/core';
 import { getLocation } from '@qimendunjia/geo';
 import { resolveLocale, type Locale } from '@qimendunjia/i18n';
+import { error } from '@sveltejs/kit';
 
 /**
  * Reading the query string, in one place.
@@ -51,6 +52,35 @@ export function ephemerisContext(): EphemerisContext {
 
 export function readLocale(params: URLSearchParams, header?: string | null): Locale {
   return resolveLocale(params.get('lang'), header);
+}
+
+/**
+ * A whole number out of the address, where the endpoint has a default.
+ *
+ * Absent or empty, the answer is `undefined` and the default stands. Present,
+ * it has to read as an integer, and refusal is the point: `Number('abc')` is
+ * NaN, and NaN slides through every `Math.min`/`Math.max` clamp downstream —
+ * both comparisons are false — to be served as garbage that looks like an
+ * answer. `bounds` are for the one caller whose sane range is not a clamp.
+ */
+export function readInteger(
+  params: URLSearchParams,
+  name: string,
+  bounds?: { least: number; most: number },
+): number | undefined {
+  const value = params.get(name);
+  if (value === null || value === '') return undefined;
+
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || (bounds && (parsed < bounds.least || parsed > bounds.most))) {
+    error(400, {
+      message: `"${value}" is not a valid number for ${name}.`,
+      code: 'INVALID_NUMBER',
+      messageKey: 'web.error.INVALID_NUMBER',
+      params: { parameter: name, value },
+    });
+  }
+  return parsed;
 }
 
 /**

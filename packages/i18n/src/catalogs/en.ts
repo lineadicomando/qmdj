@@ -57,6 +57,9 @@ export const en = {
     'Ephemeris files not found in {path}: using the Moshier ephemeris, which needs no files and is accurate to about a tenth of an arc second. Run `npm run ephe:download -w @qimendunjia/core` for the full files.',
 
   'web.error.UNKNOWN_LOCATION': 'No place has the identifier {id}.',
+  // Refused rather than clamped: `Number('abc')` is NaN, and NaN slides
+  // through a min/max clamp to be served as garbage that looks like an answer.
+  'web.error.INVALID_NUMBER': '"{value}" is not a valid number for {parameter}.',
 
   'label.stem.jia': 'Yang Wood',
   'label.stem.yi': 'Yin Wood',
@@ -298,6 +301,9 @@ export const en = {
 
   'form.open': 'Change the moment',
   'form.close': 'Close',
+  // The × beside the chosen place. Its face is a glyph, so the name a screen
+  // reader speaks has to say what pressing it takes away.
+  'form.placeRemove': 'Remove {place}',
   'form.legend': 'The moment and the place',
 
   // What a form offers has to be readable by whoever has to choose from it.
@@ -456,6 +462,9 @@ export const en = {
   'consult.lead':
     'Ask a question and get a prompt, ready to paste into ChatGPT, Claude or another assistant.',
   'consult.cast': 'Cast the chart',
+  // The request itself failed, so there is no code to translate. Not
+  // `form.copyUnread`: on a first press nothing was ever cast to read again.
+  'consult.castFailed': 'The chart could not be cast.',
 
   // Under the board, where somebody who wants a reading will be looking. It
   // sends them on rather than offering a field here: the question belongs

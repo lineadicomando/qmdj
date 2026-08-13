@@ -1,6 +1,6 @@
 import { computeBazi } from '@qimendunjia/core';
 import { json } from '@sveltejs/kit';
-import { ephemerisContext, momentIsFixed, readMoment } from '$lib/server/params';
+import { ephemerisContext, momentIsFixed, readInteger, readMoment } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
@@ -16,10 +16,10 @@ export const GET: RequestHandler = ({ url, setHeaders }) => {
     const { moment, label } = readMoment(url.searchParams);
 
     const gender = url.searchParams.get('gender');
-    const cycles = url.searchParams.get('cycles');
+    const cycles = readInteger(url.searchParams, 'cycles');
     const options: Parameters<typeof computeBazi>[1] = {};
     if (gender === 'male' || gender === 'female') options.gender = gender;
-    if (cycles) options.cycles = Math.min(12, Math.max(1, Number(cycles)));
+    if (cycles !== undefined) options.cycles = Math.min(12, Math.max(1, cycles));
 
     const bazi = computeBazi(moment, options, ephemerisContext());
 

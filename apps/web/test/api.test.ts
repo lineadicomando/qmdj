@@ -194,6 +194,20 @@ describe('GET /api/bazi', () => {
 
     expect((body as { bazi: { luck?: unknown } }).bazi.luck).toBeUndefined();
   });
+
+  it('refuses a count of cycles that does not read as a number', async () => {
+    // `Number('abc')` is NaN and NaN clamps through: the luck loop would
+    // never run, and the cycles would come back silently empty —
+    // indistinguishable from a birth none were asked for.
+    const { status, body } = await call(bazi, `${MOMENT}&gender=male&cycles=abc`);
+
+    expect(status).toBe(400);
+    expect(body).toMatchObject({
+      code: 'INVALID_NUMBER',
+      messageKey: 'web.error.INVALID_NUMBER',
+      params: { parameter: 'cycles', value: 'abc' },
+    });
+  });
 });
 
 describe('GET /api/terms', () => {
@@ -208,6 +222,21 @@ describe('GET /api/terms', () => {
     const { headers } = await call(terms, 'year=2024');
 
     expect(headers['cache-control']).toMatch(/^public/);
+  });
+
+  it('refuses a year that does not read as one', async () => {
+    // `Number('abc')` is NaN and NaN slides through every clamp: unchecked,
+    // this was a 500 — or garbage served `public` for a week.
+    for (const year of ['abc', '20x4', '999999']) {
+      const { status, body } = await call(terms, `year=${year}`);
+
+      expect(status).toBe(400);
+      expect(body).toMatchObject({
+        code: 'INVALID_NUMBER',
+        messageKey: 'web.error.INVALID_NUMBER',
+        params: { parameter: 'year', value: year },
+      });
+    }
   });
 });
 
@@ -315,6 +344,23 @@ describe('GET /api/chart/plate', () => {
 
     expect(auto.text).toContain('prefers-color-scheme');
     expect(dark.text).not.toContain('prefers-color-scheme');
+  });
+
+  it('refuses a size that does not read as a number', async () => {
+    // NaN through the clamp came out as `width="NaN"`, served 200.
+    const { status, body } = await call(plate, `${MOMENT}&size=abc`);
+
+    expect(status).toBe(400);
+    expect(body).toMatchObject({
+      code: 'INVALID_NUMBER',
+      messageKey: 'web.error.INVALID_NUMBER',
+      params: { parameter: 'size', value: 'abc' },
+    });
+  });
+
+  it('is cacheable by the browser that asked, and by nothing else', async () => {
+    expect((await call(plate, MOMENT)).headers['cache-control']).toBe('private, max-age=86400');
+    expect((await call(plate, 'timezone=Asia/Shanghai')).headers['cache-control']).toBe('no-store');
   });
 });
 
@@ -436,6 +482,11 @@ describe('GET /api/chart/prompt', () => {
 
     expect(status).toBe(400);
     expect(body).toMatchObject({ code: 'INVALID_DATE' });
+  });
+
+  it('is cacheable by the browser that asked, and by nothing else', async () => {
+    expect((await call(prompt, MOMENT)).headers['cache-control']).toBe('private, max-age=86400');
+    expect((await call(prompt, 'timezone=Asia/Shanghai')).headers['cache-control']).toBe('no-store');
   });
 });
 

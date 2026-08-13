@@ -22,11 +22,22 @@ export interface IntervalInput {
   /** ISO `YYYY-MM-DD`, whatever the locale. */
   from: string;
   to: string;
+  /**
+   * `HH:mm`, opening and closing the two days. Empty means midnight, which is
+   * what `from` naming a day means: all of it. The form does not offer them,
+   * but the server honours them, and an address that carries them must come
+   * back out of this page still asking the same question.
+   */
+  fromTime: string;
+  toTime: string;
   place?: Location;
   trueSolarTime: boolean;
   dayBoundary: string;
   /** How the ju is determined. Verbatim, as in `MomentInput`. */
   method: string;
+  /** Where the third of the term is counted from, under chaibu. Carried
+   * verbatim, as in `MomentInput`: it moves the ju on most days. */
+  yuan: string;
 }
 
 /** What is being looked for, as identifiers the engine knows. */
@@ -151,9 +162,12 @@ export function readInterval(url: URL): {
     input: {
       from: params.get('from') ?? '',
       to: params.get('to') ?? '',
+      fromTime: params.get('fromTime') ?? '',
+      toTime: params.get('toTime') ?? '',
       trueSolarTime: params.get('trueSolarTime') !== 'false',
       dayBoundary: params.get('dayBoundary') === 'midnight' ? 'midnight' : 'zishi',
       method: params.get('method') ?? 'chaibu',
+      yuan: params.get('yuan') ?? 'term',
     },
     criteria: {
       gate: params.get('gate') ?? '',
@@ -195,10 +209,13 @@ export function intervalQuery(
   const params = new URLSearchParams();
   if (input.from) params.set('from', input.from);
   if (input.to) params.set('to', input.to);
+  if (input.fromTime) params.set('fromTime', input.fromTime);
+  if (input.toTime) params.set('toTime', input.toTime);
   if (input.place) params.set('locationId', String(input.place.id));
   if (!input.trueSolarTime) params.set('trueSolarTime', 'false');
   if (input.dayBoundary !== 'zishi') params.set('dayBoundary', input.dayBoundary);
   if (input.method && input.method !== 'chaibu') params.set('method', input.method);
+  if (input.yuan && input.yuan !== 'term') params.set('yuan', input.yuan);
 
   for (const [key, value] of Object.entries({ ...criteriaFields(criteria), ...extra })) {
     if (value) params.set(key, value);
@@ -232,6 +249,7 @@ export function chartQuery(
   if (!input.trueSolarTime) params.set('trueSolarTime', 'false');
   if (input.dayBoundary !== 'zishi') params.set('dayBoundary', input.dayBoundary);
   if (input.method && input.method !== 'chaibu') params.set('method', input.method);
+  if (input.yuan && input.yuan !== 'term') params.set('yuan', input.yuan);
 
   for (const [key, value] of Object.entries(extra)) {
     if (value) params.set(key, value);

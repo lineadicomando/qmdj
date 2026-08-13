@@ -1,7 +1,7 @@
 import { chartLabels, computeQimenChart, sayGanzhi } from '@qimendunjia/core';
 import { createTranslator } from '@qimendunjia/i18n';
 import { renderChartSvg } from '@qimendunjia/plate';
-import { momentIsFixed, readLocale, readMoment } from '$lib/server/params';
+import { momentIsFixed, readInteger, readLocale, readMoment } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
@@ -22,7 +22,7 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
 
     // The intrinsic size, which the page overrides with CSS anyway. It
     // matters to whoever saves the file or drops it somewhere unstyled.
-    const size = Math.min(2048, Math.max(240, Number(url.searchParams.get('size') ?? 900)));
+    const size = Math.min(2048, Math.max(240, readInteger(url.searchParams, 'size') ?? 900));
     const labels = chartLabels(t);
     const PILLARS = [
       moment.pillars.year,
@@ -64,6 +64,9 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
 
     setHeaders({
       'cache-control': momentIsFixed(url.searchParams) ? 'private, max-age=86400' : 'no-store',
+      // The locale falls back to the Accept-Language header, so a cached copy
+      // is only right for the language it was asked in.
+      vary: 'Accept-Language',
     });
     return new Response(svg, { headers: { 'content-type': 'image/svg+xml; charset=utf-8' } });
   } catch (cause) {

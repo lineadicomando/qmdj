@@ -47,6 +47,7 @@ export const it: Record<MessageKey, string> = {
     'File di effemeridi non trovati in {path}: si usano le effemeridi Moshier, che non richiedono file e sono accurate a circa un decimo di secondo d\'arco. Esegui `npm run ephe:download -w @qimendunjia/core` per i file completi.',
 
   'web.error.UNKNOWN_LOCATION': 'Nessun luogo ha l\'identificatore {id}.',
+  'web.error.INVALID_NUMBER': '"{value}" non è un numero valido per {parameter}.',
 
   'label.stem.jia': 'Legno yang',
   'label.stem.yi': 'Legno yin',
@@ -275,6 +276,7 @@ export const it: Record<MessageKey, string> = {
 
   'form.open': 'Cambia istante',
   'form.close': 'Chiudi',
+  'form.placeRemove': 'Togli {place}',
   'form.legend': 'L\'istante e il luogo',
 
   'form.options': 'Opzioni',
@@ -367,6 +369,7 @@ export const it: Record<MessageKey, string> = {
   'consult.lead':
     'Poni una domanda e ottieni un prompt pronto — da incollare in ChatGPT, Claude o un altro assistente.',
   'consult.cast': 'Poni la carta',
+  'consult.castFailed': 'Non è stato possibile porre la carta.',
 
   'form.toConsult': 'Per far leggere una carta, con una domanda:',
 

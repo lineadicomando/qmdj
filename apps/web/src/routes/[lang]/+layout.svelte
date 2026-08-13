@@ -2,7 +2,7 @@
   import { page } from '$app/state';
   import ColorSchemeToggle from '$lib/components/ColorSchemeToggle.svelte';
   import LanguageSwitch from '$lib/components/LanguageSwitch.svelte';
-  import { SECTIONS, href, isCurrent } from '$lib/navigation';
+  import { SECTIONS, carriedSearch, href, isCurrent } from '$lib/navigation';
 
   let { data, children } = $props();
   const t = $derived(data.t);
@@ -26,7 +26,7 @@
           {@const current = isCurrent(t.locale, section.slug, page.url.pathname)}
           <li>
             <a
-              href={href(t.locale, section.slug, page.url.search)}
+              href={href(t.locale, section.slug, carriedSearch(page.url.search))}
               aria-current={current ? 'page' : undefined}
               class:current
             >

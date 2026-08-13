@@ -11,6 +11,16 @@
   let candidates = $state<Location[]>([]);
   let searching = $state(false);
   let timer: ReturnType<typeof setTimeout> | undefined;
+  /**
+   * Which request is the one still being typed towards.
+   *
+   * The debounce clears the timer and cannot clear a fetch already in
+   * flight, and the network keeps no order: a slower answer to an older
+   * request would land after a faster one and overwrite it — or repopulate
+   * the list after the box was emptied. So an answer is applied only if
+   * nothing was asked after it.
+   */
+  let asked = 0;
 
   /**
    * The list is offered and never chosen from.
@@ -23,19 +33,23 @@
     clearTimeout(timer);
     const text = query.trim();
     if (text.length < 2) {
+      asked += 1; // Whatever is in flight answers a question no longer posed.
       candidates = [];
+      searching = false;
       return;
     }
 
     timer = setTimeout(async () => {
+      const request = ++asked;
       searching = true;
       try {
         const response = await fetch(
           `/api/locations?q=${encodeURIComponent(text)}&lang=${t.locale}`,
         );
-        candidates = response.ok ? ((await response.json()).results as Location[]) : [];
+        const found = response.ok ? ((await response.json()).results as Location[]) : [];
+        if (request === asked) candidates = found;
       } finally {
-        searching = false;
+        if (request === asked) searching = false;
       }
     }, 180);
   }
@@ -64,7 +78,15 @@
       <strong>{selected.name}</strong>
       <span>{#if selected.region}{`${selected.region}, `}{/if}{selected.country}</span>
       <span class="zone">{selected.timezone}</span>
-      <button type="button" onclick={() => (selected = undefined)}>×</button>
+      <!-- The face is a glyph, so the name a screen reader speaks has to say
+           what pressing it takes away — as every other × on the site does. -->
+      <button
+        type="button"
+        aria-label={t('form.placeRemove', { place: selected.name })}
+        onclick={() => (selected = undefined)}
+      >
+        ×
+      </button>
     </p>
   {/if}
 

@@ -180,7 +180,10 @@
     } catch {
       chart = undefined;
       cast = undefined;
-      failure = { message: t('form.copyUnread') };
+      // The request itself failed, so there is no code to translate — and it
+      // may well be the first press, when nothing was ever cast to be "read
+      // again": what failed is the casting, and the message says so.
+      failure = { message: t('consult.castFailed') };
     } finally {
       busy = false;
       mark();
