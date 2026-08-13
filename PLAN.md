@@ -403,11 +403,12 @@ reproduces that reference on 260 of the 266, the six exceptions all falling in
 inside 拆補 from `kinqimen`, and finding it a second time independently is what
 let it be shipped: `yuan`, defaulting to `term`. Two further things fell out:
 
-- **Hold the ju equal and the layout engine is confirmed.** On the 150 moments
-  where the two agreed on the ju, all 150 charts agreed cell for cell — plates,
-  stars, gates, spirits, 值符, 值使, 旬首, 空亡, 驛馬. A disagreement about the
-  ju had been masking a complete agreement about everything else, which is the
-  argument for comparing a chart layer by layer rather than as a whole.
+- **Hold the ju equal and the layout engine is confirmed.** Cast under the
+  reading that reference follows, 260 of the 266 charts agree cell for cell —
+  plates, stars, gates, spirits, 值符, 值使, 旬首, 空亡, 驛馬. A disagreement
+  about the ju had been masking a complete agreement about everything else,
+  which is the argument for comparing a chart layer by layer rather than as a
+  whole.
 - **The engine wrote one creature under two glyphs.** 滕蛇 on the spirit plate
   against 螣蛇夭矯 among the configurations, where `docs/sources.md` had already
   settled 螣 from three sources. Nothing internal caught it — the identifier

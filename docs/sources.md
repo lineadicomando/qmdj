@@ -72,9 +72,12 @@ the 266, the six exceptions being 超神 windows around 寒露 and 小雪. It is
 time and the disagreement alternates every five days, which is a yuan and not
 a block.
 
-*What it confirmed*: with the ju held equal, all 150 such charts agree cell
-for cell — earth plate, the turn of the heaven plate, the nine stars, the
-eight gates, the eight spirits, 值符, 值使, 旬首, 空亡 and 驛馬.
+*What it confirmed*: cast under `chaibu` with `yuan: 'futou'`, all 260 charts
+whose ju agrees agree cell for cell — earth plate including the lodged stem,
+the turn of the heaven plate, the nine stars, the eight gates, the eight
+spirits, 值符, 值使, 旬首, 空亡 and 驛馬. The disagreement about the ju had
+been masking a complete agreement about everything else, which is the argument
+for comparing a chart layer by layer rather than as a whole.
 
 *What it corrected here*: this engine wrote the second spirit 滕蛇 in
 `plates.ts` and 螣蛇夭矯 in `patterns.ts` — the same creature under two
