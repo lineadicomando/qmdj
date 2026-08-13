@@ -194,7 +194,7 @@ implemented.** The other seventy are absent, and the reason is below.
 
 | Key | Source | Kind | Licence | Cites its own source? |
 |---|---|---|---|---|
-| **V** | [煙波釣叟歌, Wikisource](https://zh.wikisource.org/zh-hant/%E7%85%99%E6%B3%A2%E9%87%A3%E5%8F%9F%E6%AD%8C) | Song-dynasty verse, complete | public domain | is the source |
+| **V** | [煙波釣叟歌, Wikisource](https://zh.wikisource.org/zh-hant/%E7%85%99%E6%B3%A2%E9%87%A3%E5%8F%9F%E6%AD%8C) ([rev](https://zh.wikisource.org/w/index.php?oldid=1336835)) | Song-dynasty verse, complete | public domain | is the source |
 | **K** | [ktonko.com, 奇門遁甲の凶格局](https://ktonko.com/html/syoi/32_kyo.html) | Japanese tradition, 16 formations with explicit stem conditions | — | no |
 | **B** | [`perfhelf/bigfishmarquis-qimen`](https://github.com/perfhelf/bigfishmarquis-qimen), `src/data/shi_gan_ke_ying.json` | all 81, with name and fortune | MIT | no |
 | **H** | [`HeiGeAi/HeiGe-SuanMing`](https://github.com/HeiGeAi/HeiGe-SuanMing), `references/22_qimen_duanju.md` | all 81, declared cross-checked against three named Chinese sources | **PolyForm Noncommercial 1.0.0** | yes, three sources |
@@ -281,7 +281,8 @@ is nothing to run it against. What there is, is a Ming treatise in the
 四庫全書 that states the rule and states it as a defect to leave out.
 
 《遁甲演義》, 程道生, c. 1613, 卷一 遁甲錯誤須檢點
-([Wikisource](https://zh.wikisource.org/zh-hant/遁甲演義)):
+([Wikisource](https://zh.wikisource.org/zh-hant/遁甲演義),
+[rev](https://zh.wikisource.org/w/index.php?oldid=2082234)):
 
 > 夫用遁之法，不推本命行年，未見精妙，必人生年命乘本局吉星奇門生旺之方，始得
 > 神將護持，無不利也。若命入囚死刑克之宮，而又加以惡星，雖所謀事合生開吉門，
@@ -345,7 +346,8 @@ table of its own.
 ### The Tang witness — the domains
 
 《太乙金鏡式經》, 唐 王希明, c. 730, 卷二 推八門所主法, 四庫全書本
-([Wikisource](https://zh.wikisource.org/wiki/太乙金鏡式經_(四庫全書本)/卷02)):
+([Wikisource](https://zh.wikisource.org/wiki/太乙金鏡式經_(四庫全書本)/卷02),
+[rev](https://zh.wikisource.org/w/index.php?oldid=773930)):
 
 > 𤣥女云：天有八門以通八風也……開門直乾，位在西北，主開向通達。休門直坎，
 > 位正北，主休息安居。生門直艮，位東北，主生育萬物。傷門直震，位正東，主疾
@@ -359,8 +361,8 @@ the other two: an errand belongs where the domain already was.
 ### The verse — the errands, in two independent redactions
 
 《黃帝太一八門逆順生死訣》, 《正統道藏》洞玄部眾術類, author unknown, so
-before 1445 ([Wikisource](https://zh.wikisource.org/wiki/黃帝太一八門逆順生死訣)),
-under 發用出門訣:
+before 1445 ([Wikisource](https://zh.wikisource.org/wiki/黃帝太一八門逆順生死訣),
+[rev](https://zh.wikisource.org/w/index.php?oldid=2352262)), under 發用出門訣:
 
 > 欲求財利往生方、捕獵先知死路強。若與遠行開上去，盜捉逢驚因向得，
 > 休門最好遇君王。杜門有事好逃藏。取債旦憑傷上去，思量酒食問景方。
@@ -488,3 +490,11 @@ For anything that cannot be derived, **two** such sources must agree.
 Where they do not, the divergence becomes an explicit parameter with a
 declared default, or the entry is left out and the absence is written down.
 It is never resolved by preference.
+
+**A link is not the evidence; the extract is.** Every passage this file leans
+on is quoted here in full, because a wiki page can be edited or deleted — one
+ctext chapter already answers 該資料已刪除 under its other URL. The links are a
+courtesy to a reader who wants the surrounding text, and where the source is
+Wikisource one of them is an `oldid`, which names the revision that was read
+and cannot change under it. Where a printed edition was consulted, **that** is
+the citation: an edition and a page number outlive every URL here.
