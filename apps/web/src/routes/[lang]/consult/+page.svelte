@@ -14,13 +14,20 @@
   and whose empty address means now, there is nowhere to put a question that
   is not after the fact. Here there is nothing else on the page.
 
-  One errand: a question, asked now, which is the classical use. A birth may
-  be given with it, and then the chart carries a 年命 — 本命, the year pillar
-  of that birth, and 行年, the year being lived, both looked up *inside* the
-  chart of the moment. That is the classical direction and the reverse of a
-  natal chart, which this section offered once and no longer does: what a
-  natal frame could honestly give a model was a warning, and 《遁甲演義》 gives
-  two pairs and the palaces they fall in. See `docs/sources.md`.
+  One errand: a question, asked now, which is the classical use. So the form
+  asks two things in the open — the question, and the place, which fixes the
+  hour and has no default that would not be somebody else's city. The date
+  and the time are under the options and empty, because empty is the instant
+  of the press: a field nine readers out of ten have no business filling in
+  belongs where the tenth can find it, not in front of all of them.
+
+  A birth may be given with it, and then the chart carries a 年命 — 本命, the
+  year pillar of that birth, and 行年, the year being lived, both looked up
+  *inside* the chart of the moment. That is the classical direction and the
+  reverse of a natal chart, which this section offered once and no longer
+  does: what a natal frame could honestly give a model was a warning, and
+  《遁甲演義》 gives two pairs and the palaces they fall in. See
+  `docs/sources.md`.
 
   Nothing here is in the address but the setup. The chart is fetched on a
   press and held in this component, and the question never leaves the browser
@@ -114,7 +121,10 @@
   function mark(): void {
     const next = new URL(page.url);
     next.search = momentQuery(
-      { ...asked, date: '', time: '' },
+      // Whatever is in the fields, which is normally no date at all: an empty
+      // pair is the present and writes nothing into the address. A date
+      // somebody went and typed is setup like the place, and comes back.
+      { ...asked },
       // The birth is setup and survives a reload with the rest of it. The
       // question never does, and that is the line: what was typed to get
       // here comes back, what was asked does not.
@@ -138,11 +148,13 @@
     busy = true;
     failure = undefined;
     try {
-      // A consultation says no date, which the engine reads as the present in
-      // the place's own zone — never the browser's clock, which would be an
-      // hour out for a chart cast in Beijing and asked for in Rome.
+      // A consultation normally says no date, and the engine reads that as the
+      // present in the place's own zone — never the browser's clock, which
+      // would be an hour out for a chart cast in Beijing and asked for in
+      // Rome. The fields are under the options, empty, for the reader who
+      // means another instant and says so.
       const query = momentQuery(
-        { ...asked, date: '', time: '' },
+        { ...asked },
         {
           lang: t.locale,
           born: born || undefined,
@@ -214,8 +226,19 @@
       ></textarea>
     </label>
 
+    <!--
+      The place in the open, and everything else behind the disclosure.
+
+      What a consultation needs is a question and somewhere to stand: the hour
+      pillar turns on the place, and there is no default for it that would not
+      be somebody else's city. The date and the time are in the options and
+      empty, because empty is the instant of the press and that is the whole
+      use of this section — a field filled in for nine readers out of ten
+      belongs where the tenth can find it.
+    -->
     <MomentForm
       {t}
+      when="options"
       bind:date={asked.date}
       bind:time={asked.time}
       bind:place={asked.place}
@@ -223,15 +246,19 @@
       bind:dayBoundary={asked.dayBoundary}
       bind:method={asked.method}
       bind:yuan={asked.yuan}
+      extraLegend="consult.birth"
+      extraSet={born ? 1 : 0}
     >
-      <!-- The birth, under the same disclosure as the options: it is an
-           addition to a consultation and never a requirement, and the form
-           read to the button has one thing in it, which is the question. -->
+      <!-- The birth, under the same disclosure as the options and above the
+           way the moment is read: it is an addition to a consultation and
+           never a requirement, and the form read to the button has one thing
+           in it, which is the question. -->
       {#snippet extra()}
-        <p class="group">{t('consult.birth')}</p>
-        <label class="birthField">
+        <label class="birthField date">
           {t('consult.birthDate')}
-          <input type="date" bind:value={born} />
+          <!-- What the browser knows to fill in, if it is this reader's own
+               birth and they have told it once. -->
+          <input type="date" autocomplete="bday" bind:value={born} />
         </label>
         <label class="birthField">
           {t('consult.birthGender')}
@@ -322,9 +349,13 @@
   .question { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 46rem; }
   /* The birth, rendered inside the options of `MomentForm`. A snippet is
      styled where it is written, so its two fields are dressed here to match
-     the ones it stands among. */
-  .group { margin: 0.4rem 0 0; font-size: 0.9em; color: var(--faint); }
+     the ones it stands among. What names the group is the `legend` over
+     there, which is a heading to a screen reader where a paragraph in bold
+     would have been a paragraph. */
   .birthField { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 26rem; }
+  /* Eight characters go in it. The width of the same field in every other
+     form on this site, and not the width of the sentence over it. */
+  .date { max-width: 13rem; }
   textarea {
     font: inherit;
     font-size: 0.95rem;

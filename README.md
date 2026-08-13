@@ -128,11 +128,12 @@ text that does exist, 《奇門遁甲統宗》卷十二, and why nothing imports
 The interface section is `/en/consult`, and it is not under the board. The
 reason is an order the chart section cannot keep: **the instant
 of asking is the instant that is cast**, so the question comes before the
-casting or it is a caption on a chart that was already there. There is nothing
-else on that page. The question never leaves the browser — the server is told
-only that one exists — and the consultation is not in the address: it is an
-act, not a link, and reloading finds the fields ready rather than the answer
-preserved.
+casting or it is a caption on a chart that was already there. What the page
+asks in the open is the question and the place; the date and the time are
+under the options and empty, and empty is the instant of the press. The
+question never leaves the browser — the server is told only that one exists —
+and the consultation is not in the address: it is an act, not a link, and
+reloading finds the fields ready rather than the answer preserved.
 
 This project talks to no model, holds no key and sends nothing anywhere. The
 prompt goes to a clipboard.

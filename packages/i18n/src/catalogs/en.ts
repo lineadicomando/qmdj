@@ -305,6 +305,18 @@ export const en = {
   // reader sees says which hour that is, with the hanzi beside the words
   // because 子時 is a name and 23:00 is not a translation of it.
   'form.options': 'Options',
+  // What is set behind a shut disclosure, said on the line that shuts it. A
+  // count and not a list: the list is one press away, and what a reader needs
+  // from the closed state is to know there is something in there.
+  'form.optionsSet': 'Options changed: {count}',
+  // The names of the groups the options are read in. A group of fields with
+  // no name is a list, and a `legend` is what a screen reader says before
+  // every field under it — which is how "Date" comes out as the date of a
+  // birth rather than the date of the chart.
+  'form.moment': 'The moment',
+  'form.momentNote':
+    'Leave them empty and the chart is cast for the instant you press, in the time of the place above — which is the classical use. Fill them in to put the question to another moment.',
+  'form.calculation': 'How it is computed',
   'form.trueSolarTime': 'Correct to true solar time',
   'form.dayBoundary': 'The day begins',
   'form.dayBoundary.zishi': 'at the hour of the Rat 子時, 23:00',

@@ -278,6 +278,11 @@ export const it: Record<MessageKey, string> = {
   'form.legend': 'L\'istante e il luogo',
 
   'form.options': 'Opzioni',
+  'form.optionsSet': 'Opzioni modificate: {count}',
+  'form.moment': 'L\'istante',
+  'form.momentNote':
+    'Lasciali vuoti e la carta è posta per l\'istante in cui premi, nell\'ora del luogo qui sopra — che è l\'uso classico. Compilali per porre la domanda a un altro momento.',
+  'form.calculation': 'Come si calcola',
   'form.trueSolarTime': 'Correggi all\'ora solare vera',
   'form.dayBoundary': 'Il giorno comincia',
   'form.dayBoundary.zishi': 'all\'ora del Topo 子時, alle 23:00',

@@ -132,8 +132,12 @@ the engine falls back to Moshier, which needs no files.
   section where the answer is not in the URL: the chart is cast by `fetch` at
   the instant it is asked for and held in the component, because **the instant
   of asking is the instant that is cast** — the question comes before the
-  casting or it is a caption on a chart that was already there. Only the setup
-  travels in the address. Everywhere else, asking is navigating.
+  casting or it is a caption on a chart that was already there. Which is why
+  the page asks two things in the open, the question and the place: the date
+  and the time are under the options and empty, and empty is the press. A
+  reader who means another instant fills them, and that is a choice they made
+  rather than a field they had to get past. Only the setup travels in the
+  address. Everywhere else, asking is navigating.
 - **A birth enters a chart, never the other way about.** There is one frame
   and it is divination. A birth is placed *inside* the chart of the moment —
   `nianming.ts`: 本命, the year pillar of the birth, and 行年, the year being
