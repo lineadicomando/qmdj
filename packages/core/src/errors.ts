@@ -16,7 +16,9 @@ export type ChartErrorCode =
   | 'OPTION_NOT_IMPLEMENTED'
   | 'EMPTY_INTERVAL'
   | 'INTERVAL_TOO_LONG'
-  | 'UNKNOWN_IDENTIFIER';
+  | 'UNKNOWN_IDENTIFIER'
+  | 'BIRTH_AFTER_CHART'
+  | 'YEARS_OUT_OF_RANGE';
 
 /**
  * A usage error of the engine: malformed input, or a condition under which

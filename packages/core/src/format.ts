@@ -3,6 +3,7 @@ import type { Bazi } from './bazi/index.js';
 import { palace, YUAN_HANZI, YUAN_PINYIN, type QimenChart } from './dunjia/index.js';
 import type { Ganzhi } from './ganzhi.js';
 import type { LunarDate } from './lunar.js';
+import { NIANMING_NAMES, type Nianming, type Placement, type Seat } from './nianming.js';
 import type { Moment } from './pillars.js';
 import type { ScanMatch } from './scan.js';
 import type { SolarTerm } from './solar-terms.js';
@@ -355,6 +356,75 @@ function lodging(chart: QimenChart, t: Translator): string[] {
       stem: named(host.lodged, `label.stem.${host.lodged.id}` as MessageKey, t),
     })}`,
   ];
+}
+
+/**
+ * 年命 — where a birth stands in the chart above it.
+ *
+ * Printed under the chart and never instead of it: what this adds is two
+ * pairs and the palaces they fall in, and everything that weighs those
+ * palaces — the star, the gate, the spirit, the strengths — the reader has
+ * three tables up. Nothing is repeated here, and nothing is concluded: the
+ * 演義 weighs a 本命 by 生旺 or 囚死, and that is a reading, which needs a
+ * question this does not have.
+ */
+export function formatNianming(nianming: Nianming, t: Translator): string {
+  const lines = [`${t('cli.heading.nianming')}`, ...placed(nianming.benming, 'benming', t)];
+
+  if (nianming.xingnian && nianming.years !== undefined) {
+    lines.push(
+      '',
+      ...placed(nianming.xingnian, 'xingnian', t),
+      ...table(
+        [
+          [
+            t('cli.field.years'),
+            t(`cli.value.${nianming.options.count}` as MessageKey, { count: nianming.years }),
+          ],
+        ],
+        4,
+      ).map((line) => `  ${line}`),
+    );
+  }
+  return lines.join('\n');
+}
+
+function placed(placement: Placement, which: 'benming' | 'xingnian', t: Translator): string[] {
+  const rows: string[][] = [
+    [t('cli.field.pair'), ganzhi(placement.ganzhi, t)],
+    [t('cli.field.earthSeat'), seat(placement.earth, t)],
+    [t('cli.field.heavenSeat'), seat(placement.heaven, t)],
+    [
+      t('cli.field.mooring'),
+      `${placement.mooring.number} ${named(placement.mooring, `label.palace.${placement.mooring.id}` as MessageKey, t)}`,
+    ],
+    [
+      t('cli.field.image'),
+      `${glyph(placement.nayin)} · ${named(placement.nayinRelation, `label.relation.${placement.nayinRelation.id}` as MessageKey, t)}`,
+    ],
+  ];
+
+  return [
+    `  ${named(NIANMING_NAMES[which], `label.nianming.${which}` as MessageKey, t)}`,
+    ...table(rows, 4).map((line) => `  ${line}`),
+    // Said under the rows it explains, because it is about how the pair was
+    // looked up and not about where it landed.
+    ...(placement.concealed
+      ? [
+          `      ${t('cli.value.concealedUnder', {
+            stem: named(placement.stem, `label.stem.${placement.stem.id}` as MessageKey, t),
+          })}`,
+        ]
+      : []),
+  ];
+}
+
+function seat(where: Seat, t: Translator): string {
+  const here = `${where.palace.number} ${named(where.palace, `label.palace.${where.palace.id}` as MessageKey, t)}`;
+  if (!where.host) return here;
+  return `${here} · ${t('cli.value.readAt', {
+    palace: `${where.host.number} ${named(where.host, `label.palace.${where.host.id}` as MessageKey, t)}`,
+  })}`;
 }
 
 function palaceOf(chart: QimenChart, number: number, t: Translator): string {

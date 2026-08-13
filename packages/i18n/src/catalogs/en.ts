@@ -44,6 +44,10 @@ export const en = {
     'An interval of {days} days is longer than the {maximum} days that can be scanned at once.',
   'core.error.UNKNOWN_IDENTIFIER':
     '"{value}" is not a {parameter} the engine knows. Left unchecked it would match nothing, which reads exactly like an arrangement that never occurred.',
+  'core.error.BIRTH_AFTER_CHART':
+    'The birth falls after the chart, so there are no years to count: a 行年 steps forward from a birth and cannot be asked for before one.',
+  'core.error.YEARS_OUT_OF_RANGE':
+    '{years} is not a count of years a 行年 can be taken for: the count opens at one, in the year of the birth itself.',
 
   'core.warning.AMBIGUOUS_LOCAL_TIME':
     'Local time {time} on {date} occurs twice in {timezone} (clocks went back). The first occurrence was used, the one still on summer time.',
@@ -242,6 +246,12 @@ export const en = {
   'label.horse.day': 'horse of the day',
   'label.horse.hour': 'horse of the hour',
 
+  // The two pairs a person is placed by. 本命 is the year they were born in
+  // and never moves; 行年 is the year they are living and moves by one pair a
+  // year. Both are looked up in a chart cast for a moment.
+  'label.nianming.benming': 'year of the birth',
+  'label.nianming.xingnian': 'year being lived',
+
   // What somebody is choosing a time for. These are not names of gates: they
   // are the errands the transmitted lists put under each one, phrased as the
   // thing a reader recognises as their own. "Open" says a door is open and
@@ -326,6 +336,12 @@ export const en = {
   'form.towards': 'Facing',
   'form.minStrength': 'At least as strong as',
   'form.without': 'Ruling out',
+  // 本命 — the year pillar of a birth, narrowing the palaces to the two it
+  // stands on. A criterion like the others: it says which palaces are this
+  // person's, never which hour is good.
+  'form.benming': 'Whose year is to stand there',
+  'form.benmingNote':
+    'With a date of birth, only the palaces that person\'s year pillar (本命 běnmìng) stands on are reported — 《遁甲演義》 has a reading consider it before anything else. It narrows what is shown and weighs nothing: what makes a palace worth standing in is what you asked for above.',
   'form.criteriaNote':
     'These are arrangements, not recommendations. The engine reports where each one stands; whether it is a good hour to act is a reading, and it is yours to make.',
   'form.scan': 'Scan the interval',
@@ -368,10 +384,14 @@ export const en = {
   'form.working': 'Working…',
   'form.needed.date': 'A date is still needed.',
   'form.needed.interval': 'Both dates of the interval are still needed.',
-  'form.needed.question': 'A question is still needed: the prompt is built to be read towards one.',
   // The hour, and not only the day. A Qi Men chart turns on the hour pillar,
   // so a birth without a time is not a rougher chart — it is a different one.
   'form.needed.birth': 'A date and a time of birth are still needed: the chart turns on the hour.',
+  // The same thing `cli.error.genderRequired` says, without naming a command
+  // line option to somebody looking at a form.
+  'form.needed.question': 'A question is still needed: the prompt is built to be read towards one.',
+  // The hour, and not only the day. A Qi Men chart turns on the hour pillar,
+  // so a birth without a time is not a rougher chart — it is a different one.
   // The same thing `cli.error.genderRequired` says, without naming a command
   // line option to somebody looking at a form.
   'form.needed.gender':
@@ -410,6 +430,10 @@ export const en = {
   // question on it would be a third thing this project has already declined —
   // comparing a natal chart against the chart of a moment.
   'consult.title': 'Asking an AI to read a chart',
+  // The birth, offered beside the question rather than instead of it. What it
+  // produces is a 年命: the chart stays the chart of the moment and the birth
+  // is looked up inside it, which is what 《遁甲演義》 prescribes and the
+  // reverse of a natal chart.
   'consult.mode': 'What is being asked',
   'consult.mode.question': 'A question, asked now',
   'consult.mode.natal': 'A chart of a birth',
@@ -422,6 +446,18 @@ export const en = {
   // it. What was cut from here was the statement of the stance — that lives in
   // the footer, in the privacy note and in the notes — and not this, which is
   // the only thing a newcomer needs before they start typing.
+  'consult.birth': 'Your birth, if you want it in the chart',
+  'consult.birthDate': 'Date of birth',
+  'consult.birthGender': 'Sex — only the direction of the 行年 count depends on it',
+  // Why the question is above the moment and not below the chart. The order
+  // is the whole of it: the instant of asking is the instant that is cast.
+  'consult.birthNote':
+    'The chart is still cast for the instant you ask. What the birth adds is where it falls inside it — 本命 běnmìng, the year you were born in, and 行年 xíngnián, the year you are living.',
+  // The page explains itself here and nowhere else, in one line: the nav says
+  // which section this is, and the form says nothing about what comes out of
+  // it. What was cut from here was the statement of the stance — that lives in
+  // the footer, in the privacy note and in the notes — and not this, which is
+  // the only thing a newcomer needs before they start typing.
   'consult.lead':
     'Ask a question and get a prompt, ready to paste into ChatGPT, Claude or another assistant.',
   'consult.cast': 'Cast the chart',
@@ -429,8 +465,9 @@ export const en = {
   // Under the board, where somebody who wants a reading will be looking. It
   // sends them on rather than offering a field here: the question belongs
   // before the casting, and this page has already cast.
-  'form.toPillars': 'The same instant as four pillars, with the stems they conceal:',
   'form.toConsult': 'To have a chart read, with a question or as a chart of a birth:',
+
+  'form.toPillars': 'The same instant as four pillars, with the stems they conceal:',
 
   'form.promptPrivacy':
     'What is copied carries the date, the time and the place of the chart, and the question you typed. Paste it somewhere you would tell those things to.',
@@ -551,6 +588,12 @@ export const en = {
   // test, so it comes back under every answer until nobody reads it.
   'prompt.disclaimer':
     'Open your first reply with this line, before anything else you write: "Offered purely as food for thought and as entertainment. This reading establishes no facts and is in no way a substitute for medical, legal or financial advice; every choice and every action from here remains yours alone, and your responsibility." Those words and no others. Do not fit it to the question, do not name the person or the matter inside it, do not add to it and do not explain it. Then never again: it opens the conversation and it stands for all of it. Every later reply begins with the answer and carries no notice at the top or the bottom — not a reminder, not a shortened version, not a sentence that does its job in other words. If the line is already somewhere in this conversation, you have said it: go straight to the answer.',
+  // 年命 — a birth placed inside a chart of a moment, which is the classical
+  // direction and the one thing that had to be said around it. The natal
+  // frame this replaced could offer a warning and nothing else; this can
+  // offer where two pairs fell, and still refuse the mapping.
+  'prompt.nianming':
+    'The transcript carries a 年命 niánmìng: the year pillar of the person asking (本命 běnmìng) and, where it was given, the year they are living (行年 xíngnián), each looked up inside this chart. **It is who is asking, and not a second reading.** Do not give it a section of its own, and do not list its palace, star, gate, spirit and image back to the reader — the tables above already say all of that. Use it where it bears on the question: where the person stands in relation to the palace you chose for the matter, whether the two are the same palace, whether one generates or controls the other, whether the person stands in the palace the matter has to pass through. That relation is what the pair adds; everything else about it is already on the board. 遁甲演義 dùnjiǎ yǎnyì, the treatise this comes from, has a reading weigh 本命 and 行年 before anything else and looks for the person\'s year to ride a palace where a good star and a good gate stand in strength — that is the tradition\'s criterion, said as theirs, and it is a thing to weigh and not a score to compute. This is not a chart of a birth and no life is to be read from it: nothing here says which palace stands for which part of a life, and none is implied — that mapping is where the schools diverge most and where most of what circulates is one lineage\'s teaching material. If you go further, say plainly that the step is yours.',
   // The other frame: a chart cast for a birth and read as a chart of a life.
   //
   // A frame and never a method. The engine will not say which palace stands
@@ -600,6 +643,10 @@ export const en = {
   // The same fact in a table cell, where there is no room for the sentence.
   'cli.field.lodgedShort': 'the centre lodges here: {stem}',
   'cli.field.horse': '{from}: {branch}, palace {palace}',
+  // 年命 — the birth looked up inside a chart cast for a moment, which is the
+  // classical direction: the chart is the hour's, and the person is placed in
+  // it. Not a chart of a birth; see docs/sources.md.
+  'cli.heading.nianming': 'Where the birth stands',
   'cli.heading.scan': 'Charts from {from} to {to}',
   'cli.heading.criteria': 'Asked for',
   'cli.heading.warnings': 'Warnings',
@@ -618,6 +665,13 @@ export const en = {
   'cli.field.dayMaster': 'day master',
   'cli.field.empty': 'void branches',
   'cli.field.place': 'place',
+  'cli.field.pair': 'pair',
+  'cli.field.earthSeat': 'on the earth plate',
+  'cli.field.heavenSeat': 'on the heaven plate',
+  // 泊宮 — the palace the branch moors in, fixed by the branch alone.
+  'cli.field.mooring': 'moors in',
+  'cli.field.image': 'image',
+  'cli.field.years': 'years counted',
 
   'cli.column.year': 'year',
   'cli.column.month': 'month',
@@ -652,6 +706,14 @@ export const en = {
   'cli.value.nothingAnswered':
     'No palace in the interval answers what was asked. This says the arrangement did not occur, and nothing else.',
   'cli.value.everyPalace': 'every palace, nothing asked for in particular',
+  // 甲 stands on no plate, so a year headed by it is looked up under the
+  // instrument concealing its decade. Said, never silently substituted.
+  'cli.value.concealedUnder': 'looked up under {stem}, since 甲 stands on no plate',
+  // The centre has no direction, no gate and no spirit: what falls there is
+  // read at the palace the centre lodges in.
+  'cli.value.readAt': 'read at {palace}',
+  'cli.value.sui': '{count} (虛歲, counting the year of the birth)',
+  'cli.value.turns': '{count} (turns of the year pillar)',
   'cli.value.leapTerm': 'intercalated {term}',
 
   'cli.note.yuanFutou':

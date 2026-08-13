@@ -11,7 +11,8 @@ import {
 } from './dunjia/index.js';
 import { ChartError } from './errors.js';
 import type { EphemerisContext } from './ephemeris.js';
-import type { StemId } from './ganzhi.js';
+import { decadeInstrument } from './dunjia/plates.js';
+import type { Ganzhi, StemId } from './ganzhi.js';
 import { resolveMoment } from './pillars.js';
 import { fromJulianDay, resolveTime, type LocalMoment } from './time.js';
 import type { ChartOptions, Place } from './types.js';
@@ -225,6 +226,21 @@ export interface ScanCriteria {
   directions?: readonly Direction[];
   /** The weakest state the palace's star and gate may stand in (旺相休囚死). */
   minStrength?: StrengthId;
+  /**
+   * 本命 — the year pillar of a birth, admitting only the palaces it falls in.
+   *
+   * The criterion 《遁甲演義》 asks for, and the reason the natal question is
+   * answerable here at all: 「必人生年命乘本局吉星奇門生旺之方」 — the person's
+   * year is to ride a palace of the chart where a good star and gate stand in
+   * strength. That second half is the other criteria, which a caller sets as
+   * they always did; this half is the first, and it does nothing but narrow
+   * the palaces to the two the pair stands on.
+   *
+   * A pair headed by 甲 is looked for under the instrument concealing its
+   * decade, because 甲 stands on no plate. Both plates count, as they do for
+   * `stem`: which of the two bears on a question is a reading.
+   */
+  benming?: Ganzhi;
   /** Configurations the palace, or the chart, must have fallen into. */
   requires?: readonly PatternId[];
   /** Configurations that rule the palace, or the chart, out. */
@@ -279,6 +295,14 @@ function answers(
   if (criteria.spirit && cell.spirit?.id !== criteria.spirit) return false;
   if (criteria.stem && cell.heaven.id !== criteria.stem && cell.earth.id !== criteria.stem) {
     return false;
+  }
+
+  if (criteria.benming) {
+    const stem =
+      criteria.benming.stem.id === 'jia'
+        ? decadeInstrument(criteria.benming)
+        : criteria.benming.stem;
+    if (cell.heaven.index !== stem.index && cell.earth.index !== stem.index) return false;
   }
 
   if (criteria.directions) {

@@ -3,6 +3,7 @@ import { translate, type Translator } from '@qimendunjia/i18n';
 import { computeQimenChart } from '../src/dunjia/index.js';
 import { formatScan } from '../src/format.js';
 import { ChartError } from '../src/errors.js';
+import { ganzhiOf } from '../src/ganzhi.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
 import { resolveMoment } from '../src/pillars.js';
 import { MAX_SCAN_DAYS, matchRuns, scanCharts, type ScanRun } from '../src/scan.js';
@@ -270,6 +271,62 @@ describe('matchRuns', () => {
       expect(match.palaces[0]?.gate?.id).toBe('kaimen');
       expect(match.palaces[0]?.star.id).toBe('tianpeng');
       expect(match.palaces[0]?.spirit?.id).toBe('zhifu');
+    }
+  });
+});
+
+/**
+ * 本命 as a criterion, which is what 《遁甲演義》 asks a scan for: the hours in
+ * which the person's own year stands somewhere. What makes a palace worth
+ * standing in stays with the other criteria and with the reader.
+ */
+describe('matchRuns with a 本命', () => {
+  let week: ScanRun[];
+  const WEEK = (): ScanRun[] => (week ??= scan('2026-09-01', '2026-09-08'));
+
+  const pair = (hanzi: string) => {
+    for (let index = 0; index < 60; index += 1) {
+      if (ganzhiOf(index).hanzi === hanzi) return ganzhiOf(index);
+    }
+    throw new Error(`${hanzi} is not one of the sixty`);
+  };
+
+  it('admits only the palaces the pair stands on, on either plate', () => {
+    const matches = matchRuns(WEEK(), { benming: pair('庚午') });
+
+    expect(matches.length).toBeGreaterThan(0);
+    for (const match of matches) {
+      // One palace on each plate, and the same one when the two coincide.
+      expect(match.palaces.length).toBeGreaterThanOrEqual(1);
+      expect(match.palaces.length).toBeLessThanOrEqual(2);
+      for (const cell of match.palaces) {
+        expect([cell.earth.hanzi, cell.heaven.hanzi]).toContain('庚');
+      }
+    }
+  });
+
+  it('looks a year headed by 甲 up under the instrument concealing it', () => {
+    const matches = matchRuns(WEEK(), { benming: pair('甲子') });
+
+    expect(matches.length).toBeGreaterThan(0);
+    for (const match of matches) {
+      for (const cell of match.palaces) {
+        // 甲 is on no plate; 甲子 is looked for under 戊.
+        expect([cell.earth.hanzi, cell.heaven.hanzi]).toContain('戊');
+      }
+    }
+  });
+
+  it('narrows what the other criteria already asked, rather than replacing it', () => {
+    const gate = matchRuns(WEEK(), { gate: 'kaimen' });
+    const both = matchRuns(WEEK(), { gate: 'kaimen', benming: pair('庚午') });
+
+    expect(both.length).toBeLessThan(gate.length);
+    for (const match of both) {
+      for (const cell of match.palaces) {
+        expect(cell.gate?.id).toBe('kaimen');
+        expect([cell.earth.hanzi, cell.heaven.hanzi]).toContain('庚');
+      }
     }
   });
 });

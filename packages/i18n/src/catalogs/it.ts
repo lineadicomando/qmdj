@@ -34,6 +34,10 @@ export const it: Record<MessageKey, string> = {
     'Un intervallo di {days} giorni supera i {maximum} giorni che si possono scandire in una volta.',
   'core.error.UNKNOWN_IDENTIFIER':
     '"{value}" non è un {parameter} che il motore conosce. Se non venisse controllato non corrisponderebbe a nulla, il che si legge esattamente come una disposizione che non si è mai presentata.',
+  'core.error.BIRTH_AFTER_CHART':
+    'La nascita cade dopo la carta, quindi non ci sono anni da contare: lo 行年 avanza da una nascita e non si può chiedere prima di essa.',
+  'core.error.YEARS_OUT_OF_RANGE':
+    '{years} non è un conto di anni per cui si possa prendere uno 行年: il conto si apre a uno, nell\'anno stesso della nascita.',
 
   'core.warning.AMBIGUOUS_LOCAL_TIME':
     'L\'ora locale {time} del {date} ricorre due volte in {timezone} (ritorno all\'ora solare). È stata usata la prima occorrenza, quella ancora in ora legale.',
@@ -226,6 +230,12 @@ export const it: Record<MessageKey, string> = {
   'label.horse.day': 'cavallo del giorno',
   'label.horse.hour': 'cavallo dell\'ora',
 
+  // Le due coppie con cui una persona è collocata. Il 本命 è l'anno in cui è
+  // nata e non si muove; lo 行年 è l'anno che sta vivendo e avanza di una
+  // coppia l'anno. Entrambi si cercano dentro una carta posta per un momento.
+  'label.nianming.benming': 'anno della nascita',
+  'label.nianming.xingnian': 'anno che si vive',
+
   'label.purpose.opening': 'Aprire, cominciare, trattare con un ufficio, viaggiare',
   'label.purpose.meeting': 'Incontrare qualcuno, matrimonio, chiedere un favore, riposare',
   'label.purpose.wealth': 'Denaro, commercio, cure, costruire',
@@ -295,6 +305,12 @@ export const it: Record<MessageKey, string> = {
   'form.towards': 'Verso',
   'form.minStrength': 'Forza minima',
   'form.without': 'Escludendo',
+  // 本命 — il pilastro dell'anno di una nascita, che restringe i palazzi ai
+  // due su cui sta. Un criterio come gli altri: dice quali palazzi sono di
+  // quella persona, mai quale ora sia buona.
+  'form.benming': 'Di chi è l\'anno che deve starci',
+  'form.benmingNote':
+    'Con una data di nascita vengono riportati soltanto i palazzi su cui sta il pilastro dell\'anno di quella persona (本命 běnmìng) — il 《遁甲演義》 vuole che una lettura lo consideri prima di ogni altra cosa. Restringe quello che si vede e non pesa nulla: che cosa renda un palazzo degno di esserci è quanto hai chiesto qui sopra.',
   'form.criteriaNote':
     'Sono disposizioni, non raccomandazioni. Il motore riferisce dove ciascuna si trova; se sia un buon momento per agire è una lettura, e spetta a te farla.',
   'form.scan': "Scandisci l'intervallo",
@@ -316,9 +332,9 @@ export const it: Record<MessageKey, string> = {
   'form.working': 'Calcolo in corso…',
   'form.needed.date': 'Manca ancora una data.',
   'form.needed.interval': "Mancano ancora le due date dell'intervallo.",
+  'form.needed.birth': "Mancano ancora la data e l'ora di nascita: la carta dipende dal pilastro dell'ora.",
   'form.needed.question':
     'Manca ancora una domanda: il prompt è costruito perché la carta sia letta alla luce di una domanda.',
-  'form.needed.birth': "Mancano ancora la data e l'ora di nascita: la carta dipende dal pilastro dell'ora.",
   'form.needed.gender':
     'I cicli decennali richiedono il sesso, perché la tradizione ne trae la direzione. Senza, i pilastri restano comunque completi.',
   'form.jumpDate': 'Il giorno per cui la carta è posta',
@@ -335,17 +351,27 @@ export const it: Record<MessageKey, string> = {
   'form.copyUnread': 'Non è stato possibile rileggere la carta.',
 
   'consult.title': "Chiedere a un'AI di leggere una carta",
+  // La nascita, offerta accanto alla domanda e non al suo posto. Quello che
+  // produce è un 年命: la carta resta quella dell'istante e la nascita vi si
+  // cerca dentro, che è ciò che prescrive il 《遁甲演義》 ed è il rovescio di
+  // una carta natale.
   'consult.mode': 'Che cosa si chiede',
   'consult.mode.question': 'Una domanda, posta adesso',
   'consult.mode.natal': 'La carta di una nascita',
   'consult.natalNote':
     'Leggere una carta di Qi Men come carta di una vita è un\'applicazione moderna e minoritaria — gli usi classici sono la divinazione e la scelta dei tempi.',
+  'consult.birth': 'La tua nascita, se la vuoi nella carta',
+  'consult.birthDate': 'Data di nascita',
+  'consult.birthGender': 'Sesso — ne dipende solo il verso del conteggio dello 行年',
+  'consult.birthNote':
+    'La carta resta posta per l\'istante in cui chiedi. Quello che la nascita aggiunge è dove cade dentro di essa — 本命 běnmìng, l\'anno in cui sei nato, e 行年 xíngnián, l\'anno che stai vivendo.',
   'consult.lead':
     'Poni una domanda e ottieni un prompt pronto — da incollare in ChatGPT, Claude o un altro assistente.',
   'consult.cast': 'Poni la carta',
 
-  'form.toPillars': 'Lo stesso istante nei quattro pilastri, con i gan che nascondono:',
   'form.toConsult': 'Per far leggere una carta, con una domanda o come carta di una nascita:',
+
+  'form.toPillars': 'Lo stesso istante nei quattro pilastri, con i gan che nascondono:',
 
   'form.promptPrivacy':
     'Ciò che viene copiato contiene la data, l\'ora e il luogo della carta, e la domanda che hai scritto. Incollalo dove diresti quelle cose.',
@@ -416,6 +442,13 @@ export const it: Record<MessageKey, string> = {
     'Ogni nome è dato qui sotto in cinese, in pinyin e con una glossa. Scrivi per chi non legge il cinese: metti avanti la glossa. Ovunque tu scriva degli hanzi, scrivi il pinyin subito accanto — la porta dell\'apertura 開門 kāimén, e mai i glifi da soli — ogni volta che compaiono e non solo la prima, e con i segni tonali che trovi qui sotto. Se preferisci non ripetere la lettura, togli anche gli hanzi e usa la sola glossa; quello che non può mai viaggiare è un glifo che chi legge non sa pronunciare.',
   'prompt.disclaimer':
     'Apri la tua prima risposta con questa riga, prima di qualunque altra cosa tu scriva: «Contenuto pensato esclusivamente come spunto di riflessione e intrattenimento. La presente lettura non stabilisce fatti e non sostituisce in alcun modo consulenze mediche, legali o finanziarie; ogni scelta e azione futura resta sotto la tua esclusiva responsabilità.» Queste parole e nessun\'altra. Non adattarla alla domanda, non nominarci dentro la persona né la faccenda, non aggiungerci nulla e non spiegarla. Poi mai più: apre la conversazione e vale per tutta la conversazione. Ogni risposta successiva comincia dalla risposta e non porta alcun avviso, né in cima né in fondo — non un promemoria, non una versione accorciata, non una frase che faccia lo stesso lavoro con altre parole. Se la riga è già da qualche parte in questa conversazione, l\'hai già detta: vai dritto alla risposta.',
+
+  // 年命 — una nascita collocata dentro una carta di un momento, che è il verso
+  // classico e la sola cosa che andava detta attorno. Il frame natale che
+  // questo sostituisce poteva offrire un avvertimento e nient'altro; questo
+  // può offrire dove sono cadute due coppie, e rifiutare ancora la mappatura.
+  'prompt.nianming':
+    'La trascrizione porta un 年命 niánmìng: il pilastro dell\'anno di chi sta chiedendo (本命 běnmìng) e, se è stato indicato, l\'anno che sta vivendo (行年 xíngnián), cercati dentro questa carta. **È chi sta chiedendo, non una seconda lettura.** Non dedicargli una sezione a parte e non rielencare il suo palazzo, la stella, la porta, lo spirito e l\'immagine — le tabelle qui sopra li dicono già tutti. Usalo dove tocca la domanda: come sta la persona rispetto al palazzo che hai scelto per la faccenda, se i due sono lo stesso palazzo, se l\'uno genera o domina l\'altro, se la persona sta nel palazzo per cui la faccenda deve passare. Quella relazione è ciò che la coppia aggiunge; tutto il resto è già sul quadro. Il 遁甲演義 dùnjiǎ yǎnyì, il trattato da cui questo viene, vuole che una lettura pesi 本命 e 行年 prima di ogni altra cosa e cerca che l\'anno della persona cavalchi un palazzo dove una stella buona e una porta buona stiano in forza — è il criterio della tradizione, detto come suo, ed è cosa da pesare e non un punteggio da calcolare. Non è la carta di una nascita e non se ne legge una vita: nulla qui dice quale palazzo stia per quale parte di una vita, e nulla lo lascia intendere — quella mappatura è dove le scuole divergono di più e dove quasi tutto ciò che circola è il materiale didattico di una singola linea. Se vai oltre, di\' chiaramente che il passo è tuo.',
   'prompt.destiny.heading': 'Leggere una carta di Qi Men Dun Jia posta per una nascita',
   'prompt.destiny.frame':
     'La carta qui sotto è posta per un istante di nascita e va letta come carta di una vita. Di\' una volta, subito e apertamente, che questa è un\'applicazione moderna e minoritaria del Qi Men Dun Jia — gli usi classici sono la divinazione e la scelta dei tempi — e che le scuole che la insegnano non concordano fra loro.',
@@ -443,6 +476,10 @@ export const it: Record<MessageKey, string> = {
   'cli.field.lodged': 'Il centro si alloggia nel palazzo {palace}, dove si legge il suo {stem}.',
   'cli.field.lodgedShort': 'qui si alloggia il centro: {stem}',
   'cli.field.horse': '{from}: {branch}, palazzo {palace}',
+  // 年命 — la nascita cercata dentro una carta posta per un momento, che è il
+  // verso classico: la carta è quella dell'ora, e la persona vi si colloca
+  // dentro. Non è la carta di una nascita; vedi docs/sources.md.
+  'cli.heading.nianming': 'Dove sta la nascita',
   'cli.heading.scan': 'Carte dal {from} al {to}',
   'cli.heading.criteria': 'Richiesto',
   'cli.heading.warnings': 'Avvertenze',
@@ -461,6 +498,13 @@ export const it: Record<MessageKey, string> = {
   'cli.field.dayMaster': 'padrone del giorno',
   'cli.field.empty': 'rami vuoti',
   'cli.field.place': 'luogo',
+  'cli.field.pair': 'coppia',
+  'cli.field.earthSeat': 'sul piatto terra',
+  'cli.field.heavenSeat': 'sul piatto cielo',
+  // 泊宮 — il palazzo in cui il ramo ormeggia, fissato dal ramo soltanto.
+  'cli.field.mooring': 'ormeggia in',
+  'cli.field.image': 'immagine',
+  'cli.field.years': 'anni contati',
 
   'cli.column.year': 'anno',
   'cli.column.month': 'mese',
@@ -495,6 +539,14 @@ export const it: Record<MessageKey, string> = {
   'cli.value.nothingAnswered':
     "Nessun palazzo dell'intervallo risponde a quanto è stato chiesto. Questo dice che la disposizione non si è presentata, e nient'altro.",
   'cli.value.everyPalace': 'ogni palazzo, nessuna richiesta particolare',
+  // 甲 non sta su nessun piatto, quindi un anno che ne è retto si cerca sotto
+  // lo strumento che ne cela la decade. Detto, mai sostituito in silenzio.
+  'cli.value.concealedUnder': 'cercato sotto {stem}, poiché 甲 non sta su alcun piatto',
+  // Il centro non ha direzione, né porta, né spirito: ciò che vi cade si legge
+  // nel palazzo in cui il centro alloggia.
+  'cli.value.readAt': 'si legge in {palace}',
+  'cli.value.sui': '{count} (虛歲, contando l\'anno stesso della nascita)',
+  'cli.value.turns': '{count} (giri del pilastro dell\'anno)',
   'cli.value.leapTerm': '{term} intercalato',
 
   'cli.note.yuanFutou':

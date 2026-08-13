@@ -106,23 +106,31 @@ export {
   type ScanRun,
 } from './scan.js';
 
+export {
+  DEFAULT_NIANMING_OPTIONS,
+  NIANMING_NAMES,
+  nianmingOf,
+  xingnianGanzhi,
+  yearsLived,
+  type Nianming,
+  type NianmingOptions,
+  type Placement,
+  type Seat,
+} from './nianming.js';
+
 export { chartLabels, sayBranch, sayGanzhi, type ChartLabels } from './labels.js';
 
 export {
   formatBazi,
   formatMoment,
+  formatNianming,
   formatQimenChart,
   formatScan,
   formatSolarTerms,
   formatWarnings,
 } from './format.js';
 
-export {
-  chartTranscript,
-  readingPrompt,
-  type ReadingFrame,
-  type ReadingRequest,
-} from './prompt.js';
+export { chartTranscript, readingPrompt, type ReadingRequest } from './prompt.js';
 
 export {
   CONTROLLED_BY,
