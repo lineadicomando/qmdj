@@ -1,3 +1,6 @@
+import { spawnSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { run } from '../src/cli.js';
 
@@ -349,5 +352,23 @@ describe('failing', () => {
 
   it('prints help and fails when given nothing', async () => {
     expect(await run([])).toBe(2);
+  });
+});
+
+describe('the installed bin', () => {
+  // The symlink npm lays in `.bin`, which has no extension: the guard at the
+  // foot of cli.ts once sniffed the path for `cli.js`, and through the
+  // symlink the whole program was a silent exit 0. Only a spawn exercises
+  // that guard — everything above imports `run`, which must not fire it.
+  const BIN = fileURLToPath(new URL('../../../node_modules/.bin/qimen', import.meta.url));
+
+  // Skipped where `dist` has not been built: the suite runs from source and
+  // must not demand a build first.
+  it.skipIf(!existsSync(BIN))('runs when invoked through the symlink', () => {
+    const result = spawnSync(process.execPath, [BIN, 'terms', '--year', '2024',
+      '--tz', 'Asia/Shanghai', '--lang', 'en'], { encoding: 'utf8' });
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('立春');
   });
 });

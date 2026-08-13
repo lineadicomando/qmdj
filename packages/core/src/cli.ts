@@ -7,6 +7,8 @@
  * also a real surface, so it obeys the same rules as the others — it resolves
  * a locale, it translates by code, and it never interprets.
  */
+import { realpathSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
 import {
   createTranslator,
   resolveLocale,
@@ -613,7 +615,10 @@ function parse(argv: string[]): { command?: Command; options: Options } {
   return { command, options };
 }
 
-// Only when run as a program, never when imported by a test.
-if (process.argv[1] && /cli\.(ts|js)$/.test(process.argv[1])) {
+// Only when run as a program, never when imported by a test. Compared as
+// URLs, not sniffed by name: the installed bin is a symlink without an
+// extension, and a guard that looked for `cli.js` in the path left `qimen`
+// a silent no-op. The realpath resolves the symlink back to this file.
+if (process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) {
   process.exitCode = await run(process.argv.slice(2));
 }
