@@ -47,7 +47,7 @@ const CHART: PlateChart = {
       spirit: undefined,
     },
     cell(6, 'qian', '乾', 'jin', 'ding', '丁', 'xin', '辛', 'tianchong', '天沖', 'xiu', '休', 'kaimen', '開門', 'si', '死', 'taiyin', '太陰'),
-    cell(7, 'dui', '兌', 'jin', 'bing', '丙', 'yi', '乙', 'tianren', '天任', 'xiang', '相', 'jing1men', '驚門', 'si', '死', 'tengshe', '滕蛇'),
+    cell(7, 'dui', '兌', 'jin', 'bing', '丙', 'yi', '乙', 'tianren', '天任', 'xiang', '相', 'jing1men', '驚門', 'si', '死', 'tengshe', '螣蛇'),
     cell(8, 'gen', '艮', 'tu', 'yi', '乙', 'wu', '戊', 'tianying', '天英', 'wang', '旺', 'shengmen', '生門', 'xiang', '相', 'gouchen', '勾陳'),
     cell(9, 'li', '離', 'huo', 'wu', '戊', 'ding', '丁', 'tianxin', '天心', 'si', '死', 'jing3men', '景門', 'wang', '旺', 'jiutian', '九天'),
   ],

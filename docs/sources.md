@@ -56,8 +56,37 @@ two days in three. Installs under Python 3.9 only. Re-verified 2026-08-08.
 `qimen-dunjia` — and this engine with it — splits the term into three five-day
 thirds from the instant it begins. For 2026-09-02 11:00 in Beijing the two
 return 陰遁一局上元 and 陰遁七局下元 from the same instant, each internally
-consistent. That is a school divergence *inside* 拆補; if both readings are
-ever shipped it becomes a new explicit parameter, not a correction.
+consistent. That is a school divergence *inside* 拆補; it is now shipped as
+`yuan`, for the reason the entry below gives.
+
+**fengshui-hacks.com** (`cgi-bin/plotChart.pl`) — 266 moments from 1935 to
+2020, every cell of the nine palaces compared. Reads clock time on 120°E with
+no true-solar correction and turns the day at 23:00. Checked 2026-08-13.
+
+*It is the second source for the 符頭 yuan*, which is what let that reading be
+shipped: the standard below asks for two, and `kinqimen` was one. The rule
+this reference follows — **the term in force at the instant, and the yuan from
+the day's place in the fifteen-day 符頭 cycle** — reproduces its ju on 260 of
+the 266, the six exceptions being 超神 windows around 寒露 and 小雪. It is not
+置閏, which it superficially resembles: our 置閏 agrees with it only 56% of the
+time and the disagreement alternates every five days, which is a yuan and not
+a block.
+
+*What it confirmed*: with the ju held equal, all 150 such charts agree cell
+for cell — earth plate, the turn of the heaven plate, the nine stars, the
+eight gates, the eight spirits, 值符, 值使, 旬首, 空亡 and 驛馬.
+
+*What it corrected here*: this engine wrote the second spirit 滕蛇 in
+`plates.ts` and 螣蛇夭矯 in `patterns.ts` — the same creature under two
+glyphs, of which the table above had already settled 螣. The reference writes
+螣蛇, and 滕 is a surname. Fixed to 螣蛇.
+
+*Two defects found in it, for whoever uses it next*: its month pillar turns on
+the **civil day** of the jie rather than at the jie, so a chart cast between
+midnight and the term is a month out — 1984-05-05 12:00 comes back 己巳 where
+立夏 does not begin until 15:50, and `lunar-javascript` says 戊辰. Its own ju
+turns at the instant, so the two halves of its own output disagree. And its
+year field stops at 2020 while it will cast any year it is handed.
 
 **ktonko.com** (Japanese) — used to confirm the classical structure of 置閏
 piecewise: the four 符頭 heads, the solstice anchor, the 195-day leap. An

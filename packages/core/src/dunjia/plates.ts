@@ -94,7 +94,7 @@ export type SpiritId =
  */
 export const SPIRITS_YANG: readonly Spirit[] = [
   { id: 'zhifu', hanzi: '值符', pinyin: 'zhífú' },
-  { id: 'tengshe', hanzi: '滕蛇', pinyin: 'téngshé' },
+  { id: 'tengshe', hanzi: '螣蛇', pinyin: 'téngshé' },
   { id: 'taiyin', hanzi: '太陰', pinyin: 'tàiyīn' },
   { id: 'liuhe', hanzi: '六合', pinyin: 'liùhé' },
   { id: 'gouchen', hanzi: '勾陳', pinyin: 'gōuchén' },
@@ -105,7 +105,7 @@ export const SPIRITS_YANG: readonly Spirit[] = [
 
 export const SPIRITS_YIN: readonly Spirit[] = [
   { id: 'zhifu', hanzi: '值符', pinyin: 'zhífú' },
-  { id: 'tengshe', hanzi: '滕蛇', pinyin: 'téngshé' },
+  { id: 'tengshe', hanzi: '螣蛇', pinyin: 'téngshé' },
   { id: 'taiyin', hanzi: '太陰', pinyin: 'tàiyīn' },
   { id: 'liuhe', hanzi: '六合', pinyin: 'liùhé' },
   { id: 'baihu', hanzi: '白虎', pinyin: 'báihǔ' },

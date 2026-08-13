@@ -142,7 +142,7 @@ describe('a verified chart', () => {
     expect(row(chart, (p) => p.heaven.hanzi)).toBe('丙丁己庚癸乙戊壬辛');
     expect(row(chart, (p) => p.star.hanzi)).toBe('天柱天心天蓬天芮天禽天任天英天輔天沖');
     expect(row(chart, (p) => p.gate?.hanzi ?? '')).toBe('杜門景門死門傷門驚門生門休門開門');
-    expect(row(chart, (p) => p.spirit?.hanzi ?? '')).toBe('九地九天值符朱雀滕蛇勾陳六合太陰');
+    expect(row(chart, (p) => p.spirit?.hanzi ?? '')).toBe('九地九天值符朱雀螣蛇勾陳六合太陰');
   });
 });
 
