@@ -63,6 +63,16 @@ export interface ChartOptions {
    * Lichun is the near-universal choice for the Four Pillars. The lunar new
    * year exists here because some almanac traditions count by it, and because
    * a chart cast between the two dates differs by a full year pillar.
+   *
+   * **It moves the month pillar with it, and that is not a second decision.**
+   * The month branch is the solar term's in either case, but its *stem* comes
+   * from the year stem by 五虎遁, so a year pillar that turned at a different
+   * instant hands the mnemonic a different stem. Between the two dates
+   * `chunjie` therefore reports a month pillar no lichun almanac prints —
+   * 2024-02-06 is 癸卯年甲寅月 under it and 甲辰年丙寅月 under lichun.
+   * Which of the two an almanac counting by the lunar new year would itself
+   * print is a question no source consulted here answers, so the rule is
+   * applied as stated rather than special-cased. See `docs/sources.md`.
    */
   yearBoundary: 'lichun' | 'chunjie';
 

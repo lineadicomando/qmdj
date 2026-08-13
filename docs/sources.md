@@ -467,6 +467,7 @@ than fixed quietly.
 | 三奇得使 | the sources consulted disagree on which pairings count |
 | the 統宗's 六親 mapping | one late compilation, and it is interpretation from the first character |
 | counting the 泊宮 through the palaces | 《遁甲演義》 states it in four characters that admit two readings |
+| the month pillar a 春節 almanac prints | 五虎遁 reads the year stem, so `chunjie` moves the month with the year and reports a pillar no lichun almanac carries. Whether an almanac counting by the lunar new year prints that one or the solar one, no source consulted says. The rule is applied as stated and the consequence is pinned by a test, so that changing it has to be deliberate |
 | the other 70 cells of 十干克應 | complete tables exist but each is a single uncited source; two are needed |
 | 茅山 | no reference at all. `METHOD_NOT_IMPLEMENTED` rather than a silent substitution |
 | 飛盤 | a whole family. `OPTION_NOT_IMPLEMENTED` |

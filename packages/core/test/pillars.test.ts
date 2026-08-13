@@ -63,6 +63,21 @@ describe('the year turns at Lichun', () => {
     expect(lichun.startsWith('甲辰')).toBe(true);
     expect(chunjie.startsWith('癸卯')).toBe(true);
   });
+
+  it('carries the month pillar with it, since 五虎遁 reads the year stem', () => {
+    // Pinned because it is a consequence and not a choice: the branch is the
+    // solar term's either way, but the stem descends from the year stem, so
+    // moving the year moves the month with it. Between the two dates this
+    // reports a month pillar no lichun almanac prints. No source consulted
+    // says what an almanac counting by the lunar new year prints there, so
+    // the rule is applied as stated rather than special-cased — and pinned,
+    // so that changing it has to be deliberate.
+    const at = (boundary: 'lichun' | 'chunjie'): string =>
+      pillars('2024-02-06', '12:00', BEIJING, { ...CLOCK, yearBoundary: boundary });
+
+    expect(at('lichun').split(' ').slice(0, 2)).toEqual(['甲辰', '丙寅']);
+    expect(at('chunjie').split(' ').slice(0, 2)).toEqual(['癸卯', '甲寅']);
+  });
 });
 
 describe('the day boundary', () => {
