@@ -155,12 +155,13 @@ export function readPlace(params: URLSearchParams): {
  * Whether the address fixes the instant.
  *
  * Cacheability rests on this and not on the endpoint: a chart is a pure
- * function of its URL only where the URL says when. `?locationId=1816670`
- * alone means now, and an answer to that kept for a day is yesterday's chart
+ * function of its URL only where the URL says when. A date alone does — the
+ * missing time is noon, not the clock — while `?locationId=1816670` alone
+ * means now, and an answer to that kept for a day is yesterday's chart
  * offered as today's.
  */
 export function momentIsFixed(params: URLSearchParams): boolean {
-  return params.has('date') && params.has('time');
+  return params.has('date');
 }
 
 export function readOptions(params: URLSearchParams): ChartOptions {
@@ -204,13 +205,24 @@ export interface ReadMoment {
   label?: string | undefined;
 }
 
+/**
+ * The instant the address asks about.
+ *
+ * **A date without a time is noon on that date, not the hour it is asked at.**
+ * Falling back to the clock would make the same address answer with a
+ * different chart every time, which is the one thing a chart may never do: it
+ * is a pure function of its URL, and a saved one has to reproduce. Noon is
+ * the convention `bornTime` already declares. Omitting *both* is the other
+ * case entirely — there the instant of asking is the instant that is cast.
+ */
 export function readMoment(params: URLSearchParams): ReadMoment {
   const { place, label, meridianAssumed } = readPlace(params);
   const now = currentMoment(place.timezone);
+  const date = params.get('date');
 
   const input = {
-    date: params.get('date') ?? now.date,
-    time: params.get('time') ?? now.time,
+    date: date ?? now.date,
+    time: params.get('time') ?? (date === null ? now.time : '12:00'),
     timezone: place.timezone,
   };
   if (meridianAssumed) place.longitude = zoneMeridian(input);

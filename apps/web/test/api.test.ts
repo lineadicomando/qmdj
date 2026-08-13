@@ -84,9 +84,25 @@ describe('GET /api/chart', () => {
 
   it('is not cacheable at all when the address does not say when', async () => {
     // Without a date the question is "now", which is a different question
-    // every hour: an answer kept for a day would be yesterday's chart.
+    // every hour: an answer kept for a day would be yesterday's chart. A time
+    // alone does not fix it either — the day it falls in is still today's.
     expect((await call(chart, 'timezone=Asia/Shanghai')).headers['cache-control']).toBe('no-store');
-    expect((await call(chart, 'date=2024-06-15')).headers['cache-control']).toBe('no-store');
+    expect((await call(chart, 'time=14:00')).headers['cache-control']).toBe('no-store');
+  });
+
+  it('reads a date given without a time as noon on that date', async () => {
+    // Filling the time from the server's clock would make the same address
+    // answer with a different chart every time it was asked, which is the one
+    // thing a chart may never do. Noon fixes the instant — so the answer is
+    // stable, and now cacheable like any other fixed moment.
+    const bare = 'date=2024-06-15&timezone=Asia/Shanghai&trueSolarTime=false';
+    const first = await call(chart, bare);
+    const again = await call(chart, bare);
+    const answer = first.body as { chart: { moment: { input: { time: string } } } };
+
+    expect(answer.chart.moment.input.time).toBe('12:00');
+    expect(first.text).toBe(again.text);
+    expect(first.headers['cache-control']).toBe('private, max-age=86400');
   });
 
   it('leaves the longitude correction at zero when given only a timezone', async () => {
@@ -193,6 +209,20 @@ describe('GET /api/bazi', () => {
     const { body } = await call(bazi, MOMENT);
 
     expect((body as { bazi: { luck?: unknown } }).bazi.luck).toBeUndefined();
+  });
+
+  it('reads a date given without a time as noon on that date', async () => {
+    // As for the chart, and it matters most here: the hour pillar turns on
+    // the time, and one read from the clock would hand a different birth
+    // chart to every visit. Noon is what the answer to `time=12:00` says.
+    const bare = 'date=2024-06-15&timezone=Asia/Shanghai&trueSolarTime=false';
+    const first = await call(bazi, bare);
+    const again = await call(bazi, bare);
+    const atNoon = await call(bazi, `${bare}&time=12:00`);
+
+    expect(first.text).toBe(again.text);
+    expect((first.body as { bazi: unknown }).bazi).toEqual((atNoon.body as { bazi: unknown }).bazi);
+    expect(first.headers['cache-control']).toBe('private, max-age=86400');
   });
 
   it('refuses a count of cycles that does not read as a number', async () => {
