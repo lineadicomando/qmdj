@@ -21,3 +21,4 @@ packages/geo/data/
 build/
 
 compose.override.yaml
+temp/
