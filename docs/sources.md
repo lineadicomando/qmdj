@@ -264,11 +264,74 @@ neutral pairing is ever shipped.
 
 ---
 
+## 年命 — the birth inside a chart of a moment
+
+This is the one thing here that rests on a **primary text** rather than on
+implementations, and the tier has to be read differently because of it: there
+is nothing to run it against. What there is, is a Ming treatise in the
+四庫全書 that states the rule and states it as a defect to leave out.
+
+《遁甲演義》, 程道生, c. 1613, 卷一 遁甲錯誤須檢點
+([Wikisource](https://zh.wikisource.org/zh-hant/遁甲演義)):
+
+> 夫用遁之法，不推本命行年，未見精妙，必人生年命乘本局吉星奇門生旺之方，始得
+> 神將護持，無不利也。若命入囚死刑克之宮，而又加以惡星，雖所謀事合生開吉門，
+> 終不為美，故遣將先擇其年命利者為主，否則當候直符移易可也。法以生命隨局順逆
+> 為主，行年隨命，數至泊宮為是。男順寅，女逆申，皆起五虎，遁其泊宮生克刑害，
+> 須以納音而論歲月用支……緣五日為一局，一局六十時，而一時之中，善惡不一，若不
+> 參之以年命，烏足以盡其美哉。
+
+The 四庫全書提要 of the same work singles the doctrine out —
+「至論本命行年，謂欲乘本局中吉星生旺，其說亦他書所未及」 — which is worth more
+than a second source agreeing: the Qing editors are saying the other books do
+*not* carry it. It is one text, and it is written down here as one text.
+
+**What was taken.** The two pairs and where they fall: 本命, the year pillar
+of the birth, and 行年, the year being lived, opened at 丙寅 forwards or 壬申
+backwards and stepped one pair to a year. The openings are **derived** rather
+than copied — 五虎遁 gives the month of 寅 in a 甲 year as 丙寅 and its month
+of 申 as 壬申 — and a test asserts that derivation against the pairs the
+tradition transmits alongside it (一歲丙寅, 十一歲丙子; 一歲壬申, 十一歲壬戌).
+The mooring is the palace of the branch, which is the board's own table. The
+納音 is weighed against that palace because 「須以納音而論歲月用支」 says to,
+and `nayin.ts` already held the thirty images.
+
+**What was left out, and why.** 「生命隨局順逆為主……數至泊宮」 admits at least
+two readings — the pair moored at the palace of its branch, or counted through
+the palaces in the direction of the ju — and the text is four characters where
+it would need a sentence. The engine takes the branch's palace, which is
+uncontested, and does not implement a count it would have to guess at.
+`行年` is refused outright without both the years and the direction: a rule
+that runs one way from 寅 and the other from 申 has no reading that does
+without that.
+
+**Its verdicts are not taken either.** 生旺之方 and 囚死刑克之宮 are the text's
+own weighing, and they need a question to have been asked. The chart already
+carries 旺相休囚死, the relations and the configurations; what is placed here
+is a pair and a palace.
+
+**The natal chart is a different thing, and it has a text too.**
+《奇門遁甲統宗》卷之十二 (玄機賦下,
+[ctext](https://ctext.org/wiki.pl?if=gb&chapter=730643)) does cast a chart on
+the hour of a birth and read a whole life from it —
+「推人命運，以本人生時奇門之局為主……取其本命之局，以推其一生之窮通、壽夭、
+吉凶、禍福、妻財子祿，俱可知也」 — and maps 六親 onto the generation and
+control between the reader's own stem and the 奇儀, qualified gate by gate.
+That is doctrine of exactly the kind this file refuses elsewhere: prose
+verdicts, one late compilation, and a mapping the commercial lineages have
+since replaced with a different one they attribute to nobody. It is recorded
+here because it exists and because the absence would otherwise read as
+ignorance of it — not because anything imports it.
+
+---
+
 ## What is refused, and why
 
 | | Reason |
 |---|---|
 | 三奇得使 | the sources consulted disagree on which pairings count |
+| the 統宗's 六親 mapping | one late compilation, and it is interpretation from the first character |
+| counting the 泊宮 through the palaces | 《遁甲演義》 states it in four characters that admit two readings |
 | the other 70 cells of 十干克應 | complete tables exist but each is a single uncited source; two are needed |
 | 茅山 | no reference at all. `METHOD_NOT_IMPLEMENTED` rather than a silent substitution |
 | 飛盤 | a whole family. `OPTION_NOT_IMPLEMENTED` |

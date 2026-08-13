@@ -134,13 +134,18 @@ the engine falls back to Moshier, which needs no files.
   of asking is the instant that is cast** — the question comes before the
   casting or it is a caption on a chart that was already there. Only the setup
   travels in the address. Everywhere else, asking is navigating.
-- **Two frames, and they do not overlap.** `readingPrompt` reads a chart as a
-  question (`divination`, the default) or as a chart of a life (`destiny`),
-  and the type is a union so no caller can pass both. The natal frame is a
-  **frame and never a method**: it names the application as modern, minority
-  and school-divergent, and refuses to say which palace stands for which part
-  of a life — that is the doctrine `purposes.ts` declines, from the sources it
-  names as unusable, and it is where a model invents most confidently.
+- **A birth enters a chart, never the other way about.** There is one frame
+  and it is divination. A birth is placed *inside* the chart of the moment —
+  `nianming.ts`: 本命, the year pillar of the birth, and 行年, the year being
+  lived — which is what 《遁甲演義》 prescribes and the reverse of a natal
+  chart. It reports the palaces the two pairs fall in, the mooring of the
+  branch and the 納音 against that ground, and stops: 生旺 and 囚死 are the
+  text's own verdicts and need a question to have been asked. **Which palace
+  stands for which part of a life is refused wherever a 年命 appears** — that
+  is the doctrine `purposes.ts` declines, from the sources it names as
+  unusable, and it is where a model invents most confidently. The natal frame
+  that used to say so instead of saying anything is gone; see `PLAN.md` § 4
+  and the 年命 section of `docs/sources.md`.
 - **The lunar calendar is reckoned on 120°E, never on the chart's zone.** It
   is a published artefact: the same instant carries the same lunar date in
   Rome and in Beijing. Chinese wartime and summer clocks do not move it. The

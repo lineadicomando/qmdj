@@ -158,12 +158,12 @@ is. Do not describe the third as though it were the first.
 | | |
 |---|---|
 | `search_location` | a name → candidates with coordinates and zone. Always first when you have a name |
-| `compute_qimen_chart` | the nine palaces, the plates, the configurations, how each star and gate stands to its palace, and both post horses — 日馬 and 時馬, never one of the two |
+| `compute_qimen_chart` | the nine palaces, the plates, the configurations, how each star and gate stands to its palace, and both post horses — 日馬 and 時馬, never one of the two. With `born`, also a 年命: the birth placed *inside* this chart |
 | `compute_bazi` | the four pillars, read out. `gender` only affects the luck cycles |
 | `draw_qimen_chart` | the picture, framed by the eight directions, with the configurations and their fortunes listed under the grid. After the calculation, never instead of it |
 | `solar_terms` | the twenty-four terms of a year, with exact instants |
 | `lunar_date` | the lunisolar date. Reckoned on 120°E by convention, not on the zone you pass |
-| `scan_moments` | every chart over an interval, narrowed to what you name. For **choosing** a time rather than reading one |
+| `scan_moments` | every chart over an interval, narrowed to what you name — including, with `born`, to the palaces one person's 本命 stands on. For **choosing** a time rather than reading one |
 
 Reference material — the nine palaces, the gates and stars and spirits, the
 terms — is available as MCP resources. Read it when you have to explain or
@@ -184,6 +184,7 @@ GET /api/chart/plate?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/moments?from=2026-09-01&to=2026-09-08&locationId=3169070&gate=kaimen&towards=se,s
 GET /api/chart/text?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/chart/prompt?date=2024-06-15&time=14:00&locationId=1816670&asked=true
+GET /api/chart?date=2024-06-15&time=14:00&locationId=1816670&born=1968-03-12&gender=female
 ```
 
 The last two answer `text/plain` rather than JSON. `text` is the chart said in
@@ -198,14 +199,38 @@ ends on the line that introduces a question, for the caller to append; without
 it the prompt says plainly that none was asked. A question is somebody's own,
 and one in a query string is one written into every log along the way.
 
-`frame=natal` asks for the other reading: a chart cast for a birth and read as
-a chart of a life. It takes no question — the two do not overlap — and the
-prompt it returns names that application as modern, minority and
-school-divergent, and refuses to say which palace stands for which part of a
-life. **If you are asked for a natal reading, that refusal is yours to keep
-too.** The mapping is not in the engine, it is not in the resources, and
-supplying one from memory would be attributing to this software a doctrine it
-declines to hold — for the same reason 三奇得使 is absent.
+## 年命 — where a person stands in a chart of a moment
+
+`born=1968-03-12`, on the chart tools and on the scan, places a birth **inside**
+the chart that was cast: 本命, the year pillar of that birth, and — with
+`gender`, read for the direction of the count and nothing else — 行年, the
+year being lived. Each comes back as the palace it falls in on either plate,
+the palace its branch moors in, and its 納音 image weighed against that
+ground.
+
+This is the classical direction and the reverse of a natal chart. 《遁甲演義》
+(程道生, Ming, in the 四庫全書) holds that a reading which leaves the two out
+has missed the fine part of the method, and has the person's own year ride a
+palace where a good star and gate stand in strength — which on a scan is what
+`born` narrows to, with the rest of the criteria saying what makes a palace
+worth standing on.
+
+**The chart does not move for it, and neither should your reading.** What the
+software reports is where two pairs fell. 生旺 and 囚死 are the text's own
+weighing and need a question to have been asked; the strengths, the relations
+and the configurations are already in the chart, and they are what a reader
+weighs with.
+
+**No palace here stands for a part of a life, and if you are asked for a natal
+reading that refusal is yours to keep too.** A chart cast on a birth and read
+as a chart of a life is a modern and minority application; the mapping of
+palaces onto career, marriage or health is not in the engine, not in the
+resources, and supplying one from memory would attribute to this software a
+doctrine it declines to hold — for the same reason 三奇得使 is absent. There is
+one classical text that does map a life, 《奇門遁甲統宗》卷十二, and it maps it
+through the 六親 of the stems rather than through the palaces; `docs/sources.md`
+records it and says why nothing imports it. If you use a mapping of your own,
+say plainly that it is yours and whose it is.
 
 Failures come back with a `code`, a `messageKey` and `params` rather than a
 sentence to parse:

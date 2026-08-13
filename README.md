@@ -88,7 +88,8 @@ So the chart travels **already computed**, and the conditions travel with it:
 ```sh
 qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai \
             --ask "Will the contract be signed as it stands?"
-qimen chart --date 1968-03-12 --time 14:30 --tz Europe/Rome --natal
+qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai \
+            --born 1968-03-12 --gender female --prompt
 ```
 
 What comes out is the chart set out in full inside a fence, wrapped in what
@@ -99,21 +100,30 @@ which of the three tiers of certainty each number sits in. It is
 [`docs/agent-prompt.md`](docs/agent-prompt.md) said to a model that will never
 read it.
 
-**Two frames, and they do not overlap.** A question asked now is the classical
-use. A chart cast for a birth and read as a chart of a life is a modern and
-minority application, widespread enough to be worth framing honestly and
-disputed enough that a frame is all that is offered: the prompt says the
-schools do not agree, and it refuses to say which palace stands for which part
-of a life — that is the doctrine `purposes.ts` declines to carry, from the
-sources it names as unusable, and it is where a model invents most
-confidently. A chart of a birth carrying a question would be a third thing,
-and `--natal` refuses `--ask` rather than resolving it.
+**A birth enters a chart the way the classics put it there.** `--born` adds a
+年命: 本命, the year pillar of the birth, and — with `--gender`, which is read
+for the direction of the count and nothing else — 行年, the year being lived,
+each looked up **inside the chart of the moment**. The chart does not move for
+it. That is the whole of the direction, and it is the reverse of a natal
+chart: 《遁甲演義》 (程道生, Ming, in the 四庫全書) holds that a reading which
+leaves the two out has missed the fine part of the method — 「夫用遁之法，不推
+本命行年，未見精妙」 — and has the person's own year ride a palace where a good
+star and gate stand in strength.
 
-**The natal frame is not offered in the interface yet.** It is built, tested
-and reachable from the CLI and the API; what is switched off is the offer, in
-one constant in `[lang]/consult/+page.svelte`. The readings it produced were
-thin, and a mode that yields a poor reading teaches that this is what the
-method gives.
+What comes back is where the two pairs fell, the palace their branch moors in,
+and the 納音 image weighed against that ground. Nothing more: 生旺 and 囚死 are
+the text's own verdicts and they need a question to have been asked. The same
+pair is a criterion for a scan — `qimen scan --born …` admits only the palaces
+that person's year stands on — which is the other half of what the 演義 asks
+for, with what makes a palace worth standing in left to whoever is asking.
+
+**A chart cast on a birth and read as a chart of a life was offered here once,
+and is not any more.** What that frame could honestly hand a model was a
+warning; this hands it two pairs and two palaces. The doctrine mapping palaces
+onto parts of a life stays refused wherever a 年命 appears — the prompt, the
+MCP tool and the interface all say so — for the reason `purposes.ts` gives
+about everything past the eight gates. `docs/sources.md` records the natal
+text that does exist, 《奇門遁甲統宗》卷十二, and why nothing imports it.
 
 The interface section is `/en/consult`, and it is not under the board. The
 reason is an order the chart section cannot keep: **the instant
@@ -175,6 +185,7 @@ qimen terms --year 2024 --tz Asia/Shanghai
 qimen calendar --date 2023-04-01
 qimen scan  --date 2026-09-01 --until 2026-09-08 --tz Europe/Rome --gate kaimen --towards se,s
 qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --ask "Will it be signed?"
+qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --born 1968-03-12 --gender female
 
 npm run dev -w @qimendunjia/web    # http://localhost:5173
 npm start   -w @qimendunjia/web    # http://localhost:3000, after build

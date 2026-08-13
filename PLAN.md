@@ -684,11 +684,14 @@ them, and the pair alone — no concealed stems, no gods, no stages.
 **What those services do beside it is the thing this declines.** A chart of
 *birth* shown against a chart of the moment is there to pick the 用神 — the
 consultant's day stem carried into the Qi Men board — which is choosing the
-用神 and mapping a life onto palaces, the doctrine `purposes.ts` refuses and
-the `destiny` frame names as modern and school-divergent. Two charts set side
-by side are already an assertion: the reader builds the bridge, or a model
-does. So the chart leads to `/[lang]/bazi` with its own instant in the
-address, and nothing is folded in — `method` and `yuan` are left behind, since
+用神 and mapping a life onto palaces, the doctrine `purposes.ts` refuses. Two
+charts set side by side are already an assertion: the reader builds the
+bridge, or a model does. What *is* carried is the classical form of the same
+wish, which needs no second chart: the 年命 of `nianming.ts`, one pair looked
+up inside the chart of the moment.
+
+So the chart leads to `/[lang]/bazi` with its own instant in the address, and
+nothing is folded in — `method` and `yuan` are left behind, since
 they decide how Qi Men counts a ju and mean nothing to the pillars, while
 `dayBoundary` and the solar correction travel, because a moment handed over
 under one boundary and read under another comes back on a different day
@@ -808,11 +811,14 @@ associations, if one arrives, is a second table behind a `tradition`
 parameter, and no shared link breaks: a purpose is not in a chart's address,
 the criteria it expands to are.
 
-**The natal question is not answered here and was never meant to be.**
-Comparing a birth chart against the chart of a moment is a modern and
-minority practice, and where it is done the bridge is the ganzhi rather than
-any geometry between two plates. The scan stands on its own; a natal filter,
-if it ever comes, is a criterion like the others.
+**The natal question is not answered here by comparing two charts.** Setting a
+birth chart against the chart of a moment is a modern and minority practice,
+and where it is done the bridge is the ganzhi rather than any geometry between
+two plates. The filter this file left the door open to has since arrived, and
+it came as promised — a criterion like the others: `benming` admits only the
+palaces one person's year pillar stands on, which is the half of
+「必人生年命乘本局吉星奇門生旺之方」 that can be computed. What makes a palace
+worth standing on stays where it was, in the criteria the reader sets.
 
 **A list of hours is read scrolling, and the section was built to be read in
 one glance.** Two things followed from that, neither of them in the engine.
@@ -1045,38 +1051,41 @@ setup travels in the URL. That is not a shortcoming of the page, it is what a
 consultation is — and it is also the only shape under which the question can
 stay out of the address for good.
 
-**The natal frame is the concession, and it is bounded like everything else
-here.** Reading a Qi Men chart as a chart of a life is common in the West and
-is not the classical use. The engine does not notice — a chart of a birth is
-the same computation — so the whole of the decision is in the prompt, and the
-prompt gives **a frame and never a method**: it says the application is modern
-and minority, says the schools disagree, and refuses to map palaces onto parts
-of a life. That refusal is the same one `purposes.ts` makes about everything
-past the eight gates, and it matters more here than anywhere: natal material
-is abundant in a model's training data and comes overwhelmingly from the
-commercial lineages this project named as unusable, so a prompt that merely
-stayed silent would be filled in confidently and wrongly.
+**The natal wish is answered by 年命, and the natal frame is gone.** Reading a
+Qi Men chart as a chart of a life is common in the West and is not the
+classical use. It was offered here once as a frame with the method withheld —
+the application named as modern and minority, the mapping of palaces onto
+parts of a life refused — and then withheld from the interface the day it was
+built, because a frame and a warning is not much for a model to work with and
+a mode that yields a poor reading teaches that this is what the method gives.
 
-The two frames do not overlap, and the type says so: `ReadingRequest` is a
-union, `--natal` refuses `--ask`, and `asked` is not read under `frame=natal`.
-A natal chart carrying a question is a third thing — a chart of a life
-compared against the chart of a moment — which this file had already declined
-under the scan.
+What replaced it is what the classics actually do with a birth: they look it
+up inside the chart of the moment. 《遁甲演義》 (程道生, Ming, 四庫全書) —
+「夫用遁之法，不推本命行年，未見精妙」 — has a reading consider 本命, the year
+pillar of the birth, and 行年, the year being lived, before it considers
+anything else, and has the person's own year ride a palace where a good star
+and gate stand in strength. That is computable, checkable and small:
+`nianming.ts` places two pairs and reports the palaces, the mooring of the
+branch and the 納音 against that ground. Nothing else. 生旺 and 囚死 are the
+text's own verdicts and need a question to have been asked.
 
-**And then the natal mode was withheld from the interface, the day it was
-built.** What came back from it read thinly — a frame and a warning are not
-much for a model to work with, and the material that would make it more is
-exactly the material this project will not take on trust. A mode that yields a
-poor reading is worse than one that is absent, because it teaches that this is
-what the method gives. So `NATAL_OFFERED` in `[lang]/consult/+page.svelte` is
-`false`, and that constant is the whole of it: `readingPrompt` still takes the
-destiny frame, the endpoint still answers `frame=natal`, `qimen chart --natal`
-still prints it, and every test still runs. What was switched off is the
-offer, not the capability — so nothing has to be rebuilt when it returns, and
-nothing rots while it waits. The thing to fix first is what the prompt can
-honestly give a reader beyond a frame and a refusal.
+**The refusal did not soften, it moved.** The prompt still says no palace
+stands for a part of a life, and now says it beside something rather than
+instead of it. `docs/sources.md` records the one classical text that does read
+a life from a chart of a birth — 《奇門遁甲統宗》卷十二, which maps it through
+the 六親 of the stems and not through the palaces at all — and why nothing
+imports it.
 
-> Commits: `Says what a prompt for a model has to carry` · `Hands the chart over with the conditions attached` · `Asks the terminal for a prompt, and for the question it is read for` · `Puts the chart in the clipboard, as words and as a prompt` · `Poses a chart where the question can come first`
+**One birth, and everything else about it stays where it is.** Only the year
+pillar is read: `born` is a date, `bornTime` and `bornTz` exist because a
+birth within hours of 立春 belongs to the year before, and `gender` is read
+for the direction of the 行年 count and nothing else — without it the year
+being lived is left unplaced rather than guessed. The count itself is a
+parameter like every other divergence, `sui` or `turns`, because 虛歲 is what
+the rule was written for and is not what a reader thinking in birthdays
+expects.
+
+> Commits: `Says what a prompt for a model has to carry` · `Hands the chart over with the conditions attached` · `Asks the terminal for a prompt, and for the question it is read for` · `Puts the chart in the clipboard, as words and as a prompt` · `Poses a chart where the question can come first` · `Finds where a birth stands in the chart of a moment`
 
 ---
 
