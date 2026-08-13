@@ -40,11 +40,23 @@ import type { ScanCriteria } from './scan.js';
  * source this engine can stand a table on. 三奇得使 is the precedent for
  * saying so instead of guessing.
  *
- * There is deliberately **no `tradition` parameter yet**, though a second set
- * of associations would need one. The usual objection does not apply: a
- * purpose is not in a chart's address — a surface expands it into criteria
- * and the criteria are what travels — so a second tradition can arrive as a
- * second table and a parameter here without breaking a single shared link.
+ * There is **no `tradition` parameter**, and the reason is a finding rather
+ * than a deferral: laying the classical strand beside the modern manuals, the
+ * gate does not move. All eight entries below sit at the same gate in both —
+ * money at 生門, the document at 景門, the thief at 驚門. What the two differ
+ * about is how *wide* each gate's domain runs, which is the gloss and not the
+ * chart. A parameter over this table would select between two identical
+ * columns.
+ *
+ * The divergences that are real name errands this table does not: 醫療 is a
+ * **star** classically (求仙合藥見天心) and 生門 in the manuals; 訟 is 死門's
+ * and 杜門's classically and 驚門's in the manuals. Carrying those would mean
+ * a modern table longer than eight, and eight is what keeps this the gates
+ * read from the other side rather than a catalogue of undertakings somebody
+ * chose. If that table is ever wanted, the parameter is still free to arrive:
+ * a purpose is not in a chart's address — a surface expands it into criteria
+ * and the criteria are what travels — so nothing here would break a shared
+ * link. It is not wanted yet. See the 八門 section of `docs/sources.md`.
  */
 export type PurposeId =
   | 'opening'

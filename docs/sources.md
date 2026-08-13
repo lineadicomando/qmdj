@@ -452,6 +452,34 @@ is not.
 natal doctrine this file already refuses, qualified 父母逢生 · 財帛逢傷 palace
 by palace. Nothing is taken from it, for the reason given in the 年命 section.
 
+### Why there is no `tradition` parameter
+
+`purposes.ts` used to say one was deferred, on the assumption that a second
+strand would want a second table. Laying the two side by side says otherwise:
+**the gate does not move.** All eight entries sit at the same gate classically
+and in the manuals — money at 生門, the document at 景門, the thief at 驚門.
+The two strands differ about how *wide* each gate's domain runs, which is the
+gloss and not the chart, and a parameter over the table above would select
+between two identical columns.
+
+The divergences that are real name errands the table does not carry, and each
+would have to become an entry of its own before a parameter had anything to
+choose:
+
+| Errand | Classically | In the manuals |
+|---|---|---|
+| 醫療, seeking treatment | a **star**: 「求仙合藥見天心」 — no gate at all | 生門 |
+| 訟, litigation | 死門 (決斷刑獄), 杜門 (決隱獄形) | 驚門 (鬥訟官司) |
+| 商賈, trade | 開門, 休門 | 生門 (生意), and 開門 still |
+| 技巧, work of the hands | no witness carries it | 杜門 |
+
+A modern table holding those would be longer than eight, and eight is what
+keeps this the gates read from the other side rather than a catalogue of
+undertakings somebody chose. The parameter remains free to arrive if that
+table is ever wanted — a purpose is not in a chart's address, so no shared
+link would break — but it is not wanted for a difference that turns out to be
+in the wording.
+
 **The identifier `dispute` now outruns its label.** The sources put catching a
 thief under 驚門 and litigation under 死門 and 杜門; the label was corrected and
 the identifier was not, because it reaches the CLI's `--for` and the errand
