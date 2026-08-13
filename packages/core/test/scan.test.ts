@@ -162,6 +162,49 @@ describe('scanCharts', () => {
     }
   });
 
+  it('splits at a jie under zhirun, where the month turns and the ju does not', () => {
+    // The instant from the engine again: 寒露 2026 falls at some minute of the
+    // double hour of 未, and it is a jie — the month pillar turns there, and
+    // with it the season the strengths are read against, 酉 metal to 戌 earth.
+    // Under 置閏 the ju holds straight across it, so a comparison of hour, day
+    // and ju alone would let the chart change with no run opening.
+    const term = solarTermsBetween(
+      resolveMoment({ date: '2026-10-01', time: '00:00', timezone: BEIJING.timezone }, BEIJING, CLOCK, context)
+        .julianDayUT,
+      resolveMoment({ date: '2026-11-01', time: '00:00', timezone: BEIJING.timezone }, BEIJING, CLOCK, context)
+        .julianDayUT,
+      context,
+    ).find((found) => found.term.id === 'hanlu');
+    const turns = fromJulianDay(term?.julianDayUT as number, BEIJING.timezone);
+
+    expect(turns.toFormat('yyyy-MM-dd')).toBe('2026-10-08');
+    // Inside a double hour, not on the edge of one, or the hour pillar would
+    // split the runs by itself and prove nothing.
+    const opensADoubleHour = turns.hour % 2 === 1 && turns.minute === 0 && turns.second === 0;
+    expect(opensADoubleHour).toBe(false);
+
+    const runs = scan('2026-10-08T13:00', '2026-10-08T15:00', BEIJING, {
+      ...CLOCK,
+      method: 'zhirun',
+    });
+
+    expect(runs).toHaveLength(2);
+    // The hour pillar and the ju hold across the split. The month is what
+    // changed, and the strengths with it.
+    expect(new Set(runs.map((run) => run.chart.moment.pillars.hour.hanzi)).size).toBe(1);
+    expect(runs[0]?.chart.ju.number).toBe(runs[1]?.chart.ju.number);
+    expect(runs[0]?.chart.ju.yang).toBe(runs[1]?.chart.ju.yang);
+    expect(runs[0]?.chart.moment.pillars.month.hanzi).not.toBe(runs[1]?.chart.moment.pillars.month.hanzi);
+    expect(runs[0]?.chart.season).not.toBe(runs[1]?.chart.season);
+    expect(runs[0]?.chart.palaces.map((cell) => cell.starStrength.id)).not.toEqual(
+      runs[1]?.chart.palaces.map((cell) => cell.starStrength.id),
+    );
+
+    // And the split lies at the jie, to the minute the bisection promises.
+    const found = Date.parse(runs[1]?.start as string);
+    expect(Math.abs(found - turns.toMillis())).toBeLessThan(60_000);
+  });
+
   it('walks the instant and not the clock, across a change of summer time', () => {
     // Clocks go back on 2026-10-25 in Rome: 02:00 to 03:00 happens twice.
     // Counted on the clock the day has 24 hours; counted on the instant it

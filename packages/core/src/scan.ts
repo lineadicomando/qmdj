@@ -196,14 +196,18 @@ function clockAt(julianDay: number, timezone: string): LocalMoment {
  * The hour pillar and the ju settle the plates between them, but not quite
  * the chart: the day pillar rules the horse and 五不遇時, and under a
  * `midnight` day boundary it turns in the middle of the double hour of 子,
- * where the hour pillar does not. So the day is compared too. Comparing the
- * whole chart would be comparing nine palaces to learn what three numbers
- * already say.
+ * where the hour pillar does not. So the day is compared too. And under 置閏
+ * the ju holds straight across a jie, where the month pillar turns — and
+ * with it the season every strength is weighed against, and at 立春 the year
+ * pillar besides. So the month is compared as well; it turns at the jie
+ * exactly, so it answers for the year too. Comparing the whole chart would
+ * be comparing nine palaces to learn what four numbers already say.
  */
 function sameChart(a: QimenChart, b: QimenChart): boolean {
   return (
     a.moment.pillars.hour.index === b.moment.pillars.hour.index &&
     a.moment.pillars.day.index === b.moment.pillars.day.index &&
+    a.moment.pillars.month.index === b.moment.pillars.month.index &&
     a.ju.number === b.ju.number &&
     a.ju.yang === b.ju.yang
   );
