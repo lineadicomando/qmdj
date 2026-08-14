@@ -46,6 +46,16 @@ export interface PlatePalace {
 /**
  * Everything on a plate has both: the hanzi is the name, the identifier is
  * how a caller finds a label for it.
+ *
+ * **No reading, and the omission is the layout's.** Every named thing in the
+ * engine carries a `pinyin`, and every surface that sets type prints it — but
+ * a register here is a glyph and a word wrapped to at most two lines, and the
+ * third line a reading would take is the register below it. Six names to a
+ * palace and nine palaces: there is no size at which this stops being true,
+ * since the drawing is proportional and asking for more pixels buys no room.
+ * A reader who needs the reading has it beside the drawing rather than in it —
+ * the page that embeds the plate, the transcript, the CLI's own table — which
+ * is the same bargain the band under the grid strikes for a fortune.
  */
 export interface Named {
   hanzi: string;
