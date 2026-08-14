@@ -10,11 +10,13 @@
 import { realpathSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import {
+  DEFAULT_LOCALE,
   createTranslator,
   resolveLocale,
+  translate,
   type Locale,
   type MessageKey,
-  type Translator,
+  type MessageParams,
 } from '@qimendunjia/i18n';
 import { computeBazi, type Gender } from './bazi/index.js';
 import {
@@ -62,11 +64,23 @@ import { DEFAULT_OPTIONS, type ChartOptions, type Place } from './types.js';
 /**
  * A mistake in how the command was called.
  *
- * Its message is already translated and already meant for whoever typed it,
- * so `run` prints it and stops. Anything else thrown out of `execute` is a
- * fault in the engine, and a fault deserves its stack trace.
+ * It carries a catalog key and its params rather than a sentence, exactly as
+ * `ChartError` does: `run` renders it in the locale it resolved and stops.
+ * `message` is the English rendering, for tests and for whatever logs a
+ * throw. Anything else thrown out of `execute` is a fault in the engine, and
+ * a fault deserves its stack trace.
  */
-class UsageError extends Error {}
+class UsageError extends Error {
+  readonly messageKey: MessageKey;
+  readonly params: MessageParams;
+
+  constructor(messageKey: MessageKey, params: MessageParams = {}) {
+    super(translate(DEFAULT_LOCALE, messageKey, params));
+    this.name = 'UsageError';
+    this.messageKey = messageKey;
+    this.params = params;
+  }
+}
 
 const COMMANDS = ['chart', 'bazi', 'terms', 'calendar', 'scan'] as const;
 type Command = (typeof COMMANDS)[number];
@@ -176,18 +190,30 @@ A note on what this prints
 `;
 
 export async function run(argv: string[]): Promise<number> {
+  // The locale is read off the raw arguments, before anything can fail: a
+  // command too malformed to parse is still refused in the language it asked
+  // for. A `--lang` token can only be the flag itself, since a flag's value
+  // is refused when it starts with `--`.
+  const flag = argv.lastIndexOf('--lang');
+  const locale = resolveLocale(
+    flag >= 0 ? argv[flag + 1] : undefined,
+    process.env['LC_ALL'],
+    process.env['LANG'],
+  );
+  const t = createTranslator(locale);
+
   let command: Command | undefined;
   let options: Options;
 
   try {
     ({ command, options } = parse(argv));
   } catch (error) {
-    process.stderr.write(`${(error as Error).message}\n`);
-    return 2;
+    if (error instanceof UsageError) {
+      process.stderr.write(`${t(error.messageKey, error.params)}\n`);
+      return 2;
+    }
+    throw error;
   }
-
-  const locale = resolveLocale(options.lang, process.env['LC_ALL'], process.env['LANG']);
-  const t = createTranslator(locale);
 
   if (options.help || !command) {
     process.stdout.write(HELP);
@@ -203,7 +229,7 @@ export async function run(argv: string[]): Promise<number> {
       return 1;
     }
     if (error instanceof UsageError) {
-      process.stderr.write(`${error.message}\n`);
+      process.stderr.write(`${t(error.messageKey, error.params)}\n`);
       return 2;
     }
     throw error;
@@ -227,7 +253,7 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
     // year as NaN and hand it to the calendar, which answers with a stack
     // trace addressed to nobody.
     if (options.year !== undefined && !/^-?\d+$/.test(options.year)) {
-      throw new UsageError(t('cli.error.numberRequired', { option: '--year', value: options.year }));
+      throw new UsageError('cli.error.numberRequired', { option: '--year', value: options.year });
     }
     // The year of the resolved date, never a slice of the string: an ISO year
     // runs to six digits and a sign either side of our era, and `-000044`
@@ -244,11 +270,11 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
   }
 
   const place = resolvePlace(options, input);
-  const chartOptions = resolveOptions(options, t);
+  const chartOptions = resolveOptions(options);
   const moment = resolveMoment(input, place, chartOptions, context);
 
   if (command === 'scan') {
-    if (!options.until) throw new UsageError(t('cli.error.missingValue', { option: '--until' }));
+    if (!options.until) throw new UsageError('cli.error.missingValue', { option: '--until' });
 
     // `--date 2026-09-01 --until 2026-09-03` names two days and means all of
     // them: the interval closes where the day after `--until` opens, so the
@@ -258,7 +284,7 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
     const opens = { ...input, time: options.time ?? '00:00' };
     const closes = { ...opens, time: '00:00', date: dayAfter(options.until) };
     const runs = scanCharts(opens, closes, place, chartOptions, context);
-    const criteria = resolveCriteria(options, t);
+    const criteria = resolveCriteria(options);
     // 本命 as a criterion like the others, which is what 《遁甲演義》 asks a
     // scan for: the hours in which the person's own year stands somewhere
     // worth standing. It narrows the palaces; what makes one worth standing
@@ -297,7 +323,7 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
   if (command === 'bazi') {
     const gender = options.gender as Gender | undefined;
     if (gender && gender !== 'male' && gender !== 'female') {
-      throw new UsageError(t('cli.error.unknownValue', { option: '--gender', value: gender }));
+      throw new UsageError('cli.error.unknownValue', { option: '--gender', value: gender });
     }
     const bazi = computeBazi(moment, gender ? { gender } : {}, context);
     if (options.json) return JSON.stringify({ moment, bazi }, null, 2);
@@ -314,7 +340,7 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
   // The birth is looked up inside the chart, which does not move: 年命 is the
   // classical direction, and the chart stays the chart of its own moment.
   const nianming = options.born
-    ? placeBirth(options, chart, chartOptions, context, t)
+    ? placeBirth(options, chart, chartOptions, context)
     : undefined;
   if (options.json) {
     return JSON.stringify(nianming ? { ...chart, nianming } : chart, null, 2);
@@ -371,16 +397,15 @@ function placeBirth(
   chart: QimenChart,
   chartOptions: ChartOptions,
   context: EphemerisContext,
-  t: ReturnType<typeof createTranslator>,
 ): Nianming {
   if (options.years !== undefined && options.years !== 'sui' && options.years !== 'turns') {
-    throw new UsageError(t('cli.error.unknownValue', { option: '--years', value: options.years }));
+    throw new UsageError('cli.error.unknownValue', { option: '--years', value: options.years });
   }
   const nianmingOptions: NianmingOptions = { count: (options.years as 'sui' | 'turns') ?? 'sui' };
 
   const gender = options.gender as Gender | undefined;
   if (gender && gender !== 'male' && gender !== 'female') {
-    throw new UsageError(t('cli.error.unknownValue', { option: '--gender', value: gender }));
+    throw new UsageError('cli.error.unknownValue', { option: '--gender', value: gender });
   }
 
   const birth = birthMoment(
@@ -471,7 +496,7 @@ const STRENGTHS = ['wang', 'xiang', 'xiu', 'qiu', 'si'] as const;
  * report that the arrangement never occurred — which is the same answer a
  * correct question can get, and indistinguishable from it.
  */
-function resolveCriteria(options: Options, t: ReturnType<typeof createTranslator>): ScanCriteria {
+function resolveCriteria(options: Options): ScanCriteria {
   const one = <T extends string>(
     value: string | undefined,
     known: readonly { id: string }[] | readonly string[],
@@ -480,7 +505,7 @@ function resolveCriteria(options: Options, t: ReturnType<typeof createTranslator
     if (value === undefined) return undefined;
     const ids = known.map((entry) => (typeof entry === 'string' ? entry : entry.id));
     if (!ids.includes(value)) {
-      throw new UsageError(t('cli.error.unknownValue', { option: flag, value }));
+      throw new UsageError('cli.error.unknownValue', { option: flag, value });
     }
     return value as T;
   };
@@ -503,7 +528,7 @@ function resolveCriteria(options: Options, t: ReturnType<typeof createTranslator
   const errand = one<PurposeId>(options.for, PURPOSES, '--for');
   const fromErrand = errand ? purposeCriteria(errand).gate : undefined;
   if (fromErrand && options.gate && options.gate !== fromErrand) {
-    throw new UsageError(t('cli.error.contradiction', { option: '--for', other: '--gate' }));
+    throw new UsageError('cli.error.contradiction', { option: '--for', other: '--gate' });
   }
 
   const gate = one<GateId>(options.gate ?? fromErrand, GATES, '--gate');
@@ -527,26 +552,34 @@ function resolveCriteria(options: Options, t: ReturnType<typeof createTranslator
   return criteria;
 }
 
-function resolveOptions(options: Options, t: Translator): ChartOptions {
+function resolveOptions(options: Options): ChartOptions {
   const chartOptions: ChartOptions = { ...DEFAULT_OPTIONS };
   if (options.trueSolar !== undefined) chartOptions.trueSolarTime = options.trueSolar;
-  if (options.dayBoundary === 'midnight' || options.dayBoundary === 'zishi') {
+  // Strict, like the two below: nothing in the printed chart says which day
+  // boundary was read, so a misspelling that fell back to zishi would move
+  // the day pillar with no visible symptom.
+  if (options.dayBoundary !== undefined) {
+    if (options.dayBoundary !== 'zishi' && options.dayBoundary !== 'midnight') {
+      throw new UsageError('cli.error.unknownValue', {
+        option: '--day-boundary',
+        value: options.dayBoundary,
+      });
+    }
     chartOptions.dayBoundary = options.dayBoundary;
   }
-  // Strict, unlike the two above: their misspellings fall back to a default
-  // that shows in the output, but a chart cast by the wrong method looks
-  // right and is not. maoshan passes through and the engine refuses it.
+  // A chart cast by the wrong method looks right and is not. maoshan passes
+  // through and the engine refuses it.
   if (options.method !== undefined) {
     if (options.method !== 'chaibu' && options.method !== 'zhirun' && options.method !== 'maoshan') {
-      throw new UsageError(t('cli.error.unknownValue', { option: '--method', value: options.method }));
+      throw new UsageError('cli.error.unknownValue', { option: '--method', value: options.method });
     }
     chartOptions.method = options.method;
   }
-  // Strict for the same reason: a yuan read from the wrong end moves the ju
-  // on most days, and a misspelling that fell back would do it silently.
+  // A yuan read from the wrong end moves the ju on most days, and a
+  // misspelling that fell back would do it silently.
   if (options.yuan !== undefined) {
     if (options.yuan !== 'term' && options.yuan !== 'futou') {
-      throw new UsageError(t('cli.error.unknownValue', { option: '--yuan', value: options.yuan }));
+      throw new UsageError('cli.error.unknownValue', { option: '--yuan', value: options.yuan });
     }
     chartOptions.yuan = options.yuan;
   }
@@ -614,7 +647,7 @@ function parse(argv: string[]): { command?: Command; options: Options } {
     if (key) {
       const value = argv[i + 1];
       if (value === undefined || value.startsWith('--')) {
-        throw new Error(`Option "${argument}" needs a value.`);
+        throw new UsageError('cli.error.missingValue', { option: argument });
       }
       (options as unknown as Record<string, string>)[key] = value;
       i += 1;
@@ -622,13 +655,13 @@ function parse(argv: string[]): { command?: Command; options: Options } {
     }
 
     if (argument.startsWith('-')) {
-      throw new Error(`Unknown option "${argument}". Try \`qimen --help\`.`);
+      throw new UsageError('cli.error.unknownOption', { option: argument });
     }
     if (!command && (COMMANDS as readonly string[]).includes(argument)) {
       command = argument as Command;
       continue;
     }
-    throw new Error(`Unknown command "${argument}". Try \`qimen --help\`.`);
+    throw new UsageError('cli.error.unknownCommand', { command: argument });
   }
 
   return { command, options };

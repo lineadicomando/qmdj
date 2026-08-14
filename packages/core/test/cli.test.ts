@@ -102,6 +102,16 @@ describe('chart', () => {
     expect(out).not.toContain('futou');
   });
 
+  it('refuses a day boundary it has never heard of', async () => {
+    // Strict like the other two, and for a sharper reason: nothing printed
+    // says which boundary was read, so a fallback would move the day pillar
+    // of the 23:00 hour with nothing on the page to show for it.
+    const code = await run(['chart', ...MOMENT, '--day-boundary', 'midnght', '--lang', 'en']);
+
+    expect(code).toBe(2);
+    expect(err).toContain('midnght');
+  });
+
   it('refuses a yuan it has never heard of', async () => {
     const code = await run(['chart', ...MOMENT, '--yuan', 'futuo', '--lang', 'en']);
 
@@ -366,6 +376,22 @@ describe('failing', () => {
     expect(err).toContain('--gender');
     expect(err).not.toContain('at ');
     expect(out).toBe('');
+  });
+
+  it('reports a mistake in the arguments themselves in the requested locale', async () => {
+    // Thrown by `parse`, before there is anything parsed to read a locale
+    // from — so the locale is taken off the raw arguments first. These three
+    // were English sentences no catalog could reach.
+    expect(await run(['chart', '--rising-sign', '--lang', 'it'])).toBe(2);
+    expect(err).toContain('sconosciuta');
+
+    err = '';
+    expect(await run(['horoscope', '--lang', 'it'])).toBe(2);
+    expect(err).toContain('sconosciuto');
+
+    err = '';
+    expect(await run(['chart', '--date', '--lang', 'it'])).toBe(2);
+    expect(err).toContain('richiede un valore');
   });
 
   it('prints help and stops when asked', async () => {
