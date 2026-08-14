@@ -1,4 +1,5 @@
 import sweph from 'sweph';
+import { assertEphemerisRange } from './ephemeris.js';
 import { ChartError } from './errors.js';
 
 export interface TrueSolarTime {
@@ -47,6 +48,10 @@ export function trueSolarTime(
   if (!Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
     throw new ChartError('INVALID_COORDINATES', { longitude });
   }
+  // The equation of time is an ephemeris question like any other, and this is
+  // the first one a moment asks: refused here, an impossible date is named as
+  // a date rather than as whatever sweph says about its files.
+  assertEphemerisRange(julianDayUT);
 
   // Local mean time at the place: the Sun's *mean* motion seen from this
   // meridian, which is what `lmt_to_lat` expects as its argument.

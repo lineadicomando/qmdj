@@ -1,7 +1,9 @@
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { DateTime } from 'luxon';
 import sweph from 'sweph';
 import { ChartError, warning, type ChartWarning } from './errors.js';
+import { julianDayToMillis } from './time.js';
 
 /**
  * Minimal ephemeris files for `swisseph` mode, covering 1800-2399.
@@ -30,6 +32,38 @@ export interface EphemerisContext {
 }
 
 let cache: { key: string; context: EphemerisContext } | undefined;
+
+/**
+ * The Julian Days the Moshier ephemeris covers, which are the hard bounds in
+ * either mode: outside its `.se1` files Swiss Ephemeris falls back to Moshier
+ * by itself, and beyond Moshier there is nothing left to fall back to. The
+ * numbers are sweph's own (MOSHPLEPH_START and MOSHPLEPH_END), roughly
+ * 3000 BC to 3000 AD.
+ */
+const EPHEMERIS_START_JD = 625000.5;
+const EPHEMERIS_END_JD = 2818000.5;
+
+/**
+ * Refuses an instant the ephemeris cannot answer for, before sweph is asked.
+ *
+ * Asked anyway, sweph reports the failure as an internal message about files
+ * and Julian Days — a fault addressed to nobody. This names the date and the
+ * range instead, which is what whoever typed the date can act on.
+ */
+export function assertEphemerisRange(julianDayUT: number): void {
+  if (julianDayUT >= EPHEMERIS_START_JD && julianDayUT <= EPHEMERIS_END_JD) return;
+  throw new ChartError('DATE_OUT_OF_RANGE', {
+    date: calendarDay(julianDayUT),
+    from: calendarDay(EPHEMERIS_START_JD),
+    to: calendarDay(EPHEMERIS_END_JD),
+  });
+}
+
+/** The UTC date a Julian Day falls on — or the day itself, past what a date can say. */
+function calendarDay(julianDayUT: number): string {
+  const day = DateTime.fromMillis(julianDayToMillis(julianDayUT), { zone: 'utc' });
+  return day.isValid ? (day.toISODate() as string) : `JD ${julianDayUT}`;
+}
 
 /**
  * Prepares Swiss Ephemeris and settles the calculation mode.
@@ -85,6 +119,7 @@ export function moonLongitude(julianDayUT: number, context: EphemerisContext): n
 }
 
 function bodyLongitude(julianDayUT: number, body: number, context: EphemerisContext): number {
+  assertEphemerisRange(julianDayUT);
   const result = sweph.calc_ut(julianDayUT, body, context.flags);
   if (result.flag < 0) {
     throw new ChartError('EPHEMERIS_FAILURE', {
@@ -115,6 +150,7 @@ export function sunCrossing(
   after: number,
   context: EphemerisContext,
 ): number {
+  assertEphemerisRange(after);
   const result = sweph.solcross_ut(normalize360(target), after, context.flags);
   if (typeof result.date !== 'number' || !Number.isFinite(result.date)) {
     throw new ChartError('EPHEMERIS_FAILURE', {

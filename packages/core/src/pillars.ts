@@ -141,7 +141,11 @@ export function resolveMoment(
     solarTerm,
     jie,
     options,
-    warnings,
+    // The context's warnings travel with the moment: which ephemeris answered
+    // is a fact about how this was computed, and a saved chart must still
+    // explain itself. This is the only road a MOSHIER_FALLBACK has to a
+    // surface — the context itself never leaves the engine.
+    warnings: [...context.warnings, ...warnings],
   } as Moment;
 
   // Enumerable, so a moment still serialises whole: whoever hands one to

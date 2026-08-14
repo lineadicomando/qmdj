@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
+import { ChartError } from '../src/errors.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
 import { resolveMoment } from '../src/pillars.js';
 import { DEFAULT_OPTIONS, type ChartOptions, type Place } from '../src/types.js';
@@ -183,6 +184,25 @@ describe('what a moment carries', () => {
 
     expect(moment.warnings.map((w) => w.code)).toContain('NONEXISTENT_LOCAL_TIME');
     expect(moment.pillars.day.hanzi).toBeTruthy();
+  });
+
+  it('refuses a date the ephemeris cannot answer for, by name', () => {
+    // Well past where Moshier stops, which is where either mode stops. Asked
+    // anyway, sweph reported it as an internal message about files and Julian
+    // Days; the date and the range it fell outside are what can be acted on.
+    try {
+      resolveMoment(
+        { date: '9999-06-15', time: '12:00', timezone: 'Asia/Shanghai' },
+        BEIJING,
+        CLOCK,
+        context,
+      );
+      expect.unreachable('should have thrown');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ChartError);
+      expect((error as ChartError).code).toBe('DATE_OUT_OF_RANGE');
+      expect((error as ChartError).params).toMatchObject({ date: '9999-06-15' });
+    }
   });
 
   it('reports the term, the jie and the lunar date together', () => {
