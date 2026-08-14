@@ -133,6 +133,40 @@ describe('GET /api/chart', () => {
     expect((await call(chart, 'latitude=39.9')).status).toBe(400);
   });
 
+  it('refuses coordinates given as empty strings', async () => {
+    // `?latitude=&longitude=` passed the presence check, and `Number('')` is
+    // 0: a chart for the Gulf of Guinea, looking exactly like the one asked
+    // for.
+    const { status, body } = await call(chart, 'date=2024-06-15&latitude=&longitude=');
+
+    expect(status).toBe(400);
+    expect(body).toMatchObject({
+      code: 'INVALID_NUMBER',
+      messageKey: 'web.error.INVALID_NUMBER',
+      params: { parameter: 'latitude', value: '' },
+    });
+  });
+
+  it('refuses a coordinate that does not read as a number', async () => {
+    // `Number('abc')` is NaN, which serializes as `null` and was served 200.
+    const { status, body } = await call(chart, 'date=2024-06-15&latitude=39.9&longitude=abc');
+
+    expect(status).toBe(400);
+    expect(body).toMatchObject({
+      code: 'INVALID_NUMBER',
+      params: { parameter: 'longitude', value: 'abc' },
+    });
+  });
+
+  it('accepts coordinates with a sign and a fraction', async () => {
+    const southern =
+      'date=2024-06-15&time=14:00&latitude=-33.8688&longitude=151.2093&timezone=Australia/Sydney';
+    const { status, body } = await call(chart, southern);
+
+    expect(status).toBe(200);
+    expect((body as { chart: { palaces: unknown[] } }).chart.palaces).toHaveLength(9);
+  });
+
   it('casts by the method the address chooses', async () => {
     // The same instant under the two schools, and not even the dun survives:
     // 15 June 2024 is ten days into 芒種, lower yuan of a yang chart under
@@ -315,6 +349,25 @@ describe('GET /api/locations', () => {
     expect((italian as { results: { name: string }[] }).results[0]?.name).toBe(
       'Monaco di Baviera',
     );
+  });
+
+  it('refuses a limit that does not read as a number', async () => {
+    // NaN through the clamp in `geo` reached SQLite's `LIMIT ?`, and the
+    // SqliteError came back as a 500 in prose.
+    const { status, body } = await call(locations, 'q=Rome&limit=abc');
+
+    expect(status).toBe(400);
+    expect(body).toMatchObject({
+      code: 'INVALID_NUMBER',
+      messageKey: 'web.error.INVALID_NUMBER',
+      params: { parameter: 'limit', value: 'abc' },
+    });
+  });
+
+  it('honours a limit that does', async () => {
+    const { body } = await call(locations, 'q=Rome&limit=1');
+
+    expect((body as { results: unknown[] }).results).toHaveLength(1);
   });
 
   it('says a place is unknown with a code, not with an empty list', async () => {

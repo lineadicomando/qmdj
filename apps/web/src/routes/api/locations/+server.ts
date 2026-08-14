@@ -2,6 +2,7 @@ import { getLocation, searchLocations } from '@qimendunjia/geo';
 import { resolveLocale } from '@qimendunjia/i18n';
 import { error, json } from '@sveltejs/kit';
 import { isHttpError, toHttpError } from '$lib/server/errors';
+import { readInteger } from '$lib/server/params';
 import type { RequestHandler } from './$types';
 
 /**
@@ -38,9 +39,12 @@ export const GET: RequestHandler = ({ url, setHeaders }) => {
 
     const options: Parameters<typeof searchLocations>[1] = { lang };
     const country = url.searchParams.get('country');
-    const limit = url.searchParams.get('limit');
+    // `readInteger` refuses what does not read as one: `Number('abc')` is NaN,
+    // NaN slides through the clamp in `geo`, and SQLite's `LIMIT ?` answered
+    // with a 500 in prose.
+    const limit = readInteger(url.searchParams, 'limit');
     if (country) options.countryCode = country;
-    if (limit) options.limit = Number(limit);
+    if (limit !== undefined) options.limit = limit;
 
     const results = searchLocations(query, options);
 

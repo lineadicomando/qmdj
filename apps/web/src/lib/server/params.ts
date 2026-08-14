@@ -73,13 +73,33 @@ export function readInteger(
 
   const parsed = Number(value);
   if (!Number.isInteger(parsed) || (bounds && (parsed < bounds.least || parsed > bounds.most))) {
-    error(400, {
-      message: `"${value}" is not a valid number for ${name}.`,
-      code: 'INVALID_NUMBER',
-      messageKey: 'web.error.INVALID_NUMBER',
-      params: { parameter: name, value },
-    });
+    invalidNumber(name, value);
   }
+  return parsed;
+}
+
+/** The refusal `readInteger` and the coordinates share: a code, never prose. */
+function invalidNumber(name: string, value: string): never {
+  error(400, {
+    message: `"${value}" is not a valid number for ${name}.`,
+    code: 'INVALID_NUMBER',
+    messageKey: 'web.error.INVALID_NUMBER',
+    params: { parameter: name, value },
+  });
+}
+
+/**
+ * A coordinate out of the address: a float, and present means readable.
+ *
+ * Not `readInteger` — a latitude has a fraction — and not its absence rule
+ * either: the parameter is already known to be present, so an empty one is
+ * refused rather than defaulted. `Number('')` is 0, which would answer with
+ * a chart for the Gulf of Guinea as if it had been asked for; `Number('abc')`
+ * is NaN, which serializes as `null` and looks like an answer too.
+ */
+function readCoordinate(name: string, value: string): number {
+  const parsed = Number(value);
+  if (value.trim() === '' || !Number.isFinite(parsed)) invalidNumber(name, value);
   return parsed;
 }
 
@@ -141,7 +161,11 @@ export function readPlace(params: URLSearchParams): {
 
   if (latitude !== null && longitude !== null) {
     return {
-      place: { latitude: Number(latitude), longitude: Number(longitude), timezone },
+      place: {
+        latitude: readCoordinate('latitude', latitude),
+        longitude: readCoordinate('longitude', longitude),
+        timezone,
+      },
     };
   }
   if (latitude !== null || longitude !== null) {
