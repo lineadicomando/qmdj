@@ -340,6 +340,7 @@ export const it: Record<MessageKey, string> = {
 
   'nav.chart': 'Qi Men',
   'nav.bazi': 'Quattro pilastri',
+  'nav.liuren': 'Liu Ren',
   'nav.moments': 'Scegliere il momento',
   'nav.consult': 'Consultazione',
   'nav.sections': 'Sezioni',
@@ -557,6 +558,14 @@ export const it: Record<MessageKey, string> = {
   // verso classico: la carta è quella dell'ora, e la persona vi si colloca
   // dentro. Non è la carta di una nascita; vedi docs/sources.md.
   'cli.heading.nianming': 'Dove sta la nascita',
+  // L'unica divergenza del Liu Ren offerta al lettore. Ogni opzione dice a
+  // parole di quale verso si tratta: un'opzione che recitasse `chou` sarebbe
+  // una che nessuno può scegliere di proposito.
+  'form.guiren': 'Quale verso insedia il nobile (貴人)',
+  'form.guiren.chou': '甲 con 戊 e 庚, a 丑 e 未',
+  'form.guiren.wei': '甲 da solo, a 未 e 丑',
+  'form.guiren.note': 'Muove i dodici generali e lascia stare le tre trasmissioni.',
+  'cli.column.general': 'generale',
   'cli.heading.liuren': 'Il quadro del Liu Ren',
   'cli.field.yuejiang': 'generale del mese',
   'cli.field.plate': 'cielo sopra terra',

@@ -1630,6 +1630,23 @@ own branch faint underneath, because the ground is what a reader orients by
 and not what they read. The lessons are written right to left and the
 transmissions downwards.
 
+**And a section of its own**, at `/[lang]/liuren`, second in the nav because
+六壬 is the sibling of the board beside it and not an instrument the way the
+pillars and the scan are. Laying is navigating here, as casting is for the
+chart: the address holds the moment, an empty one is the present minute — a
+board of this minute is what a 六壬 reader wants most often, where a chart of
+birth for whoever opened the page would be a wrong answer — and the one
+divergence offered, `guiren`, travels in it. The page prints, with the same
+pair of pictures the chart draws: an `<img>` carries its colours in its
+address, so the copy for paper is a second one drawn at `scheme=light` and
+warmed the moment the board is laid.
+
+**One thing was said twice and is now said once.** 八專, 別責 and 涉害 name the
+shape of the board with the same words as the rule that found it, so a board
+drawn by one of them carried `the eight concentrated` in the middle of the
+picture and again underneath. Both the drawing and the page now drop the 課體
+when it repeats the rule.
+
 Two things it had to learn that the first drawing already knew. Type is
 **fitted** to the middle rather than set at a size and hoped for: the caption
 arrives from a caller in a language this package does not know, and an English

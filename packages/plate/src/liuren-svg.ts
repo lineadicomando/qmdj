@@ -207,10 +207,14 @@ function middle(
   const top = box.top + box.cell;
   const room = box.cell * 1.85;
   const rule = labels.rule?.[board.rule];
-  const keti = board.keti ? labels.keti?.[board.keti] : undefined;
+  const named = board.keti ? labels.keti?.[board.keti] : undefined;
+  // 八專, 別責 and 涉害 name the shape with the same words as the rule that
+  // found it, so a board drawn by one of those would carry the same line
+  // twice. Said once.
+  const keti = named === rule ? undefined : named;
 
   return [
-    text(centre, top + box.cell * 0.86, rule ?? '', fitted(rule ?? '', box.cell * 0.2, room)),
+    text(centre, top + box.cell * (keti ? 0.86 : 1.05), rule ?? '', fitted(rule ?? '', box.cell * 0.2, room)),
     text(centre, top + box.cell * 1.3, keti ?? '', fitted(keti ?? '', box.cell * 0.17, room), 'faint'),
   ];
 }

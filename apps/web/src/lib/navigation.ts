@@ -18,6 +18,7 @@ import type { MessageKey } from '@qimendunjia/i18n';
 export const SECTIONS: readonly { slug: string; label: MessageKey }[] = [
   { slug: '', label: 'nav.consult' },
   { slug: 'chart', label: 'nav.chart' },
+  { slug: 'liuren', label: 'nav.liuren' },
   { slug: 'bazi', label: 'nav.bazi' },
   { slug: 'moments', label: 'nav.moments' },
 ];

@@ -14,7 +14,7 @@ anything.
 | `packages/core` | calculation engine and the `qimen` CLI: solar terms, lunar calendar, sexagenary cycles, Four Pillars, Qi Men charts, Liu Ren boards, scanning an interval |
 | `packages/plate` | the drawings: the nine palaces of a chart, the ring of twelve of a 六壬 board, glyphs, SVG and PNG |
 | `packages/mcp` | MCP server: nine tools, four resources, stdio transport |
-| `apps/web` | SvelteKit: four sections at `/en` and `/it`, plus ten GET endpoints under `/api` |
+| `apps/web` | SvelteKit: five sections at `/en` and `/it`, plus ten GET endpoints under `/api` |
 
 npm workspaces monorepo, Node ≥ 22, ESM, TypeScript.
 

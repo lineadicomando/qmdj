@@ -365,6 +365,7 @@ export const en = {
 
   'nav.chart': 'Qi Men',
   'nav.bazi': 'Four Pillars',
+  'nav.liuren': 'Liu Ren',
   'nav.moments': 'Choosing a time',
   // Named by the act, which is the one this section is built around: a
   // question put at an instant, and the chart cast for that instant. It was
@@ -745,6 +746,14 @@ export const en = {
   // classical direction: the chart is the hour's, and the person is placed in
   // it. Not a chart of a birth; see docs/sources.md.
   'cli.heading.nianming': 'Where the birth stands',
+  // The one Liu Ren divergence a reader is offered. Each option says which
+  // verse it is in words: an option reading `chou` is one nobody can choose
+  // on purpose.
+  'form.guiren': 'Which verse seats the noble (貴人)',
+  'form.guiren.chou': '甲 with 戊 and 庚, at 丑 and 未',
+  'form.guiren.wei': '甲 apart, at 未 and 丑',
+  'form.guiren.note': 'It moves the twelve generals and leaves the three transmissions alone.',
+  'cli.column.general': 'general',
   'cli.heading.liuren': 'The Liu Ren board',
   'cli.field.yuejiang': 'general of the month',
   'cli.field.plate': 'heaven over earth',
