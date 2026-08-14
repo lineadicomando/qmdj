@@ -363,8 +363,24 @@ export const en = {
   'label.layer.star': 'stars',
   'label.layer.both': 'gates and stars',
 
+  // The three methods carry their own names and the two errands do not, and
+  // the line between them is what is being named rather than who is reading.
+  //
+  // Qi Men, Liu Ren and Ba Zi are methods, and a method is a Chinese thing:
+  // its name is 奇門遁甲 and not a description of what it does, so it travels
+  // romanised and untranslated the way a person's name does. «Four Pillars»
+  // read as a translation of 八字 and was one — which left the section beside
+  // two named neighbours as the only one wearing a gloss.
+  //
+  // The consultation and the choosing of a time are **acts**, not methods.
+  // What is named there is something the reader does, and that is named in
+  // the reader's own language, as everything they operate is.
+  //
+  // No tone marks here, unlike everywhere else a name is set: these are the
+  // spaced, capitalised forms an English or Italian reader meets in print,
+  // not the readings the engine carries beside its hanzi.
   'nav.chart': 'Qi Men',
-  'nav.bazi': 'Four Pillars',
+  'nav.bazi': 'Ba Zi',
   'nav.liuren': 'Liu Ren',
   'nav.moments': 'Choosing a time',
   // Named by the act, which is the one this section is built around: a

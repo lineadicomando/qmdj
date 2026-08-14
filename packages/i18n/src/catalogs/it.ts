@@ -338,8 +338,24 @@ export const it: Record<MessageKey, string> = {
   'label.layer.star': 'stelle',
   'label.layer.both': 'porte e stelle',
 
+  // I tre metodi portano il proprio nome e i due atti no, e la linea fra loro
+  // sta in ciò che si nomina, non in chi legge.
+  //
+  // Qi Men, Liu Ren e Ba Zi sono metodi, e un metodo è una cosa cinese: il suo
+  // nome è 奇門遁甲, non una descrizione di cosa fa, quindi viaggia
+  // romanizzato e non tradotto come viaggia il nome di una persona. «Quattro
+  // pilastri» era una traduzione di 八字, e lasciava quella sezione come
+  // l'unica con una glossa addosso fra due vicine chiamate per nome.
+  //
+  // La consultazione e lo scegliere il momento sono **atti**, non metodi. Lì
+  // si nomina qualcosa che il lettore fa, e quello si nomina nella lingua del
+  // lettore, come tutto ciò che opera.
+  //
+  // Senza segni di tono, a differenza di ogni altro nome: sono le forme
+  // staccate e maiuscole che un lettore incontra in stampa, non le letture che
+  // il motore porta accanto ai propri hanzi.
   'nav.chart': 'Qi Men',
-  'nav.bazi': 'Quattro pilastri',
+  'nav.bazi': 'Ba Zi',
   'nav.liuren': 'Liu Ren',
   'nav.moments': 'Scegliere il momento',
   'nav.consult': 'Consultazione',
