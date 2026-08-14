@@ -538,7 +538,7 @@ export const en = {
   // a chart of a life. Neither is the other, and a chart of a birth with a
   // question on it would be a third thing this project has already declined —
   // comparing a natal chart against the chart of a moment.
-  'consult.title': 'Asking an AI to read a chart',
+  'consult.title': 'Asking an AI to read a board',
   // The birth, offered beside the question rather than instead of it. What it
   // produces is a 年命: the chart stays the chart of the moment and the birth
   // is looked up inside it, which is what 《遁甲演義》 prescribes and the
@@ -557,7 +557,7 @@ export const en = {
   // the only thing a newcomer needs before they start typing.
   'consult.lead':
     'Ask a question and get a prompt, ready to paste into ChatGPT, Claude or another assistant.',
-  'consult.cast': 'Cast the chart',
+  'consult.cast': 'Put the question',
   // What reopening the panel offers, which is the question and not the
   // moment: a second consultation begins by rewriting the question, and
   // everything else in there is setup somebody set once. It is also the only
@@ -566,11 +566,14 @@ export const en = {
   // them.
   'consult.change': 'Change the question',
   // Over the board, on the sheet somebody prints. The instant is the answer
-  // to *which* chart this is, and on paper it is the only answer there is.
-  'consult.castAt': 'Chart cast for {when}',
+  // to *which* board this is, and on paper it is the only answer there is.
+  // The noun is gone from the words a consultation shows under both
+  // instruments: `chart` is the nine palaces and would be wrong over a ring
+  // of twelve, and the button says the act rather than the object.
+  'consult.castAt': 'Laid for {when}',
   // The request itself failed, so there is no code to translate. Not
   // `form.copyUnread`: on a first press nothing was ever cast to read again.
-  'consult.castFailed': 'The chart could not be cast.',
+  'consult.castFailed': 'The board could not be laid.',
 
   // Under the board, where somebody who wants a reading will be looking. It
   // sends them on rather than offering a field here: the question belongs
@@ -590,7 +593,7 @@ export const en = {
   // aloud. It is not a formality: the chart is read *towards* a question, and
   // a prompt built without one asks a model to read towards nothing.
   'form.question': 'Your question',
-  'form.questionPlaceholder': 'What are you asking this chart?',
+  'form.questionPlaceholder': 'What are you asking?',
 
   // The face of each step is the word, in the reader's language: these are
   // controls, and a control nobody can read is a control nobody can press.
@@ -672,9 +675,9 @@ export const en = {
   // information and made the questions decorative: nobody unreads the reading
   // to answer them.
   'prompt.tooLittle':
-    'If what you have been told does not let you choose that palace, ask before you read — and then stop, with the questions in place of the reading and never alongside it. One or two of them, whichever would actually change the reading, and not a questionnaire. Do not put a reading under them, or a provisional one, or a first impression to be revised once they are answered: whatever you write will be read as the reading, and it will have been given without the answers you just said you needed. Wait for them.',
+    'If what you have been told does not let you make that choice, ask before you read — and then stop, with the questions in place of the reading and never alongside it. One or two of them, whichever would actually change the reading, and not a questionnaire. Do not put a reading under them, or a provisional one, or a first impression to be revised once they are answered: whatever you write will be read as the reading, and it will have been given without the answers you just said you needed. Wait for them.',
   'prompt.whatToAsk':
-    'What is worth asking for is what the question leaves open: what the matter is really about, whom it concerns and whether that is the person asking, whether it is already under way or not yet begun, whether a place or a direction is part of it, and by when they need to know. What cannot be asked for is more chart — nothing missing from what is set out below can be got by conversation, and no answer moves a single palace. If the person answers that they cannot say or would rather not, read then what can be read and name what you are missing instead of filling it in — that is what their answer licenses, and only their answer.',
+    'What is worth asking for is what the question leaves open: what the matter is really about, whom it concerns and whether that is the person asking, whether it is already under way or not yet begun, whether a place or a direction is part of it, and by when they need to know. What cannot be asked for is more board — nothing missing from what is set out below can be got by conversation, and no answer moves anything on it. If the person answers that they cannot say or would rather not, read then what can be read and name what you are missing instead of filling it in — that is what their answer licenses, and only their answer.',
   'prompt.noScore':
     'Do not count 吉 jí against 凶 xiōng and call the result a score for the hour. That arithmetic is not in the tradition and the chart does not license it. Do not rank the palaces, and do not rank the hours.',
   'prompt.noAdvice':
@@ -709,7 +712,31 @@ export const en = {
   // offer where two pairs fell, and still refuse the mapping.
   'prompt.nianming':
     'The transcript carries a 年命 niánmìng: the year pillar of the person asking (本命 běnmìng) and, where it was given, the year they are living (行年 xíngnián), each looked up inside this chart. **It is who is asking, and not a second reading.** Do not give it a section of its own, and do not list its palace, star, gate, spirit and image back to the reader — the tables above already say all of that. Use it where it bears on the question: where the person stands in relation to the palace you chose for the matter, whether the two are the same palace, whether one generates or controls the other, whether the person stands in the palace the matter has to pass through. That relation is what the pair adds; everything else about it is already on the board. 遁甲演義 dùnjiǎ yǎnyì, the treatise this comes from, has a reading weigh 本命 and 行年 before anything else and looks for the person\'s year to ride a palace where a good star and a good gate stand in strength — that is the tradition\'s criterion, said as theirs, and it is a thing to weigh and not a score to compute. This is not a chart of a birth and no life is to be read from it: nothing here says which palace stands for which part of a life, and none is implied — that mapping is where the schools diverge most and where most of what circulates is one lineage\'s teaching material. If you go further, say plainly that the step is yours.',
-  'prompt.source': 'The chart is at {url}',
+  // The other 式, and its own conditions. The instructions it shares with the
+  // chart — the language, asking before reading, what may be asked for, whose
+  // the reading is, the names, the disclaimer — are the same keys; what is
+  // below is what differs, and it differs because the boards differ.
+  'prompt.liuren.heading': 'Reading a Da Liu Ren board',
+  'prompt.liuren.role':
+    'A Da Liu Ren board is set out below. It was computed by an ephemeris and by the rules of the method, not by you: read it exactly as it stands, and add nothing to it. No branch, no general, no course, no transmission that is not written there. If something you need is missing, say it is missing.',
+  // The one thing a model gets wrong here by being helpful. It knows enough
+  // about 六壬 to try to derive the transmissions, and a board derived wrongly
+  // and read well is the failure nothing downstream can catch.
+  'prompt.liuren.drawn':
+    'The three transmissions 三傳 sānchuán were drawn by procedure — the nine rules 九宗門 jiǔzōngmén, applied in their stated order to the four courses — and the rule that drew them is named in the transcript. Do not re-derive them, do not reorder them, and do not substitute a rule you would have applied instead. They are data, exactly as the plate is.',
+  'prompt.liuren.yongshen':
+    'That the transmissions arrive drawn does not mean the board has read itself. Which of the four courses 四課 sìkè bears on what was asked is the reader\'s choice, and the software that produced this does not know the question. The first two courses stand on the day stem, which is the person asking; the third and fourth stand on the day branch, which is the matter or the other party. Say which you are reading from, and why that one.',
+  'prompt.liuren.noScore':
+    'Do not weigh the twelve generals against one another and call the result a verdict on the hour. Do not rank the three transmissions — they are a beginning, a middle and an end, in that order because the procedure produced them in it, and not a first, second and third place. Do not rank the hours.',
+  // The 課體 are `Pattern` by another name, and the same rule governs them.
+  'prompt.liuren.keti':
+    'The named course 課體 kètǐ — 元首 yuánshǒu, 重審 zhòngshěn, 涉害 shèhài and the rest — is a name for the shape the board fell into, in the way a configuration of the nine palaces is. It is not a verdict on the matter and not a fortune for the person. Where the transcript gives a name, report it as a name.',
+  'prompt.liuren.unverified':
+    'This board was drawn by 返吟 fǎnyín, and that rule rests on a clause no independent implementation covers. Every other rule here was checked against two of them. Say so if you read from it.',
+  'prompt.liuren.board': 'The board',
+  'prompt.liuren.noQuestion':
+    'No question was asked. Describe how the board stands — what the plate turned, what the four courses hold, which rule drew the transmissions and what they are — and stop there. Do not choose a course, do not read a fortune for anybody, and do not advise.',
+  'prompt.source': 'The board is at {url}',
   'prompt.chart': 'The chart',
   'prompt.asked': 'The question asked is:',
   'prompt.noQuestion':
@@ -749,6 +776,14 @@ export const en = {
   // The one Liu Ren divergence a reader is offered. Each option says which
   // verse it is in words: an option reading `chou` is one nobody can choose
   // on purpose.
+  // Which board the question is put to. The options lead with what they are
+  // for, because somebody arriving with a question recognises the shape of
+  // their own and has no way to weigh two Chinese names. The name of the art
+  // follows the words rather than replacing them: a method is a Chinese
+  // thing, and this is the one place on the page where that is what is named.
+  'form.instrument': 'What kind of question is it',
+  'form.instrument.qimen': 'When to move, and which way — 奇門遁甲 qíméndùnjiǎ',
+  'form.instrument.liuren': 'What is going on, and with whom — 大六壬 dàliùrén',
   'form.guiren': 'Which verse seats the noble (貴人)',
   'form.guiren.chou': '甲 with 戊 and 庚, at 丑 and 未',
   'form.guiren.wei': '甲 apart, at 未 and 丑',

@@ -53,7 +53,7 @@ import {
 } from './liuren.js';
 import { nianmingOf, yearsLived, type Nianming, type NianmingOptions } from './nianming.js';
 import { resolveMoment, type Moment } from './pillars.js';
-import { chartTranscript, readingPrompt } from './prompt.js';
+import { chartTranscript, liurenReadingPrompt, readingPrompt } from './prompt.js';
 import { PURPOSES, purposeCriteria, type PurposeId } from './purposes.js';
 import { matchRuns, scanCharts, type ScanCriteria } from './scan.js';
 import { solarTermsOfYear } from './solar-terms.js';
@@ -169,7 +169,8 @@ Narrowing a scan
   --help
 
 Handing a chart to a model
-  --prompt               for \`chart\`: the chart wrapped in the instructions
+  --prompt               for \`chart\` and \`liuren\`: the board wrapped in the
+                         instructions
                          for reading it, to paste into an assistant that has
                          no connection to this engine
   --ask "…"              the question it is to be read for; implies --prompt.
@@ -357,6 +358,15 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
       liurenOptionsFrom(options),
     );
     if (options.json) return JSON.stringify({ moment, liuren: board }, null, 2);
+
+    // As for the chart: a question asked is a question meant to be carried,
+    // so `--ask` turns the plain printing into the prompt by itself.
+    if (options.prompt || options.ask !== undefined) {
+      return liurenReadingPrompt(moment, board, t, {
+        ...(options.ask !== undefined ? { question: options.ask } : {}),
+      });
+    }
+
     const parts = [formatMoment(moment, t), '', formatLiuren(board, t)];
     const warnings = warningsOf(moment, t);
     if (warnings !== '') parts.push(warnings);

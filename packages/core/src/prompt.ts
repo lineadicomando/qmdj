@@ -1,6 +1,13 @@
 import type { Translator } from '@qimendunjia/i18n';
 import type { QimenChart } from './dunjia/index.js';
-import { formatMoment, formatNianming, formatQimenChart, formatWarnings } from './format.js';
+import {
+  formatLiuren,
+  formatMoment,
+  formatNianming,
+  formatQimenChart,
+  formatWarnings,
+} from './format.js';
+import type { LiurenBoard } from './liuren.js';
 import type { Nianming } from './nianming.js';
 import type { Moment } from './pillars.js';
 
@@ -24,6 +31,15 @@ import type { Moment } from './pillars.js';
  * It builds readable text from a `Translator`, exactly as `format.ts` does
  * and for the same reason: the surface chooses the language, the engine holds
  * no catalog and decides nothing about who is reading.
+ *
+ * **There are two boards and there is one in a prompt.** Not because a reader
+ * could not hold both, but because a model given both will merge them into a
+ * verdict no text licenses, and — worse — will read their agreement as
+ * corroboration when the two share the day pillar, the decade, the void
+ * branches and seven of the eight spirits. Where they agree it is frequently
+ * one fact printed twice. So the two functions below never meet: a
+ * consultation is an act and takes one instrument, and comparing instruments
+ * happens where nothing is being asked. See `PLAN.md` § 4 phase 14.
  */
 
 /**
@@ -94,6 +110,94 @@ export function chartTranscript(
     ...(extra.nianming ? ['', formatNianming(extra.nianming, t)] : []),
     ...(warnings ? ['', warnings] : []),
     ...(extra.source ? ['', `  ${t('prompt.source', { url: extra.source })}`] : []),
+  ].join('\n');
+}
+
+/**
+ * What is being asked of a Liu Ren board.
+ *
+ * The same as a chart's, less the 年命. A birth is not offered with this board
+ * and the omission is structural rather than cautious: the person asking is
+ * already in it. The first course stands on the day stem, which *is* them, and
+ * the third on the day branch, which is the matter or the other party. A 本命
+ * laid beside that would be a second name for one person, and two names for
+ * one person is how a reading acquires a relation that was never there.
+ */
+export interface LiurenReadingRequest {
+  source?: string;
+  /** As `ReadingRequest.question`, including the empty string. */
+  question?: string;
+}
+
+/**
+ * The board said in full: the instant, its pillars, the plate, the courses,
+ * the transmissions and the rule that drew them.
+ *
+ * One rendering, as the chart has one, so that what somebody pastes is what
+ * they were looking at.
+ */
+export function liurenTranscript(
+  moment: Moment,
+  board: LiurenBoard,
+  t: Translator,
+  extra: { source?: string } = {},
+): string {
+  const warnings = formatWarnings(moment, t);
+  return [
+    formatMoment(moment, t),
+    '',
+    formatLiuren(board, t),
+    ...(warnings ? ['', warnings] : []),
+    ...(extra.source ? ['', `  ${t('prompt.source', { url: extra.source })}`] : []),
+  ].join('\n');
+}
+
+/** The board, the instructions for reading it, and what it is being read for. */
+export function liurenReadingPrompt(
+  moment: Moment,
+  board: LiurenBoard,
+  t: Translator,
+  request: LiurenReadingRequest = {},
+): string {
+  const aim =
+    request.question === undefined
+      ? t('prompt.liuren.noQuestion')
+      : `${t('prompt.asked')}\n${request.question}`;
+
+  return [
+    `# ${t('prompt.liuren.heading')}`,
+    '',
+    t('prompt.liuren.role'),
+    '',
+    t('prompt.language'),
+    '',
+    // First, because it is the one thing about this board a model will get
+    // wrong by helpfulness: the transmissions are the output of a procedure
+    // and not something to be re-derived or reordered. Said and bounded in
+    // the same breath — what the board hands over is a sequence, not the
+    // answer to a question it was never told.
+    `- ${t('prompt.liuren.drawn')}`,
+    `- ${t('prompt.liuren.yongshen')}`,
+    `- ${t('prompt.tooLittle')}`,
+    `- ${t('prompt.liuren.noScore')}`,
+    `- ${t('prompt.liuren.keti')}`,
+    `- ${t('prompt.yours')}`,
+    // Only where the rule that drew this board is one nothing could check.
+    ...(board.unverified ? [`- ${t('prompt.liuren.unverified')}`] : []),
+    '',
+    t('prompt.whatToAsk'),
+    '',
+    t('prompt.names'),
+    '',
+    t('prompt.disclaimer'),
+    '',
+    `## ${t('prompt.liuren.board')}`,
+    '',
+    '```',
+    liurenTranscript(moment, board, t, request.source ? { source: request.source } : {}),
+    '```',
+    '',
+    aim,
   ].join('\n');
 }
 

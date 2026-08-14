@@ -53,6 +53,7 @@
   import ChartReading from '$lib/components/ChartReading.svelte';
   import CopyText from '$lib/components/CopyText.svelte';
   import FormPanel from '$lib/components/FormPanel.svelte';
+  import LiurenReading from '$lib/components/LiurenReading.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
   import StrengthLegend from '$lib/components/StrengthLegend.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
@@ -76,6 +77,21 @@
   let born = $state(data.born);
   // svelte-ignore state_referenced_locally
   let gender = $state<string>(data.gender);
+  /**
+   * Which board the question is put to.
+   *
+   * Chosen **before** the press and at no point after it. A control that
+   * switched instrument over a standing answer would either cast again — and
+   * then it is a different instant from the one the question was asked at —
+   * or show a board laid for a moment nobody asked at. Moving it here does
+   * neither: it goes into `fields`, so the answer is spent the moment it
+   * moves, and what is on screen is put away until the next press.
+   *
+   * See `PLAN.md` § 4 phase 14 for why it is one board at a time and not two.
+   */
+  // svelte-ignore state_referenced_locally
+  let instrument = $state<string>(data.instrument);
+  const liuren = $derived(instrument === 'liuren');
 
   let busy = $state(false);
   let needed = $state<MessageKey | undefined>();
@@ -87,7 +103,7 @@
    */
   // svelte-ignore state_referenced_locally
   let failure = $state<Failure | undefined>(data.failure);
-  /** The chart as it came back. */
+  /** The board as it came back — a Qi Men chart, or a Liu Ren board. */
   let chart = $state<any>();
   /** The fields, which withdraw once they have answered. */
   let panel: FormPanel | undefined = $state();
@@ -139,7 +155,9 @@
    * So a moved field puts the answer away rather than warning about it. The
    * button to copy is simply not there, and the button to cast is.
    */
-  const fields = $derived(`${momentQuery(asked)}|${born}|${gender}|${question.trim()}`);
+  const fields = $derived(
+    `${momentQuery(asked)}|${instrument}|${born}|${gender}|${question.trim()}`,
+  );
   let castFrom = $state('');
   const spent = $derived(chart !== undefined && castFrom !== fields);
 
@@ -157,10 +175,14 @@
       // pair is the present and writes nothing into the address. A date
       // somebody went and typed is setup like the place, and comes back.
       { ...asked },
-      // The birth is setup and survives a reload with the rest of it. The
-      // question never does, and that is the line: what was typed to get
-      // here comes back, what was asked does not.
-      { born: born || undefined, gender: (born && gender) || undefined },
+      // The birth and the instrument are setup and survive a reload with the
+      // rest of it. The question never does, and that is the line: what was
+      // typed to get here comes back, what was asked does not.
+      {
+        instrument,
+        born: (!liuren && born) || undefined,
+        gender: (!liuren && born && gender) || undefined,
+      },
     );
     replaceState(next, page.state);
   }
@@ -189,11 +211,14 @@
         { ...asked },
         {
           lang: t.locale,
-          born: born || undefined,
-          gender: (born && gender) || undefined,
+          // No birth reaches a Liu Ren board, and not by oversight: the person
+          // asking is already in it, standing on the day stem. See the page's
+          // own note, and `PLAN.md` § 4 phase 14.
+          born: (!liuren && born) || undefined,
+          gender: (!liuren && born && gender) || undefined,
         },
       );
-      const response = await fetch(`/api/chart?${query}`);
+      const response = await fetch(`/api/${liuren ? 'liuren' : 'chart'}?${query}`);
       const body = await response.json();
 
       if (!response.ok) {
@@ -203,17 +228,22 @@
         return;
       }
 
-      chart = body.chart;
+      chart = liuren ? body.liuren : body.chart;
       // Pinned to what the engine actually cast for. Under a question that is
       // the instant of the press, and it is the whole point of the mode: the
       // consultation belongs to that minute and not to whenever this is read.
-      const cast = { date: chart.moment.input.date, time: chart.moment.input.time };
+      const cast = { date: body.moment.input.date, time: body.moment.input.time };
       address = momentQuery(
         { ...asked, ...cast },
-        { lang: t.locale, born: born || undefined, gender: (born && gender) || undefined },
+        {
+          lang: t.locale,
+          born: (!liuren && born) || undefined,
+          gender: (!liuren && born && gender) || undefined,
+        },
       );
       castFrom = fields;
       posed = question.trim();
+      at = `${body.moment.input.date} ${body.moment.input.time.slice(0, 5)}`;
     } catch {
       chart = undefined;
       address = '';
@@ -233,7 +263,8 @@
     if (chart && !failure) await panel?.close();
   }
 
-  const plate = $derived(`/api/chart/plate?${address}&scheme=${appearance.current}`);
+  const route = $derived(liuren ? 'liuren' : 'chart');
+  const plate = $derived(`/api/${route}/plate?${address}&scheme=${appearance.current}`);
 
   /**
    * The same board, drawn for paper.
@@ -248,7 +279,7 @@
    * then the board on screen is the board for paper.
    */
   const onPaper = $derived(appearance.current !== 'light');
-  const paper = $derived(`/api/chart/plate?${address}&scheme=light`);
+  const paper = $derived(`/api/${route}/plate?${address}&scheme=light`);
 
   /**
    * Fetched as soon as there is a chart, not when the printer is asked for.
@@ -275,12 +306,10 @@
    * the line itself. The birth travels — it is what the 年命 is computed
    * from — and the question does not.
    */
-  const promptUrl = $derived(`/api/chart/prompt?${address}&asked=true`);
+  const promptUrl = $derived(`/api/${route}/prompt?${address}&asked=true`);
 
-  /** The instant the chart was actually cast for, for the line that says so. */
-  const at = $derived(
-    chart ? `${chart.moment.input.date} ${chart.moment.input.time.slice(0, 5)}` : '',
-  );
+  /** The instant the board was actually laid for, for the line that says so. */
+  let at = $state('');
 </script>
 
 <svelte:head><title>{t('consult.title')}</title></svelte:head>
@@ -344,6 +373,24 @@
       </label>
 
       <!--
+        Which board the question is put to, in the open with it.
+
+        Not behind the disclosure, because it is not a refinement of the
+        instant: it decides what is laid on it, and the two boards answer
+        different shapes of question. The options say what they are **for**
+        and not what they are called — somebody arriving with a question
+        recognises the shape of their own, where `Qi Men` and `Liu Ren` are
+        two words they have no way to weigh.
+      -->
+      <label class="instrument">
+        {t('form.instrument')}
+        <select bind:value={instrument}>
+          <option value="qimen">{t('form.instrument.qimen')}</option>
+          <option value="liuren">{t('form.instrument.liuren')}</option>
+        </select>
+      </label>
+
+      <!--
         The place in the open, and everything else behind the disclosure.
 
         What a consultation needs is a question and somewhere to stand: the
@@ -363,14 +410,25 @@
         bind:dayBoundary={asked.dayBoundary}
         bind:method={asked.method}
         bind:yuan={asked.yuan}
-        extraLegend="consult.birth"
-        extraSet={born ? 1 : 0}
+        extraLegend={liuren ? undefined : 'consult.birth'}
+        extraSet={!liuren && born ? 1 : 0}
       >
         <!-- The birth, under the same disclosure as the options and above the
              way the moment is read: it is an addition to a consultation and
              never a requirement, and the form read to the button has one thing
              in it, which is the question. -->
         {#snippet extra()}
+          <!--
+            The birth, offered under one instrument and not the other.
+
+            Under Qi Men it places a 年命 — a person is not in that chart at
+            all until they are put in it. Under Liu Ren it is not offered, and
+            structurally rather than cautiously: the querent is already there,
+            standing on the day stem, and a 本命 beside it would be a second
+            name for one person. Two names for one person is how a reading
+            acquires a relation that was never there.
+          -->
+          {#if !liuren}
           <label class="birthField date">
             {t('consult.birthDate')}
             <!-- What the browser knows to fill in, if it is this reader's own
@@ -386,6 +444,7 @@
             </select>
           </label>
           <p class="note">{t('consult.birthNote')}</p>
+          {/if}
         {/snippet}
       </MomentForm>
 
@@ -455,20 +514,40 @@
         </p>
       </header>
 
-      <!-- The board and the key to its marks together, as on the chart. -->
-      <div class="board" class:swapped={onPaper}>
-        <img src={plate} alt="" width="900" height="1035" class="screen" />
+      <!-- The board, and under it the key to its marks where it has any: the
+           ramp of strengths belongs to the nine palaces and there is nothing
+           for it to explain on a ring of twelve. -->
+      <div class="board" class:swapped={onPaper} class:ring={liuren}>
+        <img
+          src={plate}
+          alt=""
+          width={liuren ? 900 : 900}
+          height={liuren ? 1220 : 1035}
+          class="screen"
+        />
         <!-- The same board in the light scheme, for paper and nothing else.
              Only drawn when the two differ — see `onPaper`. -->
         {#if onPaper}
-          <img src={paper} alt="" width="900" height="1035" class="paper" />
+          <img
+            src={paper}
+            alt=""
+            width={liuren ? 900 : 900}
+            height={liuren ? 1220 : 1035}
+            class="paper"
+          />
         {/if}
-        <StrengthLegend {t} />
+        {#if !liuren}<StrengthLegend {t} />{/if}
       </div>
       <!-- `wide`: the board above has the page to itself, so what it was cast
            from is set as its caption — at the drawing's own measure, centred
            on it. See `ChartReading`. -->
-      <div><ChartReading {chart} {t} wide /></div>
+      <div>
+        {#if liuren}
+          <LiurenReading board={chart} {t} />
+        {:else}
+          <ChartReading {chart} {t} wide />
+        {/if}
+      </div>
     </section>
   {/if}
 </article>
@@ -492,6 +571,15 @@
   .wide { max-width: none; }
 
   .question { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 46rem; }
+  /* Bounded: a `select` of two lines does not become clearer for being a
+     panel wide. */
+  .instrument { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 34rem; }
+  .instrument :global(select) { color: var(--ink); }
+  /* The ring is drawn narrower than the grid of nine and does not want the
+     full measure the chart's board takes. Left rather than centred: the
+     reading under it starts at the margin, and a picture centred over a
+     caption that is not shares no edge with anything. */
+  .board.ring :global(img) { max-width: 34rem; margin-inline: 0; }
   /* The birth, rendered inside the options of `MomentForm`. A snippet is
      styled where it is written, so its two fields are dressed here to match
      the ones it stands among. What names the group is the `legend` over

@@ -1682,7 +1682,7 @@ without a cast.
 
 ### Phase 14 — The consultation takes a second instrument
 
-**Planned, and the debt phase 13 opened.** The consultation casts a Qi Men
+**The debt phase 13 opened, and paid.** The consultation casts a Qi Men
 chart at the instant of the asking. There are two boards now, and the question
 is not which to show but *what a consultation is* when the act has more than
 one instrument.
@@ -1778,10 +1778,16 @@ that does not.
 preamble**, not one function over a union: one speaks of palaces, of the 用神
 the reader still has to choose, and of a 凶 that is not advice; the other of
 四課 and 三傳, of 課體 that are names and not verdicts, and of a 返吟 whose rule
-no reference implementation covers. `/api/chart/prompt` is misnamed under
-this and becomes the consultation's, with the instrument among its parameters
-— and `asked=true` stays the only thing the server is ever told about the
-question.
+no reference implementation covers. `/api/liuren/prompt` and `/api/liuren/text` stand
+beside the chart's, and `asked=true` stays the only thing the server is ever
+told about the question.
+
+> This document said `/api/chart/prompt` would be renamed to the
+> consultation's, with the instrument among its parameters. It was not, and
+> the reason is worth the line: **the endpoint tree mirrors the boards, not
+> the acts.** `/api/chart/plate` and `/api/liuren/plate` were already siblings
+> before this phase, and a prompt is of a board — the consultation only
+> chooses which. One rename avoided and one asymmetry avoided.
 
 The instrument travels in the address, because the consultation's rule is that
 the **setup** travels and the question does not, and which board to lay is

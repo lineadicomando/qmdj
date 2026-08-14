@@ -14,7 +14,7 @@ anything.
 | `packages/core` | calculation engine and the `qimen` CLI: solar terms, lunar calendar, sexagenary cycles, Four Pillars, Qi Men charts, Liu Ren boards, scanning an interval |
 | `packages/plate` | the drawings: the nine palaces of a chart, the ring of twelve of a 六壬 board, glyphs, SVG and PNG |
 | `packages/mcp` | MCP server: nine tools, four resources, stdio transport |
-| `apps/web` | SvelteKit: five sections at `/en` and `/it`, plus ten GET endpoints under `/api` |
+| `apps/web` | SvelteKit: five sections at `/en` and `/it`, plus twelve GET endpoints under `/api` |
 
 npm workspaces monorepo, Node ≥ 22, ESM, TypeScript.
 
@@ -125,6 +125,17 @@ the engine falls back to Moshier, which needs no files.
   `docs/agent-prompt.md`, for an agent that can look it up: in the pasted
   prompt it was a paragraph the model recited unasked, beside a disclaimer
   that already says this is entertainment.
+- **One board goes into a prompt, never two of one instant.** A consultation
+  is an act and takes one instrument, chosen before the press and at no point
+  after it — a control that switched boards over a standing answer would
+  either cast again, at an instant nobody asked at, or show one laid for a
+  moment nobody asked at. The reason is not tidiness: a Qi Men chart and a
+  六壬 board share the day pillar, the 旬, the 空亡, the 遁干 and seven of the
+  eight 八神, so **where they agree it is frequently one fact printed twice**,
+  and a model reading that as corroboration counts one datum as two with
+  complete confidence. No transmitted rule combines the 三式 — they were read
+  separately and compared. That comparison is still available, in the sections
+  that are addresses, where nothing is being asked. See `PLAN.md` § 4 phase 14.
 - **The question never reaches the server.** `/api/chart/prompt` is told
   `asked=true` and nothing more, and the prompt ends on the line that
   introduces a question for the browser to append. What somebody asks a chart

@@ -50,10 +50,15 @@ export function href(locale: string, slug: string, search = ''): string {
  * birth, they belong to the section that asked for them, and a header link
  * that hauled them along would write them into the address of every section
  * visited after a consultation.
+ *
+ * `instrument` is dropped for a different reason and the same effect: which
+ * board a question is put to is the consultation's own setup and means
+ * nothing in a section that is one board already. Carried, it would write a
+ * parameter into every address that reads it that nothing there reads.
  */
 export function carriedSearch(search: string): string {
   const params = new URLSearchParams(search);
-  for (const only of ['born', 'bornTime', 'bornTz', 'gender', 'years']) {
+  for (const only of ['born', 'bornTime', 'bornTz', 'gender', 'years', 'instrument']) {
     params.delete(only);
   }
   const query = params.toString();

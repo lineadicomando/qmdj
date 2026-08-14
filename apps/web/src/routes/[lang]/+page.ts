@@ -11,10 +11,11 @@ import type { PageLoad } from './$types';
  * question, and it is not reproducible by reloading — which is what a
  * consultation is, rather than a shortcoming of this page.
  *
- * So what the address carries is the setup — the place, the options, and the
- * birth if one was given for a 年命 — and what it never carries is the
- * question or the chart. Reloading finds the fields as they were and the page
- * uncast, which is the honest state.
+ * So what the address carries is the setup — the place, the options, which
+ * instrument the instant is to be laid on, and the birth if one was given for
+ * a 年命 — and what it never carries is the question or the board. Reloading
+ * finds the fields as they were and the page uncast, which is the honest
+ * state.
  */
 export const load: PageLoad = async ({ url, fetch, parent }) => {
   const { locale } = await parent();
@@ -22,6 +23,9 @@ export const load: PageLoad = async ({ url, fetch, parent }) => {
   const { place, failure } = await lookupPlace(fetch, locationId, locale);
 
   const gender = url.searchParams.get('gender');
+  // Which board the question is put to. Setup exactly as `trueSolarTime` is:
+  // chosen before the press, and nothing is laid until then.
+  const instrument = url.searchParams.get('instrument');
 
   return {
     moment: { ...input, place },
@@ -30,6 +34,7 @@ export const load: PageLoad = async ({ url, fetch, parent }) => {
     // still cast for the instant of the press.
     born: url.searchParams.get('born') ?? '',
     gender: gender === 'male' || gender === 'female' ? gender : '',
+    instrument: instrument === 'liuren' ? 'liuren' : 'qimen',
     failure: failure as Failure | undefined,
   };
 };

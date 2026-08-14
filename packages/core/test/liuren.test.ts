@@ -255,7 +255,11 @@ describe('九宗門', () => {
 });
 
 describe('the board as a whole', () => {
-  it('answers on every input the space holds', () => {
+  // A minute of CPU to itself and it takes a second; run beside five other
+  // workspaces it does not, and the default five seconds is a limit on the
+  // machine's load rather than on the engine. The point of the test is that
+  // it is the *whole* space, so it is given room instead of being sampled.
+  it('answers on every input the space holds', { timeout: 60_000 }, () => {
     // Twenty-four terms by sixty pairs by twelve branches is the whole space a
     // board can occupy, and nothing in it may throw or come back short.
     let boards = 0;

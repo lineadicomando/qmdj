@@ -135,6 +135,26 @@ read and name what you are missing, rather than filling it in.
 - **A scan ranks nothing.** There is no score in the answer and no order but
   time. A palace answering your question is a fact; a palace being a good
   place to be is a reading.
+- **A Liu Ren board hands over its 三傳 already drawn, and that is not a
+  reading.** The nine rules 九宗門 produced them from the four courses by
+  procedure, and the board says which rule. Do not re-derive them, do not
+  reorder them, do not substitute the rule you would have applied. But the
+  用神 is still the reader's: **which of the four courses bears on what was
+  asked, the board does not say.** The first two stand on the day stem, which
+  is the person asking; the third and fourth on the day branch, which is the
+  matter or the other party. Say which you read from.
+- **A 課體 is a name, not a verdict.** 元首, 重審, 涉害 and the rest name the
+  shape the board fell into, exactly as a configuration of the nine palaces
+  does. Where 返吟 drew a board, the answer says the rule is unfalsified — no
+  independent implementation covers its clause, where every other rule here
+  was checked against two.
+- **One board goes to a model, never two of one instant.** A Qi Men chart and
+  a Liu Ren board share the day pillar, the decade, the void branches and
+  seven of the eight spirits: where they agree it is frequently one fact
+  printed twice, and reading that as corroboration counts one datum as two.
+  Compare them yourself if you must; do not hand a person a reading that
+  merges them, and do not present their agreement as evidence. No transmitted
+  rule combines the 三式 — they were read separately and then compared.
 
 ## How sure the numbers are
 
@@ -201,6 +221,8 @@ GET /api/chart?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/bazi?date=1968-03-12&time=14:30&locationId=3169070&gender=male
 GET /api/liuren?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/liuren/plate?date=2024-06-15&time=14:00&locationId=1816670
+GET /api/liuren/text?date=2024-06-15&time=14:00&locationId=1816670
+GET /api/liuren/prompt?date=2024-06-15&time=14:00&locationId=1816670&asked=true
 GET /api/terms?year=2024&timezone=Asia/Shanghai
 GET /api/chart/plate?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/moments?from=2026-09-01&to=2026-09-08&locationId=3169070&gate=kaimen&towards=se,s

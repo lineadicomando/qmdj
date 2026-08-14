@@ -96,7 +96,9 @@ describe('the prompt', () => {
 
     expect(text).toContain('ask before you read');
     expect(text).toContain('not a questionnaire');
-    expect(text).toContain('What cannot be asked for is more chart');
+    // "board" and not "chart": the sentence is shared with the 六壬
+    // prompt, where a palace is not a thing that exists.
+    expect(text).toContain('What cannot be asked for is more board');
     // Asking has to end the turn, or it is a caption on a reading that was
     // given anyway, on the information the reader just called insufficient.
     expect(text).toContain('in place of the reading and never alongside it');

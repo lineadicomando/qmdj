@@ -155,7 +155,7 @@ longer there.
 | `packages/core` | the engine, and the `qimen` command |
 | `packages/plate` | the drawings: the nine palaces framed by the compass with the configurations under them, and the ring of twelve of a 六壬 board, SVG and PNG |
 | `packages/mcp` | MCP server, nine tools, stdio |
-| `apps/web` | SvelteKit: five sections at `/en` and `/it`, ten endpoints under `/api` |
+| `apps/web` | SvelteKit: five sections at `/en` and `/it`, twelve endpoints under `/api` |
 
 npm workspaces, Node ≥ 22, ESM, TypeScript.
 

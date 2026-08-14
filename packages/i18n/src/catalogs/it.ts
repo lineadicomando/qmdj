@@ -438,7 +438,7 @@ export const it: Record<MessageKey, string> = {
   'form.copyFallback': 'Il testo, da copiare a mano',
   'form.copyUnread': 'Non è stato possibile rileggere la carta.',
 
-  'consult.title': "Chiedere a un'AI di leggere una carta",
+  'consult.title': "Chiedere a un'AI di leggere un quadro",
   // La nascita, offerta accanto alla domanda e non al suo posto. Quello che
   // produce è un 年命: la carta resta quella dell'istante e la nascita vi si
   // cerca dentro, che è ciò che prescrive il 《遁甲演義》 ed è il rovescio di
@@ -450,10 +450,10 @@ export const it: Record<MessageKey, string> = {
     'La carta resta posta per l\'istante in cui chiedi. Quello che la nascita aggiunge è dove cade dentro di essa — 本命 běnmìng, l\'anno in cui sei nato, e 行年 xíngnián, l\'anno che stai vivendo.',
   'consult.lead':
     'Poni una domanda e ottieni un prompt pronto — da incollare in ChatGPT, Claude o un altro assistente.',
-  'consult.cast': 'Poni la carta',
+  'consult.cast': 'Poni la domanda',
   'consult.change': 'Cambia la domanda',
-  'consult.castAt': 'Carta posta per il {when}',
-  'consult.castFailed': 'Non è stato possibile porre la carta.',
+  'consult.castAt': 'Posto per il {when}',
+  'consult.castFailed': 'Non è stato possibile porre il quadro.',
 
   'form.toConsult': 'Per far leggere una carta, con una domanda:',
 
@@ -461,7 +461,7 @@ export const it: Record<MessageKey, string> = {
 
   'form.promptPrivacy': 'I dati inseriti verranno inclusi nel prompt.',
   'form.question': 'La tua domanda',
-  'form.questionPlaceholder': 'Che cosa stai chiedendo a questa carta?',
+  'form.questionPlaceholder': 'Che cosa stai chiedendo?',
 
   'step.shichen': 'doppia ora',
   'step.day': 'giorno',
@@ -514,9 +514,9 @@ export const it: Record<MessageKey, string> = {
   'prompt.yongshen':
     'Quale palazzo riguardi la domanda è lo 用神 yòngshén, e lo sceglie il lettore per la domanda posta. Nulla qui sotto lo sceglie, e il programma che ha prodotto questa carta non conosce la domanda. Di\' quale palazzo stai leggendo, e perché quello.',
   'prompt.tooLittle':
-    'Se quello che ti è stato detto non ti permette di scegliere quel palazzo, chiedi prima di leggere — e poi fermati, con le domande al posto della lettura e mai accanto ad essa. Una o due, quelle che cambierebbero davvero la lettura, e non un questionario. Non metterci sotto una lettura, né una provvisoria, né una prima impressione da rivedere quando avrai le risposte: qualunque cosa tu scriva verrà letta come la lettura, e sarà stata data senza le risposte che hai appena detto di aspettare. Aspettale.',
+    'Se quello che ti è stato detto non ti permette di fare quella scelta, chiedi prima di leggere — e poi fermati, con le domande al posto della lettura e mai accanto ad essa. Una o due, quelle che cambierebbero davvero la lettura, e non un questionario. Non metterci sotto una lettura, né una provvisoria, né una prima impressione da rivedere quando avrai le risposte: qualunque cosa tu scriva verrà letta come la lettura, e sarà stata data senza le risposte che hai appena detto di aspettare. Aspettale.',
   'prompt.whatToAsk':
-    'Vale la pena chiedere ciò che la domanda lascia aperto: di che cosa si tratti davvero, chi riguardi e se sia chi sta chiedendo, se la cosa sia già in corso o non ancora cominciata, se ci sia dentro un luogo o una direzione, ed entro quando serva saperlo. Quello che non si può chiedere è che la carta dica di più — nulla di ciò che manca a quanto è disposto qui sotto si ottiene conversando, e nessuna risposta sposta un solo palazzo. Se la persona risponde che non sa dirlo o preferisce non dirlo, allora leggi quello che si può leggere e nomina ciò che ti manca, invece di riempirlo — è la sua risposta ad autorizzarlo, e nient\'altro.',
+    'Vale la pena chiedere ciò che la domanda lascia aperto: di che cosa si tratti davvero, chi riguardi e se sia chi sta chiedendo, se la cosa sia già in corso o non ancora cominciata, se ci sia dentro un luogo o una direzione, ed entro quando serva saperlo. Quello che non si può chiedere è che il quadro dica di più — nulla di ciò che manca a quanto è disposto qui sotto si ottiene conversando, e nessuna risposta ci sposta nulla. Se la persona risponde che non sa dirlo o preferisce non dirlo, allora leggi quello che si può leggere e nomina ciò che ti manca, invece di riempirlo — è la sua risposta ad autorizzarlo, e nient\'altro.',
   'prompt.noScore':
     'Non contare i 吉 jí contro i 凶 xiōng per poi chiamare il risultato il punteggio dell\'ora. Quell\'aritmetica non è nella tradizione e la carta non la autorizza. Non mettere in classifica i palazzi, e non mettere in classifica le ore.',
   'prompt.noAdvice':
@@ -534,7 +534,27 @@ export const it: Record<MessageKey, string> = {
   // può offrire dove sono cadute due coppie, e rifiutare ancora la mappatura.
   'prompt.nianming':
     'La trascrizione porta un 年命 niánmìng: il pilastro dell\'anno di chi sta chiedendo (本命 běnmìng) e, se è stato indicato, l\'anno che sta vivendo (行年 xíngnián), cercati dentro questa carta. **È chi sta chiedendo, non una seconda lettura.** Non dedicargli una sezione a parte e non rielencare il suo palazzo, la stella, la porta, lo spirito e l\'immagine — le tabelle qui sopra li dicono già tutti. Usalo dove tocca la domanda: come sta la persona rispetto al palazzo che hai scelto per la faccenda, se i due sono lo stesso palazzo, se l\'uno genera o domina l\'altro, se la persona sta nel palazzo per cui la faccenda deve passare. Quella relazione è ciò che la coppia aggiunge; tutto il resto è già sul quadro. Il 遁甲演義 dùnjiǎ yǎnyì, il trattato da cui questo viene, vuole che una lettura pesi 本命 e 行年 prima di ogni altra cosa e cerca che l\'anno della persona cavalchi un palazzo dove una stella buona e una porta buona stiano in forza — è il criterio della tradizione, detto come suo, ed è cosa da pesare e non un punteggio da calcolare. Non è la carta di una nascita e non se ne legge una vita: nulla qui dice quale palazzo stia per quale parte di una vita, e nulla lo lascia intendere — quella mappatura è dove le scuole divergono di più e dove quasi tutto ciò che circola è il materiale didattico di una singola linea. Se vai oltre, di\' chiaramente che il passo è tuo.',
-  'prompt.source': 'La carta è all\'indirizzo {url}',
+  // L'altro 式, con le proprie condizioni. Le istruzioni che condivide con la
+  // carta — la lingua, chiedere prima di leggere, cosa si può chiedere, di chi
+  // è la lettura, i nomi, l'avvertenza — sono le stesse chiavi; qui sotto c'è
+  // ciò che differisce, e differisce perché differiscono i quadri.
+  'prompt.liuren.heading': 'Leggere un quadro di Da Liu Ren',
+  'prompt.liuren.role':
+    'Qui sotto è disposto un quadro di Da Liu Ren. È stato calcolato da un\'effemeride e dalle regole del metodo, non da te: leggilo esattamente come sta, e non aggiungerci nulla. Nessun ramo, nessun generale, nessuna lezione, nessuna trasmissione che non sia scritta lì. Se ti manca qualcosa, di\' che manca.',
+  'prompt.liuren.drawn':
+    'Le tre trasmissioni 三傳 sānchuán sono state tratte per procedura — le nove regole 九宗門 jiǔzōngmén, applicate nell\'ordine stabilito alle quattro lezioni — e la regola che le ha tratte è nominata nella trascrizione. Non riderivarle, non riordinarle, non sostituirci una regola che avresti applicato tu. Sono dati, esattamente come lo è il quadro.',
+  'prompt.liuren.yongshen':
+    'Che le trasmissioni arrivino già tratte non significa che il quadro si sia letto da sé. Quale delle quattro lezioni 四課 sìkè riguardi ciò che è stato chiesto è scelta del lettore, e il software che ha prodotto questo non conosce la domanda. Le prime due lezioni poggiano sul gan del giorno, che è chi domanda; la terza e la quarta sul ramo del giorno, che è la cosa o l\'altra parte. Di\' da quale stai leggendo, e perché quella.',
+  'prompt.liuren.noScore':
+    'Non pesare i dodici generali gli uni contro gli altri per ricavarne un verdetto sull\'ora. Non mettere in classifica le tre trasmissioni — sono un inizio, un mezzo e una fine, in quest\'ordine perché la procedura le ha prodotte così, non un primo, un secondo e un terzo posto. Non mettere in classifica le ore.',
+  'prompt.liuren.keti':
+    'La figura nominata 課體 kètǐ — 元首 yuánshǒu, 重審 zhòngshěn, 涉害 shèhài e le altre — è un nome per la forma in cui il quadro è caduto, nel modo in cui lo è una configurazione dei nove palazzi. Non è un verdetto sulla faccenda né una sorte per la persona. Dove la trascrizione dà un nome, riportalo come un nome.',
+  'prompt.liuren.unverified':
+    'Questo quadro è stato tratto per 返吟 fǎnyín, e quella regola poggia su una clausola che nessuna implementazione indipendente copre. Ogni altra regola qui è stata verificata contro due. Dillo, se leggi da lì.',
+  'prompt.liuren.board': 'Il quadro',
+  'prompt.liuren.noQuestion':
+    'Nessuna domanda è stata posta. Descrivi come sta il quadro — cosa ha girato il piano, cosa tengono le quattro lezioni, quale regola ha tratto le trasmissioni e quali sono — e fermati lì. Non scegliere una lezione, non leggere una sorte per nessuno, e non dare consigli.',
+  'prompt.source': 'Il quadro è all\'indirizzo {url}',
   'prompt.chart': 'La carta',
   'prompt.asked': 'La domanda posta è:',
   'prompt.noQuestion':
@@ -561,6 +581,14 @@ export const it: Record<MessageKey, string> = {
   // L'unica divergenza del Liu Ren offerta al lettore. Ogni opzione dice a
   // parole di quale verso si tratta: un'opzione che recitasse `chou` sarebbe
   // una che nessuno può scegliere di proposito.
+  // A quale quadro si pone la domanda. Le opzioni guidano con ciò a cui
+  // servono, perché chi arriva con una domanda ne riconosce la forma e non ha
+  // modo di pesare due nomi cinesi. Il nome dell'arte segue le parole invece
+  // di sostituirle: un metodo è una cosa cinese, ed è l'unico punto della
+  // pagina in cui è quello a essere nominato.
+  'form.instrument': 'Che tipo di domanda è',
+  'form.instrument.qimen': 'Quando muovermi, e da che parte — 奇門遁甲 qíméndùnjiǎ',
+  'form.instrument.liuren': 'Cosa sta succedendo, e con chi — 大六壬 dàliùrén',
   'form.guiren': 'Quale verso insedia il nobile (貴人)',
   'form.guiren.chou': '甲 con 戊 e 庚, a 丑 e 未',
   'form.guiren.wei': '甲 da solo, a 未 e 丑',

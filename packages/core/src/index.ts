@@ -158,7 +158,14 @@ export {
   formatWarnings,
 } from './format.js';
 
-export { chartTranscript, readingPrompt, type ReadingRequest } from './prompt.js';
+export {
+  chartTranscript,
+  liurenReadingPrompt,
+  liurenTranscript,
+  readingPrompt,
+  type LiurenReadingRequest,
+  type ReadingRequest,
+} from './prompt.js';
 
 export {
   CONTROLLED_BY,

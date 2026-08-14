@@ -447,14 +447,13 @@ export function formatLiuren(board: LiurenBoard, t: Translator): string {
   );
 
   const rule = LIUREN_RULES[board.rule];
-  const rows: string[][] = [
-    [t('cli.field.drawnBy'), named(rule, `label.liurenRule.${board.rule}` as MessageKey, t)],
-  ];
+  const drawnBy = named(rule, `label.liurenRule.${board.rule}` as MessageKey, t);
+  const rows: string[][] = [[t('cli.field.drawnBy'), drawnBy]];
   if (board.keti) {
-    rows.push([
-      t('cli.field.keti'),
-      named(KETI[board.keti], `label.keti.${board.keti}` as MessageKey, t),
-    ]);
+    // 八專, 別責 and 涉害 name the shape with the same words as the rule that
+    // found it. Said once rather than twice — as the drawing says it once.
+    const keti = named(KETI[board.keti], `label.keti.${board.keti}` as MessageKey, t);
+    if (keti !== drawnBy) rows.push([t('cli.field.keti'), keti]);
   }
   lines.push('', ...table(rows, 4));
 
