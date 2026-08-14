@@ -115,7 +115,7 @@
       <table>
         <thead>
           <tr>
-            <th></th><th>{t('cli.column.year')}</th><th>{t('cli.column.god')}</th>
+            <th></th><th>{t('cli.column.pillar')}</th><th>{t('cli.column.god')}</th>
             <th>{t('cli.column.hidden')}</th><th>{t('cli.column.stage')}</th>
           </tr>
         </thead>
