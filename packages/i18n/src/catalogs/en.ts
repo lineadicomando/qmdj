@@ -707,6 +707,8 @@ export const en = {
   'cli.value.backward': 'running backward',
   'cli.value.leapMonth': 'leap month',
   'cli.value.minutes': '{value} min',
+  // How long after the birth the luck cycles open, each unit abbreviated.
+  'cli.value.luckStart': '{years}y {months}m {days}d',
   'cli.value.nothingAnswered':
     'No palace in the interval answers what was asked. This says the arrangement did not occur, and nothing else.',
   'cli.value.everyPalace': 'every palace, nothing asked for in particular',

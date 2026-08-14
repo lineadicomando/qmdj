@@ -133,8 +133,13 @@ export function formatMoment(moment: Moment, t: Translator): string {
   ];
 
   if (moment.options.trueSolarTime) {
-    const hours = Math.floor(moment.solar.hour);
-    const minutes = Math.round((moment.solar.hour - hours) * 60);
+    // One count of minutes, rounded once: rounded apart, the seconds past
+    // 59.5 printed as `:60` beside an hour that had not moved. The wrap is
+    // for the last half-minute of the day, which rounds to the top of the
+    // next one; the date it lands on is `dayShift`'s to report, not this line's.
+    const minutesOfDay = Math.round(moment.solar.hour * 60) % 1440;
+    const hours = Math.floor(minutesOfDay / 60);
+    const minutes = minutesOfDay % 60;
     fields.push([
       t('cli.field.solar'),
       `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}` +
@@ -487,7 +492,7 @@ export function formatBazi(bazi: Bazi, t: Translator): string {
     const direction = bazi.luck.forward ? t('cli.value.forward') : t('cli.value.backward');
     lines.push(
       '',
-      `${t('cli.heading.luck')} — ${direction}, ${bazi.luck.start.years}y ${bazi.luck.start.months}m ${bazi.luck.start.days}d`,
+      `${t('cli.heading.luck')} — ${direction}, ${t('cli.value.luckStart', bazi.luck.start)}`,
       ...table(
         bazi.luck.cycles.map((cycle) => [
           String(cycle.startAge).padStart(3),
@@ -543,7 +548,13 @@ export function formatScan(matches: readonly ScanMatch[], t: Translator): string
 
   // Already local clock time at the place, and already ISO: the date and the
   // hour are read off it rather than converted through a zone a second time.
-  const clock = (iso: string): string => `${iso.slice(0, 10)} ${iso.slice(11, 16)}`;
+  // Split at the `T`, never at a fixed offset — an ISO year runs to six
+  // digits and a sign either side of our era, and a slice measured against
+  // four would show such a date with its clock cut mid-year.
+  const clock = (iso: string): string => {
+    const at = iso.indexOf('T');
+    return `${iso.slice(0, at)} ${iso.slice(at + 1, at + 6)}`;
+  };
 
   const rows: string[][] = [
     [

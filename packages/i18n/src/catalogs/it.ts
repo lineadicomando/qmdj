@@ -537,6 +537,8 @@ export const it: Record<MessageKey, string> = {
   'cli.value.backward': 'all\'indietro',
   'cli.value.leapMonth': 'mese intercalare',
   'cli.value.minutes': '{value} min',
+  // Quanto dopo la nascita si aprono i cicli decennali: anni, mesi, giorni.
+  'cli.value.luckStart': '{years}a {months}m {days}g',
   'cli.value.nothingAnswered':
     "Nessun palazzo dell'intervallo risponde a quanto è stato chiesto. Questo dice che la disposizione non si è presentata, e nient'altro.",
   'cli.value.everyPalace': 'ogni palazzo, nessuna richiesta particolare',
