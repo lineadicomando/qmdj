@@ -15,7 +15,7 @@ the presentation rather than by the data.
 | | What it means | Where it applies |
 |---|---|---|
 | **1 · Published fact** | An authority publishes the answer and anyone can check it | solar terms, lunar calendar, four pillars |
-| **2 · Runnable reference** | No authority, but another implementation computes it and can be run against this one | the Qi Men layout, the zhirun ju |
+| **2 · Runnable reference** | No authority, but another implementation computes it and can be run against this one | the Qi Men layout, the zhirun ju, the 六壬 transmissions |
 | **3 · Transmitted text** | Chinese-language sources only; agreement is between readings, not against a measurement | the configurations, the seasonal states, 十干克應 |
 
 **Tier 2 is not tier 1 in disguise.** An almanac encodes published astronomy;
@@ -519,6 +519,203 @@ than fixed quietly.
 
 ---
 
+## 六壬 — the board built from references, and the text that arrived after
+
+The second board was built the way phase 13 said it had to be: no rule written
+from memory, two runnable references found first, and the construction measured
+against the whole space before any doctrine was argued about. **Then the
+classical text was read, and it turned out to state — outright, in a verse of
+four-character lines — three clauses this engine had recovered by scoring
+itself against those references.** That is the happiest result this file
+records and the sharpest lesson in it, and both halves are written down below.
+
+### The text
+
+《六壬大全》, 十二卷, 四庫全書本, 卷一 **入手法** — the opening chapter, which
+is a mnemonic verse with the compilers' interlinear notes running through it.
+The 四庫 catalogue gives no author; the first juan carries the name of 郭載騋,
+a Ming judge of 懷慶府
+([Wikisource](https://zh.wikisource.org/wiki/六壬大全_(四庫全書本)/卷01),
+[oldid 763659](https://zh.wikisource.org/w/index.php?oldid=763659)).
+
+**The extract is the raw wikitext, not a rendering of it.** Two passes of a
+page-reader over the same page disagreed on a character — 隂 against 隐 in the
+比用 line — so the transcription was taken from the API instead and is
+reproduced here as the edition has it, `{{SKchar}}` placeholders expanded and
+interlinear notes moved into 〈〉. **No printed edition was consulted**, unlike
+the 統宗 passages above, so this extract stands one degree weaker than those:
+it is a transcription of a photographic edition, checked against itself.
+
+The 四庫 text writes 己 and 巳 for each other in two places (丙戊課**己**,
+丁**巳**課未, 丁**巳**辛), which is the ordinary scribal confusion of the two
+graphs and is read here as 巳 and 己 respectively. It also uses the edition's
+variant forms throughout — 尅 for 剋, 渉 for 涉, 隂 for 陰, 逓 for 遞, 别 for
+別, 眀 for 明.
+
+> 　　入手法
+> 　　**十干寄宫**
+> 　　甲課寅兮乙課辰丙戊課己不須論丁巳課未庚申土辛戌壬亥是其真癸課原来丑宮坐分眀不用四正神
+> 　　**一賊尅法**〈一下尅上曰重審一上尅下曰元首〉
+> 　　取課先從下賊呼如無下賊上尅初初傳之上名中次中上加臨是末居三傳既定天盤将此是入式法第一
+> 　　**二比用法**〈即知一也〉
+> 　　下賊或三二四侵若逢上尅亦同云常将天日比神用陽日用陽隂用隂若或俱比俱不比立法别有渉害陳
+> 　　**三渉害法**
+> 　　渉害行来本家止路逢多尅為用取孟深仲淺季當休復等柔辰剛日宜
+> 　　**四遙尅法**〈神遙尅日曰蒿矢日遙尅神曰彈射〉
+> 　　四課無尅號為遥日與神兮逓互招先取神遥尅其日如無方取日来遥或有日尅乎兩神復有兩神来尅日擇與日干比者用陽日用陽隂用隂
+> 　　**五昴星法**
+> 　　無遙無尅昴星窮陽仰隂俯酉位中〈論初傳也〉剛日先辰而後日柔日先日而後辰〈論中末也〉
+> 　　**六别責法**〈戊辰戊午丙辰三剛日各一課辛未二課辛丑二課丁酉　辛酉各一課〉
+> 　　四課不全三課備無遥無尅别責例剛日干合上頭神柔日支前三合取皆以天上作初傳隂陽中末干中寄剛三柔六共九課此課先賢俱隠秘戊午戊辰與丙辰干上皆午是為親辛丑辛未各二日下上皆是丑未真丁酉當為己丁是辛酉原来是酉辛
+> 　　**七八專法**〈論尅不論遥〉
+> 　　兩課無尅號八專陽日日陽順行三〈連本位數〉隂日辰隂逆三位中末總向日上眠
+> 　　**八伏吟法**
+> 　　伏吟有尅還為用無尅剛干柔取辰迤邐刑之作中末従兹玉厯職其真若也自刑為發用次傳顛倒日辰併〈陽日用辰隂日用日〉次傳更復自刑者冲取末傳不論刑
+> 　　**九返吟法**
+> 　　返吟有尅亦為用無尅别有井欄名若知六日該無尅丑未同干丁巳辛丑日登眀未太乙辰申日未識原因〈辰上作申日上作未〉
+
+### 寄宮, which the verse gives before the rules
+
+「甲課寅兮乙課辰，丙戊課巳不須論，丁己課未庚申土，辛戌壬亥是其真，癸課原來
+丑宮坐，分明不用四正神」 — 甲寅 乙辰 丙戊巳 丁己未 庚申 辛戌 壬亥 癸丑, and
+the closing line is the table's own check: no stem lodges on a cardinal branch.
+`LODGING` in `liuren.ts` is that table character for character. **It is not
+dunjia's 寄宮**, which asks which palace the centre is read at; the two words
+name two different detours and this file keeps them apart.
+
+### The nine rules, line against implementation
+
+| rule | the verse | what `liuren.ts` does |
+|---|---|---|
+| 賊剋 | 取課先從下賊呼，如無下賊上尅初 · 〈一下尅上曰重審，一上尅下曰元首〉 | 下賊上 taken before 上剋下; one candidate of either kind settles it, and the 課體 is 重審 or 元首 exactly as the note assigns them |
+| 比用 | 常將天日比神用，陽日用陽隂用隂 · 〈即知一也〉 | the upper sharing the day stem's polarity; 知一 is the note's own gloss and is the `keti` |
+| 涉害 | 渉害行来本家止，路逢多尅為用取，孟深仲淺季當休 | counts harms walking **forward to the home palace**, and asks 孟 · 仲 · 季 **before** depth |
+| 遙剋 | 先取神遥尅其日，如無方取日来遥 · 〈神遙尅日曰蒿矢，日遙尅神曰彈射〉 | upper-controls-stem first, then stem-controls-upper; 蒿矢 and 彈射 as the note assigns them; ties by 比 |
+| 昴星 | 無遙無尅昴星窮，陽仰隂俯酉位中 · 剛日先辰而後日，柔日先日而後辰 | 酉, taken from above on a yang day and from below on a yin one, and the middle and last in the two orders the second line gives |
+| 別責 | 剛日干合上頭神，柔日支前三合取，皆以天上作初傳，隂陽中末干中寄 | yang day from the 寄宮 of the stem's 合 partner, yin day from the 三合 corner ahead; middle and last both the stem's seat |
+| 八專 | 陽日日陽順行三〈連本位數〉，隂日辰隂逆三位，中末總向日上眠 | three forward and three back **counting the starting position**, which is why the code steps by two |
+| 伏吟 | 伏吟有尅還為用，無尅剛干柔取辰，迤邐刑之作中末 · 若也自刑為發用，次傳顛倒日辰併〈陽日用辰，隂日用日〉 | a control on a still board answers it by the ordinary rule; otherwise the stem's seat on a yang day and the branch on a yin one, punished onward, crossing to the other seat when the opening punishes itself |
+| 返吟 | 返吟有尅亦為用，無尅别有井欄名 · 若知六日該無尅，丑未同干丁己辛，丑日登眀未太乙 | a control answers it by the ordinary rule; otherwise the 驛馬 |
+
+### Three clauses the engine recovered, and the text states
+
+`PLAN.md` § 4 phase 13 records three corrections found by asking what rule
+reproduces two independent implementations where they agree. Each is in the
+verse, and none was known to be there when it was made:
+
+- **伏吟有尅還為用.** The engine had dispatched 伏吟 before 賊剋, so a still
+  board was never asked whether it showed a control. The correction — the
+  board is answered by the ordinary rule and named 杜傳 — is the verse's own
+  first clause, and 「若也自刑為發用」 confirms the crossing that follows it.
+- **孟深仲淺季當休.** That where a candidate stands is asked before how deep it
+  waded was inferred by scoring one ordering against the other, 95.8 % to
+  90.5 %. It is a whole line of the verse. So is 「行来本家止」, which is the
+  direction the count runs — forward to the home palace, the reading that
+  scored 95.8 % against 58.2 % for counting backwards.
+- **論尅不論遙.** That 八專 is decided before the board is read at a distance
+  was inferred from every remaining 遙剋 disagreement falling on a 八專 day.
+  The compilers put it in the section's interlinear note, in four characters.
+
+**The lesson is not that the method worked.** It is that the text was available
+throughout, and reading it first would have cost an afternoon and saved three
+rounds of scoring. The order phase 13 set — find a runnable reference before
+writing a rule down — is right against memory and wrong against a text that can
+be quoted. Phase 15 was written with that in front of it.
+
+### 返吟, which no reference could check, and the text checks exhaustively
+
+`liurenBoard` marks every 返吟 board `unverified`, because `kinliuren` defines
+the method and never dispatches to it. The verse closes that gap and closes it
+completely: 「若知六日該無尅，丑未同干丁己辛，丑日登眀未太乙」 — only six day
+pillars can reach a 返吟 with no control, they are the 丑 and 未 days of stems
+丁 · 己 · 辛, and the 初傳 is 登明 on a 丑 day and 太乙 on a 未 day.
+
+Laying every 返吟 board this engine can produce gives **丁丑 己丑 辛丑 丁未 己未
+辛未 and no others**, opening on 亥 for the three 丑 days and 巳 for the three
+未 days. 登明 is 亥 and 太乙 is 巳; 亥 is the 驛馬 of 丑 (巳酉丑) and 巳 is the
+驛馬 of 未 (亥卯未). The engine reaches both through `horseBranch`, so the text
+and this implementation agree on the whole of the rule's domain by two different
+routes — the verse enumerating six cases, the engine deriving them.
+
+The same passage's 別責 note enumerates the day pillars that rule arises on —
+戊辰 戊午 丙辰 辛未 辛丑 丁酉 辛酉 — and the engine produces exactly those seven
+and no others. Neither of these is a sample.
+
+### What the text settles that the engine does not yet do
+
+- **復等柔辰剛日宜.** 涉害 ties are broken in the verse — an equal depth goes to
+  the branch's seat on a yin day and the stem's on a yang one. `shehai` leaves
+  a surviving tie to the order of the courses and its comment says so, calling
+  it "the one place in this rule it is choosing rather than following".
+  `PLAN.md` calls the 21 remaining disagreements "a question for 《六壬大全》,
+  not for another round of scoring". This is that question answered, and the
+  clause is not implemented.
+- **井欄, not 無親.** The verse names the 返吟 board that shows no control
+  井欄〔射〕. This engine's `KETI` calls it `wuqin` 無親, which the verse does
+  not carry. The name is the engine's and wants either a witness or a change.
+- **One clause is the engine's own.** `fuyin` takes the 冲 for the last
+  transmission when the punishment revisits the middle *or the opening*. The
+  verse gives only the first — 「次傳更復自刑者，冲取末傳不論刑」 — and the
+  second disjunct is this implementation's reading of a case the line does not
+  address. It is marked here rather than left in a comment.
+
+### The runnable references, and what they weigh
+
+Both were run over the whole input space, which this board uniquely permits:
+keyed by 月將 rather than by term it is 12 × 12 × 60 = **8 640 boards, and that
+is not a sample of the space but the space**.
+
+- **`kinliuren` 0.1.2.9** (PyPI, Ken Tang, MIT) — one pure-Python module, no
+  dependencies, and it takes 節氣 · 農曆月 · 日干支 · 時干支 rather than an
+  instant, so a comparison isolates the 六壬 construction with no calendar of
+  its own to disagree with. Its nine functions are the 九宗門 one for one.
+- **`liuren-ts-lib` 3.1.0** (npm, Apache-2.0) — a `jiuZongMen` directory of
+  nine modules, taking 月將 · 占時 · 日干支 directly. It answers on all 8 640
+  without throwing. (`mingyu-core`, MIT, is the third to try when one is
+  needed.)
+
+| | | |
+|---|---|---|
+| the two references, **to each other** | 7 120 / 8 640 | **82.4 %** |
+| this engine vs `liuren-ts-lib` | 8 604 / 8 640 | **99.6 %** |
+| this engine where the two references agree | 7 099 / 7 120 | **99.7 %** |
+
+**The middle row is not the interesting one; the first is.** Two independent
+implementations of a transmitted procedure agree with each other on 82.4 % of
+its input space, which means there was never a single answer to measure
+against, and any figure quoted against one of them alone measures distance from
+that author's idiosyncrasies as much as from the tradition. The bottom row is
+the one that means something: where two disagreeing witnesses agree, that is
+the transmitted board.
+
+**And the construction was verified apart from the doctrine.** `kinliuren`
+exposes what it built before it chose anything, and over all 17 280 term-keyed
+boards the four courses agree **17 280 / 17 280** and the 上剋下 · 下賊上
+marking agrees **17 280 / 17 280**. 月將加時, the 寄宮 table, the four courses
+and the phase arithmetic under them are correct over the whole space a board can
+occupy. What remains contestable is the selection among candidates, which is
+doctrine and not computation — and which the verse above now adjudicates.
+
+**Where the disagreements are.** The 21 boards left against `liuren-ts-lib` are
+all 涉害 and all one clause: candidates on a 仲 palace against candidates on a
+季, where the 季 is much the deeper and both references take it. Tuning past
+this point would fit this engine to one implementation rather than to the
+tradition, and 0.24 % of the space is a smaller error than the 17.6 % the two
+references differ from each other by.
+
+### What the board does not carry
+
+The 課體 travel as `Pattern` does — an identifier, the hanzi, the reading — and
+they name a shape of the board. What the manuals hang on that shape does not
+travel: choosing the 用神, ranking the transmissions, dating an outcome. The
+line is `purposes.ts`'s and falls in the same place.
+
+The **十二天將** carry five-phase assignments the tradition transmits, and the
+drawing leaves them in neutral ink for the reason this whole file exists: no
+source is registered for them here. They stay uncoloured until one is.
+
+---
+
 ## What is refused, and why
 
 | | Reason |
@@ -532,6 +729,9 @@ than fixed quietly.
 | 飛盤 | a whole family. `OPTION_NOT_IMPLEMENTED` |
 | 日家 · 月家 · 年家 | same |
 | 寄宮 `dun` | the parameter exists and the second value is refused rather than guessed |
+| 六壬 `yuejiang` `jieqi` · `true` | the 四庫 verse's own table turns the general at the 中氣, and both references read it so. The other two values exist in the type and are refused rather than guessed |
+| 六壬 `zhouye` `solar` | no source consulted cuts the day at the actual sunrise. `OPTION_NOT_IMPLEMENTED` |
+| the 涉害 復等 clauses | **not refused — owed.** 「復等柔辰剛日宜」 is in the verse above and `shehai` does not implement it. See the 六壬 section |
 
 `bigfishmarquis-qimen` implements 茅山, 置閏 and all four systems, and is
 therefore a candidate reference for several of these. It is five months old

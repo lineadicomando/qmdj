@@ -26,9 +26,10 @@ import type { Element } from './types.js';
  * identifier, the hanzi and the reading. They name a shape of the board and
  * are not a verdict on it.
  *
- * See `PLAN.md` § 4 phase 13 for the reference this was checked against, for
- * the two divergences it settled, and for 返吟 — the one rule it cannot check,
- * which is marked on every board that uses it.
+ * See `PLAN.md` § 4 phase 13 for the references this was checked against and
+ * the two divergences they settled, and the 六壬 section of `docs/sources.md`
+ * for 《六壬大全》卷一 入手法 — the verse that states the nine rules, which was
+ * read after this was written and is quoted there line against implementation.
  */
 
 /** The divergences of this board. See `PLAN.md` § 3. */
@@ -316,8 +317,12 @@ export interface LiurenBoard {
    *
    * Only 返吟 sets it. `kinliuren` defines the method and never dispatches to
    * it, so a 返吟 board there falls through to 遙剋 and returns a degenerate
-   * answer; what is computed here comes from the texts alone and has been
-   * checked against nothing. A surface says so, the way it says so of 茅山.
+   * answer. **What this no longer means is unchecked.** 《六壬大全》卷一
+   * enumerates the six days a 返吟 can show no control on and names the 初傳
+   * for each, and this engine reproduces all six and nothing else — so the
+   * rule is attested over the whole of its domain, by a text rather than by
+   * something that runs. Whether a flag naming the weaker of the two kinds of
+   * evidence should still be raised here is open; see `docs/sources.md`.
    */
   unverified?: true;
   options: LiurenOptions;
@@ -540,10 +545,14 @@ function biyong(context: Context, candidates: readonly Course[]): Drawn {
  *
  * When the count ties, the tradition breaks it by where the candidates stand
  * rather than by what they suffered — 見機 takes one standing on a 孟 palace
- * (寅申巳亥), and failing that 察微 takes one on a 仲 (子午卯酉). A tie that
- * survives both is left to the order of the courses, which is the reading this
- * engine takes and the one place in this rule it is choosing rather than
- * following.
+ * (寅申巳亥), and failing that 察微 takes one on a 仲 (子午卯酉).
+ *
+ * A tie that survives both is left to the order of the courses. **That is the
+ * one place in this rule this engine chooses rather than follows, and it is
+ * now known to be a gap rather than a silence**: 《六壬大全》卷一 breaks it —
+ * 「復等柔辰剛日宜」, an equal depth going to the branch's seat on a yin day
+ * and the stem's on a yang one — and the clause is not implemented here. See
+ * the 六壬 section of `docs/sources.md`.
  */
 function shehai(context: Context, candidates: readonly Course[]): Drawn {
   const depth = (course: Course): number => {
@@ -682,12 +691,17 @@ function fuyin(context: Context): Drawn {
   const opening = struck ? struck.upper : day.stem.yang ? lodging : day.branch;
   const keti: KetiId = struck ? 'duchuan' : day.stem.yang ? 'ziren' : 'zixin';
 
-  // Each transmission punishes the one before it. Two things break that chain,
-  // and the tradition has an answer for each: a branch that punishes itself
-  // hands on nothing, so the board crosses to its other seat — the stem's if it
-  // was standing on the branch's, the branch's if it was standing on the
-  // stem's — and a punishment that leads back into the chain it came from is
-  // no advance either, so the last is taken as the middle's opposite.
+  // Each transmission punishes the one before it. Two things break that chain.
+  // For the first the verse has an answer: a branch that punishes itself hands
+  // on nothing, so the board crosses to its other seat — 「若也自刑為發用，次傳
+  // 顛倒日辰併」, the stem's if it was standing on the branch's and the
+  // branch's if the stem's — and where the middle punishes itself in turn the
+  // last is its opposite, 「次傳更復自刑者，冲取末傳不論刑」.
+  //
+  // The second is this engine's own reading and is marked as such in
+  // `docs/sources.md`: a punishment that leads back to the opening is no
+  // advance either, so it is taken the same way. 《六壬大全》卷一 addresses
+  // only the self-punishing middle, and no witness has been found for this.
   const other = opening.index === lodging.index ? day.branch : lodging;
   const punished = punishment(opening);
   const middle = punished.index === opening.index ? other : punished;
@@ -704,13 +718,22 @@ function fuyin(context: Context): Drawn {
  *
  * Every branch faces its opposite, and nothing stands where it belongs. Where
  * the board still shows a control the ordinary rule is applied to it and the
- * course is 無依; where it shows none, the tradition puts the 驛馬 in front —
- * 「返吟無剋以馬推」 — and follows it with the branch's seat and the stem's.
+ * course is 無依 — 「返吟有尅亦為用」; where it shows none, the tradition puts
+ * the 驛馬 in front and follows it with the branch's seat and the stem's.
  *
  * **This is the one rule here with no runnable reference.** `kinliuren`
  * defines a `fanyin` and never dispatches to it, and what it returns is not a
  * set of transmissions at all. Every board drawn by this rule is marked
  * `unverified`, and every surface says so.
+ *
+ * The text checks it where no implementation could. 《六壬大全》卷一 does not
+ * carry the formula 「返吟無剋以馬推」 this comment used to cite; it enumerates
+ * instead — 「若知六日該無尅，丑未同干丁己辛，丑日登眀未太乙」 — and the six
+ * days it names are the six this engine produces, opening on 亥 and 巳, which
+ * are the 驛馬 of 丑 and of 未. Enumeration and derivation meet exactly.
+ *
+ * What the verse names 井欄 this file calls `wuqin` 無親, which it does not
+ * carry. See `docs/sources.md`.
  */
 function fanyin(context: Context): Drawn {
   const byControl = zeike(context);

@@ -1639,6 +1639,23 @@ is a smaller error than the 17.6 % the two references differ from each other
 by. What is left is a question for 《六壬大全》, not for another round of
 scoring.
 
+**And 《六壬大全》 was read, one phase later, and answered it.** Paying this
+board's debt to `docs/sources.md` before phase 15 meant finding the text, and
+卷一 入手法 is the whole procedure in a mnemonic verse: the 寄宮 table, the nine
+rules line by line, and the compilers' interlinear notes. Three of the clauses
+above — 伏吟有尅還為用, 孟深仲淺季當休, and 八專's 論尅不論遥 — are stated
+there outright, having been recovered here by scoring against two references
+that could not both be right. **Reading it first would have cost an afternoon
+and saved three rounds.** The rule this phase set — no rule from memory, a
+runnable reference before anything is written down — holds against
+recollection and was applied too widely: a text that can be quoted outranks an
+implementation that can be run, and the register wants the quotation anyway.
+What the verse settles beyond the three is recorded where it belongs, in the
+六壬 section of `docs/sources.md`: the 復等 tie-break this engine still does
+not implement, the 返吟 that no reference could check and the text checks
+exhaustively, and one clause in `fuyin` that is this implementation's reading
+rather than the verse's.
+
 Where this engine ends up differing deliberately, that is a divergence to
 declare — possibly a parameter, as `yuan` became in phase 3 when the same
 thing happened with 拆補.
