@@ -1559,23 +1559,59 @@ on 98.1 % of them. Every contested case sampled goes the same way — this
 engine and `liuren-ts-lib` against `kinliuren` — which is the second witness
 `docs/sources.md` asks for before anything is written down.
 
-**What the remaining 137 are.** Almost all 伏吟, and they are one specific
-question rather than a vague gap. Both references open a 伏吟 board on the
-stem's seat for every 陽日 — 30 of 30, which this engine already does — and on
-the branch's seat for 丁, 己 and 辛. But for **乙 and 癸 they both open on the
-stem's seat**, against the rule as it is usually stated (剛日干上神,
-柔日支上神). Two independent implementations agreeing on that is the standard
-this project accepts elsewhere; what is missing is the reason, and neither the
-lodgings (辰 and 丑 against 未 and 戌) nor polarity nor the 三刑 explains it.
-It is left unimplemented and written down here as a question for
-《六壬大全》 rather than hardcoded as a table nobody can weigh — the treatment
-三奇得使 got. One clause was fixed on the way: a transmission opening on a
-branch that punishes itself crosses to the other seat, which took the whole
-comparison from 94.2 % to 95.0 % and the agreed core from 97.7 % to 98.1 %.
+**Three clauses were wrong, and the agreeing witnesses said which.** The method
+was the one that had just worked for the reference itself: where two
+independent implementations agree, ask what rule reproduces them, and take the
+rule rather than the table.
+
+- **伏吟 is not a rule about stems.** The pattern looked like one — every 乙
+  and every 癸 day opened on the stem's seat where 丁, 己 and 辛 opened on the
+  branch's, which no statement of 剛日干上神 · 柔日支上神 accounts for. It is
+  **杜傳**: a still plate can still show one control, and where it does the
+  board is answered by the ordinary rule instead of by its own silence. Only
+  the first course can show it — the other three stand on themselves — and 乙
+  木 over 辰 土 is always a 賊 while 癸 水 under 丑 土 is always a 剋, where
+  丁 and 己 over 未 and 辛 over 戌 never are. The per-stem pattern was a
+  consequence of the phases, not a rule. **伏吟 dispatched before 賊剋 was the
+  error**, and the fix took the comparison from 95.0 % to 97.2 %.
+- **涉害 asks where before it asks how deep.** 「孟深仲淺季當休」 orders the
+  clauses: a candidate standing on one of the four 孟 palaces is preferred
+  outright, a 仲 only when no 孟 is present, and depth decides *inside* that
+  group rather than across it. Scored over the 505 boards both references
+  agree on, 孟 → 仲 → depth gives 95.8 % against 90.5 % for depth → 孟 → 仲,
+  which is what this engine had. Counting backwards to the home palace instead
+  of forwards was also tried and is much worse — 58.2 % at best. 97.2 % to
+  98.6 %.
+- **八專 comes before 遙剋, not after.** Its condition is 「如無上下相剋」, and
+  a distant control is not a control between a course and its ground — it is
+  what the board is asked *once no such control exists*. Every remaining 遙剋
+  disagreement was a 八專 day. 98.6 % to 99.6 %.
+
+**Where it stands.** Against `liuren-ts-lib`, **8 604 / 8 640 = 99.6 %**;
+where the two references agree with each other, **7 099 / 7 120 = 99.7 %**.
+
+**The 21 that remain** are all 涉害, and they are one narrow clause: candidates
+on a 仲 palace against candidates on a 季, where the 季 is much the deeper and
+the references take it. The 復等 clauses of 涉害 go further than 孟 · 仲 · 季
+and this engine does not implement them. **It stops here deliberately.** Tuning
+past this point would be fitting to one implementation rather than to the
+tradition, which is what this phase set out not to do, and 0.24 % of the space
+is a smaller error than the 17.6 % the two references differ from each other
+by. What is left is a question for 《六壬大全》, not for another round of
+scoring.
 
 Where this engine ends up differing deliberately, that is a divergence to
 declare — possibly a parameter, as `yuan` became in phase 3 when the same
 thing happened with 拆補.
+
+**The tests carry their values in the open**, as every test here does:
+`test/liuren.test.ts` asserts one board per rule and per 課體, and **every one
+of them is a board both references agree on**. Nothing is asserted from the
+17.6 % where they do not. Two structural checks stand beside them — the
+general steps back one branch at each of the twelve 中氣, and the `guiren`
+divergence moves the generals over every hour of a day while leaving the
+transmissions identical — and one that lays all 17 280 boards to prove none
+throws or comes back short.
 
 > The corpus is generated outside the repo, as phase 3's comparisons were: a
 > ~40-line script over `kinliuren`, whose output feeds a throwaway test. No

@@ -245,7 +245,7 @@ export const LIUREN_RULES: Record<LiurenRuleId, { hanzi: string; pinyin: string 
 export type KetiId =
   | 'yuanshou' | 'zhongshen' | 'zhiyi' | 'shehai'
   | 'haoshi' | 'tanshe' | 'hushi' | 'dongshe'
-  | 'bieze' | 'bazhuan' | 'ziren' | 'zixin' | 'wuyi' | 'wuqin';
+  | 'bieze' | 'bazhuan' | 'ziren' | 'zixin' | 'duchuan' | 'wuyi' | 'wuqin';
 
 export const KETI: Record<KetiId, { hanzi: string; pinyin: string }> = {
   yuanshou: { hanzi: '元首', pinyin: 'yuánshǒu' },
@@ -260,6 +260,7 @@ export const KETI: Record<KetiId, { hanzi: string; pinyin: string }> = {
   bazhuan: { hanzi: '八專', pinyin: 'bāzhuān' },
   ziren: { hanzi: '自任', pinyin: 'zìrèn' },
   zixin: { hanzi: '自信', pinyin: 'zìxìn' },
+  duchuan: { hanzi: '杜傳', pinyin: 'dùchuán' },
   wuyi: { hanzi: '無依', pinyin: 'wúyī' },
   wuqin: { hanzi: '無親', pinyin: 'wúqīn' },
 };
@@ -441,13 +442,16 @@ function threeTransmissions(context: Context): Drawn {
   const byControl = zeike(context);
   if (byControl) return byControl;
 
+  // 八專 comes in **before** the board is read at a distance, because its
+  // condition is 「如無上下相剋」 and a 遙剋 is not a control between a course
+  // and its ground — it is what the board is asked once no such control
+  // exists. A day whose stem lodges where its branch already stands has fewer
+  // than four distinct courses because of the day itself, and that fact is
+  // settled before anything is looked for outside them.
+  if (lodgingOf(day.stem).index === day.branch.index) return bazhuan(context);
+
   const distant = yaoke(context);
   if (distant) return distant;
-
-  // 八專 before 別責: a day whose stem and branch lodge in one palace has
-  // fewer than four distinct courses *because of the day*, and that is a
-  // stronger fact about the board than a duplicate arriving by chance.
-  if (lodgingOf(day.stem).index === day.branch.index) return bazhuan(context);
 
   const distinct = new Set(context.courses.map((course) => `${course.upper.index}`));
   if (distinct.size === 3) return bieze(context);
@@ -535,16 +539,17 @@ function shehai(context: Context, candidates: readonly Course[]): Drawn {
     return harms;
   };
 
-  const deepest = Math.max(...candidates.map(depth));
-  let tied = candidates.filter((course) => depth(course) === deepest);
+  // 「孟深仲淺季當休」 — where a candidate stands is asked *before* what it
+  // suffered, not after it. A board with a candidate on one of the four 孟
+  // palaces (寅申巳亥) never weighs one standing on a 仲, and one standing on
+  // a 季 is out of the reckoning while either of the others is present. Depth
+  // decides inside that group and not across it.
+  const meng = candidates.filter((course) => context.palaceUnder(course.upper) % 3 === 2);
+  const zhong = candidates.filter((course) => context.palaceUnder(course.upper) % 3 === 0);
+  const pool = meng.length > 0 ? meng : zhong.length > 0 ? zhong : candidates;
 
-  if (tied.length > 1) {
-    const meng = tied.filter((course) => context.palaceUnder(course.upper) % 3 === 2);
-    const zhong = tied.filter((course) => context.palaceUnder(course.upper) % 3 === 0);
-    tied = meng.length > 0 ? meng : zhong.length > 0 ? zhong : tied;
-  }
-
-  const chosen = tied[0] as Course;
+  const deepest = Math.max(...pool.map(depth));
+  const chosen = pool.find((course) => depth(course) === deepest) as Course;
   return { branches: chain(context, chosen.upper), rule: 'shehai', keti: 'shehai' };
 }
 
@@ -640,22 +645,38 @@ function bazhuan(context: Context): Drawn {
  * the tradition sends the board to the branch's seat instead.
  */
 function fuyin(context: Context): Drawn {
-  const { day } = context;
+  const { day, courses } = context;
   const lodging = lodgingOf(day.stem);
-  const opening = day.stem.yang ? lodging : day.branch;
-  // A branch that punishes itself hands the board nothing, so the rule crosses
-  // to the other seat: a board opened on the stem's takes the branch's, and
-  // one opened on the branch's takes the stem's.
-  const other = day.stem.yang ? day.branch : lodging;
-  const second = punishment(opening);
-  const middle = second.index === opening.index ? other : second;
+
+  // A 伏吟 board can still show one control, and only one: the branches of the
+  // second, third and fourth courses stand on themselves, so nothing there can
+  // control anything. What is left is the first, the lodging over the stem —
+  // and where it controls or is controlled, the board is answered by the
+  // ordinary rule and named 杜傳 rather than for its own silence.
+  const struck = courses.find(
+    (course) =>
+      controls(groundOf(course), course.upper.element) ||
+      controls(course.upper.element, groundOf(course)),
+  );
+
+  const opening = struck ? struck.upper : day.stem.yang ? lodging : day.branch;
+  const keti: KetiId = struck ? 'duchuan' : day.stem.yang ? 'ziren' : 'zixin';
+
+  // Each transmission punishes the one before it. Two things break that chain,
+  // and the tradition has an answer for each: a branch that punishes itself
+  // hands on nothing, so the board crosses to its other seat — the stem's if it
+  // was standing on the branch's, the branch's if it was standing on the
+  // stem's — and a punishment that leads back into the chain it came from is
+  // no advance either, so the last is taken as the middle's opposite.
+  const other = opening.index === lodging.index ? day.branch : lodging;
+  const punished = punishment(opening);
+  const middle = punished.index === opening.index ? other : punished;
+
   const third = punishment(middle);
-  const last = third.index === middle.index ? (BRANCHES[(middle.index + 3) % 12] as Branch) : third;
-  return {
-    branches: [opening, middle, last],
-    rule: 'fuyin',
-    keti: day.stem.yang ? 'ziren' : 'zixin',
-  };
+  const revisits = third.index === middle.index || third.index === opening.index;
+  const last = revisits ? (BRANCHES[(middle.index + 6) % 12] as Branch) : third;
+
+  return { branches: [opening, middle, last], rule: 'fuyin', keti };
 }
 
 /**
