@@ -77,4 +77,10 @@
   /* A shade under the word, as the name is under the word everywhere here.
      No quieter than that: the whole legend is already set faint. */
   .glyph { font-size: 0.9em; }
+
+  /* On paper it stays with its board: a key printed on the page after the
+     marks it explains is a key found by whoever had already given up. */
+  @media print {
+    .legend { break-inside: avoid; break-before: avoid; }
+  }
 </style>

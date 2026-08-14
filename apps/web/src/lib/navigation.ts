@@ -1,13 +1,25 @@
 import type { MessageKey } from '@qimendunjia/i18n';
 
-/** The sections, in the order the header lists them. */
+/**
+ * The sections, in the order the header lists them.
+ *
+ * The consultation is first and lives at the root of a language, which is a
+ * claim about what this site is for: the classical use of the method is a
+ * question put at an instant, and the three sections after it are the
+ * instruments that use serves itself with. Someone who arrives knowing what
+ * they want arrives wanting to ask something.
+ *
+ * The cost is paid knowingly and it is the chart's address. `/[lang]` was the
+ * chart of now and is now a form: a link to a chart is `/[lang]/chart` with
+ * the moment in it, and the links shared before this change land on the
+ * consultation instead. What is bought is that the section which cannot be
+ * addressed at all — see the page — is the one nobody has to find.
+ */
 export const SECTIONS: readonly { slug: string; label: MessageKey }[] = [
-  { slug: '', label: 'nav.chart' },
+  { slug: '', label: 'nav.consult' },
+  { slug: 'chart', label: 'nav.chart' },
   { slug: 'bazi', label: 'nav.bazi' },
   { slug: 'moments', label: 'nav.moments' },
-  // Last, because it is the only one that does not answer a question of its
-  // own: it poses a chart to be read somewhere else.
-  { slug: 'consult', label: 'nav.consult' },
 ];
 
 /**
@@ -67,8 +79,8 @@ export function isPlainClick(event: MouseEvent): boolean {
 /**
  * Whether a section is the one being read.
  *
- * The chart lives at the root of a language, so a plain `startsWith` would
- * mark it current on every page of the site.
+ * The consultation lives at the root of a language, so a plain `startsWith`
+ * would mark it current on every page of the site.
  */
 export function isCurrent(locale: string, slug: string, pathname: string): boolean {
   const target = href(locale, slug);

@@ -212,3 +212,61 @@ input[type='checkbox'], input[type='radio'] { accent-color: var(--ink); }
   scrollbar-width: thin;
   overscroll-behavior-x: contain;
 }
+
+/*
+ * The fourth appearance, and the one nobody chose: paper.
+ *
+ * A consultation is printed to be shown to somebody else or kept, and neither
+ * of the two on screen suits a sheet. Dark is obvious — a board in reversed
+ * ink is a page of toner and a drawing nobody can read off a printer — but
+ * light is not right either: it is a paper-*coloured* screen, and its ground
+ * and its rules are set against a lit surface rather than against white.
+ *
+ * So the properties are reset here rather than in each component, and every
+ * rule below is one of two things: a colour that has to hold on white, or
+ * something that is furniture on screen and is not on paper.
+ *
+ * All three selectors together, and at the specificity of the strongest of
+ * them: `:root[data-color-scheme='dark']` outranks a bare `:root`, so a
+ * reader who picked dark would otherwise print exactly what this exists to
+ * prevent. Later in the sheet, so among equals it is this that wins.
+ */
+@media print {
+  :root,
+  :root[data-color-scheme='light'],
+  :root[data-color-scheme='dark'] {
+    --ink: #1a1a1a;
+    /* A shade darker than the screen's `--faint`: on white, and through a
+       printer that renders grey as a halftone, the quiet register has to be
+       readable rather than merely present. */
+    --faint: #46433d;
+    --rule: #b8b2a8;
+    --edge: #6f6a60;
+    --ground: #ffffff;
+    --tint: #f4f1eb;
+    --alarm: #8a3325;
+    --element-mu: #eef4ea;
+    --element-huo: #faeeea;
+    --element-tu: #f6f1e6;
+    --element-jin: #eff1f4;
+    --element-shui: #e9eef3;
+    color-scheme: light;
+  }
+
+  body { background: #ffffff; }
+
+  /*
+   * The one rule here that is about losing data rather than about ink.
+   *
+   * A table wider than its frame scrolls on screen; a frame that still clips
+   * on paper prints three of the nine palaces and gives no sign that the
+   * other six existed. Nothing scrolls on a sheet, so the frame comes off and
+   * what is inside is set to fit — see `PalaceTable`, which takes itself down
+   * to a size that does.
+   */
+  .scroller { overflow-x: visible; }
+
+  /* The tints are the board grouped at a glance, and a browser that drops
+     backgrounds prints five white squares where five phases were. */
+  * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}

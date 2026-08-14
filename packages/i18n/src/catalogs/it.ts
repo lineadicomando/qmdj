@@ -268,7 +268,7 @@ export const it: Record<MessageKey, string> = {
   'nav.chart': 'Qi Men',
   'nav.bazi': 'Quattro pilastri',
   'nav.moments': 'Scegliere il momento',
-  'nav.consult': 'Prompt AI',
+  'nav.consult': 'Consultazione',
   'nav.sections': 'Sezioni',
 
   'scheme.label': 'Aspetto',
@@ -356,6 +356,7 @@ export const it: Record<MessageKey, string> = {
 
   'form.copyChart': 'Copia la carta come testo',
   'form.copyPrompt': 'Copia il prompt',
+  'form.print': 'Stampa',
   'form.copied': 'Copiato',
   'form.copying': 'Preparo…',
   'form.copyFailed':
@@ -376,6 +377,9 @@ export const it: Record<MessageKey, string> = {
   'consult.lead':
     'Poni una domanda e ottieni un prompt pronto — da incollare in ChatGPT, Claude o un altro assistente.',
   'consult.cast': 'Poni la carta',
+  'consult.legend': 'La tua domanda, e da dove la poni',
+  'consult.change': 'Cambia la domanda',
+  'consult.castAt': 'Carta posta per il {when}',
   'consult.castFailed': 'Non è stato possibile porre la carta.',
 
   'form.toConsult': 'Per far leggere una carta, con una domanda:',

@@ -160,7 +160,7 @@
    * parameters nobody read, in an address somebody might share.
    */
   const chartHref = (start: string): string =>
-    `/${t.locale}?${chartQuery(start, data.interval)}`;
+    `/${t.locale}/chart?${chartQuery(start, data.interval)}`;
 
   /**
    * The row of the answer the open hour stands on, if the answer still has

@@ -83,4 +83,11 @@
     font-family: ui-monospace, monospace;
     font-size: 0.75rem;
   }
+
+  /* A clipboard is a thing screens have. The box that stands in for it when
+     the clipboard refuses goes with it: what it holds is the chart, and the
+     sheet already carries that in a form made to be read. */
+  @media print {
+    .copy { display: none; }
+  }
 </style>

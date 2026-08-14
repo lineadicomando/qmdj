@@ -181,4 +181,17 @@
     .panel { padding: 0.8rem 0.7rem 0.9rem; margin-bottom: 1.4rem; }
     .panel.closed { padding: 0.5rem 0.6rem; }
   }
+
+  /*
+   * A form is not part of a document.
+   *
+   * Whatever is in here was a way of asking, and the sheet holds the answer:
+   * fields, steppers and the buttons on the closed bar all print as furniture
+   * around the one thing somebody wanted on paper. Anything the panel said
+   * that belongs on the sheet — which instant, which place, which question —
+   * is said again by the answer itself, and the pages see to that.
+   */
+  @media print {
+    .panel { display: none; }
+  }
 </style>

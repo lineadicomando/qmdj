@@ -128,16 +128,32 @@ the engine falls back to Moshier, which needs no files.
   `asked=true` and nothing more, and the prompt ends on the line that
   introduces a question for the browser to append. What somebody asks a chart
   is theirs, and a query string is written into every log along the way.
-- **A consultation is an act, not an address.** `/[lang]/consult` is the one
-  section where the answer is not in the URL: the chart is cast by `fetch` at
-  the instant it is asked for and held in the component, because **the instant
-  of asking is the instant that is cast** — the question comes before the
-  casting or it is a caption on a chart that was already there. Which is why
-  the page asks two things in the open, the question and the place: the date
-  and the time are under the options and empty, and empty is the press. A
-  reader who means another instant fills them, and that is a choice they made
-  rather than a field they had to get past. Only the setup travels in the
-  address. Everywhere else, asking is navigating.
+- **A consultation is an act, not an address.** `/[lang]` — the root of a
+  language, and the section the nav lists first — is the one place where the
+  answer is not in the URL: the chart is cast by `fetch` at the instant it is
+  asked for and held in the component, because **the instant of asking is the
+  instant that is cast** — the question comes before the casting or it is a
+  caption on a chart that was already there. Which is why the page asks two
+  things in the open, the question and the place: the date and the time are
+  under the options and empty, and empty is the press. A reader who means
+  another instant fills them, and that is a choice they made rather than a
+  field they had to get past. Only the setup travels in the address.
+  Everywhere else, asking is navigating — the chart is `/[lang]/chart`, which
+  is where it moved from the root when the consultation took the lead. See
+  `navigation.ts` for what that cost and what it bought.
+- **A chart prints, and paper is the fourth appearance.** Not light: light is
+  a paper-*coloured* screen, set against a lit surface. `@media print` in
+  `app.css` resets the properties for white, at the specificity of
+  `[data-color-scheme='dark']` so a reader who picked dark does not print a
+  page of toner; each component says whether it belongs on a sheet, and the
+  table of palaces drops its scrolling frame — a frame that still clips on
+  paper prints three palaces of nine and gives no sign of the other six. The
+  board is the exception the CSS cannot reach: an `<img>` carries its colours
+  in its address, so both pages draw a second copy at `scheme=light`, hidden
+  on screen and warmed as soon as the chart is cast, since `beforeprint`
+  cannot wait for a picture. **The consultation prints from the page and never
+  from a route of its own**, for the reason above it: a route would have to be
+  told the question.
 - **A birth enters a chart, never the other way about.** There is one frame
   and it is divination. A birth is placed *inside* the chart of the moment —
   `nianming.ts`: 本命, the year pillar of the birth, and 行年, the year being

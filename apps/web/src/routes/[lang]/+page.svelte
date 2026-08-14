@@ -1,326 +1,542 @@
+<!--
+  Where a chart is posed in order to be taken away and read.
+
+  This project computes a chart and refuses to read it, which is the rule it
+  stands on. The consequence is that somebody who wants a reading takes the
+  date to a model, and a model handed a date casts the chart from memory and
+  gets it wrong. So the chart goes across already computed, with the
+  conditions attached — and this is the section where that is done properly.
+
+  It exists apart from the chart because of an order the chart section cannot
+  keep. **The instant of asking is the instant that is cast**: the question
+  comes before the casting, or it is a caption on a chart that was already
+  there. On a page whose address *is* a chart, whose arrows step the moment
+  and whose empty address means now, there is nowhere to put a question that
+  is not after the fact. Here there is nothing else on the page.
+
+  One errand: a question, asked now, which is the classical use. So the form
+  asks two things in the open — the question, and the place, which fixes the
+  hour and has no default that would not be somebody else's city. The date
+  and the time are under the options and empty, because empty is the instant
+  of the press: a field nine readers out of ten have no business filling in
+  belongs where the tenth can find it, not in front of all of them.
+
+  A birth may be given with it, and then the chart carries a 年命 — 本命, the
+  year pillar of that birth, and 行年, the year being lived, both looked up
+  *inside* the chart of the moment. That is the classical direction and the
+  reverse of a natal chart, which this section offered once and no longer
+  does: what a natal frame could honestly give a model was a warning, and
+  《遁甲演義》 gives two pairs and the palaces they fall in. See
+  `docs/sources.md`.
+
+  Nothing here is in the address but the setup. The chart is fetched on a
+  press and held in this component, and the question never leaves the browser
+  at all: a consultation is an act, not an address, and a reload should find
+  the fields ready rather than the answer preserved.
+
+  **It is also the root of a language**, and that is a claim rather than an
+  arrangement: the classical use of this method is a question put at an
+  instant, and the three sections after it are the instruments that use serves
+  itself with. What it costs is the chart's old address, and the note in
+  `navigation.ts` says so.
+
+  Two things can be done with what comes out, and they are the two the page is
+  built around: hand it to a model, or print it. The second is why the answer
+  carries the question in ink and not only in the fields — a sheet shown to
+  somebody else has to say what was asked, or it is a chart of nothing.
+-->
 <script lang="ts">
-  import { goto, invalidateAll } from '$app/navigation';
+  import { replaceState } from '$app/navigation';
   import { page } from '$app/state';
   import { appearance } from '$lib/appearance.svelte';
-  import { momentQuery, sayFailure, type MomentInput } from '$lib/moment';
-  import { step, type Unit, type Wall } from '$lib/step';
+  import { momentQuery, sayFailure, type Failure, type MomentInput } from '$lib/moment';
   import ChartReading from '$lib/components/ChartReading.svelte';
   import CopyText from '$lib/components/CopyText.svelte';
   import FormPanel from '$lib/components/FormPanel.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
-  import MomentSteps from '$lib/components/MomentSteps.svelte';
   import StrengthLegend from '$lib/components/StrengthLegend.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
+  import type { MessageKey } from '@qimendunjia/i18n';
 
   let { data } = $props();
   const t = $derived(data.t);
 
-  /**
-   * The fields are edited, so they are state; the address is what they were
-   * last asked as, so arriving at one puts them back.
-   */
   // svelte-ignore state_referenced_locally
   let asked = $state<MomentInput>({ ...data.moment });
-  $effect(() => {
-    asked = { ...data.moment };
-  });
-
-  const chart = $derived(data.chart);
-  const failure = $derived(data.failure ? sayFailure(t, data.failure) : '');
-
+  let question = $state('');
   /**
-   * The instant the answer was actually computed for.
+   * The birth, which is optional and stays optional.
    *
-   * An address that says nothing means now, and the server resolved that now
-   * **in the place's own zone**. Stepping from the browser's clock instead
-   * would jump by hours for a chart cast in Beijing and read in Rome.
+   * A date alone places the 本命. The 行年 needs the direction its count runs
+   * in as well, which the tradition sets by sex — forward from 寅, back from
+   * 申 — so without that field the year being lived is simply not placed,
+   * rather than guessed at.
    */
-  const cast = $derived<Wall | undefined>(
-    data.chart && { date: data.chart.moment.input.date, time: data.chart.moment.input.time },
-  );
-
-  // The picture answers for the moment the data answers for — pinned to the
-  // instant, so that "now" is a new address every time and not one image
-  // cached over a day of different charts.
-  const plate = $derived(
-    `/api/chart/plate?${momentQuery({ ...data.moment, ...cast }, { lang: t.locale, scheme: appearance.current })}`,
-  );
-
-  /**
-   * The same chart, for whatever is asked of it in words.
-   *
-   * Pinned to the instant like the drawing, and for the same reason: what is
-   * copied has to be the chart on screen, and «now» is a different chart an
-   * hour later.
-   */
-  const address = $derived(momentQuery({ ...data.moment, ...cast }, { lang: t.locale }));
-
-  /**
-   * The same instant, in the section that opens its pillars out.
-   *
-   * Pinned like the other two: a link that said «now» would land on a
-   * different moment than the one whose pillars are on screen — and worse,
-   * the pillars page has no «now» at all, since a chart of birth cast for
-   * whoever opened it is a wrong answer rather than a lesser one.
-   *
-   * The ju is left behind on purpose. `method` and `yuan` decide how Qi Men
-   * counts its ju and mean nothing to the four pillars; carried across they
-   * would sit in an address that never reads them, looking like settings that
-   * bear on the answer. `dayBoundary` and the solar correction do go, because
-   * both sections reckon the same day and the same hour from them — a moment
-   * handed over under one boundary and read under another would come back
-   * with a different day pillar than the chart was cast on.
-   */
-  const pillars = $derived(momentQuery({ ...data.moment, ...cast, method: '', yuan: '' }));
-
-  /**
-   * Where each step stands, shown on the step that moves it.
-   *
-   * Cut from the instant the answer was cast for, not from the fields: the
-   * fields say nothing when the chart is the present one, and a row of steps
-   * that read as empty beside a chart of today would be lying about it.
-   */
-  const values = $derived(
-    cast && {
-      year: cast.date.slice(0, 4),
-      month: cast.date.slice(5, 7),
-      day: cast.date.slice(8, 10),
-      // The present arrives from the engine to the second, and the seconds
-      // are neither stepped nor read: what a step moves is the clock time.
-      shichen: cast.time.slice(0, 5),
-    },
-  );
+  // svelte-ignore state_referenced_locally
+  let born = $state(data.born);
+  // svelte-ignore state_referenced_locally
+  let gender = $state<string>(data.gender);
 
   let busy = $state(false);
+  let needed = $state<MessageKey | undefined>();
+  /**
+   * Starts on what the load refused: an address naming a place there is none
+   * of. The other sections stop before casting for that — see the chart's
+   * load — and here nothing is cast until the press, so the refusal is said
+   * up front, where the reader corrects the place the press will use.
+   */
+  // svelte-ignore state_referenced_locally
+  let failure = $state<Failure | undefined>(data.failure);
+  /** The chart as it came back. */
+  let chart = $state<any>();
+  /** The fields, which withdraw once they have answered. */
   let panel: FormPanel | undefined = $state();
 
-  /**
-   * The drawing that is on screen, as against the one that was asked for.
-   *
-   * A new address changes `src` before a pixel of the new picture exists, and
-   * the browser holds the old one up in the meantime with nothing to say it
-   * is stale. Until the two agree, the board is shown as on its way.
-   */
-  let drawn = $state('');
+  const said = $derived(failure ? sayFailure(t, failure) : '');
 
   /**
-   * Asking is navigating, and the answer arrives as the page's own data.
+   * What is still missing, checked before anything is asked of the server.
    *
-   * `replaceState`: a moment gets stepped a dozen times in a row, and a back
-   * button that has to walk back through every one of them is a back button
-   * nobody can use. Back leaves the chart, which is what a reader means by it.
+   * Only the question. The birth is an addition and never a requirement:
+   * a consultation without one is the whole of the classical use.
    */
-  async function show(next: MomentInput): Promise<void> {
-    const query = momentQuery(next);
-    const target = `${page.url.pathname}${query ? `?${query}` : ''}`;
+  const missing = $derived<MessageKey | undefined>(
+    question.trim() === '' ? 'form.needed.question' : undefined,
+  );
+
+  /**
+   * The address of the chart that was cast, for the drawing and the prompt.
+   *
+   * Written once at the cast and never derived: the fields stay editable
+   * after the press, and a board that followed them would quietly redraw as
+   * a chart nobody cast while the reading beside it still answered the one
+   * they did. A moved field already puts the copy button away; the drawing
+   * holds still the same way, until the next press replaces both.
+   */
+  let address = $state('');
+
+  /**
+   * The question as it was actually put, kept apart from the field.
+   *
+   * The field goes on being editable after the press and the answer does not
+   * follow it — so the sentence standing over a cast chart is the one it was
+   * cast with, not whatever is in the box at the moment of reading. On a
+   * sheet that will be printed and handed to somebody, the difference is the
+   * whole document.
+   */
+  let posed = $state('');
+
+  /**
+   * Everything the answer on screen was cast from, as one string.
+   *
+   * Compared against what was asked, it says whether the chart still answers
+   * the fields — and that is not a nicety. The prompt is built from the chart
+   * the server cast and the question this browser holds, and those are read at
+   * different moments: ask A, cast, correct it to B, copy, and out comes the
+   * chart of the instant A was put with B written underneath. Which is the
+   * one thing this section exists to prevent.
+   *
+   * So a moved field puts the answer away rather than warning about it. The
+   * button to copy is simply not there, and the button to cast is.
+   */
+  const fields = $derived(`${momentQuery(asked)}|${born}|${gender}|${question.trim()}`);
+  let castFrom = $state('');
+  const spent = $derived(chart !== undefined && castFrom !== fields);
+
+  /**
+   * The setup, kept in the address so a reload finds the fields as they were.
+   *
+   * The question is not in it and never will be, and neither is the chart:
+   * what is worth surviving a reload is what was typed to get here, not the
+   * act itself.
+   */
+  function mark(): void {
+    const next = new URL(page.url);
+    next.search = momentQuery(
+      // Whatever is in the fields, which is normally no date at all: an empty
+      // pair is the present and writes nothing into the address. A date
+      // somebody went and typed is setup like the place, and comes back.
+      { ...asked },
+      // The birth is setup and survives a reload with the rest of it. The
+      // question never does, and that is the line: what was typed to get
+      // here comes back, what was asked does not.
+      { born: born || undefined, gender: (born && gender) || undefined },
+    );
+    replaceState(next, page.state);
+  }
+
+  /**
+   * Casting, which is a fetch and not a navigation.
+   *
+   * Everywhere else in this interface asking is navigating, because there the
+   * address is the answer. Here it cannot be: the answer is cast for the
+   * instant of the press, and it holds a question that must not travel.
+   */
+  async function consult(event: SubmitEvent): Promise<void> {
+    event.preventDefault();
+    needed = missing;
+    if (needed) return;
+
     busy = true;
+    failure = undefined;
     try {
-      // Asking the present for the present again is not a navigation, and
-      // SvelteKit would rightly do nothing with it. It is still a new chart.
-      if (target === `${page.url.pathname}${page.url.search}`) await invalidateAll();
-      else await goto(target, { replaceState: true, noScroll: true, keepFocus: true });
+      // A consultation normally says no date, and the engine reads that as the
+      // present in the place's own zone — never the browser's clock, which
+      // would be an hour out for a chart cast in Beijing and asked for in
+      // Rome. The fields are under the options, empty, for the reader who
+      // means another instant and says so.
+      const query = momentQuery(
+        { ...asked },
+        {
+          lang: t.locale,
+          born: born || undefined,
+          gender: (born && gender) || undefined,
+        },
+      );
+      const response = await fetch(`/api/chart?${query}`);
+      const body = await response.json();
+
+      if (!response.ok) {
+        chart = undefined;
+        address = '';
+        failure = body as Failure;
+        return;
+      }
+
+      chart = body.chart;
+      // Pinned to what the engine actually cast for. Under a question that is
+      // the instant of the press, and it is the whole point of the mode: the
+      // consultation belongs to that minute and not to whenever this is read.
+      const cast = { date: chart.moment.input.date, time: chart.moment.input.time };
+      address = momentQuery(
+        { ...asked, ...cast },
+        { lang: t.locale, born: born || undefined, gender: (born && gender) || undefined },
+      );
+      castFrom = fields;
+      posed = question.trim();
+    } catch {
+      chart = undefined;
+      address = '';
+      // The request itself failed, so there is no code to translate — and it
+      // may well be the first press, when nothing was ever cast to be "read
+      // again": what failed is the casting, and the message says so.
+      failure = { message: t('consult.castFailed') };
     } finally {
       busy = false;
+      mark();
     }
+
+    // The fields withdraw once they have answered, and stay open for a
+    // failure: what has to be corrected is inside them. Closing is also what
+    // puts the two things there are to do with a chart — hand it over, print
+    // it — on the one line the panel leaves at the top of the page.
+    if (chart && !failure) await panel?.close();
   }
+
+  const plate = $derived(`/api/chart/plate?${address}&scheme=${appearance.current}`);
 
   /**
-   * Asking closes the fields, once they have answered.
+   * The same board, drawn for paper.
    *
-   * Only on the submit, and only when the answer is a chart: a failure leaves
-   * the panel open, because what has to be corrected is in it.
+   * The drawing is an `<img>`, so its colours are settled by an address and
+   * not by a stylesheet: there is no rule this page can write that turns a
+   * dark board light on its way to a printer. What there is instead is a
+   * second copy, asked for in the light scheme, hidden on screen and shown
+   * only in print.
+   *
+   * Not asked for at all when the reader is already reading in light, since
+   * then the board on screen is the board for paper.
    */
-  async function submit(event: SubmitEvent): Promise<void> {
-    event.preventDefault();
-    await show(asked);
-    if (!data.failure) await panel?.close();
-  }
+  const onPaper = $derived(appearance.current !== 'light');
+  const paper = $derived(`/api/chart/plate?${address}&scheme=light`);
 
-  /** The day, moved without reopening the fields. The hour stays where it is. */
-  function jump(date: string): void {
-    if (date) void show({ ...data.moment, date, time: cast?.time ?? data.moment.time });
-  }
+  /**
+   * Fetched as soon as there is a chart, not when the printer is asked for.
+   *
+   * Printing starts in three ways — this page's button, the browser's menu,
+   * Ctrl+P — and only the first can be made to wait for a picture to arrive.
+   * `beforeprint` cannot: it is synchronous, and a dialog that opens before
+   * the image has loaded prints a gap where the board was. So the copy is
+   * warmed the moment the chart is cast, which costs one request against a
+   * response the browser then holds for the day.
+   */
+  $effect(() => {
+    if (!chart || !onPaper) return;
+    const warm = new Image();
+    warm.src = paper;
+    void warm.decode().catch(() => {});
+  });
 
-  function moved(unit: Unit, by: number): void {
-    if (cast) void show({ ...data.moment, ...step(cast, unit, by) });
-  }
+  /**
+   * Where the prompt comes from.
+   *
+   * `asked=true` and never the question: the server is told one exists, so
+   * that the prompt can end on the line introducing it, and the browser adds
+   * the line itself. The birth travels — it is what the 年命 is computed
+   * from — and the question does not.
+   */
+  const promptUrl = $derived(`/api/chart/prompt?${address}&asked=true`);
 
-  /** The present is what the address says by not saying a date. */
-  function now(): void {
-    void show({ ...data.moment, date: '', time: '' });
-  }
+  /** The instant the chart was actually cast for, for the line that says so. */
+  const at = $derived(
+    chart ? `${chart.moment.input.date} ${chart.moment.input.time.slice(0, 5)}` : '',
+  );
 </script>
 
-<svelte:head><title>{t('cli.heading.chart')}</title></svelte:head>
+<svelte:head><title>{t('consult.title')}</title></svelte:head>
 
-<!-- Named, not shown: the nav says which section this is — see `.offscreen`. -->
-<h1 class="offscreen">{t('cli.heading.chart')}</h1>
-
-<FormPanel {t} bind:this={panel} closable={chart !== undefined} onsubmit={submit}>
-  {#snippet fields()}
-    <MomentForm
-      {t}
-      bind:date={asked.date}
-      bind:time={asked.time}
-      bind:place={asked.place}
-      bind:trueSolarTime={asked.trueSolarTime}
-      bind:dayBoundary={asked.dayBoundary}
-      bind:method={asked.method}
-      bind:yuan={asked.yuan}
-    />
-    <!-- Nothing here can be missing: a chart of no date is the chart of now. -->
-    <SubmitButton {t} label="cli.heading.chart" {busy} />
-  {/snippet}
-  {#snippet summary()}
-    <!--
-      The day stays a field with the panel shut.
-
-      It is the one thing asked for here that the steps beside it cannot
-      reach in a reasonable number of presses — a chart of a date next spring
-      is one gesture away rather than four dozen — and it is also the answer
-      to which moment this is. The instant it was cast for, not the one that
-      was asked: an empty form means now, and the reader should be told which
-      now.
-    -->
-    <input
-      type="date"
-      class="day"
-      value={cast?.date ?? ''}
-      aria-label={t('form.jumpDate')}
-      disabled={busy}
-      onchange={(event) => jump(event.currentTarget.value)}
-    />
-    {#if data.moment.place}<span>· {data.moment.place.name}</span>{/if}
-  {/snippet}
-  {#snippet controls()}
-    <MomentSteps {t} disabled={busy} {values} onstep={moved} onnow={now} />
-  {/snippet}
-</FormPanel>
-
-{#if failure}<p class="failure" role="alert">{failure}</p>{/if}
-
-{#if chart}
+<!--
+  The two ways out of this page, written once and rendered twice: among the
+  fields while the panel is open, and on the bar it leaves behind once it is
+  shut. The same pair in both places, because two copies of a pair of buttons
+  is two things to keep in step.
+-->
+{#snippet takeaway()}
+  <CopyText {t} lead label="form.copyPrompt" url={promptUrl} suffix={question.trim()} />
   <!--
-    While the next chart is being cast, the one on screen is last question's
-    answer: it is shown as spent rather than swapped without warning. A press
-    that changed nothing visible for half a second is a press people make
-    twice.
+    Printing is the other way out, and the one that owes nothing to anybody's
+    account. What comes off the printer is the question, the board in the
+    colours of paper, the four pillars and the reading — a sheet that can be
+    handed to somebody who reads charts, or simply kept.
   -->
-  <section class="result" class:stale={busy} aria-busy={busy}>
-    <!-- The picture and the data together: a drawing carries the glyphs but
-         not the warnings, so it is never shown on its own. -->
-    <!--
-      A box to reserve, not a promise about this drawing.
+  <button type="button" class="print" onclick={() => window.print()}>{t('form.print')}</button>
+{/snippet}
 
-      The picture is as tall as the list of configurations under the board
-      makes it, and how many the hour fell into is only known once the answer
-      is here — between one and nine, mostly three to six. So this is the shape
-      of a middling chart, which is what the browser holds the space at until
-      the real one arrives and settles it.
-    -->
-    <!-- The board and the key to its marks are one thing in this grid: the
-         gap between the picture and the reading is two rems, and a legend
-         standing in it would belong to neither. -->
-    <div class="board">
-      <img
-        src={plate}
-        alt=""
-        width="900"
-        height="1035"
-        class:settling={drawn !== plate}
-        onload={() => (drawn = plate)}
-      />
-      <!-- Under the picture and above the words: the marks it explains are in
-           the picture, and a key that came after the reading would be found
-           by whoever had already given up on them. -->
-      <StrengthLegend {t} />
-    </div>
+<article>
+  <!-- Named, not shown: the nav says which section this is, as on the chart. -->
+  <h1 class="offscreen">{t('consult.title')}</h1>
 
-    <div>
-      <ChartReading {chart} {t} />
+  <!-- The one line that says what comes out of this, before anybody types
+       into it. It stands where a heading would, under one that is spoken and
+       not seen — and it carries the word the nav gave up when the section
+       stopped being named after the artefact it produces. -->
+  <p class="lead">{t('consult.lead')}</p>
+
+  <!--
+    The fields, which withdraw once they have answered.
+
+    The same panel the chart and the pillars use, and here it does more work
+    than it does there: what it makes room for is not only the board but the
+    two buttons the page exists for, which stand on the bar it leaves behind.
+    A consultation is asked once and then read, at length — a form that stayed
+    open through the reading would be a form claiming the reader is still
+    filling it in.
+  -->
+  <FormPanel
+    {t}
+    bind:this={panel}
+    legend="consult.legend"
+    reopenLabel="consult.change"
+    closable={chart !== undefined}
+    onsubmit={consult}
+  >
+    {#snippet fields()}
+      <!-- Above the moment and above the button, because that is the order:
+           the chart is cast for the instant the question is put. -->
+      <label class="question">
+        {t('form.question')}
+        <!-- Five lines rather than two. What is typed here is the one thing on
+             the page the reader composes rather than picks, and a box the size
+             of a caption says to keep it to a caption — when what makes a
+             question readable is the circumstance around it. -->
+        <textarea bind:value={question} rows="5" placeholder={t('form.questionPlaceholder')}
+        ></textarea>
+      </label>
+
       <!--
-        The chart in words, and nothing more.
+        The place in the open, and everything else behind the disclosure.
 
-        Taking a chart to something that will read it is a different errand and
-        lives in its own section, because there the question comes before the
-        casting and here it could only come after. A field for one under this
-        board would teach the wrong order — so what is left here is a pointer
-        to where the right one is kept.
+        What a consultation needs is a question and somewhere to stand: the
+        hour pillar turns on the place, and there is no default for it that
+        would not be somebody else's city. The date and the time are in the
+        options and empty, because empty is the instant of the press and that
+        is the whole use of this section — a field filled in for nine readers
+        out of ten belongs where the tenth can find it.
       -->
-      <div class="tools">
-        <CopyText {t} label="form.copyChart" url="/api/chart/text?{address}" />
-        <!--
-          The pillars above, said in full one section over.
+      <MomentForm
+        {t}
+        when="options"
+        bind:date={asked.date}
+        bind:time={asked.time}
+        bind:place={asked.place}
+        bind:trueSolarTime={asked.trueSolarTime}
+        bind:dayBoundary={asked.dayBoundary}
+        bind:method={asked.method}
+        bind:yuan={asked.yuan}
+        extraLegend="consult.birth"
+        extraSet={born ? 1 : 0}
+      >
+        <!-- The birth, under the same disclosure as the options and above the
+             way the moment is read: it is an addition to a consultation and
+             never a requirement, and the form read to the button has one thing
+             in it, which is the question. -->
+        {#snippet extra()}
+          <label class="birthField date">
+            {t('consult.birthDate')}
+            <!-- What the browser knows to fill in, if it is this reader's own
+                 birth and they have told it once. -->
+            <input type="date" autocomplete="bday" bind:value={born} />
+          </label>
+          <label class="birthField">
+            {t('consult.birthGender')}
+            <select bind:value={gender} disabled={!born}>
+              <option value="">{t('form.gender.unset')}</option>
+              <option value="male">{t('form.gender.male')}</option>
+              <option value="female">{t('form.gender.female')}</option>
+            </select>
+          </label>
+          <p class="note">{t('consult.birthNote')}</p>
+        {/snippet}
+      </MomentForm>
 
-          Nothing is computed twice for it: the four pairs are already in the
-          reading, and what this leads to is the concealed stems, the gods and
-          the stages — the Four Pillars' own questions, kept where they are
-          answered. A link and not a panel, because the two are separate
-          methods and a page that folded one into the other would be reading
-          the chart for somebody.
-        -->
-        <p class="note">
-          {t('form.toPillars')}
-          <a href="/{t.locale}/bazi?{pillars}">{t('nav.bazi')}</a>
-        </p>
-        <p class="note">
-          {t('form.toConsult')}
-          <a href="/{t.locale}/consult">{t('nav.consult')}</a>
-        </p>
+      <!--
+        One thing to do at a time, and the box says which.
+
+        Nothing cast, or a field moved since: the only thing to press is the
+        casting. Cast and standing — which is what a panel reopened over an
+        answer holds — the two ways out stand beside it, and the casting stays
+        quiet, still the way to put the same question again at a later
+        instant. Which is a second consultation, rather than the same one seen
+        twice.
+      -->
+      <div class="actions">
+        {#if chart && !spent}{@render takeaway()}{/if}
+        <SubmitButton
+          {t}
+          label="consult.cast"
+          {busy}
+          needed={needed ?? undefined}
+          quiet={chart !== undefined && !spent}
+        />
       </div>
-    </div>
-  </section>
-{/if}
+      <p class="note wide">{t('form.promptPrivacy')}</p>
+    {/snippet}
+
+    <!-- With the fields shut, the bar says which instant answered and where
+         it stood. Not the question: that is set in full over the board, where
+         it is read with the answer rather than beside a button. -->
+    {#snippet summary()}
+      {at || '—'}
+      {asked.place ? `· ${asked.place.name}` : ''}
+    {/snippet}
+
+    <!--
+      What is left to do once the fields are gone, on the line they leave
+      behind. This is the errand of the page and should not need the panel
+      reopened to be reached.
+
+      In a box of their own, and that is not decoration: the bar sets what it
+      holds apart, so two buttons handed to it loose are pushed to opposite
+      ends of the page with the summary between them — a pair that belongs
+      together, reading as two unrelated controls.
+    -->
+    {#snippet controls()}
+      {#if chart && !spent}<div class="actions">{@render takeaway()}</div>{/if}
+    {/snippet}
+  </FormPanel>
+
+  {#if said}<p class="failure" role="alert">{said}</p>{/if}
+
+  {#if chart}
+    <!--
+      The board is shown, and is not what the page is for.
+
+      It is here so that somebody can see what they are about to hand over —
+      after the button and not before it, because the taking away is the
+      errand and the looking is the check on it. On paper the order is the
+      other one, which is why the question heads the section: a sheet read by
+      somebody who was not here when it was typed begins with what was asked.
+    -->
+    <section class="result" class:stale={busy || spent} aria-busy={busy}>
+      <header class="posed">
+        <p class="asked">{posed}</p>
+        <p class="note">
+          {t('consult.castAt', { when: at })}{asked.place ? ` · ${asked.place.name}` : ''}
+        </p>
+      </header>
+
+      <!-- The board and the key to its marks together, as on the chart. -->
+      <div class="board" class:swapped={onPaper}>
+        <img src={plate} alt="" width="900" height="1035" class="screen" />
+        <!-- The same board in the light scheme, for paper and nothing else.
+             Only drawn when the two differ — see `onPaper`. -->
+        {#if onPaper}
+          <img src={paper} alt="" width="900" height="1035" class="paper" />
+        {/if}
+        <StrengthLegend {t} />
+      </div>
+      <!-- `wide`: the board above has the page to itself, so what it was cast
+           from is set as its caption — at the drawing's own measure, centred
+           on it. See `ChartReading`. -->
+      <div><ChartReading {chart} {t} wide /></div>
+    </section>
+  {/if}
+</article>
 
 <style>
+  /* One sentence, so it takes the width it is given: the measure that keeps a
+     paragraph readable is about coming back from one line to the next, and
+     there is no next one here. */
+  .lead { margin: 0 0 1rem; color: var(--faint); font-size: 0.9rem; line-height: 1.55; }
+  .note { margin: 0; color: var(--faint); font-size: 0.8rem; line-height: 1.55; max-width: 62ch; }
+  /*
+   * The measure for prose, lifted for the one line that is not prose.
+   *
+   * 62ch is what a paragraph wants, and inside a box as wide as the page it
+   * broke this sentence in a place nothing on screen accounts for — narrower
+   * than the field above it, at a width the reader can neither see nor guess
+   * at. It is a caption under the buttons and is read at a glance rather than
+   * through, so it takes the box: one line where there is room for one, and a
+   * break at the edge of something visible where there is not.
+   */
+  .wide { max-width: none; }
+
+  .question { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 46rem; }
+  /* The birth, rendered inside the options of `MomentForm`. A snippet is
+     styled where it is written, so its two fields are dressed here to match
+     the ones it stands among. What names the group is the `legend` over
+     there, which is a heading to a screen reader where a paragraph in bold
+     would have been a paragraph. */
+  .birthField { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 26rem; }
+  /* Eight characters go in it. The width of the same field in every other
+     form on this site, and not the width of the sentence over it. */
+  .date { max-width: 13rem; }
+  textarea {
+    font: inherit;
+    font-size: 0.95rem;
+    padding: 0.4rem;
+    color: var(--ink);
+    background: var(--ground);
+    border: 1px solid var(--rule);
+  }
+
   .failure { color: var(--alarm); }
-  .tools { margin-top: 1.5rem; display: grid; justify-items: start; gap: 0.6rem; }
-  .note { margin: 0; font-size: 0.8rem; color: var(--faint); max-width: 62ch; }
-  /* In the closed bar, beside text rather than under a label of its own. */
-  .day { font-size: 0.9rem; padding: 0.15rem 0.35rem; color: var(--ink); }
-  /*
-   * One column, and the drawing as large as the reading is wide.
-   *
-   * Beside the table it had to fit in a column of it, and every palace holds
-   * five words, five names and a mark: at that size the board was read with
-   * an effort nobody should be asked for. The table follows it instead —
-   * a picture first, then the same thing said in full.
-   */
   .result { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1fr); }
-  /* The picture and its legend, as one item of that grid. Allowed to shrink:
-     a grid item will not go below its own min-content otherwise, and the
-     picture's is nine hundred pixels. */
-  .board { min-inline-size: 0; }
-  .result, img { transition: opacity 0.15s ease-out; }
-  .stale { opacity: 0.5; }
-  .settling { opacity: 0.35; }
   /*
-   * As large as the page allows, and centred in it.
+   * What was asked, over what came back.
    *
-   * It stopped at 46rem inside a shell of 72 and hung off the left edge, which
-   * left a third of the page empty beside the one thing anybody came here to
-   * read: a palace carries six names, each with a word under it, and at that
-   * measure they were set at seven pixels. The measure is the shell's now —
-   * this is a picture and not a paragraph, and nothing about it wants the
-   * width a line of prose wants.
-   *
-   * The other bound is the window's own height, and it is the *board* that has
-   * to fit in it rather than the picture: a chart whose two palaces cannot be
-   * seen at once is a chart nobody can compare anything on, while the list of
-   * configurations underneath is a list and may perfectly well be scrolled to.
-   *
-   * From the top of the paper down to the foot of the board is seven eighths
-   * of the width — the caption's margin of an eighth, then three quarters of
-   * grid — so a window `h` tall can afford eight sevenths of it. Counting only
-   * the grid's own three quarters leaves the caption above it unpaid for, and
-   * the board comes to rest that much below the fold.
-   *
-   * `svh` is the short viewport, so a phone whose toolbars are out does not
-   * make the board grow when they slide away.
-   *
-   * `width` first, so a browser that does not know `svh` still gets the
-   * column's measure rather than the image's own 900 pixels.
+   * Set in the ink and larger than the reading, because on paper it is the
+   * title of the sheet: whoever is handed one was not here when it was typed,
+   * and a board with no question on it is a board about nothing. On screen it
+   * does the smaller job of saying which question the answer belongs to, now
+   * that the field it was typed into has folded away.
    */
+  .posed { margin: 0; }
+  .asked {
+    margin: 0 0 0.3rem;
+    font-size: 1.15rem;
+    line-height: 1.4;
+    max-width: 46rem;
+    /* Typed by hand and set as typed: a question written over several lines
+       keeps them, and a run of spaces is not collapsed into one. */
+    white-space: pre-wrap;
+  }
+  /* The picture and its legend, as one item of that grid. See the chart. */
+  .board { min-inline-size: 0; }
+  .result { transition: opacity 0.15s ease-out; }
+  .stale { opacity: 0.5; }
+  /* As on the chart: the board has to fit a window, the words under it may
+     perfectly well be scrolled to. */
   img {
     display: block;
     margin-inline: auto;
@@ -328,7 +544,61 @@
     inline-size: min(100%, calc(100svh * 8 / 7));
     block-size: auto;
   }
+  /* The copy drawn for paper, which is not part of the page. */
+  .paper { display: none; }
+  /* The one or two things there are to press, on a line, with the leading one
+     first. They wrap on a narrow screen rather than shrinking. */
+  .actions { display: flex; flex-wrap: wrap; align-items: start; gap: 0.6rem 0.9rem; }
+  /* Beside the button that copies and dressed as its equal: they are the two
+     ways out of this page, and neither of them leads. */
+  .print {
+    font: inherit;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    border: 1px solid var(--edge);
+    background: none;
+    color: var(--ink);
+  }
+  .print:hover { background: var(--tint); }
   @media (prefers-reduced-motion: reduce) {
-    .result, img { transition: none; }
+    .result { transition: none; }
+  }
+
+  /*
+   * On paper.
+   *
+   * The board is swapped for the copy drawn light — the one exchange a
+   * stylesheet cannot make on an `<img>`, and the whole reason there are two
+   * of them. `.swapped` guards it: where the reader is already in the light
+   * scheme there is no second copy, and hiding the first would print a sheet
+   * with a hole in the middle.
+   *
+   * The rest is the sheet reading as a document rather than as a screenshot:
+   * nothing greyed out, no state left over from a fetch, and the question at
+   * the top where a title goes.
+   */
+  @media print {
+    .lead { display: none; }
+    .print { display: none; }
+    .stale { opacity: 1; }
+    /*
+     * Blocks, not a grid.
+     *
+     * The answer is one column either way, so the grid buys nothing here —
+     * and it costs a page. A grid container broken across sheets is measured
+     * by Chrome as though its rows were whole, which left the footer alone on
+     * a page of its own under half a page of nothing.
+     */
+    .result { display: block; }
+    .board { margin-bottom: 1.2rem; }
+    .posed { margin-bottom: 0.8rem; }
+    .asked { font-size: 1.05rem; }
+    /* A picture on a sheet of paper, not one fitted to a window: `svh` means
+       nothing to a printer, and left the board at the full measure of the
+       page. 17cm is what A4 has between its margins with a little to spare. */
+    img { inline-size: min(100%, 17cm); }
+    .swapped .screen { display: none; }
+    .paper { display: block; }
   }
 </style>

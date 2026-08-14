@@ -110,4 +110,25 @@
      the other two are allowed to be quiet. */
   .disclaimer { color: var(--ink); }
   footer p { margin: 0.3rem 0; }
+
+  /*
+   * On paper the shell keeps two of its three parts.
+   *
+   * The nav and the two switches are ways of going somewhere else, and a
+   * sheet has nowhere else. What stays is the wordmark, because a printed
+   * chart handed on should say where it was cast, and the whole footer,
+   * because the disclaimer is the one line that must never be separated from
+   * a chart — least of all on the copy that travels furthest from the page
+   * carrying it.
+   */
+  @media print {
+    .shell { max-width: none; padding: 0; }
+    nav, .controls { display: none; }
+    .mark { text-decoration: none; }
+    header { margin-bottom: 1rem; }
+    /* Close under what it qualifies, and never split: the disclaimer is two
+       lines and half a disclaimer is worse than none. Tight, because it is
+       what decides whether a report runs to one sheet more than it needs. */
+    footer { margin-top: 0.8rem; break-inside: avoid; }
+  }
 </style>

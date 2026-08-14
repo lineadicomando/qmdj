@@ -125,8 +125,8 @@ MCP tool and the interface all say so — for the reason `purposes.ts` gives
 about everything past the eight gates. `docs/sources.md` records the natal
 text that does exist, 《奇門遁甲統宗》卷十二, and why nothing imports it.
 
-The interface section is `/en/consult`, and it is not under the board. The
-reason is an order the chart section cannot keep: **the instant
+The interface section is `/en` — the root of a language — and it is not under
+the board. The reason is an order the chart section cannot keep: **the instant
 of asking is the instant that is cast**, so the question comes before the
 casting or it is a caption on a chart that was already there. What the page
 asks in the open is the question and the place; the date and the time are
@@ -196,19 +196,20 @@ npm start   -w @qimendunjia/mcp    # MCP on stdio
 
 Every surface takes the same parameters and answers the same way. A chart is a
 pure function of its input, so the web address of one is shareable and
-reproducible — the interface included: `/it?date=1984-03-12&time=07:30&
+reproducible — the interface included: `/it/chart?date=1984-03-12&time=07:30&
 locationId=1816670` is a chart, a link, and the same query string the API
 takes. Which is also how the moment follows a reader from the chart to the
 four pillars and back.
 
-The two are shown together, up to a point. The chart names the four pillars it
-was cast from — the terminal always printed them, the page had them only in
-the drawing's caption — and leads to the section where the same instant is
+The two are shown together, up to a point. The chart draws the four pillars it
+was cast from, as four tinted squares under the board — every calculator that
+shows this board shows them, and they are what the ju, the chief and both post
+horses are counted from — and leads to the section where the same instant is
 opened out into concealed stems, gods and stages. It leads there and does not
 fold it in: what a pillar conceals is another method's question, and a page
 that answered it under the board would be reading the chart for somebody.
 
-The third section is the other question. The chart and the pillars ask what
+The scan is the other question. The chart and the pillars ask what
 stands *now*; `/it/moments` asks *when, in a stretch of days, does a thing
 stand — and which way is it*. That second half is not decoration: a chart is
 consulted for a direction as much as for an hour, and an answer of times
@@ -222,11 +223,23 @@ One exception, and it is the same rule read carefully: an address that does
 not say *when* means now, and now is a different answer every hour. Those are
 `no-store`; only an address that fixes the instant is cacheable.
 
-The fourth section breaks that promise on purpose, and is the only thing here
-that does. `/en/consult` poses a chart in order to hand it to something that
-will read it, and a consultation is an act rather than an address: the chart
-is cast at the instant it is asked for, it holds somebody's question, and
-neither is in the URL. See the section above.
+The section that leads breaks that promise on purpose, and is the only thing
+here that does. `/en` — the root of a language, and the first entry in the
+nav — poses a chart in order to hand it to something that will read it, and a
+consultation is an act rather than an address: the chart is cast at the
+instant it is asked for, it holds somebody's question, and neither is in the
+URL. Which is the trade it makes to stand first: the classical use of this
+method is a question put at an instant, and the three sections after it are
+the instruments that use serves itself with. What it costs is the chart's old
+address, `/en`, now `/en/chart`. See the section above.
+
+The other way out of a cast chart is a printer. There is a stylesheet for
+paper — the board redrawn in the colours of paper whichever appearance is on
+screen, the fields and the switches gone, the nine palaces set to a width that
+fits a sheet instead of a frame that scrolls — and what comes off it is the
+question, the board, the four pillars, the reading and the disclaimer. It
+prints from the page and not from a route of its own, because a route would
+have to be told the question, and the question does not travel.
 
 ## Docker
 

@@ -16,6 +16,7 @@
   import { glyph } from '$lib/glyph';
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
   import PalaceTable from './PalaceTable.svelte';
+  import PillarPlate from './PillarPlate.svelte';
 
   /**
    * The chart as data, not as a type.
@@ -35,16 +36,48 @@
    * worth of markup: `PalaceTable` was always its own, and what this exists to
    * keep in one place is the ju, the horses and the configurations.
    */
+  /**
+   * `wide` is whether this reading stands under a board of the page's width.
+   *
+   * It does in the two sections that give the drawing a page to itself, and
+   * there the ju and the four pillars are the caption to that drawing: they
+   * take its measure and centre on it, the way the drawing's own caption sits
+   * centred above the grid. It does not in the scan's dialog, where the words
+   * are a column beside the board and a heading centred in a column is a
+   * heading that has lost its left edge.
+   */
   let {
     chart,
     t,
     palaces = true,
-  }: { chart: any; t: Translator; palaces?: boolean } = $props();
+    wide = false,
+  }: { chart: any; t: Translator; palaces?: boolean; wide?: boolean } = $props();
 
   /** Largest to smallest, as every almanac and the drawing's caption have it. */
   const PILLARS = ['year', 'month', 'day', 'hour'] as const;
+
+  /**
+   * The chart's own four pairs, in the shape the squares are drawn from.
+   *
+   * A god and a stage are not among them and that is the whole of the
+   * mapping: the engine hands a Qi Men chart four `Ganzhi`, and what the
+   * other method reads off them stays in the other method's section.
+   */
+  const squares = $derived(
+    PILLARS.map((position) => ({ position, ganzhi: chart.moment.pillars[position] })),
+  );
 </script>
 
+<!--
+  The ju and the four pillars, as one block with a measure of its own.
+
+  What the chart was cast from, and under a board it is the board's caption:
+  the drawing sets its own caption centred over the grid, and these two do the
+  same under it. Which is what the box is for — the ju is centred on the
+  pillars because the two are one thing, not because a line of text was
+  centred on a page.
+-->
+<div class="cast" class:wide>
 <p class="ju">
   {chart.ju.yang ? t('cli.value.yangDun') : t('cli.value.yinDun')}
   {chart.ju.number} · {t(`label.yuan.${chart.ju.yuan}` as MessageKey)}
@@ -68,23 +101,21 @@
   them in its caption since it had one; the page had them only in the picture,
   which is `alt=""`, uncopyable, and unreadable to a screen reader.
 
+  Drawn and not listed, everywhere the board is. Four tinted cells are taken
+  in at a glance where a line of four pairs has to be read, and it is the form
+  every calculator that shows this board shows them in — which is where the
+  reader has met them. The plate asks the room it was given how many columns
+  it can have, so the same four fit the page under a board and the column of
+  the scan's dialog beside one.
+
   The pair and nothing beside it. What a pillar conceals, which god it is and
   where it stands in the twelve stages are the Four Pillars' questions, and
   they are answered in that section — putting them here would let a reader
   take a whole second method for part of the chart. The link under the board
   leads there, with this same instant in its address.
 -->
-<ul class="pillars">
-  {#each PILLARS as position}
-    {@const pair = chart.moment.pillars[position]}
-    <li>
-      <span class="what">{t(`cli.column.${position}` as MessageKey)}</span>
-      {t(`label.stem.${pair.stem.id}` as MessageKey)} ·
-      {t(`label.branch.${pair.branch.id}` as MessageKey)}
-      <span class="glyph">{glyph(pair)}</span>
-    </li>
-  {/each}
-</ul>
+<PillarPlate pillars={squares} {t} {wide} />
+</div>
 
 <!--
   Both post horses, never one of them.
@@ -150,24 +181,30 @@
    */
   .ju { font-size: 1.1em; margin: 0 0 0.35rem; }
   /*
-   * Between the ju and the horses, and set between them too: what the chart
-   * was cast from outranks what it happens to contain, and reads before it.
+   * The caption's measure, mirrored from the drawing's own rule.
    *
-   * Four items of some five words, so they wrap where the column is narrow —
-   * a dialog's, or a phone's — and stand on one line where it is not. The
-   * name of the pillar is faint and the pair is not: down a column of four,
-   * `year` `month` `day` `hour` is the part a reader already knows.
+   * The board is `min(100%, 100svh * 8 / 7)` wide on both pages that draw it
+   * at full width, so this is the same figure and the two align edge to edge.
+   * Written twice on purpose and marked in both places: the alternative is a
+   * custom property set by two pages and read here, which hides the coupling
+   * instead of naming it.
    */
-  .pillars {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 0.4rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.2rem 1.25rem;
-    font-size: 0.95em;
+  .wide {
+    inline-size: min(100%, calc(100svh * 8 / 7));
+    margin-inline: auto;
   }
-  .pillars .what { color: var(--faint); }
+  .wide .ju { text-align: center; }
+  /*
+   * On paper the board is 17cm and not a fraction of a window: the caption
+   * follows it there too, or it hangs off both sides of the drawing.
+   *
+   * And it stays with what it captions. A page break fell between the ju and
+   * the four pillars, which left a line centred at the foot of one sheet over
+   * a plate at the head of the next — a caption to nothing, twice.
+   */
+  @media print {
+    .wide { inline-size: min(100%, 17cm); break-inside: avoid; }
+  }
   /* Under the ju and above the board: they qualify the whole chart, as the ju
      does, and neither belongs to any one palace of it. */
   .horses {

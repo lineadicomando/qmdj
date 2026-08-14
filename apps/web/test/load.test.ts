@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { load as chart } from '../src/routes/[lang]/+page';
+import { load as consult } from '../src/routes/[lang]/+page';
 import { load as bazi } from '../src/routes/[lang]/bazi/+page';
-import { load as consult } from '../src/routes/[lang]/consult/+page';
+import { load as chart } from '../src/routes/[lang]/chart/+page';
 import { load as moments } from '../src/routes/[lang]/moments/+page';
 
 /**

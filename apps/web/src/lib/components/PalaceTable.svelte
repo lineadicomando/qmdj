@@ -96,4 +96,20 @@
   th span:first-child, td span:first-child { display: block; }
   .glyph { display: block; color: var(--faint); font-size: 0.8em; }
   .gloss { display: block; color: var(--faint); font-size: 0.8em; }
+
+  /*
+   * Six columns onto a sheet that cannot be scrolled.
+   *
+   * `max-content` is what keeps the names whole on screen, where a frame
+   * slides sideways when they do not fit. On paper there is no sliding: what
+   * does not fit is cut off at the margin and nothing says so. So the table
+   * takes the page's width and the type comes down to a size six columns of
+   * two lines fit in — and a row is kept off a page break, because the word
+   * and the name under it are one thing.
+   */
+  @media print {
+    table { min-width: 0; font-size: 0.78rem; }
+    th, td { padding: 0.2rem 0.3rem; }
+    tr { break-inside: avoid; }
+  }
 </style>

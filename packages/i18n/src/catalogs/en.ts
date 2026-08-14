@@ -292,12 +292,18 @@ export const en = {
   'nav.chart': 'Qi Men',
   'nav.bazi': 'Four Pillars',
   'nav.moments': 'Choosing a time',
-  // Named by what it produces, not by what it does with it. A section called
-  // "Reading" would be this project claiming the one thing it declines to do,
-  // and the word for the artefact has been common currency since 2022 — for
-  // anybody it is not, the line under the nav says it in full at the first
-  // click, which is a shorter way to learn a word than a longer label.
-  'nav.consult': 'AI prompt',
+  // Named by the act, which is the one this section is built around: a
+  // question put at an instant, and the chart cast for that instant. It was
+  // called "AI prompt" — named by the artefact — while it stood last in the
+  // nav and had to say what it was for from four words. Leading the sections,
+  // it is the classical use of the method and reads as one.
+  //
+  // Not "Reading" and not "Oracle": both would have this project claim the
+  // one thing it declines to do, and the footer says on every page that it
+  // does not. What comes out is a prompt, and `consult.lead` — the first line
+  // of the page — says so before anybody types into it. That line carries the
+  // word this label gave up.
+  'nav.consult': 'Consultation',
   'nav.sections': 'Sections',
 
   'scheme.label': 'Appearance',
@@ -438,6 +444,10 @@ export const en = {
   // plain text unreachable to whoever wants nothing to do with a model.
   'form.copyChart': 'Copy the chart as text',
   'form.copyPrompt': 'Copy the prompt',
+  // The other way out of a cast chart, and the one that needs no account
+  // anywhere: the sheet carries the question, the board, the four pillars and
+  // the reading, and can be handed to somebody who reads charts.
+  'form.print': 'Print',
   'form.copied': 'Copied',
   'form.copying': 'Preparing…',
   // The clipboard refuses outside a secure context, and this runs on local
@@ -473,6 +483,18 @@ export const en = {
   'consult.lead':
     'Ask a question and get a prompt, ready to paste into ChatGPT, Claude or another assistant.',
   'consult.cast': 'Cast the chart',
+  // The panel of fields, named by what is in it. Not `form.legend` — «The
+  // moment and the place» is what the other sections ask for, and here the
+  // moment is normally the instant of the press and the question is the
+  // thing being filled in.
+  'consult.legend': 'Your question, and where you are asking from',
+  // What reopening it offers, which is the question and not the moment: a
+  // second consultation begins by rewriting the question, and everything
+  // else in there is setup somebody set once.
+  'consult.change': 'Change the question',
+  // Over the board, on the sheet somebody prints. The instant is the answer
+  // to *which* chart this is, and on paper it is the only answer there is.
+  'consult.castAt': 'Chart cast for {when}',
   // The request itself failed, so there is no code to translate. Not
   // `form.copyUnread`: on a first press nothing was ever cast to read again.
   'consult.castFailed': 'The chart could not be cast.',

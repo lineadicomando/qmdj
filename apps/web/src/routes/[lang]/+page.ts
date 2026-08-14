@@ -1,36 +1,35 @@
-import { lookupPlace, momentQuery, readMoment, type Failure } from '$lib/moment';
+import { lookupPlace, readMoment, type Failure } from '$lib/moment';
 import type { PageLoad } from './$types';
 
 /**
- * Casting is loading, because the address is the chart.
+ * The setup is loaded; the chart is not.
  *
- * The alternative — holding the moment in the component and fetching on
- * submit — has the page show one thing while its address says another, so a
- * link is not the chart the person was looking at and a reload loses it.
- * Reading the address instead gives the link, the reload, and the moment
- * carried between the two sections, all from the same code.
+ * The other two sections cast from the address, because there a chart is a
+ * pure function of its parameters and the address is the thing worth sharing.
+ * Here it is the opposite and deliberately so: a consultation is an act, not
+ * an address. It is cast at the instant it is asked for, it holds somebody's
+ * question, and it is not reproducible by reloading — which is what a
+ * consultation is, rather than a shortcoming of this page.
  *
- * An empty address is not an empty page: it is the present moment, which is
- * the chart a Qi Men reader wants most often and the one every other is
- * stepped away from. The pillars cannot do the same — see `bazi/+page.ts`.
+ * So what the address carries is the setup — the place, the options, and the
+ * birth if one was given for a 年命 — and what it never carries is the
+ * question or the chart. Reloading finds the fields as they were and the page
+ * uncast, which is the honest state.
  */
 export const load: PageLoad = async ({ url, fetch, parent }) => {
   const { locale } = await parent();
   const { input, locationId } = readMoment(url);
-  const { place, failure: unknownPlace } = await lookupPlace(fetch, locationId, locale);
-  const moment = { ...input, place };
+  const { place, failure } = await lookupPlace(fetch, locationId, locale);
 
-  // A place that could not be found stops it here. Casting for the server's
-  // own zone instead would answer a question nobody asked, and the answer
-  // would look like the right one.
-  if (unknownPlace) return { moment, chart: undefined, failure: unknownPlace };
+  const gender = url.searchParams.get('gender');
 
-  const response = await fetch(`/api/chart?${momentQuery(moment, { lang: locale })}`);
-  const body = await response.json();
-
-  // A failure is data, not a page: the form has to stay on screen, because
-  // what needs correcting is in it.
-  return response.ok
-    ? { moment, chart: body.chart, failure: undefined }
-    : { moment, chart: undefined, failure: body as Failure };
+  return {
+    moment: { ...input, place },
+    // The birth, when one was given. It is setup and not the question: what
+    // it produces is a 年命 inside the chart of the moment, and the chart is
+    // still cast for the instant of the press.
+    born: url.searchParams.get('born') ?? '',
+    gender: gender === 'male' || gender === 'female' ? gender : '',
+    failure: failure as Failure | undefined,
+  };
 };
