@@ -161,6 +161,12 @@
       · <span class="glyph">{page.god.hanzi} {page.god.pinyin}</span>
       {t(`label.daygod.${page.god.id}` as MessageKey)}
       <span class="glyph">{page.god.valence.hanzi}</span>
+    <span class="gods">
+      {page.year.hanzi} —
+      {#each page.yearGods as god}
+        <span class="glyph">{god.hanzi}</span>&nbsp;{t(`label.branch.${god.branch.id}` as MessageKey)}{' '}
+      {/each}
+    </span>
     </p>
   {/if}
 

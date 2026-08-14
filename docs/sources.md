@@ -902,6 +902,52 @@ stays where the officers' 宜忌 stayed.
 The 四庫 text writes 元武 throughout, avoiding the 玄 of the reigning emperor's
 name. The god is 玄武, as the 六壬 board already has it.
 
+### 年神 — six bearings, and why six is a boundary and not a set
+
+The other axis. A chart chooses an hour **and a direction**, and the 年神 are
+what the almanac puts on the second — 卷三 describes each as 所理之地 or
+所在之方, a bearing held for a year.
+
+Six are implemented. Each is one whose position 卷三 states outright and
+completely, in its own entry, without leaning on a god defined elsewhere:
+
+| | the source's words | |
+|---|---|---|
+| 太歲 | the year's own branch | — |
+| 歲破 | 「太歲所衝之辰也……子年在午，順行十二辰是也」 | opposite |
+| 大將軍 | 「常居四正之位而從歲君之後：寅夘辰歲……居正北，巳午未……正東，申酉戌……正南，亥子丑……正西」 | the cardinal behind the triad |
+| 太陰 | 「常居太歲後二辰……子年則在戌，丑年則在亥，寅年則在子是也」 | two behind |
+| 黃幡 | 「常居三合墓辰……寅午戌歲在戌，申子辰歲在辰，亥夘未歲在未，巳酉丑歲在丑」 | the 墓 of the triad |
+| 豹尾 | 「常居黄幡對衝」 | opposite the 黃幡 |
+
+**Every one of those enumerations is asserted in `almanac.test.ts`**, from the
+text rather than from an implementation — which matters here more than
+elsewhere, because this is the one block of the layer with **no runnable
+reference to speak of**. `lunar-javascript` returns a direction for 太歲 and
+nothing for the other five, and 太歲 is the one that needs no checking, being
+the year's branch by definition. So the evidence is tier 3: a text, quoted, and
+its own worked lists reproduced.
+
+What *is* checked against an implementation is the year the page belongs to.
+The almanac turns its year at 立春 and gives the whole of that date to the new
+year, as it gives the whole of a 節's date to the new month; `yearBoundary`
+never reaches here, as `dayBoundary` does not.
+
+| | | |
+|---|---|---|
+| the page's year, against `lunar-javascript` | 10 950 / 10 950 | **100 %** |
+
+**Six, and the rest of 卷三 is unread rather than rejected.** There are some two
+dozen entries — 白虎, 死符, 劫煞, 歲煞, 大煞, 金神, 病符, 弔客, 大耗, 喪門 and
+others. Each has a statement and each needs reading one at a time, which is
+what was done for the six above and what has not yet been done for them. The
+boundary is declared here so that it is a boundary and not an accident.
+
+**And nearly everything the source says about them is left behind.** The bulk
+of each entry is 宜忌 — 「其地不可興造移徙嫁娶逺行」, 「所理之地不可興修」,
+「不可嫁娶納奴婢進六畜及興造」. None of it travels. What remains is a name and
+a bearing, which is exactly what this engine says of a gate or a star.
+
 ### What the source refuses, and what that cost
 
 The phase this block belongs to named 二十八宿值日 as its cheap middle third,

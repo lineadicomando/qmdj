@@ -703,6 +703,7 @@ export const it: Record<MessageKey, string> = {
   'cli.field.correction': 'correzione',
   'cli.field.term': 'termine',
   'cli.field.jie': 'mese aperto il',
+  'cli.field.yearGods': 'Dèi dell\'anno',
   'cli.field.jianchu': 'Ufficiale del giorno',
   'cli.field.lunar': 'lunare',
   'cli.field.ju': 'ju',

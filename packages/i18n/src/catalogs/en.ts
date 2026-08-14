@@ -900,6 +900,7 @@ export const en = {
   'cli.field.correction': 'correction',
   'cli.field.term': 'term',
   'cli.field.jie': 'month opened at',
+  'cli.field.yearGods': 'Year gods',
   'cli.field.jianchu': 'Day officer',
   'cli.field.lunar': 'lunar',
   'cli.field.ju': 'ju',

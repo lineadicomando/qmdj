@@ -33,7 +33,7 @@ const CALENDAR_OFFSET_DAYS = 8 / 24;
  * The sign is inverted on purpose and not by mistake: in the `Etc/` zones the
  * offset counts degrees west, so `Etc/GMT-8` is eight hours *ahead* of UTC.
  */
-const CALENDAR_ZONE = 'Etc/GMT-8';
+export const CALENDAR_ZONE = 'Etc/GMT-8';
 
 export interface LunarDate {
   /**

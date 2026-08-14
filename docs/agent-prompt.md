@@ -220,7 +220,10 @@ Not uniformly, and the difference matters when you are asked to justify one.
   《協紀辨方書》; the lodge's epoch is additionally pinned by the fact that
   twenty-eight is four weeks, so each lodge keeps a fixed weekday and its 七政
   names it. The **十二神** agree over 7 300 days, and their rule is one the
-  協紀 derived itself after rejecting the two it inherited.
+  協紀 derived itself after rejecting the two it inherited. The **six 年神** are
+  the exception in this layer: they have no runnable reference at all, and rest
+  on 《協紀辨方書》卷三 with the source's own worked lists reproduced in tests.
+  Say so if you quote a bearing.
 
 If you are asked how the software knows something, say which of these three it
 is. Do not describe the third as though it were the first.

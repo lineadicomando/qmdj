@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { almanacAt, dayGodOf, lodgeOn, officerOf, DAY_GOD_LIST, LODGES, OFFICERS } from '../src/almanac.js';
+import { almanacAt, dayGodOf, lodgeOn, officerOf, yearGodsOf, DAY_GOD_LIST, LODGES, OFFICERS } from '../src/almanac.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
 import { BRANCHES, type Branch } from '../src/ganzhi.js';
 import { toJulianDay } from '../src/time.js';
@@ -176,6 +176,42 @@ describe('建除十二神', () => {
     const lucky = DAY_GOD_LIST.filter((g) => g.valence.id === 'ji').map((g) => g.hanzi);
     expect(lucky).toEqual(['司命', '青龍', '明堂', '金匱', '天德', '玉堂']);
     expect(DAY_GOD_LIST.filter((g) => g.valence.id === 'xiong')).toHaveLength(6);
+  });
+
+  it("seats the year gods where 卷三 enumerates them", () => {
+    // Every one of these is the source's own worked list, not a derivation of
+    // this file's. 「歲破者，太歲所衝之辰也……子年在午」; 太陰「子年則在戌，
+    // 丑年則在亥，寅年則在子」; 大將軍「寅夘辰歲……居正北，巳午未……正東，
+    // 申酉戌……正南，亥子丑……正西」; 黄幡「寅午戌歲在戌，申子辰歲在辰，
+    // 亥夘未歲在未，巳酉丑歲在丑」; 豹尾「常居黄幡對衝」.
+    const seat = (year: string, god: string): string =>
+      yearGodsOf(branch(year)).find((g) => g.id === god)?.branch.hanzi ?? '';
+
+    expect(seat('子', 'suipo')).toBe('午');
+    expect([seat('子', 'taiyin'), seat('丑', 'taiyin'), seat('寅', 'taiyin')]).toEqual([
+      '戌', '亥', '子',
+    ]);
+    for (const y of ['寅', '卯', '辰']) expect(seat(y, 'dajiangjun')).toBe('子');
+    for (const y of ['巳', '午', '未']) expect(seat(y, 'dajiangjun')).toBe('卯');
+    for (const y of ['申', '酉', '戌']) expect(seat(y, 'dajiangjun')).toBe('午');
+    for (const y of ['亥', '子', '丑']) expect(seat(y, 'dajiangjun')).toBe('酉');
+    for (const y of ['寅', '午', '戌']) expect(seat(y, 'huangfan')).toBe('戌');
+    for (const y of ['申', '子', '辰']) expect(seat(y, 'huangfan')).toBe('辰');
+    for (const y of ['亥', '卯', '未']) expect(seat(y, 'huangfan')).toBe('未');
+    for (const y of ['巳', '酉', '丑']) expect(seat(y, 'huangfan')).toBe('丑');
+    expect(seat('寅', 'baowei')).toBe('辰');
+    expect(seat('申', 'taisui')).toBe('申');
+  });
+
+  it('turns the page\'s year at 立春, giving the whole of that date to it', () => {
+    // 2026 立春 falls on 4 February. The chart's `yearBoundary` never reaches
+    // here: a page turns its year on the date, as it turns its month.
+    expect(almanacAt(noonAt(2026, 2, 3), context()).year.hanzi).toBe('乙巳');
+    expect(almanacAt(noonAt(2026, 2, 4), context()).year.hanzi).toBe('丙午');
+    // Every hour of the 立春 date, before the crossing as well as after it.
+    for (const hour of [0, 12, 23]) {
+      expect(almanacAt(toJulianDay(2026, 2, 4, hour) - 8 / 24, context()).year.hanzi).toBe('丙午');
+    }
   });
 
   it('carries the 節 that opened the month it counted from', () => {

@@ -139,6 +139,12 @@
       · <span class="glyph">{page.god.hanzi} {page.god.pinyin}</span>
       {t(`label.daygod.${page.god.id}` as MessageKey)}
       <span class="glyph">{page.god.valence.hanzi}</span>
+    <span class="gods">
+      {page.year.hanzi} —
+      {#each page.yearGods as god}
+        <span class="glyph">{god.hanzi}</span>&nbsp;{t(`label.branch.${god.branch.id}` as MessageKey)}{' '}
+      {/each}
+    </span>
   </p>
 {/if}
 </div>
@@ -216,6 +222,9 @@
   .almanac { font-size: 0.85em; color: var(--faint); margin: 0.5rem 0 0; }
   .wide .almanac { text-align: center; }
   .almanac .doubled { opacity: 0.75; }
+  /* The bearings go on their own line: they answer a different question from
+     the day above them, and the one dunjia shares with this layer. */
+  .almanac .gods { display: block; margin-block-start: 0.15rem; }
   /*
    * The caption's measure, mirrored from the drawing's own rule.
    *

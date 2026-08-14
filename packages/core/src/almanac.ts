@@ -1,7 +1,8 @@
 import { sunCrossing, type EphemerisContext } from './ephemeris.js';
-import { dayGanzhi, BRANCHES, type Branch, type Ganzhi } from './ganzhi.js';
+import { dayGanzhi, yearGanzhi, BRANCHES, type Branch, type Ganzhi } from './ganzhi.js';
 import { VALENCE, type Valence } from './dunjia/patterns.js';
-import { calendarDayNumber } from './lunar.js';
+import { calendarDayNumber, CALENDAR_ZONE } from './lunar.js';
+import { fromJulianDay } from './time.js';
 import { jieAt, SOLAR_TERMS, type SolarTermDefinition } from './solar-terms.js';
 
 /**
@@ -228,6 +229,60 @@ export function dayGodOf(monthBranch: Branch, dayBranch: Branch): DayGod {
 
 export const DAY_GOD_LIST: readonly DayGod[] = DAY_GODS;
 
+
+export type YearGodId = 'taisui' | 'suipo' | 'dajiangjun' | 'taiyin' | 'huangfan' | 'baowei';
+
+export interface YearGod {
+  id: YearGodId;
+  hanzi: string;
+  pinyin: string;
+  /** The branch it stands on, which is a bearing and not a date. */
+  branch: Branch;
+}
+
+/**
+ * The 年神 that stand on a direction, from the branch of the year.
+ *
+ * **Six, and the number is a boundary rather than a set.** 《協紀辨方書》卷三
+ * carries some two dozen; these are the ones whose position it states outright
+ * and completely, in the entry itself, without leaning on a god defined
+ * elsewhere — each was read one at a time and each of the source's own
+ * enumerations is asserted in the tests. The rest of 卷三 has not been read
+ * yet and is not guessed at. See `docs/sources.md`.
+ *
+ * **What is left behind is most of what the source says about them.** Nearly
+ * every entry is 宜忌 — 「其地不可興造移徙嫁娶逺行」, 「所理之地不可興修」 —
+ * and none of that travels. What remains is a name and a bearing, which is
+ * what the engine says of a gate or a star and for the same reason.
+ */
+const YEAR_GODS: readonly { id: YearGodId; hanzi: string; pinyin: string; seat: (year: number) => number }[] = [
+  // 太歲 stands on the year's own branch.
+  { id: 'taisui', hanzi: '太歲', pinyin: 'tàisuì', seat: (y) => y },
+  // 「歲破者，太歲所衝之辰也……子年在午，順行十二辰是也」.
+  { id: 'suipo', hanzi: '歲破', pinyin: 'suìpò', seat: (y) => (y + 6) % 12 },
+  // 「常居四正之位而從歲君之後：寅夘辰歲在東方則居正北，巳午未歲在南方則居正
+  // 東，申酉戌歲在西方則居正南，亥子丑歲在北方則居正西也」.
+  { id: 'dajiangjun', hanzi: '大將軍', pinyin: 'dàjiāngjūn', seat: (y) => [9, 9, 0, 0, 0, 3, 3, 3, 6, 6, 6, 9][y] as number },
+  // 「常居太歲後二辰……子年則在戌，丑年則在亥，寅年則在子是也」.
+  { id: 'taiyin', hanzi: '太陰', pinyin: 'tàiyīn', seat: (y) => (y + 10) % 12 },
+  // 「常居三合墓辰……寅午戌歲在戌，申子辰歲在辰，亥夘未歲在未，巳酉丑歲在丑」.
+  { id: 'huangfan', hanzi: '黃幡', pinyin: 'huángfān', seat: (y) => [4, 1, 10, 7, 4, 1, 10, 7, 4, 1, 10, 7][y] as number },
+  // 「常居黄幡對衝」.
+  { id: 'baowei', hanzi: '豹尾', pinyin: 'bàowěi', seat: (y) => ([4, 1, 10, 7, 4, 1, 10, 7, 4, 1, 10, 7][y] as number + 6) % 12 },
+];
+
+export const YEAR_GOD_IDS: readonly YearGodId[] = YEAR_GODS.map((g) => g.id);
+
+/** Where each of the six stands, for a year branch. */
+export function yearGodsOf(yearBranch: Branch): readonly YearGod[] {
+  return YEAR_GODS.map(({ id, hanzi, pinyin, seat }) => ({
+    id,
+    hanzi,
+    pinyin,
+    branch: BRANCHES[seat(yearBranch.index)] as Branch,
+  }));
+}
+
 export interface Almanac {
   /** The officer holding the day. */
   officer: Officer;
@@ -241,6 +296,16 @@ export interface Almanac {
   lodge: Lodge;
   /** 十二神 — the god the day stands under, by 天罡加建. */
   god: DayGod;
+  /**
+   * The year the page belongs to, turned at 立春 on the date.
+   *
+   * The chart's `yearBoundary` never reaches here, as `dayBoundary` does not:
+   * an almanac turns its year at 立春 and gives the whole of that day to the
+   * new year, exactly as it gives the whole of a 節's day to the new month.
+   */
+  year: Ganzhi;
+  /** The 年神 that stand on a bearing, from the branch of that year. */
+  yearGods: readonly YearGod[];
   /**
    * True on the second of the two days a 交節 gives the same officer.
    *
@@ -277,6 +342,7 @@ export function almanacAt(julianDayUT: number, context: EphemerisContext): Alman
   const jie = monthOpeningOn(julianDayUT, dayNumber, context);
   const day = dayGanzhi(dayNumber);
   const monthBranch = BRANCHES[jie.term.monthBranch as number] as Branch;
+  const year = yearGanzhi(sexagenaryYearOn(julianDayUT, dayNumber, context));
 
   return {
     officer: officerOf(monthBranch, day.branch),
@@ -286,6 +352,8 @@ export function almanacAt(julianDayUT: number, context: EphemerisContext): Alman
     monthBranch,
     jie: jie.term,
     doubled: calendarDayNumber(jie.julianDayUT) === dayNumber,
+    year,
+    yearGods: yearGodsOf(year.branch),
   };
 }
 
@@ -324,4 +392,30 @@ function monthOpeningOn(
   return calendarDayNumber(next) === dayNumber
     ? { term: definition, julianDayUT: next }
     : current;
+}
+
+/**
+ * Which sexagenary year the **day** falls in, turned at 立春.
+ *
+ * The same day grain as the month, one term up: the whole of 立春's date
+ * belongs to the year it opens, so a page never disagrees with itself about
+ * which year printed it. `resolveMoment` asks the same question of the
+ * *instant*, and under `yearBoundary: 'chunjie'` it asks a different question
+ * entirely — neither reaches here, because a page carries no options.
+ */
+function sexagenaryYearOn(
+  julianDayUT: number,
+  dayNumber: number,
+  context: EphemerisContext,
+): number {
+  // 立春 is the Sun at 315°. The crossing solver searches forward, so this
+  // starts a little over a year back and takes the last one whose own date has
+  // arrived.
+  let latest = sunCrossing(315, julianDayUT - 400, context);
+  for (;;) {
+    const next = sunCrossing(315, latest + 1, context);
+    if (calendarDayNumber(next) > dayNumber) break;
+    latest = next;
+  }
+  return fromJulianDay(latest, CALENDAR_ZONE).year;
 }
