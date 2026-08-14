@@ -62,7 +62,10 @@ export interface NianmingOptions {
   count: 'sui' | 'turns';
 }
 
-export const DEFAULT_NIANMING_OPTIONS: NianmingOptions = { count: 'sui' };
+// Frozen, like `DEFAULT_OPTIONS`: a surface builds its own options from it,
+// and one that could write to it would change what "default" means for every
+// caller after it.
+export const DEFAULT_NIANMING_OPTIONS: NianmingOptions = Object.freeze({ count: 'sui' });
 
 /**
  * A palace, and where it is read when it is the centre.
@@ -167,11 +170,7 @@ export function xingnianGanzhi(years: number, gender: Gender): Ganzhi {
  * people born eleven months apart can therefore be one year apart here, which
  * is what 虛歲 has always done and what the 行年 rule was written to step by.
  */
-export function yearsLived(
-  birth: Moment,
-  chart: Moment,
-  options: NianmingOptions = DEFAULT_NIANMING_OPTIONS,
-): number {
+export function yearsLived(birth: Moment, chart: Moment, options: NianmingOptions): number {
   const turns = sexagenaryYearOf(chart) - sexagenaryYearOf(birth);
   if (turns < 0) throw new ChartError('BIRTH_AFTER_CHART');
   return options.count === 'sui' ? turns + 1 : turns;
@@ -202,7 +201,7 @@ function sexagenaryYearOf(moment: Moment): number {
 export function nianmingOf(
   chart: QimenChart,
   request: { birthYear: Ganzhi; years?: number; gender?: Gender },
-  options: NianmingOptions = DEFAULT_NIANMING_OPTIONS,
+  options: NianmingOptions,
 ): Nianming {
   const nianming: Nianming = {
     benming: placeOn(chart, request.birthYear),

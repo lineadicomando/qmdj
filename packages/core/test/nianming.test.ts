@@ -3,7 +3,12 @@ import { computeQimenChart, type QimenChart } from '../src/dunjia/index.js';
 import { ChartError } from '../src/errors.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
 import { ganzhiOf, monthGanzhi, type Ganzhi } from '../src/ganzhi.js';
-import { nianmingOf, xingnianGanzhi, yearsLived } from '../src/nianming.js';
+import {
+  DEFAULT_NIANMING_OPTIONS,
+  nianmingOf,
+  xingnianGanzhi,
+  yearsLived,
+} from '../src/nianming.js';
 import { resolveMoment } from '../src/pillars.js';
 import { DEFAULT_OPTIONS, type ChartOptions, type Place } from '../src/types.js';
 
@@ -84,7 +89,7 @@ describe('the years counted', () => {
     const chart = moment('2026-08-13', '12:00');
 
     expect(yearsLived(birth, chart, { count: 'turns' })).toBe(36);
-    expect(yearsLived(birth, chart)).toBe(37);
+    expect(yearsLived(birth, chart, DEFAULT_NIANMING_OPTIONS)).toBe(37);
   });
 
   /**
@@ -108,7 +113,7 @@ describe('the years counted', () => {
   it('refuses a birth the chart has not reached', () => {
     const birth = moment('2026-08-13', '12:00');
     const chart = moment('1990-06-01', '12:00');
-    expect(() => yearsLived(birth, chart)).toThrow(ChartError);
+    expect(() => yearsLived(birth, chart, DEFAULT_NIANMING_OPTIONS)).toThrow(ChartError);
   });
 });
 
@@ -120,7 +125,7 @@ describe('本命 — the birth placed on a chart', () => {
   });
 
   it('finds the stem on both plates, and reports what stands there', () => {
-    const placed = nianmingOf(chart, { birthYear: pair('庚午') }).benming;
+    const placed = nianmingOf(chart, { birthYear: pair('庚午') }, DEFAULT_NIANMING_OPTIONS).benming;
 
     expect(placed.stem.hanzi).toBe('庚');
     expect(placed.concealed).toBe(false);
@@ -148,7 +153,7 @@ describe('本命 — the birth placed on a chart', () => {
 
   for (const [year, instrument] of CONCEALED) {
     it(`looks ${year} up under ${instrument}`, () => {
-      const placed = nianmingOf(chart, { birthYear: pair(year) }).benming;
+      const placed = nianmingOf(chart, { birthYear: pair(year) }, DEFAULT_NIANMING_OPTIONS).benming;
       expect(placed.concealed).toBe(true);
       expect(placed.stem.hanzi).toBe(instrument);
       expect(placed.ganzhi.hanzi).toBe(year);
@@ -161,7 +166,7 @@ describe('本命 — the birth placed on a chart', () => {
    * metal, and 子 moors in 坎, water — metal generating water is 我生.
    */
   it('moors by the branch and weighs the 納音 against that ground', () => {
-    const placed = nianmingOf(chart, { birthYear: pair('甲子') }).benming;
+    const placed = nianmingOf(chart, { birthYear: pair('甲子') }, DEFAULT_NIANMING_OPTIONS).benming;
 
     expect(placed.mooring.hanzi).toBe('坎');
     expect(placed.nayin.hanzi).toBe('海中金');
@@ -173,7 +178,7 @@ describe('本命 — the birth placed on a chart', () => {
     const inCentre = ganzhiOf(
       [...Array(60).keys()].find((i) => ganzhiOf(i).stem.index === centre.earth.index) as number,
     );
-    const placed = nianmingOf(chart, { birthYear: inCentre }).benming;
+    const placed = nianmingOf(chart, { birthYear: inCentre }, DEFAULT_NIANMING_OPTIONS).benming;
 
     expect(placed.earth.palace.number).toBe(5);
     expect(placed.earth.host?.hanzi).toBe('坤');
@@ -182,17 +187,19 @@ describe('本命 — the birth placed on a chart', () => {
   it('places the 行年 only when the years and the direction are both known', () => {
     const birthYear = pair('庚午');
 
-    expect(nianmingOf(chart, { birthYear }).xingnian).toBeUndefined();
-    expect(nianmingOf(chart, { birthYear, years: 35 }).xingnian).toBeUndefined();
+    expect(nianmingOf(chart, { birthYear }, DEFAULT_NIANMING_OPTIONS).xingnian).toBeUndefined();
+    expect(
+      nianmingOf(chart, { birthYear, years: 35 }, DEFAULT_NIANMING_OPTIONS).xingnian,
+    ).toBeUndefined();
 
-    const both = nianmingOf(chart, { birthYear, years: 35, gender: 'male' });
+    const both = nianmingOf(chart, { birthYear, years: 35, gender: 'male' }, DEFAULT_NIANMING_OPTIONS);
     expect(both.years).toBe(35);
     expect(both.xingnian?.ganzhi.hanzi).toBe(xingnianGanzhi(35, 'male').hanzi);
   });
 
   it('leaves the chart alone', () => {
     const before = JSON.stringify(chart.palaces);
-    nianmingOf(chart, { birthYear: pair('甲子'), years: 40, gender: 'female' });
+    nianmingOf(chart, { birthYear: pair('甲子'), years: 40, gender: 'female' }, DEFAULT_NIANMING_OPTIONS);
     expect(JSON.stringify(chart.palaces)).toBe(before);
   });
 });

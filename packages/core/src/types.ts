@@ -119,9 +119,11 @@ export interface ChartOptions {
  * What the engine assumes when a surface says nothing.
  *
  * Read this only where a surface builds its own defaults. Passing it into the
- * engine is the caller's job, never the engine's.
+ * engine is the caller's job, never the engine's. Frozen, because a surface
+ * that could write to it would change what "default" means for every caller
+ * after it: spread it and set the copy.
  */
-export const DEFAULT_OPTIONS: ChartOptions = {
+export const DEFAULT_OPTIONS: ChartOptions = Object.freeze({
   method: 'chaibu',
   yuan: 'term',
   plate: 'zhuan',
@@ -130,7 +132,7 @@ export const DEFAULT_OPTIONS: ChartOptions = {
   dayBoundary: 'zishi',
   system: 'shijia',
   centreLodging: 'kun',
-};
+});
 
 /** Where on Earth the chart is cast. */
 export interface Place {
