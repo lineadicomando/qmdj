@@ -1305,7 +1305,15 @@ at all where the reader is already in light.
 have to be told the question, and the question does not travel. The one place
 the rule and the convenience point the same way.
 
-> Commits: `Names the section by the act and gives it the root` · `Folds the consultation's fields away once they have answered` · `Draws the four pillars under every board` · `Prints a chart on paper rather than on a screen`
+**And the commits stop being layered here.** Every phase above this one lists
+several, one per stage, because while the engine was being built a stage was a
+thing that could be wrong on its own and had to be findable on its own. This
+one is a session's work on an interface that already runs, and it is one
+commit with a paragraph per movement. `CLAUDE.md` § Style and the `new-feature`
+skill say so; the lines below go on listing what a phase produced, which from
+here is usually one entry.
+
+> Commits: `Leads with the consultation, and prints a chart on paper`
 
 ---
 

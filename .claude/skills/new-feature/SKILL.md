@@ -1,6 +1,6 @@
 ---
 name: new-feature
-description: Use when ADDING or EXTENDING a calculation in qimendunjia that has to reach users or agents — a new computation in core, a new /api endpoint, a new MCP tool, a new section of the interface, a new CLI option, a new pattern in dunjia. Lists the surfaces to cross (core, i18n, CLI, plate, web, MCP, README, agent-prompt) and how to split them into commits. Triggers: new calculation, new endpoint, new MCP tool, new section, expose to agents, new CLI option, new pattern.
+description: Use when ADDING or EXTENDING a calculation in qimendunjia that has to reach users or agents — a new computation in core, a new /api endpoint, a new MCP tool, a new section of the interface, a new CLI option, a new pattern in dunjia. Lists the surfaces to cross (core, i18n, CLI, plate, web, MCP, README, agent-prompt) and the order to work through them in. Triggers: new calculation, new endpoint, new MCP tool, new section, expose to agents, new CLI option, new pattern.
 ---
 
 # Adding a feature to qimendunjia
@@ -56,17 +56,26 @@ PLAN.md                               what was learned, especially if wrong
 5. **The documentation**, last and never omitted.
 6. `npm test && npm run typecheck`.
 
-## The commits
+## The commit
 
-One per stage, in the order the repo has always had them:
+**One, for the whole feature.** The history up to the readings under the board
+splits a feature one stage at a time — core, then the surfaces, then the
+documentation — and that layering is over: see `CLAUDE.md` § Style for why it
+was worth having and why it no longer is. The order of the procedure above is
+still the order to *work* in, because a surface built before the calculation
+is a surface built against a guess. It is no longer the order to commit in.
+
+English, third person present, no conventional prefix. The subject says what
+the feature does; the body takes a paragraph per surface it crossed, which is
+what the separate subjects used to carry:
 
 ```
-Recognises the configurations of the chart          → core + i18n + test
-Shows the configurations in the interface and to agents → web + mcp
-Documents the configurations and opens them over HTTP   → README + docs
-```
+Recognises the configurations of the chart
 
-English, third person present, no conventional prefix.
+Names them in both catalogs, ...
+Shows them in the interface and hands them to agents ...
+Opens them over HTTP and says so in the README ...
+```
 
 ## Rules that bite harder here than elsewhere
 

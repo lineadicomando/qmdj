@@ -185,6 +185,16 @@ rather than what was done. No conventional prefixes. Examples:
 «Finds the twenty-four solar terms», «Exposes the chart over HTTP»,
 «Determines the dun and the ju number».
 
+**One commit a session is enough now, however many surfaces it crossed.** The
+history up to the readings under the board is layered one stage at a time —
+the calculation, then the surfaces, then the documentation — because while the
+engine was being built each stage was a thing that could be wrong on its own
+and had to be findable on its own. That is done. What a session produces now
+is a change to an interface that already works, and splitting it three ways
+buys a history nobody reads at the cost of commits that do not stand up alone.
+The subject still says what the change does; what used to be three subjects
+becomes the body, one paragraph a movement.
+
 Domain identifiers are toneless pinyin where the domain is Chinese
 (`ganzhi`, `jieqi`, `zhifu`, `xiumen`); everything else is English. Where
 dropping the tone would collide, and only there, the tone number is kept:
