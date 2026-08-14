@@ -405,6 +405,10 @@ export const en = {
   'label.yeargod.zaisha': 'the calamity killing',
   'label.yeargod.suisha': 'the year killing',
 
+  'label.yeargod.dahao': 'the great wasting',
+  'label.yeargod.xiaohao': 'the small wasting',
+  'label.yeargod.suizhide': 'the branch virtue of the year',
+
   'label.keti.yuanshou': 'the head',
   'label.keti.zhongshen': 'the second hearing',
   'label.keti.zhiyi': 'knowing the one',

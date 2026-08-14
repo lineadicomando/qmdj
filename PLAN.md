@@ -2077,7 +2077,7 @@ stand in this file and in `liuren.ts`'s comments, not in the register
 CLAUDE.md calls mandatory. A third layer's tables do not land in a register
 the second board never entered.
 
-**建除十二神, 二十八宿值日, the 十二神 and fifteen 年神 are built; the rest of 卷三 is not.** `almanac.ts`, `almanacAt`, and the
+**建除十二神, 二十八宿值日, the 十二神 and eighteen 年神 are built; the rest of 卷三 is not.** `almanac.ts`, `almanacAt`, and the
 page beside the pillars on the CLI, the API, the MCP tools, the chart page and
 the 六壬 page. Agreement with `lunar-javascript` on **14 600 / 14 600 days of
 2000 to 2039** for the officer and again for the lodge with its 七政; the 480
@@ -2122,13 +2122,15 @@ officers'.
 
 **The 年神 are the layer's other axis, and its weakest evidence.** A chart
 chooses an hour *and a direction*, and 卷三 puts the year's gods on the second.
-Fifteen are in — 太歲, 歲破, 大將軍, 太陰, 黃幡, 豹尾, 喪門, 弔客, 白虎, 病符,
-死符, 大煞 and the three 煞 — each one whose seat the source states outright and completely
+Eighteen are in — 太歲, 歲破, 大將軍, 太陰, 黃幡, 豹尾, 喪門, 弔客, 白虎, 病符,
+死符, 大煞, the three 煞, 大耗, 小耗 and 歲枝德 — each one whose seat the source states outright and completely
 without leaning on a god defined elsewhere, and each of its worked enumerations
-asserted in the tests. **Two of them share a branch and stay sharing it**: 太陰
-and 弔客 are both 歲後二辰, the 總論 raises that as an objection and answers it
-— 「美惡不嫌同位，各從其所用耳」 — so deduplicating them would report a
-tidiness nobody transmitted. **This is
+asserted in the tests. **Seats are shared and stay shared**: 太陰 and 弔客 are
+both 歲後二辰, 大耗 stands where 歲破 does, and one branch a year is 死符, 小耗
+and 歲枝德 at once. The source states the principle twice, 「美惡不嫌同位，吉凶
+不嫌同名」, so deduplicating would report a tidiness nobody transmitted — and
+what *would* pick between the names is 宜忌, an undertaking, which is the part
+this engine declines. **This is
 the one block with no runnable reference**: `lunar-javascript` answers for 太歲,
 which needs no answering, and for none of the other five. Tier 3, said so.
 What *is* checked is the year the page turns on — 立春, on the date, 10 950 /

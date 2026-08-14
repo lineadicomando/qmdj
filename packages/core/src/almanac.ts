@@ -233,7 +233,8 @@ export const DAY_GOD_LIST: readonly DayGod[] = DAY_GODS;
 export type YearGodId =
   | 'taisui' | 'suipo' | 'dajiangjun' | 'taiyin' | 'huangfan' | 'baowei'
   | 'sangmen' | 'diaoke' | 'baihu' | 'bingfu' | 'sifu' | 'dasha'
-  | 'jiesha' | 'zaisha' | 'suisha';
+  | 'jiesha' | 'zaisha' | 'suisha'
+  | 'dahao' | 'xiaohao' | 'suizhide';
 
 export interface YearGod {
   id: YearGodId;
@@ -259,13 +260,16 @@ export interface YearGod {
  * pins it. Splitting a group the source states as a group would be worse than
  * the asymmetry, which is written down instead.
  *
- * **Two of them share a seat, and the source defends it.** 太陰 and 弔客 both
- * stand on 歲後二辰, and 卷三's 總論 raises exactly that objection — 「然太隂之
- * 方又為弔客者何歟」 — before answering it: 「隂陽之義，美惡不嫌同位，各從其所
- * 用耳」. Good and ill are not embarrassed to share a bearing; each is read for
- * what it is read for. A tidier source would have moved one of them, and a
- * table that quietly deduplicated them would be reporting a tidiness nobody
- * transmitted.
+ * **Seats are shared, on purpose, and the source states the principle twice.**
+ * 太陰 and 弔客 both stand on 歲後二辰, and the 總論 raises exactly that
+ * objection — 「然太隂之方又為弔客者何歟」 — before answering it: 「隂陽之義，
+ * 美惡不嫌同位，各從其所用耳」. The 歲枝德 entry says it again in general terms,
+ * 「美惡不嫌同位，吉凶不嫌同名」, of a branch that is 死符 and 小耗 and 歲枝德
+ * at once; and 大耗 stands where 歲破 does. Good and ill are not embarrassed to
+ * share a bearing, each being read for what it is read for. A table that
+ * quietly deduplicated them would be reporting a tidiness nobody transmitted,
+ * and which of the names applies is a question about somebody's undertaking —
+ * which is the part this engine does not answer.
  *
  * **What is left behind is most of what the source says about them.** Nearly
  * every entry is 宜忌 — 「其地不可興造移徙嫁娶逺行」, 「所理之地不可興修」 —
@@ -310,6 +314,16 @@ const YEAR_GODS: readonly { id: YearGodId; hanzi: string; pinyin: string; seat: 
   { id: 'jiesha', hanzi: '劫煞', pinyin: 'jiéshà', seat: (y) => [5, 2, 11, 8][y % 4] as number },
   { id: 'zaisha', hanzi: '災煞', pinyin: 'zāishà', seat: (y) => [6, 3, 0, 9][y % 4] as number },
   { id: 'suisha', hanzi: '歲煞', pinyin: 'suìshà', seat: (y) => [7, 4, 1, 10][y % 4] as number },
+  // 「太歲所衝為大耗」 — the seat 歲破 already holds, and the 小耗 entry leans
+  // on it: 「小耗常居大耗後一辰」.
+  { id: 'dahao', hanzi: '大耗', pinyin: 'dàhào', seat: (y) => (y + 6) % 12 },
+  // 「小耗常居大耗後一辰」, and again from the other side, 「舊歲破為小耗」 —
+  // last year's 歲破, which is this year's 歲前五辰. The two statements meet.
+  { id: 'xiaohao', hanzi: '小耗', pinyin: 'xiǎohào', seat: (y) => (y + 5) % 12 },
+  // 「歲枝德者，謂甲既在子則巳上必己，己甲之合也，其所合之神所居之枝則亦必吉
+  // 矣」 — the branch where 歲德's 五合 partner stands. The entry then says
+  // where that lands: 「其辰又為死符，又為小耗」, which is 歲前五辰.
+  { id: 'suizhide', hanzi: '歲枝德', pinyin: 'suìzhīdé', seat: (y) => (y + 5) % 12 },
 ];
 
 export const YEAR_GOD_IDS: readonly YearGodId[] = YEAR_GODS.map((g) => g.id);

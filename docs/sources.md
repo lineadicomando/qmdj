@@ -908,7 +908,7 @@ The other axis. A chart chooses an hour **and a direction**, and the 年神 are
 what the almanac puts on the second — 卷三 describes each as 所理之地 or
 所在之方, a bearing held for a year.
 
-Fifteen are implemented. Each is one whose position 卷三 states outright and
+Eighteen are implemented. Each is one whose position 卷三 states outright and
 completely, in its own entry, without leaning on a god defined elsewhere:
 
 | | the source's words | |
@@ -926,6 +926,9 @@ completely, in its own entry, without leaning on a god defined elsewhere:
 | 死符 | 「常居歲前五辰」 | five ahead |
 | 大煞 | 「子年在子，丑年在酉，寅年在午，夘年在夘，辰年又在子」, with 「申子辰三合為水，水旺於子」 | the cardinal the year's triad prospers in |
 | 劫煞 · 災煞 · 歲煞 | 考原:「劫煞災煞歲煞是為三煞……三合五行絕胎養之位也」, with 李鼎祚's 「寅午戌煞在丑，巳酉丑煞在辰，申子辰煞在未，亥夘未煞在戌」 | the 絕, the 胎 and the 養 of the year's triad |
+| 大耗 | 「太歲所衝為大耗」 | opposite, with 歲破 |
+| 小耗 | 「常居大耗後一辰」, and 「舊歲破為小耗」 | five ahead |
+| 歲枝德 | 「甲既在子則巳上必己，己甲之合也，其所合之神所居之枝」, landing where the entry then says: 「其辰又為死符，又為小耗」 | five ahead |
 
 **Every one of those enumerations is asserted in `almanac.test.ts`**, from the
 text rather than from an implementation — which matters here more than
@@ -953,16 +956,23 @@ of its own** in 卷三 and is carried anyway, because the passage states the rul
 for all three at once; splitting a group the source states as a group would be
 worse than the asymmetry, so the asymmetry is recorded here instead.
 
-**Two share a seat, and the source defends it rather than tidying it.** 太陰
-and 弔客 both stand on 歲後二辰. 卷三's 總論 raises exactly that objection —
-「然太隂之方又為弔客者何歟」 — and answers it: 「隂陽之義，美惡不嫌同位，各從
-其所用耳」, good and ill are not embarrassed to share a bearing, each being read
-for what it is read for. It gives the geometry too: 歲後二位 and 歲前二位 always
-form a 三合 with the branch that controls or clashes with the 太歲 — 「太歲在午
-則後二辰前二申，申與辰必暗拱子以尅太歲矣」. The engine reports both, on the
-one branch. A table that quietly deduplicated them would be reporting a
-tidiness nobody transmitted, and a test asserts they stay together for all
-twelve years.
+**Seats are shared on purpose, and the source states the principle twice.**
+太陰 and 弔客 both stand on 歲後二辰. 卷三's 總論 raises exactly that objection
+— 「然太隂之方又為弔客者何歟」 — and answers it: 「隂陽之義，美惡不嫌同位，各從
+其所用耳」. It gives the geometry too: 歲後二位 and 歲前二位 always form a 三合
+with the branch that controls or clashes with the 太歲 — 「太歲在午則後二辰前二
+申，申與辰必暗拱子以尅太歲矣」.
+
+The 歲枝德 entry says it again, in general terms, of a branch that is three
+things at once: 「其辰又為死符又為小耗……然美惡不嫌同位，吉凶不嫌同名」. And
+大耗 stands where 歲破 does. So four of the eighteen share a seat with another
+and one branch a year carries three names. **The engine reports all of them, on
+the one branch**, and a test holds each pair together across all twelve years.
+A table that quietly deduplicated them would be reporting a tidiness nobody
+transmitted — and the part that would resolve which name applies is the part
+the same passage supplies and this engine refuses: 「死符為營塚等事所忌，小耗
+為市易造作等事所忌」, which is 宜忌, an undertaking, a question somebody has to
+have asked.
 
 **Two the source itself gives up on.** 蠶室: 「其方位所在必有每歲蠶絲豐歉之占，
 **而今不可考矣**」 — there was a divination in it and it can no longer be
@@ -972,8 +982,8 @@ is here. A source that says where its own knowledge stopped is the reason this
 one was chosen, and taking what it disclaims would be reading past the part that
 makes it worth reading.
 
-**Fifteen, and the rest of 卷三 is unread rather than rejected.** What remains
-includes 大耗, 小耗, 歲德, 歲德合, 歲枝德, 金神, 博士, 破敗五鬼 and 日遊神.
+**Eighteen, and the rest of 卷三 is unread rather than rejected.** What remains
+is 歲德, 歲德合, 金神, 博士, 破敗五鬼 and 日遊神.
 Several are keyed to the year *stem* and seat on a **stem** rather than a
 branch — 歲德合 is 「甲年在己，乙年在乙，丙年在辛……」 — which is a different
 kind of bearing and wants a type this engine has not yet had to write;

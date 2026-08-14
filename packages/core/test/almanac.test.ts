@@ -235,15 +235,19 @@ describe('建除十二神', () => {
     for (const y of BRANCHES) expect(['丑', '辰', '未', '戌']).toContain(seat(y.hanzi, 'suisha'));
   });
 
-  it('lets 太陰 and 弔客 keep the one seat the source gives them both', () => {
-    // 卷三's 總論 raises the objection itself — 「然太隂之方又為弔客者何歟」 —
-    // and answers it: 「隂陽之義，美惡不嫌同位，各從其所用耳」. Deduplicating
-    // them here would report a tidiness nobody transmitted.
+  it('keeps every seat the source gives to more than one god', () => {
+    // 「美惡不嫌同位，吉凶不嫌同名」. 卷三 says this twice — of 太陰 and 弔客
+    // in the 總論, and of 死符 · 小耗 · 歲枝德 in the 歲枝德 entry — and 大耗
+    // stands where 歲破 does. Deduplicating any of them would report a
+    // tidiness nobody transmitted.
     for (const year of BRANCHES) {
-      const gods = yearGodsOf(year);
-      const taiyin = gods.find((g) => g.id === 'taiyin')?.branch.hanzi;
-      const diaoke = gods.find((g) => g.id === 'diaoke')?.branch.hanzi;
-      expect(taiyin).toBe(diaoke);
+      const at = (id: string): string =>
+        yearGodsOf(year).find((g) => g.id === id)?.branch.hanzi ?? '';
+
+      expect(at('taiyin')).toBe(at('diaoke'));
+      expect(at('suipo')).toBe(at('dahao'));
+      expect(at('sifu')).toBe(at('xiaohao'));
+      expect(at('sifu')).toBe(at('suizhide'));
     }
   });
 
