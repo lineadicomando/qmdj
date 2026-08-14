@@ -373,10 +373,11 @@ const YEAR_GODS: readonly {
   // where that lands: 「其辰又為死符，又為小耗」, which is 歲前五辰.
   { id: 'suizhide', hanzi: '歲枝德', pinyin: 'suìzhīdé', seat: (y) => (y + 5) % 12 },
   // The two that stand on a stem, and on the year's stem rather than its
-  // branch. 「歲德合者，歲德五合之干是也：甲年在己，乙年在乙，丙年在辛，丁年
-  // 在丁，戊年在癸，己年在己，庚年在乙，辛年在辛，壬年在丁，癸年在癸。故歲德
-  // 屬陽，歲德合屬隂」 — so 歲德 is the 五合 partner of that table, which the
-  // sentence states as a relation rather than leaving to be guessed.
+  // branch. Each is enumerated whole, in a different quotation of the same
+  // entry: 廣聖厯 「甲德在甲，乙德在庚，丙德在丙，丁德在壬，戊德在戊，己德在
+  // 甲，庚德在庚，辛德在丙，壬德在壬，癸德在戊」, and 考原 「歲德合者，歲德五
+  // 合之干是也：甲年在己，乙年在乙，丙年在辛……」. The second is the 五合 of
+  // the first, which is a third statement of the same fact.
   { id: 'suide', hanzi: '歲德', pinyin: 'suìdé', byStem: true, seat: (g) => [0, 6, 2, 8, 4, 0, 6, 2, 8, 4][g] as number },
   { id: 'suidehe', hanzi: '歲德合', pinyin: 'suìdéhé', byStem: true, seat: (g) => [5, 1, 7, 3, 9, 5, 1, 7, 3, 9][g] as number },
   // 破敗五鬼, from 厯例 and enumerated whole: 「甲壬年在巽，乙癸年在艮，丙年在

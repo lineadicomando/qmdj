@@ -245,9 +245,12 @@ describe('建除十二神', () => {
   });
 
   it('seats 歲德 and its 合 on a stem, as the source gives them', () => {
-    // 「甲年在己，乙年在乙，丙年在辛，丁年在丁，戊年在癸，己年在己，庚年在乙，
-    // 辛年在辛，壬年在丁，癸年在癸。故歲德屬陽，歲德合屬隂」 — and 歲德 is the
-    // 五合 partner of that table, which the same sentence states.
+    // Both are enumerated, in two quotations of the one entry. 考原 for the
+    // 合: 「甲年在己，乙年在乙，丙年在辛，丁年在丁，戊年在癸，己年在己，庚年
+    // 在乙，辛年在辛，壬年在丁，癸年在癸」. 廣聖厯 for 歲德 itself: 「甲德在
+    // 甲，乙德在庚，丙德在丙，丁德在壬，戊德在戊，己德在甲，庚德在庚，辛德在
+    // 丙，壬德在壬，癸德在戊」. And the two are each other's 五合, which is the
+    // same fact stated a third time.
     const stemSeat = (yearStem: string, god: string): string => {
       const year = Array.from({ length: 60 }, (_, i) => ganzhiOf(i)).find(
         (g) => g.stem.hanzi === yearStem,
@@ -260,7 +263,6 @@ describe('建除十二神', () => {
     expect(table.map((y) => stemSeat(y, 'suidehe'))).toEqual([
       '己', '乙', '辛', '丁', '癸', '己', '乙', '辛', '丁', '癸',
     ]);
-    // The 五合 of each of those: 甲己, 乙庚, 丙辛, 丁壬, 戊癸.
     expect(table.map((y) => stemSeat(y, 'suide'))).toEqual([
       '甲', '庚', '丙', '壬', '戊', '甲', '庚', '丙', '壬', '戊',
     ]);

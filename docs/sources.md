@@ -929,7 +929,8 @@ completely, in its own entry, without leaning on a god defined elsewhere:
 | 大耗 | 「太歲所衝為大耗」 | opposite, with 歲破 |
 | 小耗 | 「常居大耗後一辰」, and 「舊歲破為小耗」 | five ahead |
 | 歲枝德 | 「甲既在子則巳上必己，己甲之合也，其所合之神所居之枝」, landing where the entry then says: 「其辰又為死符，又為小耗」 | five ahead |
-| 歲德 · 歲德合 | 「歲德合者，歲德五合之干是也：甲年在己，乙年在乙，丙年在辛……故歲德屬陽，歲德合屬隂」 | **a stem**, from the year's stem |
+| 歲德 | 廣聖厯:「甲德在甲，乙德在庚，丙德在丙，丁德在壬，戊德在戊，己德在甲，庚德在庚，辛德在丙，壬德在壬，癸德在戊」 | **a stem**, from the year's stem |
+| 歲德合 | 考原:「歲德合者，歲德五合之干是也：甲年在己，乙年在乙，丙年在辛……」 | **a stem**, the 五合 of the above |
 | 破敗五鬼 | 厯例:「甲壬年在巽，乙癸年在艮，丙年在坤，丁年在震，戊年在離，己年在坎，庚年在兑，辛年在乾」 | **a trigram**, from the year's stem |
 | 奏書 · 博士 · 力士 · 蠶室 | 「常居近歲後維方……初起於乾」, 「常與奏書對衝，如奏書在艮，博士在坤也」, 「在太歲之前隅」, 「與力士對衝」 | **a corner trigram**, by the year's quarter |
 | 金神 | 「以年幹五虎元厯之逢庚辛及納音金之位者是也……故甲己年午未申酉為金神也」 | **several branches**, by running the year's months |
@@ -1016,7 +1017,14 @@ weighed — the month pillars against `lunar-javascript` over two centuries, the
 納音 over 479 charts — so the only new thing is the selection, and the source's
 one worked year checks it: 甲己年 comes back 午未申酉, which is what 卷三 says.
 
-**Twenty-six, and 日遊神 is the one entry of 卷三 left unread**;
+**日遊神 cannot be read from this source as it stands.** It is the last anchor
+of 卷三 and its body is **empty** in the Wikisource transcription — the heading
+is there and the text runs straight on to the chapter's 總論 — and the name
+appears nowhere in 卷四 to 卷八 either. So it is neither implemented nor
+refused: a printed edition would settle it and none was consulted. Recorded
+here rather than filled in, which is the whole habit this file exists to keep.
+
+**Twenty-six, and 卷三 is otherwise read**;
 some are stated only inside a discussion the source marks as one opinion among
 several — 大耗 and 小耗 arrive inside a 「是亦一説也」 and are not taken on
 that footing; and 羣醜 turns out not to be a seat at all but a condition, the
