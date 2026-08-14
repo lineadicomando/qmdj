@@ -361,23 +361,37 @@
 <FormPanel
   {t}
   bind:this={panel}
-  legend="form.interval"
+  legend={null}
   reopenLabel="form.openInterval"
   closable={scan !== undefined}
   onsubmit={submit}
 >
   {#snippet fields()}
-    <div class="row">
-      <label>
-        {t('form.from')}
-        <input type="date" bind:value={asked.from} required />
-      </label>
-      <label>
-        {t('form.to')}
-        <input type="date" bind:value={asked.to} required />
-      </label>
-      <LocationSearch {t} bind:selected={asked.place} />
-    </div>
+    <!--
+      The two questions this form asks, in two boxes of the same make.
+
+      They were a bare row and a fieldset, with the row named by a heading over
+      the whole panel — so one of the two groups had a ruled box around it and
+      the other did not, and the name of the first sat outside the thing it
+      named. The heading is gone and the name has come down into a `legend`,
+      where the name of the group beneath it already was. What still names the
+      panel as a whole is the button that reopens it.
+    -->
+    <fieldset>
+      <legend>{t('form.interval')}</legend>
+
+      <div class="row">
+        <label>
+          {t('form.from')}
+          <input type="date" bind:value={asked.from} required />
+        </label>
+        <label>
+          {t('form.to')}
+          <input type="date" bind:value={asked.to} required />
+        </label>
+        <LocationSearch {t} bind:selected={asked.place} />
+      </div>
+    </fieldset>
 
     <fieldset>
       <legend>{t('form.looking')}</legend>
