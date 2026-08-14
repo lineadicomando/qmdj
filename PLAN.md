@@ -177,7 +177,7 @@ default from dunjia's.
 | Board | Parameter | Values | Proposed default |
 |---|---|---|---|
 | 六壬 | `yuejiang` | `zhongqi` (太陽過宮 at the 中氣), `jieqi`, `true` (太陽實躔) | `zhongqi` |
-| 六壬 | `guirenSong` | `geng` (甲戊庚牛羊), `jian` (甲戊兼牛羊) | `geng` |
+| 六壬 | `guiren` | `chou` (甲 shares 丑未 with 戊庚), `wei` (甲 stands alone at 未丑) | `chou` |
 | 六壬 | `zhouye` | `branch` (晝 from 卯 to 申), `solar` (actual sunrise and sunset) | `branch` |
 | 七政四餘 | `xiudu` | which 宿度 table, by 曆: `shixian` (時憲曆), `shoushi` (授時曆) | `shixian` |
 | 七政四餘 | `ziqi` | `off`, or a named transmission with its epoch | `off` |
@@ -1414,11 +1414,66 @@ outcome. The line is the one already drawn, and it falls in the same place.
 《六壬指南》 (陳公獻, Ming) state the construction; 《六壬視斯》 is a third
 witness on the 九宗門. But **none of this may be written down from memory** —
 phases 1 to 3 learned that more than once. A runnable reference has to be
-found and agreed with before a single rule enters `docs/sources.md`;
-`kinliuren` (PyPI, by the author of the `kinqimen` already used in phase 3)
-is the first candidate to try, and if it does not run or does not agree, that
-finding is itself worth writing down. Until then everything above is a plan,
-not a citation.
+found and agreed with before a single rule enters `docs/sources.md`.
+
+**The reference was found and run, and it is a better one than phase 3 had.**
+`kinliuren` 0.1.2.9 (PyPI, Ken Tang — the author of the `kinqimen` used in
+phase 3), MIT, **one pure-Python module of 142 kB and no dependencies at all**.
+It installs and runs under Python 3.14, which is worth saying because
+`kinqimen` still needs 3.9 and a pair of prebuilt wheels.
+
+Two things about it matter more than that it runs:
+
+- **It takes no instant.** `Liuren(節氣, 農曆月, 日干支, 時干支)` — the solar
+  term and the pillars, which are precisely what phases 1 and 2 already
+  compute and already verified against `lunar-javascript`. So a comparison
+  isolates the 六壬 construction and nothing else: no calendar of its own to
+  disagree with. Nothing in this project's reference history has been that
+  clean. (`農曆月` is echoed in the output and does not enter the board —
+  `正` and `十一` give an identical chart. It feeds the monthly variants.)
+- **Its nine methods are the 九宗門, one function each** — `zeike`, `biyung`,
+  `shehai`, `yaoke`, `maosing`, `bieze`, `bazhuan`, `fuyin`, `fanyin` — which
+  is independent confirmation that the structure planned above is the
+  structure the tradition transmits, and not a shape recalled to fit.
+
+**What it settles.** Its 月將 table pairs each 中氣 with the 節氣 that follows
+it — (雨水, 驚蟄)→亥, (冬至, 小寒)→丑, (大寒, 立春)→子 — so the 太陽 changes
+palace **at the 中氣**, and `yuejiang: zhongqi` is the reference's reading as
+well as the proposed default. Its 晝夜 is cut on the hour branch, 卯 to 申
+against 酉 to 寅, which makes `zhouye: branch` the implemented value; `solar`
+stays in the type unimplemented until a source states it, as § 3 permits.
+
+**What it settles differently from what was guessed here**, which is the whole
+reason one runs a reference: it ships the 貴人 divergence *as an option of its
+own*, and the two verses it carries are not the pair this document first named.
+They are 甲戊庚→丑未, 乙己→子申, 丙丁→亥酉, 壬癸→巳卯, 辛→午寅 against a finer
+table that stands 甲 apart at 未丑 and splits 丙 from 丁, 壬 from 癸, 乙 from
+己. § 3 was corrected to those two. And the divergence is bounded in a way
+worth knowing before the tests are written: on a 甲子 day it moves the generals
+— 貴 or 空 on the 巳 of the 地盤 — and leaves the branches of the 三傳
+untouched, 戌·午·寅 either way. **The 貴人 moves the generals, never the
+transmissions.**
+
+**Two defects in it, for whoever uses it after this.** They are recorded in the
+same spirit as `kinqimen`'s in § 5, and the second is the more serious:
+
+- `result()` dispatches over **eight** of the nine methods. `fanyin` is
+  defined and never called. A 返吟 board — 月將 opposed to the hour, 丑加未 at
+  冬至 — falls through to 遙剋 and comes back `['遙尅', '蒿矢11']` with 初傳
+  and 中傳 the same branch, which is a degenerate answer rather than a
+  refusal. **返吟 must be implemented here from the texts and cannot be
+  checked against this reference**, and that has to be said at the surface the
+  way 茅山's want of a reference is said.
+- The course name leaks an index: `蒿矢11`, not `蒿矢`.
+
+One more to check rather than to claim: 伏吟 on the 陰日 丁未 returns 自任
+where the rule as usually stated gives 自任 to a 陽日 and 自信 to a 陰日. That
+may be this document misremembering the rule, which is exactly why it is
+written here as a question for the texts and not as a third defect.
+
+Until the 三傳 are compared over a span — the phase-3 discipline, thousands of
+boards rather than a handful — everything above is a reference agreed with in
+its structure and not yet in its output.
 
 **Surfaces.** The `new-feature` procedure, unchanged, with one addition that
 is not small: `packages/plate` needs a *second drawing* — the four courses
