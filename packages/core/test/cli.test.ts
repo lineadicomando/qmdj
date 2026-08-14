@@ -371,10 +371,14 @@ describe('failing', () => {
   });
 
   it('renders a mistake in the call rather than throwing it at the reader', async () => {
-    expect(await run(['bazi', '--date', '1990-01-01', '--gender', 'neither'])).toBe(2);
+    expect(
+      await run(['bazi', '--date', '1990-01-01', '--gender', 'neither', '--lang', 'en']),
+    ).toBe(2);
 
     expect(err).toContain('--gender');
-    expect(err).not.toContain('at ');
+    // A stack frame, not the word: a sentence that explains itself says
+    // «that», and a guard on `at ` would fail on the explanation.
+    expect(err).not.toMatch(/^\s+at /m);
     expect(out).toBe('');
   });
 
