@@ -585,11 +585,9 @@ export const it: Record<MessageKey, string> = {
   // modo di pesare due nomi cinesi. Il nome dell'arte segue le parole invece
   // di sostituirle: un metodo è una cosa cinese, ed è l'unico punto della
   // pagina in cui è quello a essere nominato.
-  // I due gruppi che la consultazione chiede in chiaro. Nessuna delle due
-  // intestazioni ripete l'etichetta di un campo: una nomina la coppia come
-  // coppia, l'altra nomina l'unica cosa che le sta accanto — che prende una
-  // cornice perché ce l'ha la coppia, non perché un controllo solo la volesse.
-  'form.group.asking': 'La domanda, e a quale quadro',
+  // Ciò che la consultazione nomina in chiaro. Solo la circostanza prende un
+  // nome: i campi sopra sono quelli che la riga d'apertura già annuncia, e un
+  // titolo su di essi direbbe una terza volta ciò che dicono due etichette.
   'form.group.standing': 'Da dove chiedi',
   'form.instrument': 'Che tipo di domanda è',
   'form.instrument.qimen': 'Quando muovermi, e da che parte — 奇門遁甲 qíméndùnjiǎ',

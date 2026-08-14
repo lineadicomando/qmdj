@@ -771,11 +771,9 @@ export const en = {
   // their own and has no way to weigh two Chinese names. The name of the art
   // follows the words rather than replacing them: a method is a Chinese
   // thing, and this is the one place on the page where that is what is named.
-  // The two groups the consultation asks in the open. Neither legend repeats
-  // a field's own label: one names the pair as a pair, the other names the one
-  // thing beside it — which takes a box because the pair has one, not because
-  // a single control wanted framing.
-  'form.group.asking': 'The question, and which board',
+  // What the consultation names in the open. Only the circumstance takes a
+  // name: the fields above it are what the page's lead line already announces,
+  // and a heading over them would say a third time what two labels say.
   'form.group.standing': 'Where you are asking from',
   'form.instrument': 'What kind of question is it',
   'form.instrument.qimen': 'When to move, and which way — 奇門遁甲 qíméndùnjiǎ',

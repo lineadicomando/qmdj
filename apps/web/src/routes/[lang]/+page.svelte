@@ -362,16 +362,16 @@
       <!-- Above the moment and above the button, because that is the order:
            the chart is cast for the instant the question is put. -->
       <!--
-        Two groups in the open, and the second is one field on purpose.
+        What is being asked, under no heading at all.
 
-        The question and the board it is put to are one thing asked; the place
-        is another. Boxing only the first would leave the place as the one
-        control on the panel standing outside every group, which is the
-        asymmetry the scan was fixed for — there the interval took a box
-        *because* the criteria beside it had one.
+        A name over these two would have to say «the question, and which
+        board» — over a field labelled «Your question» and one labelled «What
+        kind of question is it». Three ways of saying one thing, which is what
+        the panel's own heading was taken off for. The lead line above the
+        panel already says what the page is for, and these are the fields that
+        do it; what takes a name below is the circumstance, which is a
+        different kind of thing and reads as the step it is.
       -->
-      <fieldset class="asking">
-        <legend>{t('form.group.asking')}</legend>
       <label class="question">
         {t('form.question')}
         <!-- Five lines rather than two. What is typed here is the one thing on
@@ -399,7 +399,6 @@
           <option value="liuren">{t('form.instrument.liuren')}</option>
         </select>
       </label>
-      </fieldset>
 
       <!--
         The place in the open, and everything else behind the disclosure.
@@ -581,29 +580,6 @@
    */
   .wide { max-width: none; }
 
-  /*
-   * Named, not boxed — the house style for a group of fields.
-   *
-   * The `fieldset` earns its place with a screen reader, which reads the
-   * legend before every field inside it; on screen it is a bold line over
-   * them, because a border here would make this the only framed thing on a
-   * panel whose other groups are named the same way and drawn not at all.
-   * See `MomentForm`, where the rule this matches lives.
-   */
-  .asking {
-    border: 0;
-    margin: 0 0 0.9rem;
-    padding: 0;
-    min-inline-size: 0;
-    display: grid;
-    gap: 0.8rem;
-  }
-  .asking legend {
-    padding: 0 0 0.45rem;
-    font-size: 0.9em;
-    font-weight: 600;
-    color: var(--ink);
-  }
   .question { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 46rem; }
   /* Bounded: a `select` of two lines does not become clearer for being a
      panel wide. */
