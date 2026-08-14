@@ -1887,44 +1887,35 @@ positions, the lodges, the 命宮, the twelve palaces — names what the traditi
 names, and stops. That it is a fate art changes what is on the board. It does
 not change what the board is allowed to say.
 
-### Phase 17 — The notes, written once the engine stops moving
+### Phase 17 — The notes, decided last
 
-**Planned, and last on purpose.** `/[lang]/notes` is the page that says what
-this computes and how sure it is. It was written when there was one board, and
-it aged the moment there were two: it named 拆補 and the methods refused
-beside it, counted the dates the pillars were checked over, and named the
-single open implementation the layout was compared against. Not one of those
-sentences survives a phase that adds a board with sources of its own. The page
-is now a heading saying the section is still being defined and nothing under
-it, which is the honest state — **a note that lags behind the engine
-misinforms exactly the reader it exists for**, because whoever opens it is the
-one person on the site who came to check rather than to read. A paragraph
-explaining the emptiness would be one more sentence to keep true.
+**Planned, and last on purpose.** `/[lang]/notes` is a heading in the footer
+with nothing under it. It used to say what the engine computes and how sure it
+is: it named 拆補 and the methods refused beside it, counted the dates the
+pillars were checked over, and named the single open implementation the layout
+was compared against. Not one of those sentences survived a second board.
+**A note that lags behind the engine misinforms exactly the reader it exists
+for**, because whoever opens it is the one person on the site who came to
+check rather than to read — so the page now says the section is still being
+defined, which is the honest state and the whole of it.
 
-**A summary is written after the thing it summarises.** Keeping it aligned
-phase by phase costs an edit in two languages at every change, to re-derive
-the same paragraph from the same register; leaving it here means writing it
-once, from `docs/sources.md`, which is where each number is entered as it
-arrives. **The register is not deferred with it.** The notes page is a reading
-of that register for somebody who will not open the repository; it is never
-where a number is first written down, and a phase that adds a quantity still
-owes `docs/sources.md` its entry the day it lands.
+**What the section is for is deferred with what it says.** It began as a
+summary of the engine's provenance and need not end as one: it is the only
+place here that is neither an instrument nor an address, and what this wants
+to say beside its instruments is not settled while the instruments are still
+arriving. So this phase fixes no contents — no list of the paragraphs it owes,
+no promise about which of them carry over. Doing that now would repeat the
+error the old page made, one phase earlier: written against an engine that has
+not stopped changing, it would be rewritten at every board, in two languages,
+from the same register it was derived from the first time. Decided once, at
+the end, it is written once.
 
-**What it has to say, per board where the boards differ.** The method that was
-implemented and what is refused rather than quietly substituted in its place —
-every parameter of § 3 that ships one value. How sure each number is, tiered
-as the engine actually is: checked against published astronomical fact,
-consistent with one open implementation, or read from texts with no runnable
-reference at all. What needs a question to have been asked and is therefore
-refused — the 用神, the ranking of palaces, the ordering of hours, the dating
-of an outcome, advice, and which palace stands for which part of a life. And
-why the hanzi are on the screen, which is the one paragraph that was never
-about a board and carries over as it stands.
-
-**What it must not become.** Not a course in the tradition, and not an apology
-for it. It describes this implementation — what was computed, from what, and
-with what confidence — and a reader who wants the doctrine is owed a source,
-not a summary of one written here.
+**The register is not deferred with it.** `docs/sources.md` is where each
+number is entered as it arrives, and the notes page is never where one is
+first written down. Whatever the section turns out to be, a phase that adds a
+quantity still owes the register its entry the day it lands — the page reads
+from it, for somebody who will not open the repository, and nothing upstream
+waits on the page to be decided.
 
 ---
 
@@ -2050,8 +2041,9 @@ getting it wrong costs most, because that is the one that hands a board to a
 model.
 
 **Phase 17 is not in that sequence either, and comes after all of it.** It is
-the only phase whose input is every other phase's output: the notes say what
-the engine computes and how sure it is, and that sentence cannot be finished
-while boards are still being added. Written early it has to be rewritten at
-each one; written last it is written once. Nothing waits on it, and it waits
-on everything.
+the only phase whose input is every other phase's output, and the only one
+whose subject is still open: what the notes section is for is decided together
+with what it says, at the end, when there is a finished thing to write beside.
+Written early it is written against a moving engine and rewritten at every
+board; written last it is written once. Nothing waits on it, and it waits on
+everything.

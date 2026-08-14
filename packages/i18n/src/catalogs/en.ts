@@ -640,10 +640,12 @@ export const en = {
   'footer.privacy': 'Privacy',
   'footer.notes': 'Notes',
 
-  // The section is deliberately empty until the engine stops moving: what is
-  // computed, how sure each number is and what is refused all change with
-  // every board added, and a note that lags behind the engine misinforms
-  // exactly the reader who came here to check. See PLAN.md § 4 phase 17.
+  // The section is empty on purpose, and what it is for is as open as what it
+  // says: a note written against an engine that is still gaining boards falls
+  // behind it, and misinforms exactly the reader who came here to check rather
+  // than to read. Both are settled at the end of the project, in one writing,
+  // rather than anticipated now and realigned at every change.
+  // See PLAN.md § 4 phase 17.
   'notes.title': 'Section still being defined',
 
   'privacy.title': 'Privacy',
