@@ -153,7 +153,10 @@ function officer(page: Almanac, t: Translator): string {
   // 鬼金 to anyone who has met it, and the planet is what ties the count to a
   // weekday and lets a reader catch it if it ever slipped.
   const lodge = `${page.lodge.hanzi}${page.lodge.planet.hanzi} ${page.lodge.pinyin} ${t(`label.lodge.${page.lodge.id}` as MessageKey)}`;
-  return `${name}  · ${page.day.hanzi}${doubled}  ·  ${lodge}`;
+  // The god carries its 吉 or 凶 as a `Pattern` does: the source names and
+  // weighs it in one line, and what it hangs on that — the 宜忌 — is not here.
+  const god = `${page.god.hanzi} ${page.god.pinyin} ${t(`label.daygod.${page.god.id}` as MessageKey)} ${page.god.valence.hanzi}`;
+  return `${name}  · ${page.day.hanzi}${doubled}  ·  ${lodge}  ·  ${god}`;
 }
 
 /**

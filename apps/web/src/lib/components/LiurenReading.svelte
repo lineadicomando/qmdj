@@ -158,6 +158,9 @@
       {#if page.doubled}({t('cli.value.jianchuDoubled')}){/if}
       · <span class="glyph">{page.lodge.hanzi}{page.lodge.planet.hanzi} {page.lodge.pinyin}</span>
       {t(`label.lodge.${page.lodge.id}` as MessageKey)}
+      · <span class="glyph">{page.god.hanzi} {page.god.pinyin}</span>
+      {t(`label.daygod.${page.god.id}` as MessageKey)}
+      <span class="glyph">{page.god.valence.hanzi}</span>
     </p>
   {/if}
 

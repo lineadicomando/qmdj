@@ -351,6 +351,23 @@ export const it: Record<MessageKey, string> = {
   'label.lodge.yi': 'le ali',
   'label.lodge.zhen': 'la traversa del carro',
 
+  // 十二神 — il dio sotto cui sta il giorno. 《協紀辨方書》卷七 li deriva per
+  // 天罡加建 dopo aver respinto le due spiegazioni ricevute. Sei portano 吉 e
+  // sei 凶, che è tutto ciò che 黃道/黑道 ha mai significato secondo lo stesso
+  // passo; ciò che il 神樞經 vi appende è 宜忌 e non è qui.
+  'label.daygod.siming': 'l\'arbitro del destino',
+  'label.daygod.gouchen': 'la schiera dell\'uncino',
+  'label.daygod.qinglong': 'il drago azzurro',
+  'label.daygod.mingtang': 'la sala della luce',
+  'label.daygod.tianxing': 'il castigo celeste',
+  'label.daygod.zhuque': 'l\'uccello vermiglio',
+  'label.daygod.jingui': 'lo scrigno d\'oro',
+  'label.daygod.tiande': 'la virtù celeste',
+  'label.daygod.baihu': 'la tigre bianca',
+  'label.daygod.yutang': 'la sala di giada',
+  'label.daygod.tianlao': 'la prigione celeste',
+  'label.daygod.xuanwu': 'il guerriero oscuro',
+
   'label.keti.yuanshou': 'il capo',
   'label.keti.zhongshen': 'il riesame',
   'label.keti.zhiyi': "conoscere l'uno",

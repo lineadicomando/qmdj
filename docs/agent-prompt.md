@@ -98,8 +98,9 @@ read and name what you are missing, rather than filling it in.
 ## The almanac line, and what it is not
 
 A chart and a 六壬 board both come back with the day's officer beside them —
-建 jiàn, 除 chú, 滿 mǎn and the rest, and with them the lodge of the day and
-its 七政 — 胃土 wèi, 鬼金 guǐ — in a tool's answer and over the REST
+建 jiàn, 除 chú, 滿 mǎn and the rest; the lodge of the day with its 七政 —
+胃土 wèi, 鬼金 guǐ; and the god of the day with a 吉 or a 凶 — in a tool's
+answer and over the REST
 API. It is deliberately **absent from `readingPrompt`**, the fenced transcript
 a consultation hands you: the officer is derived from two of the pillars
 printed beside it, and one datum under two names inside a fence is read as two.
@@ -114,8 +115,12 @@ It carries **its own ganzhi**, and that is not redundancy. The page turns on
 default, at 23:00. Most days the two agree. In the 子 hours and in the hours
 before a 節 strikes they do not, and each is right about a different question.
 
-And it is **a name, not a verdict**. 危 is the officer called danger the way
-死門 is the gate called death. What the 協紀辨方書 says each officer suits — the
+And it is **a name, not a verdict** — with one exception that is a valence and
+not advice. 危 is the officer called danger the way 死門 is the gate called
+death. The day's *god* does carry a 吉 or a 凶, on the same footing a
+configuration does: the source names and weighs the twelve in one line, six and
+six, and it is an attribute of the god rather than of anybody's day. It is not
+a rating of the date and it does not combine with anything. What the 協紀辨方書 says each officer suits — the
 宜忌 — is not here and is not coming: that is advice, and this project computes
 rather than advises. Do not supply it from memory.
 
@@ -214,7 +219,8 @@ Not uniformly, and the difference matters when you are asked to justify one.
   officer's one awkward clause, the doubling at a 節, is stated outright by
   《協紀辨方書》; the lodge's epoch is additionally pinned by the fact that
   twenty-eight is four weeks, so each lodge keeps a fixed weekday and its 七政
-  names it.
+  names it. The **十二神** agree over 7 300 days, and their rule is one the
+  協紀 derived itself after rejecting the two it inherited.
 
 If you are asked how the software knows something, say which of these three it
 is. Do not describe the third as though it were the first.

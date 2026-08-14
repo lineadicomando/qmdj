@@ -371,6 +371,23 @@ export const en = {
   'label.lodge.yi': 'the wings',
   'label.lodge.zhen': 'the chariot crossbar',
 
+  // 十二神 — the god a day stands under. 《協紀辨方書》卷七 derives them by
+  // 天罡加建 after rejecting the two accounts it inherited. Six carry 吉 and
+  // six 凶, which the same passage says is all 黃道/黑道 ever meant; what the
+  // 神樞經 hangs on that is 宜忌 and is not here.
+  'label.daygod.siming': 'the arbiter of fate',
+  'label.daygod.gouchen': 'the hook array',
+  'label.daygod.qinglong': 'the azure dragon',
+  'label.daygod.mingtang': 'the hall of light',
+  'label.daygod.tianxing': 'the celestial punishment',
+  'label.daygod.zhuque': 'the vermilion bird',
+  'label.daygod.jingui': 'the golden coffer',
+  'label.daygod.tiande': 'the celestial virtue',
+  'label.daygod.baihu': 'the white tiger',
+  'label.daygod.yutang': 'the jade hall',
+  'label.daygod.tianlao': 'the celestial prison',
+  'label.daygod.xuanwu': 'the dark warrior',
+
   'label.keti.yuanshou': 'the head',
   'label.keti.zhongshen': 'the second hearing',
   'label.keti.zhiyi': 'knowing the one',

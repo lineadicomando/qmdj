@@ -860,6 +860,48 @@ cannot track a count of days once the months differ in length, so the folk rule
 and the cycle it claims to come from have come apart. The numbers here say by
 how much.
 
+### 十二神 — the block where the source does its own work
+
+The one entry here whose rule the 協紀 did not inherit but **derived**, after
+rejecting the two accounts it was handed. 卷七 quotes 曹震圭's derivation from
+納甲 and calls it 荒唐不經; it quotes 邵泰衢's attempt to pair the twelve with
+建除 and says it cannot work, since six of the gods are yang and six yin and
+建除 has no such split — 徒多遁詞. Then:
+
+> 今按司命即是子，勾陳即是丑，青龍即是寅，明堂即是卯，天刑即是辰，朱雀即是巳，
+> 金匱即是午，天德即是未，白虎即是申，玉堂即是酉，天牢即是戌，元武即是亥。
+> **其法以天罡加於建上**，視各神所臨之辰，神吉則吉，神凶則凶。
+
+Each god simply *is* a branch, and the plate is turned by laying the 天罡 on
+the 建. The 天罡 is the 厭對, the branch facing the 月厭, so it is `6 − month`;
+laying it on the month branch turns the seated twelve by `month − 天罡`, and
+`dayGodOf` is that in one line. The source works three months out in full and
+all three fall out of it — 卯 and 酉 stand still (it calls that 伏吟), 子 and
+午 turn half way (反吟), 寅 and 申 agree. **Those three worked months are the
+test**, asserted from the text rather than from the reference.
+
+| | | |
+|---|---|---|
+| against `lunar-javascript`, 2010–2029 | 7 300 / 7 300 | **100 %** |
+
+**The valence travels; 黃道 and 黑道 do not.** Six gods carry 吉 and six 凶,
+named and weighed in one line of 《神樞經》 as quoted there, which is exactly
+the case `Pattern`'s valence was written for: an attribute of the god, fixed,
+never of anybody's situation. What the engine does **not** repeat is the pair
+of words usually used for it, because the same passage empties them:
+
+> 又此司命以下十二神向以黄道黑道命之，今按黄道為日行躔度，無只以子午卯酉寅未
+> 為黄道之理；若黑道之説葢不見經傳……然則此所為黄黑道云者，**亦即吉凶之别名
+> 而非有深義**決矣。
+
+A source that tells you its own vocabulary is a synonym has told you which of
+the two to carry. And the 宜忌 in the same 神樞經 passage —
+「所值之日皆宜興衆務」, 「皆不可興土功營屋舍移徙逺行嫁娶出軍」 — is advice and
+stays where the officers' 宜忌 stayed.
+
+The 四庫 text writes 元武 throughout, avoiding the 玄 of the reigning emperor's
+name. The god is 玄武, as the 六壬 board already has it.
+
 ### What the source refuses, and what that cost
 
 The phase this block belongs to named 二十八宿值日 as its cheap middle third,

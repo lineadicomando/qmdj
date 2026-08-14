@@ -173,6 +173,7 @@ describe('compute_qimen_chart', () => {
     const text = await call('compute_qimen_chart', BEIJING);
 
     expect(text).toContain('定 dìng');
+    expect(text).toContain('天刑 tiānxíng');
     expect(text).toContain('庚戌');
   });
 

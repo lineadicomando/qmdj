@@ -1,5 +1,6 @@
 import { sunCrossing, type EphemerisContext } from './ephemeris.js';
 import { dayGanzhi, BRANCHES, type Branch, type Ganzhi } from './ganzhi.js';
+import { VALENCE, type Valence } from './dunjia/patterns.js';
 import { calendarDayNumber } from './lunar.js';
 import { jieAt, SOLAR_TERMS, type SolarTermDefinition } from './solar-terms.js';
 
@@ -151,6 +152,82 @@ export function lodgeOn(dayNumber: number): Lodge {
   return LODGES[(dayNumber + LODGE_EPOCH_OFFSET) % 28] as Lodge;
 }
 
+
+export type DayGodId =
+  | 'siming' | 'gouchen' | 'qinglong' | 'mingtang'
+  | 'tianxing' | 'zhuque' | 'jingui' | 'tiande'
+  | 'baihu' | 'yutang' | 'tianlao' | 'xuanwu';
+
+export interface DayGod {
+  id: DayGodId;
+  hanzi: string;
+  pinyin: string;
+  /**
+   * 黃道 or 黑道, which the source says is only another name for this.
+   *
+   * 《協紀辨方書》卷七 refuses to let the pair mean more than it does:
+   * 「黄道為日行躔度，無只以子午卯酉寅未為黄道之理；若黑道之説葢不見經傳……
+   * 然則此所為黄黑道云者，亦即吉凶之别名而非有深義決矣」 — the yellow path
+   * and the black path are a second name for 吉 and 凶 and nothing further.
+   * So the valence is carried and the two words are not: naming a day 黃道
+   * would be this engine repeating a term its own source empties.
+   *
+   * It travels for the reason `Pattern`'s does — named and weighed in one
+   * line of one text, six and six, an attribute of the god and never of
+   * anybody's situation. What the 神樞經 hangs on it in the same passage —
+   * 「所值之日皆宜興衆務」, 「皆不可興土功營屋舍移徙逺行嫁娶出軍」 — is 宜忌
+   * and does not travel.
+   */
+  valence: Valence;
+}
+
+/**
+ * 十二神, seated on the branches they *are*.
+ *
+ * 《協紀辨方書》卷七 gives this list after rejecting the two accounts it
+ * inherited — 曹震圭's derivation from 納甲, which it calls 荒唐不經, and
+ * 邵泰衢's attempt to pair the twelve with 建除, which it says cannot work
+ * because six are yang and six are yin. What it puts in their place is
+ * 「今按司命即是子，勾陳即是丑，青龍即是寅，明堂即是卯，天刑即是辰，朱雀即是
+ * 巳，金匱即是午，天德即是未，白虎即是申，玉堂即是酉，天牢即是戌，元武即是
+ * 亥」 — each god simply *is* a branch — 「其法以天罡加於建上」.
+ *
+ * The 四庫 text writes 元武, avoiding the 玄 of the reigning emperor's name.
+ * The god is 玄武, as the 六壬 board already has it.
+ */
+const DAY_GODS: readonly DayGod[] = (
+  [
+    ['siming', '司命', 'sīmìng', 'ji'], ['gouchen', '勾陳', 'gōuchén', 'xiong'],
+    ['qinglong', '青龍', 'qīnglóng', 'ji'], ['mingtang', '明堂', 'míngtáng', 'ji'],
+    ['tianxing', '天刑', 'tiānxíng', 'xiong'], ['zhuque', '朱雀', 'zhūquè', 'xiong'],
+    ['jingui', '金匱', 'jīnguì', 'ji'], ['tiande', '天德', 'tiāndé', 'ji'],
+    ['baihu', '白虎', 'báihǔ', 'xiong'], ['yutang', '玉堂', 'yùtáng', 'ji'],
+    ['tianlao', '天牢', 'tiānláo', 'xiong'], ['xuanwu', '玄武', 'xuánwǔ', 'xiong'],
+  ] as const
+).map(([id, hanzi, pinyin, valence]) => ({
+  id: id as DayGodId,
+  hanzi,
+  pinyin,
+  valence: VALENCE[valence] as Valence,
+}));
+
+/**
+ * The god a day stands under, from the month's branch and the day's.
+ *
+ * 「其法以天罡加於建上」. The 天罡 is the 厭對, the branch facing the 月厭, so
+ * it is `(6 − month)`; laying it on the 建 turns the seated twelve by
+ * `month − 天罡`, and a day branch then reads whichever god that turn has
+ * brought to it. Two multiplications of the month branch is the whole of it,
+ * and the source's own worked months fall out — 卯 and 酉 stand still, which
+ * it calls 伏吟, and 子 and 午 turn half way, which it calls 反吟.
+ */
+export function dayGodOf(monthBranch: Branch, dayBranch: Branch): DayGod {
+  const seat = (((dayBranch.index - 2 * monthBranch.index + 6) % 12) + 12) % 12;
+  return DAY_GODS[seat] as DayGod;
+}
+
+export const DAY_GOD_LIST: readonly DayGod[] = DAY_GODS;
+
 export interface Almanac {
   /** The officer holding the day. */
   officer: Officer;
@@ -162,6 +239,8 @@ export interface Almanac {
   jie: SolarTermDefinition;
   /** 二十八宿值日 — the lodge holding the day, a count and never a date. */
   lodge: Lodge;
+  /** 十二神 — the god the day stands under, by 天罡加建. */
+  god: DayGod;
   /**
    * True on the second of the two days a 交節 gives the same officer.
    *
@@ -202,6 +281,7 @@ export function almanacAt(julianDayUT: number, context: EphemerisContext): Alman
   return {
     officer: officerOf(monthBranch, day.branch),
     lodge: lodgeOn(dayNumber),
+    god: dayGodOf(monthBranch, day.branch),
     day,
     monthBranch,
     jie: jie.term,

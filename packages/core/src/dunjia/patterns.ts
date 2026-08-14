@@ -62,7 +62,7 @@ export interface Valence {
   pinyin: string;
 }
 
-const VALENCE: Record<ValenceId, Valence> = {
+export const VALENCE: Record<ValenceId, Valence> = {
   ji: { id: 'ji', hanzi: '吉', pinyin: 'jí' },
   xiong: { id: 'xiong', hanzi: '凶', pinyin: 'xiōng' },
   jixiong: { id: 'jixiong', hanzi: '吉凶', pinyin: 'jíxiōng' },

@@ -2077,7 +2077,7 @@ stand in this file and in `liuren.ts`'s comments, not in the register
 CLAUDE.md calls mandatory. A third layer's tables do not land in a register
 the second board never entered.
 
-**建除十二神 and 二十八宿值日 are built; the 神煞 are not.** `almanac.ts`, `almanacAt`, and the
+**建除十二神, 二十八宿值日 and the 十二神 are built; the rest of the 神煞 are not.** `almanac.ts`, `almanacAt`, and the
 page beside the pillars on the CLI, the API, the MCP tools, the chart page and
 the 六壬 page. Agreement with `lunar-javascript` on **14 600 / 14 600 days of
 2000 to 2039** for the officer and again for the lodge with its 七政; the 480
@@ -2101,6 +2101,24 @@ dates, this engine's 室 days match **2 of 78** over six years — and that is t
 complaint: a list of fixed lunar dates cannot track a count of days once months
 differ in length. The passage is in 辨訛 because the folk rule has come apart
 from the cycle it claims, and the engine now says by how much.
+
+**The 十二神 are the block that repaid the choice of source.** 卷七 does not
+transmit their rule, it *derives* one — after quoting 曹震圭's 納甲 account and
+calling it 荒唐不經, and 邵泰衢's attempt to pair the twelve with 建除 and
+showing it cannot work. What it puts there instead is 「其法以天罡加於建上」,
+each god seated on the branch it *is*, and that is one line of arithmetic which
+agrees with the reference on 7 300 / 7 300 days. The three months the source
+works out in full are the test, asserted from the text rather than from the
+reference. **This is what «a source that shows its own reasoning is worth more
+than three that agree» was a bet on, and it paid.**
+
+**And it settled a valence question by emptying it.** The twelve are usually
+called 黃道 and 黑道, and this engine carries neither word: the same passage
+says 「此所為黄黑道云者，亦即吉凶之别名而非有深義決矣」 — the pair is a
+synonym for 吉 and 凶 and nothing more. So the fortune travels as a `Valence`,
+on the footing `Pattern` established, and the vocabulary the source empties
+does not. The 宜忌 hung on the twelve in the same passage stays out with the
+officers'.
 
 **One convention was extended, and only by one case.** 尾 wěi, 危 wēi and 胃
 wèi keep tone numbers, which is the existing rule. 壁 and 畢 are both bì in the

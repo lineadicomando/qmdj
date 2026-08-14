@@ -111,7 +111,7 @@ describe('GET /api/chart', () => {
     // with its own ganzhi rather than left to be read off the day pillar.
     const answer = (
       await call(chart, 'date=2024-06-15&timezone=Asia/Shanghai&trueSolarTime=false')
-    ).body as { chart: { moment: { almanac: { officer: { id: string }; day: { hanzi: string }; doubled: boolean; lodge: { id: string; planet: { hanzi: string } } } } } };
+    ).body as { chart: { moment: { almanac: { officer: { id: string }; day: { hanzi: string }; doubled: boolean; lodge: { id: string; planet: { hanzi: string } }; god: { id: string; valence: { id: string } } } } } };
 
     expect(answer.chart.moment.almanac.officer.id).toBe('ding');
     expect(answer.chart.moment.almanac.day.hanzi).toBe('庚戌');
@@ -120,6 +120,10 @@ describe('GET /api/chart', () => {
     // ties it to a weekday and lets a reader catch an epoch that ever slipped.
     expect(answer.chart.moment.almanac.lodge.id).toBe('wei4');
     expect(answer.chart.moment.almanac.lodge.planet.hanzi).toBe('土');
+    // The god carries its fortune the way a configuration does, and nothing
+    // about what the day is said to suit.
+    expect(answer.chart.moment.almanac.god.id).toBe('tianxing');
+    expect(answer.chart.moment.almanac.god.valence.id).toBe('xiong');
   });
 
   it('leaves the longitude correction at zero when given only a timezone', async () => {

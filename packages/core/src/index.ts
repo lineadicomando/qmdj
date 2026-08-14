@@ -120,9 +120,17 @@ export {
 
 export {
   almanacAt,
+  dayGodOf,
+  lodgeOn,
   officerOf,
+  DAY_GOD_LIST,
+  LODGES,
   OFFICERS,
   type Almanac,
+  type DayGod,
+  type DayGodId,
+  type Lodge,
+  type LodgeId,
   type Officer,
   type OfficerId,
 } from './almanac.js';

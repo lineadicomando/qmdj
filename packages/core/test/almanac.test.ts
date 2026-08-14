@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { almanacAt, lodgeOn, officerOf, LODGES, OFFICERS } from '../src/almanac.js';
+import { almanacAt, dayGodOf, lodgeOn, officerOf, DAY_GOD_LIST, LODGES, OFFICERS } from '../src/almanac.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
 import { BRANCHES, type Branch } from '../src/ganzhi.js';
 import { toJulianDay } from '../src/time.js';
@@ -152,6 +152,30 @@ describe('建除十二神', () => {
     expect(before.officer.hanzi).toBe(onTheJie.officer.hanzi);
     expect(before.lodge.hanzi).not.toBe(onTheJie.lodge.hanzi);
     expect(onTheJie.lodge.hanzi).toBe('婁');
+  });
+
+  it("reproduces the source's own worked months for the twelve gods", () => {
+    // 《協紀辨方書》卷七 works three cases out in full. They are the test.
+    // 寅月: 「寅天刑卯朱雀辰金匱巳天德午白虎未玉堂申天牢酉元武戌司命亥勾陳子青龍丑明堂」
+    const run = (month: string): string =>
+      BRANCHES.map((d) => dayGodOf(branch(month), d).hanzi).join('');
+
+    // Written from 子 round to 亥, which is the order BRANCHES runs in.
+    expect(run('寅')).toBe('青龍明堂天刑朱雀金匱天德白虎玉堂天牢玄武司命勾陳');
+    // 卯月 and 酉月 stand still — the source calls it 伏吟: 「卯明堂辰天刑…」
+    expect(run('卯')).toBe('司命勾陳青龍明堂天刑朱雀金匱天德白虎玉堂天牢玄武');
+    // 午月 and 子月 turn half way — 反吟: 「午司命未勾陳申青龍…」
+    expect(run('午')).toBe('金匱天德白虎玉堂天牢玄武司命勾陳青龍明堂天刑朱雀');
+    expect(run('申')).toBe(run('寅'));
+    expect(run('酉')).toBe(run('卯'));
+  });
+
+  it('carries the fortune of the god and none of its errands', () => {
+    // Six 吉 and six 凶 — 《神樞經》 by way of 卷七. The valence travels as
+    // `Pattern`'s does; the 宜忌 in the same passage does not.
+    const lucky = DAY_GOD_LIST.filter((g) => g.valence.id === 'ji').map((g) => g.hanzi);
+    expect(lucky).toEqual(['司命', '青龍', '明堂', '金匱', '天德', '玉堂']);
+    expect(DAY_GOD_LIST.filter((g) => g.valence.id === 'xiong')).toHaveLength(6);
   });
 
   it('carries the 節 that opened the month it counted from', () => {
