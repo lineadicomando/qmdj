@@ -1,6 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   chartQuery,
+  defaultInterval,
   intervalQuery,
   keptKey,
   keptParam,
@@ -146,6 +147,28 @@ describe('the hours set aside', () => {
       { start: '2026-09-01T04:10', palace: 'qian' },
     ]);
     expect(readKept(address(keptParam(kept)))).toEqual(kept);
+  });
+});
+
+describe('the interval offered before one is asked', () => {
+  const zone = process.env['TZ'];
+
+  afterEach(() => {
+    vi.useRealTimers();
+    if (zone === undefined) delete process.env['TZ'];
+    else process.env['TZ'] = zone;
+  });
+
+  it("opens on the reader's own today, not on UTC's", () => {
+    // 03:00 UTC is still yesterday evening in New York: `toISOString` read
+    // the UTC date, and the form offered a `from` of tomorrow. The week it
+    // closes on crosses a summer-time change (8 March 2026), so this also
+    // holds `to` to seven calendar days rather than 168 hours.
+    process.env['TZ'] = 'America/New_York';
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-05T03:00:00Z'));
+
+    expect(defaultInterval()).toEqual({ from: '2026-03-04', to: '2026-03-11' });
   });
 });
 

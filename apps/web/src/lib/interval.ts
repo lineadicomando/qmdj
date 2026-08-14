@@ -257,10 +257,20 @@ export function chartQuery(
   return params.toString();
 }
 
-/** A week from today, which is the interval somebody arriving here means. */
+/**
+ * A week from today, which is the interval somebody arriving here means.
+ *
+ * Today by the clock on the wall, not by UTC: `toISOString` read the UTC
+ * date, and a reader west of Greenwich in the evening was offered a `from`
+ * of tomorrow. Plain `Date` accessors, because this runs in the browser and
+ * the client imports no calendar library — and `setDate` rather than adding
+ * milliseconds, so a summer-time change cannot shave the week short.
+ */
 export function defaultInterval(): { from: string; to: string } {
   const today = new Date();
-  const week = new Date(today.getTime() + 7 * 86_400_000);
-  const iso = (date: Date): string => date.toISOString().slice(0, 10);
+  const week = new Date(today);
+  week.setDate(week.getDate() + 7);
+  const iso = (date: Date): string =>
+    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   return { from: iso(today), to: iso(week) };
 }
