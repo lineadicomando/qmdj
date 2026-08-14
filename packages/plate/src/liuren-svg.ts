@@ -33,7 +33,7 @@ import type {
  */
 
 /** Side of the square, in pixels, unless told otherwise. */
-export const DEFAULT_LIUREN_SIZE = 720;
+export const DEFAULT_LIUREN_SIZE = 900;
 
 /**
  * Where each branch sits on the ring, as (row, column) of a four by four.
@@ -65,7 +65,7 @@ export function renderLiurenSvg(board: PlateLiuren, options: PlateLiurenOptions 
   // intrinsic size and nothing else — as on the other board.
   const margin = size * 0.045;
   const headingRoom = options.heading ? size * 0.055 : 0;
-  const upper = size * 0.26;
+  const upper = size * 0.3;
   const ring = size - margin * 2;
   const cell = ring / 4;
   const foot = board.unverified && labels.unverified ? size * 0.05 : 0;
@@ -80,6 +80,7 @@ export function renderLiurenSvg(board: PlateLiuren, options: PlateLiurenOptions 
       .qmdj { font-family: ${FONT_STACK}; }
       .qmdj text { fill: var(--qmdj-ink); }
       .qmdj .faint { fill: var(--qmdj-faint); }
+      .qmdj .word { fill: var(--qmdj-word); }
       .qmdj .rule { stroke: var(--qmdj-rule); fill: none; }
       .qmdj .ground { fill: var(--qmdj-ground); }
     </style>`,
@@ -92,7 +93,7 @@ export function renderLiurenSvg(board: PlateLiuren, options: PlateLiurenOptions 
   }
 
   parts.push(...upperBlock(board, labels, { size, margin, top: margin + headingRoom, height: upper }));
-  parts.push(...ringOf(board, { left: margin, top: ringTop, cell }));
+  parts.push(...ringOf(board, labels, { left: margin, top: ringTop, cell }));
   parts.push(...middle(board, labels, { left: margin, top: ringTop, cell }));
 
   if (foot > 0) {
@@ -121,72 +122,156 @@ function upperBlock(
   const parts: string[] = [];
   const { size, margin, top, height } = box;
 
-  const glyph = size * 0.044;
-  const small = size * 0.022;
+  const glyph = size * 0.04;
+  const small = size * 0.019;
   const column = (size - margin * 2) / 9;
 
   // 四課, right to left: the first lesson takes the rightmost column, which is
-  // where a reader of the tradition looks for it.
+  // where a reader of the tradition looks for it. What stands over, what it
+  // stands on, and a word under each — the lower of the first lesson is the
+  // day stem and takes a stem's word, which is why the two maps are separate.
   board.courses.forEach((course: PlateCourse, index) => {
     const x = size - margin - column * (index + 0.5);
-    parts.push(text(x, top + height * 0.34, course.upper.hanzi, glyph));
-    parts.push(text(x, top + height * 0.66, course.lower.hanzi, glyph, 'faint'));
-    parts.push(text(x, top + height * 0.9, String(course.number), small, 'faint'));
+    parts.push(text(x, top + height * 0.22, course.upper.hanzi, glyph));
+    parts.push(...worded(x, top + height * 0.33, labels.branch?.[course.upper.id], small, column * 0.95));
+    parts.push(text(x, top + height * 0.62, course.lower.hanzi, glyph, 'faint'));
+    parts.push(
+      ...worded(
+        x,
+        top + height * 0.73,
+        labels.branch?.[course.lower.id] ?? labels.stem?.[course.lower.id],
+        small,
+        column * 0.95,
+      ),
+    );
+    parts.push(text(x, top + height * 0.95, String(course.number), small, 'faint'));
   });
 
-  // 三傳, downwards on the left, each on **one** baseline: the name of the
+  // 三傳, downwards on the left, each on one baseline: the name of the
   // position, the branch, the general riding it, and the stem covering it —
-  // or the word for the absence of one, which is what 空亡 is.
+  // or the word for the absence of one, which is what 空亡 is. Each name takes
+  // its word underneath, so the picture says in the reader's own language
+  // what it says in glyphs.
   const rows = board.transmissions.length;
   board.transmissions.forEach((transmission: PlateTransmission, index) => {
-    const y = top + height * (0.3 + (index * 0.56) / Math.max(1, rows - 1));
+    // Three rows over the block, with the room a two-line word needs left
+    // under each: `Metallo yin` and `il serpente alato` are what a European
+    // language does to four characters.
+    const y = top + height * (0.18 + (index * 0.6) / Math.max(1, rows - 1));
     let x = margin;
 
     const name = labels.transmission?.[transmission.position];
     if (name) parts.push(text(x, y, name, small, 'faint', 'start'));
-    x += column * 1.15;
+    x += column * 1.1;
 
     parts.push(text(x, y, transmission.branch.hanzi, glyph, undefined, 'start'));
-    x += column * 0.8;
-    parts.push(text(x, y, transmission.general.hanzi, small, 'faint', 'start'));
-    x += column * 1.05;
+    parts.push(...worded(x, y + small * 1.5, labels.branch?.[transmission.branch.id], small, column, 'start'));
+    x += column * 0.85;
+
+    parts.push(text(x, y, transmission.general.hanzi, small * 1.3, 'faint', 'start'));
     parts.push(
-      text(
-        x,
-        y,
-        transmission.hiddenStem ? transmission.hiddenStem.hanzi : (labels.empty ?? ''),
-        small,
-        'faint',
-        'start',
-      ),
+      ...worded(x, y + small * 1.5, labels.general?.[transmission.general.id], small, column * 1.7, 'start'),
     );
+    x += column * 1.75;
+
+    if (transmission.hiddenStem) {
+      parts.push(text(x, y, transmission.hiddenStem.hanzi, small * 1.3, 'faint', 'start'));
+      parts.push(
+        ...worded(x, y + small * 1.5, labels.stem?.[transmission.hiddenStem.id], small, column * 1.25, 'start'),
+      );
+    } else if (labels.empty) {
+      parts.push(text(x, y, labels.empty, small, 'faint', 'start'));
+    }
   });
 
   return parts;
 }
 
-/** The twelve palaces, and what has come to stand on each. */
-function ringOf(board: PlateLiuren, box: { left: number; top: number; cell: number }): string[] {
+/**
+ * The twelve palaces, and what has come to stand on each.
+ *
+ * Three registers to a cell, and only two of them take a word. The general
+ * and the branch standing over the palace are what the board *says*, and a
+ * reader who does not read Chinese needs both said — the same bargain the
+ * chart strikes with its stars and its stems. The palace's own branch takes
+ * none: it is the ground, it never moves, and the twelve of them in order are
+ * the frame rather than the news. The chart's compass ring is written in
+ * hanzi alone for exactly that reason.
+ */
+function ringOf(
+  board: PlateLiuren,
+  labels: PlateLiurenLabels,
+  box: { left: number; top: number; cell: number },
+): string[] {
   const parts: string[] = [];
   const { left, top, cell } = box;
+  const room = cell * 0.88;
 
   for (let branch = 0; branch < 12; branch += 1) {
     const [row, column] = SEAT[branch] as readonly [number, number];
     const x = left + column * cell;
     const y = top + row * cell;
+    const middleX = x + cell / 2;
 
     parts.push(
       `<rect x="${round(x)}" y="${round(y)}" width="${round(cell)}" height="${round(cell)}" class="rule"/>`,
     );
-    // The general rides above, the 天盤 branch stands in the middle at full
-    // size, and the palace's own branch sits under it faintly: the ground is
-    // what the reader orients by, not what they read.
-    parts.push(text(x + cell / 2, y + cell * 0.26, board.generals[branch]?.hanzi ?? '', cell * 0.2, 'faint'));
-    parts.push(text(x + cell / 2, y + cell * 0.62, board.heaven[branch]?.hanzi ?? '', cell * 0.34));
-    parts.push(text(x + cell / 2, y + cell * 0.88, HANZI[branch] as string, cell * 0.18, 'faint'));
+
+    const general = board.generals[branch];
+    const over = board.heaven[branch];
+
+    // The rhythm is set by the branch, which is the headline: at 0.24 of the
+    // cell its glyph rises about 0.19 above its own baseline, so the register
+    // over it has to have finished by 0.45 — and a general's word runs to two
+    // lines often enough (`the celestial queen`, `the six harmonies`) that the
+    // room for the second is reserved rather than hoped for.
+    parts.push(text(middleX, y + cell * 0.145, general?.hanzi ?? '', cell * 0.13, 'faint'));
+    parts.push(...worded(middleX, y + cell * 0.26, labels.general?.[general?.id ?? ''], cell * 0.082, room));
+    parts.push(text(middleX, y + cell * 0.68, over?.hanzi ?? '', cell * 0.24));
+    parts.push(...worded(middleX, y + cell * 0.8, labels.branch?.[over?.id ?? ''], cell * 0.082, room));
+    parts.push(text(middleX, y + cell * 0.95, HANZI[branch] as string, cell * 0.115, 'faint'));
   }
 
   return parts;
+}
+
+/**
+ * A word under a name, on at most two lines.
+ *
+ * Two and never three: a third would run into the register below it, and the
+ * register below it is another name. Where no split leaves both halves inside
+ * the width the word comes back whole and is shrunk to fit, which is the only
+ * answer left for a language that puts `the winter snake, eyes covered` where
+ * the hanzi put four characters.
+ */
+function worded(
+  x: number,
+  y: number,
+  word: string | undefined,
+  size: number,
+  room: number,
+  anchor: 'start' | 'middle' = 'middle',
+): string[] {
+  if (!word) return [];
+  const lines = broken(word, size, room);
+  return lines.map((line, index) =>
+    text(x, y + index * size * 1.15, line, fitted(line, size, room), 'word', anchor),
+  );
+}
+
+function broken(word: string, size: number, room: number): string[] {
+  if (fitted(word, size, room) === size) return [word];
+  const spaces = [...word].flatMap((character, index) => (character === ' ' ? [index] : []));
+  if (spaces.length === 0) return [word];
+
+  // The split that leaves the two halves most nearly equal, so a wrapped word
+  // reads as a block rather than as a line with a crumb under it.
+  const middle = word.length / 2;
+  const at = spaces.reduce((best, index) =>
+    Math.abs(index - middle) < Math.abs(best - middle) ? index : best,
+  );
+  const halves = [word.slice(0, at), word.slice(at + 1)];
+  return halves.every((half) => fitted(half, size, room) === size) ? halves : [word];
 }
 
 /**

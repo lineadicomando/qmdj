@@ -79,6 +79,9 @@ export function chartLabels(t: Translator): ChartLabels {
  */
 export interface LiurenLabels {
   general: Record<string, string>;
+  /** The twelve branches and the ten stems, for the drawing and the page. */
+  branch: Record<string, string>;
+  stem: Record<string, string>;
   rule: Record<string, string>;
   keti: Record<string, string>;
   transmission: Record<string, string>;
@@ -92,6 +95,12 @@ export function liurenLabels(t: Translator): LiurenLabels {
   return {
     general: Object.fromEntries(
       GENERALS.map((general) => [general.id, t(`label.general.${general.id}` as MessageKey)]),
+    ),
+    branch: Object.fromEntries(
+      BRANCHES.map((branch) => [branch.id, t(`label.branch.${branch.id}` as MessageKey)]),
+    ),
+    stem: Object.fromEntries(
+      STEMS.map((stem) => [stem.id, t(`label.stem.${stem.id}` as MessageKey)]),
     ),
     rule: Object.fromEntries(
       Object.keys(LIUREN_RULES).map((id) => [id, t(`label.liurenRule.${id}` as MessageKey)]),

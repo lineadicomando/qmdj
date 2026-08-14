@@ -13,32 +13,39 @@ const BOARD: PlateLiuren = {
   yuejiang: { hanzi: '大吉', branch: { hanzi: '丑', index: 1 } },
   day: { hanzi: '丁未' },
   hour: { hanzi: '巳', index: 5 },
-  heaven: ['申', '酉', '戌', '亥', '子', '丑', '寅', '卯', '辰', '巳', '午', '未'].map(
-    (hanzi, index) => ({ hanzi, index }),
-  ),
+  heaven: [
+    ['申', 'shen'], ['酉', 'you'], ['戌', 'xu'], ['亥', 'hai'],
+    ['子', 'zi'], ['丑', 'chou'], ['寅', 'yin'], ['卯', 'mao'],
+    ['辰', 'chen'], ['巳', 'si'], ['午', 'wu'], ['未', 'wei'],
+  ].map(([hanzi, id], index) => ({ hanzi: hanzi as string, id: id as string, index })),
   generals: ['玄武', '太陰', '天后', '貴人', '螣蛇', '朱雀', '六合', '勾陳', '青龍', '天空', '白虎', '太常'].map(
     (hanzi, i) => ({ hanzi, id: `g${i}` }),
   ),
   courses: [
-    { number: 1, upper: { hanzi: '卯' }, lower: { hanzi: '丁' } },
-    { number: 2, upper: { hanzi: '亥' }, lower: { hanzi: '卯' } },
-    { number: 3, upper: { hanzi: '卯' }, lower: { hanzi: '未' } },
-    { number: 4, upper: { hanzi: '亥' }, lower: { hanzi: '卯' } },
+    { number: 1, upper: { hanzi: '卯', id: 'mao' }, lower: { hanzi: '丁', id: 'ding' } },
+    { number: 2, upper: { hanzi: '亥', id: 'hai' }, lower: { hanzi: '卯', id: 'mao' } },
+    { number: 3, upper: { hanzi: '卯', id: 'mao' }, lower: { hanzi: '未', id: 'wei' } },
+    { number: 4, upper: { hanzi: '亥', id: 'hai' }, lower: { hanzi: '卯', id: 'mao' } },
   ],
   transmissions: [
-    { position: 'chu', branch: { hanzi: '卯' }, general: { hanzi: '勾陳', id: 'gouchen' }, empty: true },
+    {
+      position: 'chu',
+      branch: { hanzi: '卯', id: 'mao' },
+      general: { hanzi: '勾陳', id: 'gouchen' },
+      empty: true,
+    },
     {
       position: 'zhong',
-      branch: { hanzi: '亥' },
+      branch: { hanzi: '亥', id: 'hai' },
       general: { hanzi: '貴人', id: 'guiren' },
-      hiddenStem: { hanzi: '辛' },
+      hiddenStem: { hanzi: '辛', id: 'xin' },
       empty: false,
     },
     {
       position: 'mo',
-      branch: { hanzi: '未' },
+      branch: { hanzi: '未', id: 'wei' },
       general: { hanzi: '太常', id: 'taichang' },
-      hiddenStem: { hanzi: '丁' },
+      hiddenStem: { hanzi: '丁', id: 'ding' },
       empty: false,
     },
   ],
@@ -52,7 +59,7 @@ describe('the Liu Ren drawing', () => {
   it('is a square-ish SVG with a viewBox', () => {
     expect(svg.startsWith('<svg')).toBe(true);
     expect(svg.trimEnd().endsWith('</svg>')).toBe(true);
-    expect(svg).toMatch(/viewBox="0 0 720 \d/);
+    expect(svg).toMatch(/viewBox="0 0 900 \d/);
   });
 
   it('draws twelve palaces and no more', () => {
@@ -104,6 +111,33 @@ describe('the Liu Ren drawing', () => {
     expect(unverified).toContain('this rule is unfalsified');
     // And the paper is taller by exactly what that line needs.
     expect(heightOf(unverified)).toBeGreaterThan(heightOf(svg));
+  });
+
+  it('writes a word under every name it is given one for', () => {
+    // The point of the whole file: a reader who does not read Chinese has to
+    // be able to read the picture, and the picture is what travels.
+    const glossed = renderLiurenSvg(BOARD, {
+      labels: {
+        general: { guiren: 'the noble', gouchen: 'the hooked array', taichang: 'the constant' },
+        branch: { mao: 'Rabbit', hai: 'Pig', wei: 'Goat', zi: 'Rat' },
+        stem: { xin: 'Yin Metal', ding: 'Yin Fire' },
+      },
+    });
+    // In a palace of the ring, beside the general and beside what stands over
+    // it — and in the transmissions above.
+    expect(glossed).toContain('the noble');
+    expect(glossed).toContain('Rabbit');
+    expect(glossed).toContain('Yin Metal');
+    // The palace's own branch takes no word: it is the ground, and the twelve
+    // of them in order are the frame rather than the news.
+    expect((glossed.match(/Rat/g) ?? []).length).toBeLessThan(2);
+  });
+
+  it('falls back to the hanzi for a name it was given no word for', () => {
+    const partial = renderLiurenSvg(BOARD, { labels: { general: { guiren: 'the noble' } } });
+    expect(partial).toContain('the noble');
+    expect(partial).toContain('勾陳');
+    expect(partial).not.toContain('undefined');
   });
 
   it('scales without changing the layout', () => {

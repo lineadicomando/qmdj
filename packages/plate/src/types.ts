@@ -175,7 +175,7 @@ export interface PlateLiuren {
   day: { hanzi: string };
   hour: { hanzi: string; index: number };
   /** The 天盤 by palace of the 地盤: `heaven[i]` stands over branch `i`. */
-  heaven: readonly { hanzi: string; index: number }[];
+  heaven: readonly { hanzi: string; id: string; index: number }[];
   /** The general over each palace of the 地盤, in the same order. */
   generals: readonly { hanzi: string; id: string }[];
   courses: readonly PlateCourse[];
@@ -189,21 +189,34 @@ export interface PlateLiuren {
 export interface PlateCourse {
   /** 一課 to 四課. They are written right to left, as the tradition writes them. */
   number: number;
-  upper: { hanzi: string };
-  lower: { hanzi: string };
+  upper: { hanzi: string; id: string };
+  /** A branch, or the day stem where the first lesson stands on it. */
+  lower: { hanzi: string; id: string };
 }
 
 export interface PlateTransmission {
   position: string;
-  branch: { hanzi: string };
+  branch: { hanzi: string; id: string };
   general: { hanzi: string; id: string };
-  hiddenStem?: { hanzi: string } | undefined;
+  hiddenStem?: { hanzi: string; id: string } | undefined;
   /** 空亡 — the branch falls outside the day's decade and carries no stem. */
   empty: boolean;
 }
 
-/** What to write around a Liu Ren board, keyed by the engine's identifiers. */
+/**
+ * What to write around a Liu Ren board, keyed by the engine's identifiers.
+ *
+ * The package still holds no catalog and knows no language: a caller chooses
+ * the words and this decides where they go. What a map is missing is written
+ * as the hanzi alone, which is what the board did before there were words.
+ */
 export interface PlateLiurenLabels {
+  /** The twelve generals — the names a reader cannot infer from the glyph. */
+  general?: Record<string, string>;
+  /** The twelve branches, for what has come to stand on a palace. */
+  branch?: Record<string, string>;
+  /** The ten stems, for what covers a transmission. */
+  stem?: Record<string, string>;
   rule?: Record<string, string>;
   keti?: Record<string, string>;
   transmission?: Record<string, string>;

@@ -33,7 +33,7 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
       options,
     );
 
-    const size = Math.min(2048, Math.max(240, readInteger(url.searchParams, 'size') ?? 720));
+    const size = Math.min(2048, Math.max(240, readInteger(url.searchParams, 'size') ?? 900));
     const asked = url.searchParams.get('scheme');
     const scheme = asked === 'light' || asked === 'dark' ? asked : 'auto';
 

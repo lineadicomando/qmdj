@@ -1647,6 +1647,23 @@ drawn by one of them carried `the eight concentrated` in the middle of the
 picture and again underneath. Both the drawing and the page now drop the 課體
 when it repeats the rule.
 
+**And it is read in a European language, as the chart is.** Every name on the
+board carries its word underneath — the twelve generals, and the branch that
+has come to stand on each palace — because the picture is what travels and a
+reader who does not read Chinese has to be able to read it. Two things bound
+that. The palace's **own** branch takes no word: it is the ground, it never
+moves, and the twelve of them in order are the frame rather than the news —
+which is the same bargain the chart's compass ring strikes, hanzi against the
+grid and words outside them. And the board grew from 720 to 900, the chart's
+own size, because five registers to a cell need the room the chart already
+gives six.
+
+The first render of that was wrong in a way only looking could catch: `the six
+harmonies` and `the celestial queen` wrap to two lines, and the second line
+landed inside the branch glyph below. The rhythm of a cell is set by that
+glyph — at 0.24 of the cell it rises about 0.19 above its own baseline — so
+the room for a second line is reserved rather than hoped for.
+
 Two things it had to learn that the first drawing already knew. Type is
 **fitted** to the middle rather than set at a size and hoped for: the caption
 arrives from a caller in a language this package does not know, and an English

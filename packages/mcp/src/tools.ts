@@ -470,7 +470,7 @@ export function registerDrawLiuren(server: McpServer, context: ToolContext): voi
         ...placeSchema,
         guiren: z.enum(['chou', 'wei']).optional().describe('Which verse seats the 貴人.'),
         ...optionSchema,
-        size: z.number().int().min(240).max(2048).optional().describe('Side in pixels. Default 720.'),
+        size: z.number().int().min(240).max(2048).optional().describe('Side in pixels. Default 900.'),
         lang: langSchema,
       },
     },
@@ -488,7 +488,7 @@ export function registerDrawLiuren(server: McpServer, context: ToolContext): voi
 
         return ok(
           renderLiurenSvg(board, {
-            size: args.size ?? 720,
+            size: args.size ?? 900,
             labels: liurenLabels(t),
             heading:
               `${sayGanzhi(board.day, t)} ${board.day.hanzi} · ${board.hour.hanzi} · ` +
