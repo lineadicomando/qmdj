@@ -15,7 +15,7 @@ the presentation rather than by the data.
 | | What it means | Where it applies |
 |---|---|---|
 | **1 · Published fact** | An authority publishes the answer and anyone can check it | solar terms, lunar calendar, four pillars |
-| **2 · Runnable reference** | No authority, but another implementation computes it and can be run against this one | the Qi Men layout, the zhirun ju, the 六壬 transmissions |
+| **2 · Runnable reference** | No authority, but another implementation computes it and can be run against this one | the Qi Men layout, the zhirun ju, the 六壬 transmissions, the almanac's officer |
 | **3 · Transmitted text** | Chinese-language sources only; agreement is between readings, not against a measurement | the configurations, the seasonal states, 十干克應 |
 
 **Tier 2 is not tier 1 in disguise.** An almanac encodes published astronomy;
@@ -767,6 +767,103 @@ source is registered for them here. They stay uncoloured until one is.
 
 ---
 
+## 曆注 — the almanac's page, and the block its own source refuses
+
+The layer dunjia was read beside. It arrives one block at a time; **建除十二神
+is the first**, and it is the block whose one dangerous decision the source
+turned out to state in a clause.
+
+### The text
+
+《欽定協紀辨方書》, 三十六卷, imperially commissioned in 乾隆四年 (1739) and in
+the 四庫全書 — the one work of its kind that adjudicates between conflicting
+rules and says which it rejects, 卷三十六 being a whole chapter of rejections
+(辨訛). 卷四 義例二, under 建除十二神, quoting the 厯書
+([Wikisource](https://zh.wikisource.org/wiki/欽定協紀辨方書_(四庫全書本)/卷04)):
+
+> 厯書曰厯家以建除滿平定執破危成收開閉凡十二日周而復始觀所值以定吉凶**每月交
+> 節則疊兩值日**其法從月建上起建與斗杓所指相應如正月建寅則寅日起建順行十二辰
+> 是也
+
+Two rules in one sentence, and this engine implements both: 建 opens on the day
+whose branch is the month's and the twelve run forward, and **the officer is
+doubled at the 交節**.
+
+### The doubling is not a second rule
+
+「每月交節則疊兩值日」 reads like a special case and is not one. Nothing in
+`almanac.ts` tests for it. The month branch advances on the same date the day
+branch does, so their difference — which is the officer — stands still for one
+day, and the doubling falls out of the day grain by itself. The `doubled` flag
+is reported so that a reader who sees 執 twice can tell a doubling from a
+mistake; it changes no arithmetic.
+
+**What makes that work is the grain, and the grain is the decision.** The page
+turns on the *date*: the whole of a 節's day belongs to the month the 節 opens,
+where a month *pillar* turns at the instant the Sun reaches it. So a chart cast
+at nine in the morning of a 節 striking at eight in the evening carries the old
+month pillar and the new month's officer, and both are right about different
+questions. Had this been built on the pillars instead, the doubling would have
+had to be special-cased, and the special case would have been the tell that the
+grain was wrong. The rule is 「疊兩**值日**」 — a rule that doubles a *day*
+cannot be a rule about an instant.
+
+The day itself is reckoned on **120°E**, as the lunar date is and for the same
+reason: an almanac page is a published artefact, and the same instant carries
+the same page in Rome and in Beijing. `dayBoundary` and `trueSolarTime` never
+reach this layer. This is why the page prints its own ganzhi beside the
+officer — in the 子 hours and before a 節 strikes it is not the chart's day
+pillar, and a reader is owed the difference rather than left to assume it away.
+
+### What it was checked against
+
+`lunar-javascript`, the same independent implementation every pillar in this
+project was verified against, over **every day from 2000 to 2039**:
+
+| | | |
+|---|---|---|
+| officer and day pillar together | 14 600 / 14 600 | **100 %** |
+| doubled days found | 480 | 12 a year, over 40 years |
+
+Tier 2 — consistent with a common implementation — but with a tier-3 text
+stating the rule the comparison could most easily have got wrong, which is a
+better position than either alone. `liuren-ts-lib` exports a `jianChu` of its
+own and is the second runnable witness when a second is wanted.
+
+### What the source refuses, and what that cost
+
+The phase this block belongs to named 二十八宿值日 as its cheap middle third,
+on the assumption that the 協紀 stood behind it. **It does not.** 卷一 records
+the compilers searching for a Chinese basis and finding none —
+「徧閱羣書莫可考究，及見西域《吉凶時日善惡宿曜經》乃得其說」 — and 卷三十六
+辨訛 disposes of it: 「二十八宿選擇之法來自西域……與中國風俗逈然不同……並不可
+從」.
+
+A source chosen because it rejects things rejected something, which is the
+strongest evidence available that it was the right source. The consequence is
+recorded rather than worked around: what 辨訛 refuses is the **宜忌**, the
+lodges as grounds for choosing a day, and this engine ships no 宜忌 of any
+kind. What may still travel is the **count**, which every printed almanac
+carries and which the 協紀 describes accurately while declining to follow it —
+but it will travel with the refusal beside it, and its epoch takes its warrant
+from the implementations and from the weekday lock, **never from this book**.
+
+### What is not here
+
+The 宜忌 of each officer — what the 協紀 says 建 suits and 破 forbids — is the
+largest and best-attested thing in the source, and it is refused. It is advice:
+ordering days, dating an act, telling somebody what to do. The line is
+`purposes.ts`'s, and it falls in the same place it falls for the gates. The
+glosses in the catalogs translate the officer's *name* and nothing else: 危 is
+the officer called danger exactly as 死門 is the gate called death.
+
+The ~100 further entries of 義例 (卷三 to 卷八) are not here yet. Much of what
+looks like a hundred quantities is one quantity under a hundred names — 卷四
+says so itself, 「凡月神之以十二辰起例者……今一以建除統之」 — and the block
+above is that one quantity.
+
+---
+
 ## What is refused, and why
 
 | | Reason |
@@ -783,6 +880,8 @@ source is registered for them here. They stay uncoloured until one is.
 | 六壬 `yuejiang` `jieqi` · `true` | the 四庫 verse's own table turns the general at the 中氣, and both references read it so. The other two values exist in the type and are refused rather than guessed |
 | 六壬 `zhouye` `solar` | no source consulted cuts the day at the actual sunrise. `OPTION_NOT_IMPLEMENTED` |
 | the 涉害 復等 clause | implemented, measured, and dropped: it moves none of the 8 640 boards under any of three readings, because the order of the courses already gives what it asks for. See the 六壬 section |
+| 二十八宿值日's 宜忌 | 《協紀辨方書》卷三十六 辨訛 rejects the lodge-day selection outright as an import: 來自西域, 並不可從. The count may still travel; the doctrine attached to it may not, and the epoch takes its warrant elsewhere |
+| the 宜忌 of the twelve officers | the largest thing in the 協紀 and the clearest refusal here: 宜 and 忌 are advice — ordering days, dating an act — which is `purposes.ts`'s line in a second place |
 | the verse's clause order in 涉害 | 「孟深仲淺季當休」 read as evaluation order scores 98.19 % where the grouping this engine uses scores 99.58 %. Both references take the deeper 季; the divergence is recorded rather than resolved by preference |
 
 `bigfishmarquis-qimen` implements 茅山, 置閏 and all four systems, and is

@@ -38,6 +38,7 @@ import { ChartError } from './errors.js';
 import { STEMS, type StemId } from './ganzhi.js';
 import {
   formatBazi,
+  formatAlmanac,
   formatMoment,
   formatLiuren,
   formatNianming,
@@ -394,8 +395,16 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
       ...(nianming ? { nianming } : {}),
     });
   }
-  return [chartTranscript(moment, chart, t), ...(nianming ? ['', formatNianming(nianming, t)] : [])]
-    .join('\n');
+  // The almanac's line stands *beside* the transcript and never inside it: the
+  // transcript is what goes in a prompt's fence, and the officer is derived
+  // from two pillars printed there already. A terminal is an address, so here
+  // it is shown. See `chartTranscript`.
+  return [
+    chartTranscript(moment, chart, t),
+    ...(nianming ? ['', formatNianming(nianming, t)] : []),
+    '',
+    formatAlmanac(moment.jianchu, t),
+  ].join('\n');
 }
 
 /**

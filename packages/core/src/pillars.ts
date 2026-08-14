@@ -1,3 +1,4 @@
+import { jianchuAt, type Jianchu } from './almanac.js';
 import { sunCrossing, type EphemerisContext } from './ephemeris.js';
 import type { ChartWarning } from './errors.js';
 import {
@@ -42,6 +43,16 @@ export interface Moment {
   solarTerm: SolarTerm;
   /** The jie that opened the month. */
   jie: SolarTerm;
+  /**
+   * The almanac's page for the day this instant falls on (曆注).
+   *
+   * Deferred like `lunar`, and for the same reason: a scan reads thousands of
+   * moments and looks at none of these. It is **not** a function of the
+   * options — the page turns on 120°E and on the date, where the pillars turn
+   * on the chart's zone and on the hour — so the two can disagree in the 子
+   * hours and in the hours before a 節 strikes, and each says which it is.
+   */
+  readonly jianchu: Jianchu;
   /**
    * The lunar date, for display and for the methods that count by it.
    *
@@ -151,6 +162,11 @@ export function resolveMoment(
   // Enumerable, so a moment still serialises whole: whoever hands one to
   // `JSON.stringify` gets the lunar date, and pays for it there.
   Object.defineProperty(moment, 'lunar', { get: lunar, enumerable: true });
+
+  // Enumerable for the same reason the lunar date is: a moment that
+  // serialises without its page is a moment a surface has to ask twice for.
+  const jianchu = deferred(() => jianchuAt(time.julianDayUT, context));
+  Object.defineProperty(moment, 'jianchu', { get: jianchu, enumerable: true });
 
   // The futou is a fact about the day pillar, so the bookkeeping reads the
   // same day number the pillar was read from — shifted by the late hour of

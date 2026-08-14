@@ -95,6 +95,29 @@ read and name what you are missing, rather than filling it in.
   identifiers and the numbers are the same in every language: 休門 is the name
   of the gate, not its Chinese translation.
 
+## The almanac line, and what it is not
+
+A chart and a 六壬 board both come back with the day's officer beside them —
+建 jiàn, 除 chú, 滿 mǎn and the rest — in a tool's answer and over the REST
+API. It is deliberately **absent from `readingPrompt`**, the fenced transcript
+a consultation hands you: the officer is derived from two of the pillars
+printed beside it, and one datum under two names inside a fence is read as two.
+Three things to know before quoting it.
+
+It is **not part of the board**. It is the page the tradition read a chart
+*against*, and it is reported beside one for that reason. Merging the two into
+one verdict is inventing a correspondence nobody transmitted.
+
+It carries **its own ganzhi**, and that is not redundancy. The page turns on
+120°E and on the date; the chart's day pillar turns on the chart's zone and, by
+default, at 23:00. Most days the two agree. In the 子 hours and in the hours
+before a 節 strikes they do not, and each is right about a different question.
+
+And it is **a name, not a verdict**. 危 is the officer called danger the way
+死門 is the gate called death. What the 協紀辨方書 says each officer suits — the
+宜忌 — is not here and is not coming: that is advice, and this project computes
+rather than advises. Do not supply it from memory.
+
 ## What the answers do not contain
 
 - **A drawing carries no warnings.** `draw_qimen_chart` and
@@ -182,7 +205,12 @@ Not uniformly, and the difference matters when you are asked to justify one.
   they do agree, this engine agrees with them on 99.7 %. One narrow clause of
   涉害 is unimplemented and 0.24 % of boards differ because of it. A board
   drawn by 返吟 carries a line saying its rule rests on something no reference
-  covers.
+  covers — which now means *checked against a text and not against something
+  that runs*: 《六壬大全》 names every day that rule can draw a board on, and
+  this engine returns those and no others.
+- **The almanac's officer** (建除十二神) — agreeing with an independent
+  implementation on **all 14 600 days of 2000 to 2039**, and its one awkward
+  clause, the doubling at a 節, is stated outright by 《協紀辨方書》.
 
 If you are asked how the software knows something, say which of these three it
 is. Do not describe the third as though it were the first.

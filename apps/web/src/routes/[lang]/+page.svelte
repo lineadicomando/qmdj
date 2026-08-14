@@ -105,6 +105,14 @@
   let failure = $state<Failure | undefined>(data.failure);
   /** The board as it came back — a Qi Men chart, or a Liu Ren board. */
   let chart = $state<any>();
+  /**
+   * The almanac's line for the instant that was cast.
+   *
+   * Held apart from `chart` because it belongs to neither board: a 六壬
+   * response carries the moment beside the board, a chart carries it inside,
+   * and the page under both is the same page either way.
+   */
+  let almanac = $state<any>();
   /** The fields, which withdraw once they have answered. */
   let panel: FormPanel | undefined = $state();
 
@@ -223,12 +231,14 @@
 
       if (!response.ok) {
         chart = undefined;
+        almanac = undefined;
         address = '';
         failure = body as Failure;
         return;
       }
 
       chart = liuren ? body.liuren : body.chart;
+      almanac = body.moment?.jianchu ?? null;
       // Pinned to what the engine actually cast for. Under a question that is
       // the instant of the press, and it is the whole point of the mode: the
       // consultation belongs to that minute and not to whenever this is read.
@@ -553,7 +563,7 @@
            on it. See `ChartReading`. -->
       <div>
         {#if liuren}
-          <LiurenReading board={chart} {t} />
+          <LiurenReading board={chart} {t} jianchu={almanac} />
         {:else}
           <ChartReading {chart} {t} wide />
         {/if}

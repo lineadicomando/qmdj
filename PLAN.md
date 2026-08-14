@@ -2077,6 +2077,38 @@ stand in this file and in `liuren.ts`'s comments, not in the register
 CLAUDE.md calls mandatory. A third layer's tables do not land in a register
 the second board never entered.
 
+**建除十二神 is built, and the rest of the layer is not.** `almanac.ts`,
+`jianchuAt`, and the officer beside the pillars on the CLI, the API, the MCP
+tools, the chart page and the 六壬 page. Agreement with `lunar-javascript` on
+**14 600 / 14 600 days of 2000 to 2039**, and the 480 doubled days it found are
+twelve a year for forty years. `docs/sources.md` has the 曆注 section, written
+the day the quantity landed rather than owed.
+
+**The doubling needed no code, which is how the grain proved itself.** Nothing
+in `almanac.ts` tests for a 節. The month branch advances on the same date the
+day branch does, so their difference stands still for one day and
+「每月交節則疊兩值日」 falls out. Built on the pillars instead it would have
+needed a special case — and the special case would have been the tell that the
+grain was wrong.
+
+**And it nearly went into the fence.** `chartTranscript` is what the CLI
+prints, what the page offers to copy *and* what `readingPrompt` puts inside the
+fence, all deliberately one rendering — so adding the officer to `formatMoment`
+put it in front of a model, beside the two pillars it is derived from, which is
+the exact double-counting phase 14 was written to prevent. The fix is not a
+flag on the transcript, which would break the one-rendering invariant it exists
+for: the officer stays out of the transcript, and the surfaces that are
+addresses print it *beside* that block — the page under the pillars, the CLI
+through `formatAlmanac`. A test in `almanac.test.ts` keeps it out.
+
+**The one judgment call, recorded as one.** It is absent from the fence and
+present in the MCP tools and the REST answers, where a model also reads it. The
+difference is that those have a contract — `docs/agent-prompt.md`, which now
+says the officer is not part of the board, carries its own ganzhi for a reason,
+and is a name rather than a verdict — where a pasted transcript travels with
+nothing. Suppressing it everywhere a model might read would also take it from
+the agent that asked for a page on purpose.
+
 ### Phase 16 — 七政四餘
 
 **Planned, and scoped before it is started, because two of its questions have

@@ -92,6 +92,15 @@ export interface ReadingRequest {
  * What the CLI prints, what the interface offers to copy, and what goes
  * inside the prompt — one rendering, because three that drifted apart would
  * mean the text somebody pasted was not the chart they were looking at.
+ *
+ * **The almanac's officer is the one thing left out**, and it is left out here
+ * rather than at one of the three callers precisely to keep that invariant:
+ * the officer is a function of the month branch and the day branch, both
+ * printed a few lines below it, so inside a fence it is one datum wearing two
+ * names and a model reads the second as confirming the first. The surfaces
+ * that are *addresses* print it beside this block instead — the page does,
+ * under the pillars, and the CLI does with `formatAlmanac`. See `PLAN.md` § 4
+ * phase 15.
  */
 export function chartTranscript(
   moment: Moment,
@@ -101,7 +110,7 @@ export function chartTranscript(
 ): string {
   const warnings = formatWarnings(moment, t);
   return [
-    formatMoment(moment, t),
+    formatMoment(moment, t, { almanac: false }),
     '',
     formatQimenChart(chart, t),
     // Inside the transcript and not beside it: a 年命 is placed *in* this
@@ -144,7 +153,7 @@ export function liurenTranscript(
 ): string {
   const warnings = formatWarnings(moment, t);
   return [
-    formatMoment(moment, t),
+    formatMoment(moment, t, { almanac: false }),
     '',
     formatLiuren(board, t),
     ...(warnings ? ['', warnings] : []),

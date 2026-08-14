@@ -59,6 +59,16 @@ describe('chart', () => {
     }
   });
 
+  it("prints the almanac's officer beside the pillars", async () => {
+    // 曆注, a line and not a section: the page dunjia was read against, with
+    // its own ganzhi because it turns on 120°E and not on the chart's zone.
+    await run(['chart', ...MOMENT, '--lang', 'en']);
+
+    expect(out).toContain('Day officer');
+    expect(out).toContain('定 dìng settle');
+    expect(out).toContain('庚戌');
+  });
+
   it('says which method it used', async () => {
     await run(['chart', ...MOMENT, '--lang', 'en']);
 

@@ -115,6 +115,26 @@
   leads there, with this same instant in its address.
 -->
 <PillarPlate pillars={squares} {t} {wide} />
+
+<!--
+  The almanac's line for the day, under the pillars it belongs beside.
+
+  A line and never a panel: the 曆注 are not part of this board and are not
+  being asked anything — they are the page dunjia was always read against, and
+  a reader comparing the two is doing what the tradition did. Its ganzhi is
+  printed because the page's day need not be the chart's: it turns on 120°E
+  and on the date, where the pillars turn on the zone and the hour.
+-->
+{#if chart.moment.jianchu}
+  <p class="almanac">
+    <span class="glyph">{chart.moment.jianchu.officer.hanzi} {chart.moment.jianchu.officer.pinyin}</span>
+    {t(`label.officer.${chart.moment.jianchu.officer.id}` as MessageKey)}
+    · <span class="glyph">{chart.moment.jianchu.day.hanzi}</span>
+    {#if chart.moment.jianchu.doubled}
+      <span class="doubled">({t('cli.value.jianchuDoubled')})</span>
+    {/if}
+  </p>
+{/if}
 </div>
 
 <!--
@@ -180,6 +200,16 @@
    * element that holds this moves all of it together.
    */
   .ju { font-size: 1.1em; margin: 0 0 0.35rem; }
+  /*
+   * The almanac's line, set under the pillars and quieter than them.
+   *
+   * Smaller and dimmer because it is not the chart: it is the page the chart
+   * was read beside, and a reader who mistook it for a field of the board
+   * would be taking a whole second layer for part of this one.
+   */
+  .almanac { font-size: 0.85em; color: var(--faint); margin: 0.5rem 0 0; }
+  .wide .almanac { text-align: center; }
+  .almanac .doubled { opacity: 0.75; }
   /*
    * The caption's measure, mirrored from the drawing's own rule.
    *

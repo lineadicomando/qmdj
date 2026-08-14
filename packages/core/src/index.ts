@@ -119,6 +119,15 @@ export {
 } from './nianming.js';
 
 export {
+  jianchuAt,
+  officerOf,
+  OFFICERS,
+  type Jianchu,
+  type Officer,
+  type OfficerId,
+} from './almanac.js';
+
+export {
   DEFAULT_LIUREN_OPTIONS,
   GENERALS,
   KETI,
@@ -148,6 +157,7 @@ export {
 } from './labels.js';
 
 export {
+  formatAlmanac,
   formatBazi,
   formatLiuren,
   formatMoment,

@@ -322,6 +322,22 @@ export const en = {
 
   // 課體 — the named shape the board turned out to be. Carried the way a
   // configuration of the nine palaces is: a name for an arrangement.
+  // 建除十二神 — the twelve officers of the almanac's day. Names, not
+  // verdicts: 危 is the officer called danger exactly as 死門 is the gate
+  // called death, and what the 協紀 says each one suits stays in the 協紀.
+  'label.officer.jian': 'establish',
+  'label.officer.chu': 'remove',
+  'label.officer.man': 'full',
+  'label.officer.ping': 'level',
+  'label.officer.ding': 'settle',
+  'label.officer.zhi': 'hold',
+  'label.officer.po': 'break',
+  'label.officer.wei': 'danger',
+  'label.officer.cheng': 'complete',
+  'label.officer.shou': 'gather',
+  'label.officer.kai': 'open',
+  'label.officer.bi': 'shut',
+
   'label.keti.yuanshou': 'the head',
   'label.keti.zhongshen': 'the second hearing',
   'label.keti.zhiyi': 'knowing the one',
@@ -834,6 +850,7 @@ export const en = {
   'cli.field.correction': 'correction',
   'cli.field.term': 'term',
   'cli.field.jie': 'month opened at',
+  'cli.field.jianchu': 'Day officer',
   'cli.field.lunar': 'lunar',
   'cli.field.ju': 'ju',
   'cli.field.chief': 'chief',
@@ -878,6 +895,7 @@ export const en = {
   'cli.value.yinDun': 'yin dun',
   'cli.value.forward': 'running forward',
   'cli.value.backward': 'running backward',
+  'cli.value.jianchuDoubled': 'doubled: the month turns on this date',
   'cli.value.leapMonth': 'leap month',
   'cli.value.minutes': '{value} min',
   // How long after the birth the luck cycles open, each unit abbreviated.

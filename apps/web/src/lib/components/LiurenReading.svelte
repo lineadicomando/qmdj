@@ -15,7 +15,14 @@
    * nine rules are written out below: a value import would drag the
    * ephemerides and a native module into the browser bundle.
    */
-  let { board, t }: { board: any; t: Translator } = $props();
+  /**
+   * `jianchu` is the almanac's line for the day, when the caller has it.
+   *
+   * Optional because it comes off the moment and not off the board: the 曆注
+   * are not part of a 六壬 board any more than they are part of a chart. Both
+   * pages that show a board have the moment beside it, and both pass it.
+   */
+  let { board, t, jianchu = null }: { board: any; t: Translator; jianchu?: any } = $props();
 
   /**
    * Written out with their readings, because a name carries one.
@@ -140,6 +147,17 @@
 
   <!-- Said where it applies and never in a footnote: this board rests on a
        rule no reference implementation covers. -->
+  <!-- The almanac's line, as under the chart: the page this board was read
+       beside, quieter than the board and never inside it. -->
+  {#if jianchu}
+    <p class="note">
+      <span class="glyph">{jianchu.officer.hanzi} {jianchu.officer.pinyin}</span>
+      {t(`label.officer.${jianchu.officer.id}` as MessageKey)}
+      · <span class="glyph">{jianchu.day.hanzi}</span>
+      {#if jianchu.doubled}({t('cli.value.jianchuDoubled')}){/if}
+    </p>
+  {/if}
+
   {#if board.unverified}
     <p class="note">{t('cli.value.liurenUnverified')}</p>
   {/if}

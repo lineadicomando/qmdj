@@ -1,4 +1,5 @@
 import type { MessageKey, Translator } from '@qimendunjia/i18n';
+import type { Jianchu } from './almanac.js';
 import type { Bazi } from './bazi/index.js';
 import { palace, YUAN_HANZI, YUAN_PINYIN, type QimenChart } from './dunjia/index.js';
 import { BRANCHES, type Ganzhi } from './ganzhi.js';
@@ -133,8 +134,40 @@ function lunar(date: LunarDate, t: Translator): string {
   return `${date.year} · ${leap}${date.month}/${date.day}`;
 }
 
-/** The instant, its pillars, and the calendrical facts they rest on. */
-export function formatMoment(moment: Moment, t: Translator): string {
+/**
+ * The day's officer, said with its ganzhi.
+ *
+ * The pillar is printed beside it because the page's day is not always the
+ * chart's: it turns on 120°E and on the date. A reader who sees the two agree
+ * learns nothing and loses nothing; a reader who sees them differ has been
+ * told why in the one place it could matter.
+ */
+export function formatAlmanac(page: Jianchu, t: Translator): string {
+  return `  ${pad(t('cli.field.jianchu'), 20)}${officer(page, t)}`;
+}
+
+function officer(page: Jianchu, t: Translator): string {
+  const name = `${page.officer.hanzi} ${page.officer.pinyin} ${t(`label.officer.${page.officer.id}` as MessageKey)}`;
+  const doubled = page.doubled ? `  (${t('cli.value.jianchuDoubled')})` : '';
+  return `${name}  · ${page.day.hanzi}${doubled}`;
+}
+
+/**
+ * The instant, its pillars, and the calendrical facts they rest on.
+ *
+ * `almanac` is false in exactly one place and the reason is not tidiness: the
+ * officer is a function of the month branch and the day branch, **both of
+ * which the block below already prints**, so a model handed the two together
+ * reads one datum twice and calls the second a corroboration of the first.
+ * The layer belongs where nothing is being asked — a terminal, an agent's
+ * answer, a page — and never inside a prompt's fence. See `PLAN.md` § 4
+ * phase 15 and the test that keeps this true.
+ */
+export function formatMoment(
+  moment: Moment,
+  t: Translator,
+  { almanac = true }: { almanac?: boolean } = {},
+): string {
   const zone = moment.input.timezone;
   const fields: string[][] = [
     [t('cli.field.local'), moment.local],
@@ -161,6 +194,7 @@ export function formatMoment(moment: Moment, t: Translator): string {
     [t('cli.field.jie'), term(moment.jie, zone, t)],
     [t('cli.field.lunar'), lunar(moment.lunar, t)],
   );
+  if (almanac) fields.push([t('cli.field.jianchu'), officer(moment.jianchu, t)]);
 
   // One pillar to a line rather than four across the page. Said in words and
   // then in glyphs and then aloud, a pillar is some forty columns wide, and

@@ -123,6 +123,20 @@ function calendarDay(julianDayUT: number): number {
 }
 
 /**
+ * The same day number, for the 曆注, which count days on the same meridian.
+ *
+ * An almanac page is the artefact the lunar date is: 建除 and the lodge are
+ * printed against a date and that date is the same one in Rome as in Beijing.
+ * So the layer reckons its day here rather than on the chart's zone, and
+ * `dayBoundary` never reaches it — the page describes a day and the pillars
+ * describe an instant, which is why the two can disagree and each says which
+ * it is.
+ */
+export function calendarDayNumber(julianDayUT: number): number {
+  return calendarDay(julianDayUT);
+}
+
+/**
  * The winter solstice at or before `julianDayUT`.
  *
  * Month eleven is defined as the month containing the winter solstice, so

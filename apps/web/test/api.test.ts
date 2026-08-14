@@ -105,6 +105,19 @@ describe('GET /api/chart', () => {
     expect(first.headers['cache-control']).toBe('private, max-age=86400');
   });
 
+  it("carries the almanac's page for the day across HTTP", async () => {
+    // 曆注. It rides on the moment, so every answer that carries a moment
+    // carries it — and it is reckoned on 120°E, which is why it is reported
+    // with its own ganzhi rather than left to be read off the day pillar.
+    const answer = (
+      await call(chart, 'date=2024-06-15&timezone=Asia/Shanghai&trueSolarTime=false')
+    ).body as { chart: { moment: { jianchu: { officer: { id: string }; day: { hanzi: string }; doubled: boolean } } } };
+
+    expect(answer.chart.moment.jianchu.officer.id).toBe('ding');
+    expect(answer.chart.moment.jianchu.day.hanzi).toBe('庚戌');
+    expect(answer.chart.moment.jianchu.doubled).toBe(false);
+  });
+
   it('leaves the longitude correction at zero when given only a timezone', async () => {
     // The stand-in meridian must come from the offset at the chart's moment:
     // read from today's clock, a winter chart requested in summer would carry

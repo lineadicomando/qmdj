@@ -301,6 +301,23 @@ export const it: Record<MessageKey, string> = {
 
   // 課體 — la figura nominata che il quadro è risultato essere. Portata come si
   // porta una configurazione dei nove palazzi: un nome per una disposizione.
+  // 建除十二神 — i dodici ufficiali del giorno dell'almanacco. Nomi, non
+  // verdetti: 危 è l'ufficiale chiamato pericolo esattamente come 死門 è la
+  // porta chiamata morte, e ciò che il 協紀 dice adatto a ciascuno resta nel
+  // 協紀.
+  'label.officer.jian': 'stabilire',
+  'label.officer.chu': 'rimuovere',
+  'label.officer.man': 'pieno',
+  'label.officer.ping': 'pari',
+  'label.officer.ding': 'fissare',
+  'label.officer.zhi': 'tenere',
+  'label.officer.po': 'rompere',
+  'label.officer.wei': 'pericolo',
+  'label.officer.cheng': 'compiere',
+  'label.officer.shou': 'raccogliere',
+  'label.officer.kai': 'aprire',
+  'label.officer.bi': 'chiudere',
+
   'label.keti.yuanshou': 'il capo',
   'label.keti.zhongshen': 'il riesame',
   'label.keti.zhiyi': "conoscere l'uno",
@@ -636,6 +653,7 @@ export const it: Record<MessageKey, string> = {
   'cli.field.correction': 'correzione',
   'cli.field.term': 'termine',
   'cli.field.jie': 'mese aperto il',
+  'cli.field.jianchu': 'Ufficiale del giorno',
   'cli.field.lunar': 'lunare',
   'cli.field.ju': 'ju',
   'cli.field.chief': 'capo',
@@ -680,6 +698,7 @@ export const it: Record<MessageKey, string> = {
   'cli.value.yinDun': 'dun yin',
   'cli.value.forward': 'in avanti',
   'cli.value.backward': 'all\'indietro',
+  'cli.value.jianchuDoubled': 'raddoppiato: il mese cambia in questa data',
   'cli.value.leapMonth': 'mese intercalare',
   'cli.value.minutes': '{value} min',
   // Quanto dopo la nascita si aprono i cicli decennali: anni, mesi, giorni.

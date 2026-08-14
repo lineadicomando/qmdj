@@ -166,6 +166,16 @@ describe('compute_qimen_chart', () => {
     expect(text).toContain('The centre lodges in 2 southwest 坤');
   });
 
+  it("says the almanac's officer for the day", async () => {
+    // 曆注. The layer is not part of the board and is reported beside it, so an
+    // agent reading a chart can see the page it was traditionally read against
+    // without being told what the page says the day suits.
+    const text = await call('compute_qimen_chart', BEIJING);
+
+    expect(text).toContain('定 dìng');
+    expect(text).toContain('庚戌');
+  });
+
   /**
    * 年命 — the birth looked up inside the chart, which is the classical
    * direction. The chart is not recast for it, and the 行年 is left out
