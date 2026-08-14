@@ -230,7 +230,9 @@ export function dayGodOf(monthBranch: Branch, dayBranch: Branch): DayGod {
 export const DAY_GOD_LIST: readonly DayGod[] = DAY_GODS;
 
 
-export type YearGodId = 'taisui' | 'suipo' | 'dajiangjun' | 'taiyin' | 'huangfan' | 'baowei';
+export type YearGodId =
+  | 'taisui' | 'suipo' | 'dajiangjun' | 'taiyin' | 'huangfan' | 'baowei'
+  | 'sangmen' | 'diaoke' | 'baihu' | 'bingfu' | 'sifu' | 'dasha';
 
 export interface YearGod {
   id: YearGodId;
@@ -249,6 +251,14 @@ export interface YearGod {
  * elsewhere — each was read one at a time and each of the source's own
  * enumerations is asserted in the tests. The rest of 卷三 has not been read
  * yet and is not guessed at. See `docs/sources.md`.
+ *
+ * **Two of them share a seat, and the source defends it.** 太陰 and 弔客 both
+ * stand on 歲後二辰, and 卷三's 總論 raises exactly that objection — 「然太隂之
+ * 方又為弔客者何歟」 — before answering it: 「隂陽之義，美惡不嫌同位，各從其所
+ * 用耳」. Good and ill are not embarrassed to share a bearing; each is read for
+ * what it is read for. A tidier source would have moved one of them, and a
+ * table that quietly deduplicated them would be reporting a tidiness nobody
+ * transmitted.
  *
  * **What is left behind is most of what the source says about them.** Nearly
  * every entry is 宜忌 — 「其地不可興造移徙嫁娶逺行」, 「所理之地不可興修」 —
@@ -269,6 +279,22 @@ const YEAR_GODS: readonly { id: YearGodId; hanzi: string; pinyin: string; seat: 
   { id: 'huangfan', hanzi: '黃幡', pinyin: 'huángfān', seat: (y) => [4, 1, 10, 7, 4, 1, 10, 7, 4, 1, 10, 7][y] as number },
   // 「常居黄幡對衝」.
   { id: 'baowei', hanzi: '豹尾', pinyin: 'bàowěi', seat: (y) => ([4, 1, 10, 7, 4, 1, 10, 7, 4, 1, 10, 7][y] as number + 6) % 12 },
+  // 「喪門者……常居歲前二辰」. The 總論 adds that this seat is also 朱雀's:
+  // 「喪門之位又為朱雀，則以前朱雀後𤣥武，而以太歲前二位為朱雀耳」.
+  { id: 'sangmen', hanzi: '喪門', pinyin: 'sāngmén', seat: (y) => (y + 2) % 12 },
+  // 「弔客者……常居歲後二辰」 — the same seat as 太陰, which the source raises
+  // as a question and answers rather than tidies away. See `yearGodsOf`.
+  { id: 'diaoke', hanzi: '弔客', pinyin: 'diàokè', seat: (y) => (y + 10) % 12 },
+  // 「白虎者歲中凶神也，常居歲後四辰」.
+  { id: 'baihu', hanzi: '白虎', pinyin: 'báihǔ', seat: (y) => (y + 8) % 12 },
+  // 「病符主災病，常居歲後一辰」.
+  { id: 'bingfu', hanzi: '病符', pinyin: 'bìngfú', seat: (y) => (y + 11) % 12 },
+  // 「死符者……常居歲前五辰」.
+  { id: 'sifu', hanzi: '死符', pinyin: 'sǐfú', seat: (y) => (y + 5) % 12 },
+  // 「大煞子年在子，丑年在酉，寅年在午，夘年在夘，辰年又在子，如是逆行四正」,
+  // and the reason given with it: 「申子辰三合為水，水旺於子」 and so round —
+  // the cardinal the year's own triad prospers in.
+  { id: 'dasha', hanzi: '大煞', pinyin: 'dàshà', seat: (y) => [0, 9, 6, 3][y % 4] as number },
 ];
 
 export const YEAR_GOD_IDS: readonly YearGodId[] = YEAR_GODS.map((g) => g.id);

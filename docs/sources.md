@@ -908,7 +908,7 @@ The other axis. A chart chooses an hour **and a direction**, and the 年神 are
 what the almanac puts on the second — 卷三 describes each as 所理之地 or
 所在之方, a bearing held for a year.
 
-Six are implemented. Each is one whose position 卷三 states outright and
+Twelve are implemented. Each is one whose position 卷三 states outright and
 completely, in its own entry, without leaning on a god defined elsewhere:
 
 | | the source's words | |
@@ -919,6 +919,12 @@ completely, in its own entry, without leaning on a god defined elsewhere:
 | 太陰 | 「常居太歲後二辰……子年則在戌，丑年則在亥，寅年則在子是也」 | two behind |
 | 黃幡 | 「常居三合墓辰……寅午戌歲在戌，申子辰歲在辰，亥夘未歲在未，巳酉丑歲在丑」 | the 墓 of the triad |
 | 豹尾 | 「常居黄幡對衝」 | opposite the 黃幡 |
+| 喪門 | 「常居歲前二辰」 | two ahead |
+| 弔客 | 「常居歲後二辰」 | two behind |
+| 白虎 | 「常居歲後四辰」 | four behind |
+| 病符 | 「常居歲後一辰」 | one behind |
+| 死符 | 「常居歲前五辰」 | five ahead |
+| 大煞 | 「子年在子，丑年在酉，寅年在午，夘年在夘，辰年又在子」, with 「申子辰三合為水，水旺於子」 | the cardinal the year's triad prospers in |
 
 **Every one of those enumerations is asserted in `almanac.test.ts`**, from the
 text rather than from an implementation — which matters here more than
@@ -937,11 +943,26 @@ never reaches here, as `dayBoundary` does not.
 |---|---|---|
 | the page's year, against `lunar-javascript` | 10 950 / 10 950 | **100 %** |
 
-**Six, and the rest of 卷三 is unread rather than rejected.** There are some two
-dozen entries — 白虎, 死符, 劫煞, 歲煞, 大煞, 金神, 病符, 弔客, 大耗, 喪門 and
-others. Each has a statement and each needs reading one at a time, which is
-what was done for the six above and what has not yet been done for them. The
-boundary is declared here so that it is a boundary and not an accident.
+**Two share a seat, and the source defends it rather than tidying it.** 太陰
+and 弔客 both stand on 歲後二辰. 卷三's 總論 raises exactly that objection —
+「然太隂之方又為弔客者何歟」 — and answers it: 「隂陽之義，美惡不嫌同位，各從
+其所用耳」, good and ill are not embarrassed to share a bearing, each being read
+for what it is read for. It gives the geometry too: 歲後二位 and 歲前二位 always
+form a 三合 with the branch that controls or clashes with the 太歲 — 「太歲在午
+則後二辰前二申，申與辰必暗拱子以尅太歲矣」. The engine reports both, on the
+one branch. A table that quietly deduplicated them would be reporting a
+tidiness nobody transmitted, and a test asserts they stay together for all
+twelve years.
+
+**Twelve, and the rest of 卷三 is unread rather than rejected.** What remains
+includes 劫煞, 歲煞, 大耗, 小耗, 歲德合, 歲枝德, 金神, 博士, 蠶室, 蠶命,
+破敗五鬼 and 日遊神. Some are keyed to the year *stem* rather than its branch;
+some are stated only inside a discussion the source marks as one opinion among
+several — 大耗 and 小耗 arrive inside a 「是亦一説也」 and are not taken on
+that footing; and 羣醜 turns out not to be a seat at all but a condition, the
+years in which 太陰 and 大將軍 coincide. Each needs reading one at a time,
+which is what was done for the twelve above. The boundary is declared here so
+that it is a boundary and not an accident.
 
 **And nearly everything the source says about them is left behind.** The bulk
 of each entry is 宜忌 — 「其地不可興造移徙嫁娶逺行」, 「所理之地不可興修」,

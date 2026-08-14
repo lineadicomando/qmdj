@@ -201,6 +201,30 @@ describe('建除十二神', () => {
     for (const y of ['巳', '酉', '丑']) expect(seat(y, 'huangfan')).toBe('丑');
     expect(seat('寅', 'baowei')).toBe('辰');
     expect(seat('申', 'taisui')).toBe('申');
+
+    // 喪門「常居歲前二辰」, 弔客「常居歲後二辰」, 白虎「常居歲後四辰」,
+    // 病符「常居歲後一辰」, 死符「常居歲前五辰」.
+    expect(seat('子', 'sangmen')).toBe('寅');
+    expect(seat('子', 'diaoke')).toBe('戌');
+    expect(seat('子', 'baihu')).toBe('申');
+    expect(seat('子', 'bingfu')).toBe('亥');
+    expect(seat('子', 'sifu')).toBe('巳');
+    // 「大煞子年在子，丑年在酉，寅年在午，夘年在夘，辰年又在子」.
+    expect(['子', '丑', '寅', '卯', '辰'].map((y) => seat(y, 'dasha'))).toEqual([
+      '子', '酉', '午', '卯', '子',
+    ]);
+  });
+
+  it('lets 太陰 and 弔客 keep the one seat the source gives them both', () => {
+    // 卷三's 總論 raises the objection itself — 「然太隂之方又為弔客者何歟」 —
+    // and answers it: 「隂陽之義，美惡不嫌同位，各從其所用耳」. Deduplicating
+    // them here would report a tidiness nobody transmitted.
+    for (const year of BRANCHES) {
+      const gods = yearGodsOf(year);
+      const taiyin = gods.find((g) => g.id === 'taiyin')?.branch.hanzi;
+      const diaoke = gods.find((g) => g.id === 'diaoke')?.branch.hanzi;
+      expect(taiyin).toBe(diaoke);
+    }
   });
 
   it('turns the page\'s year at 立春, giving the whole of that date to it', () => {

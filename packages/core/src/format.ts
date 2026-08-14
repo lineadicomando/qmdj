@@ -147,8 +147,11 @@ export function formatAlmanac(page: Almanac, t: Translator): string {
   // day this is; the second is which way things stand, which is the axis
   // dunjia shares with the almanac and no other art here has.
   const gods = page.yearGods
-    .map((god) => `${god.hanzi} ${god.pinyin} ${t(`label.branch.${god.branch.id}` as MessageKey)}`)
-    .join(' · ');
+    .map(
+      (god) =>
+        `${god.hanzi} ${god.pinyin} ${t(`label.yeargod.${god.id}` as MessageKey)} → ${t(`label.branch.${god.branch.id}` as MessageKey)}`,
+    )
+    .join('\n' + ' '.repeat(24));
   return [
     `  ${pad(t('cli.field.jianchu'), 20)}${officer(page, t)}`,
     `  ${pad(t('cli.field.yearGods'), 20)}${page.year.hanzi} — ${gods}`,
