@@ -1,4 +1,5 @@
 import { sunCrossing, type EphemerisContext } from '../ephemeris.js';
+import { ChartError } from '../errors.js';
 import { ganzhiOf, type Ganzhi } from '../ganzhi.js';
 import type { Moment } from '../pillars.js';
 import { SOLAR_TERMS } from '../solar-terms.js';
@@ -170,12 +171,24 @@ function nextJieAfter(julianDayUT: number, context: EphemerisContext): number {
 }
 
 /**
+ * The longest run of year pillars that may be asked for at once.
+ *
+ * Ten full sexagenary cycles — six centuries, far past any life the pillars
+ * are read over. The bound is here for the reason `MAX_SCAN_DAYS` is: an
+ * unbounded loop in a pure function is a trap laid for whoever calls it next.
+ */
+export const MAX_ANNUAL_YEARS = 600;
+
+/**
  * The year pillars a run of years carries (流年).
  *
  * Plain arithmetic on the sexagenary year, given here so that a surface does
  * not have to know that 1984 opened a cycle.
  */
 export function annualPillars(fromYear: number, count: number): { year: number; ganzhi: Ganzhi }[] {
+  if (count > MAX_ANNUAL_YEARS) {
+    throw new ChartError('TOO_MANY_YEARS', { years: count, maximum: MAX_ANNUAL_YEARS });
+  }
   return Array.from({ length: count }, (_, offset) => ({
     year: fromYear + offset,
     ganzhi: ganzhiOf(fromYear + offset - 1984),

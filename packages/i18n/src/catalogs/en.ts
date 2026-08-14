@@ -48,6 +48,8 @@ export const en = {
     'The birth falls after the chart, so there are no years to count: a 行年 steps forward from a birth and cannot be asked for before one.',
   'core.error.YEARS_OUT_OF_RANGE':
     '{years} is not a count of years a 行年 can be taken for: the count opens at one, in the year of the birth itself.',
+  'core.error.TOO_MANY_YEARS':
+    'A run of {years} year pillars is longer than the {maximum} that can be asked for at once.',
 
   'core.warning.AMBIGUOUS_LOCAL_TIME':
     'Local time {time} on {date} occurs twice in {timezone} (clocks went back). The first occurrence was used, the one still on summer time.',

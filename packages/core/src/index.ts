@@ -137,6 +137,7 @@ export {
   CONTROLS,
   GENERATED_BY,
   GENERATES,
+  MAX_ANNUAL_YEARS,
   annualPillars,
   computeBazi,
   hiddenStems,

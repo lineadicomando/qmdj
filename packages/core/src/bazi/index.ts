@@ -108,6 +108,7 @@ export function computeBazi(
 
 export { hiddenStems, twelveStage, type HiddenRank, type HiddenStem, type TwelveStage, type TwelveStageId } from './hidden-stems.js';
 export {
+  MAX_ANNUAL_YEARS,
   annualPillars,
   luckCycles,
   type Gender,

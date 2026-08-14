@@ -18,7 +18,8 @@ export type ChartErrorCode =
   | 'INTERVAL_TOO_LONG'
   | 'UNKNOWN_IDENTIFIER'
   | 'BIRTH_AFTER_CHART'
-  | 'YEARS_OUT_OF_RANGE';
+  | 'YEARS_OUT_OF_RANGE'
+  | 'TOO_MANY_YEARS';
 
 /**
  * A usage error of the engine: malformed input, or a condition under which

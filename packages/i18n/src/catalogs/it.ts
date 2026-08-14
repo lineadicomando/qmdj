@@ -38,6 +38,8 @@ export const it: Record<MessageKey, string> = {
     'La nascita cade dopo la carta, quindi non ci sono anni da contare: lo 行年 avanza da una nascita e non si può chiedere prima di essa.',
   'core.error.YEARS_OUT_OF_RANGE':
     '{years} non è un conto di anni per cui si possa prendere uno 行年: il conto si apre a uno, nell\'anno stesso della nascita.',
+  'core.error.TOO_MANY_YEARS':
+    'Una serie di {years} pilastri dell\'anno supera i {maximum} che si possono chiedere in una volta.',
 
   'core.warning.AMBIGUOUS_LOCAL_TIME':
     'L\'ora locale {time} del {date} ricorre due volte in {timezone} (ritorno all\'ora solare). È stata usata la prima occorrenza, quella ancora in ora legale.',

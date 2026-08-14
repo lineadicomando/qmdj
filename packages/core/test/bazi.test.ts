@@ -1,9 +1,10 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { computeBazi, type Bazi, type BaziOptions } from '../src/bazi/index.js';
-import { annualPillars } from '../src/bazi/luck.js';
+import { MAX_ANNUAL_YEARS, annualPillars } from '../src/bazi/luck.js';
 import { nayin } from '../src/bazi/nayin.js';
 import { tenGod } from '../src/bazi/relations.js';
 import { twelveStage } from '../src/bazi/hidden-stems.js';
+import { ChartError } from '../src/errors.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
 import { BRANCHES, STEMS, ganzhiOf } from '../src/ganzhi.js';
 import { resolveMoment } from '../src/pillars.js';
@@ -237,6 +238,21 @@ describe('annualPillars', () => {
       '1985 乙丑',
       '1986 丙寅',
     ]);
+  });
+
+  it('refuses a run longer than it will answer for', () => {
+    // Ten cycles is already past any life these are read over. The bound is
+    // the point: an unbounded count is a loop a caller can hang the engine
+    // with, and it refuses by code like everything else.
+    expect(annualPillars(1984, MAX_ANNUAL_YEARS)).toHaveLength(MAX_ANNUAL_YEARS);
+
+    try {
+      annualPillars(1984, MAX_ANNUAL_YEARS + 1);
+      expect.unreachable('should have thrown');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ChartError);
+      expect((error as ChartError).code).toBe('TOO_MANY_YEARS');
+    }
   });
 });
 
