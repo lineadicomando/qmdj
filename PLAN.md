@@ -180,6 +180,7 @@ default from dunjia's.
 | 六壬 | `yuejiang` | `zhongqi` (太陽過宮 at the 中氣), `jieqi`, `true` (太陽實躔) | `zhongqi` |
 | 六壬 | `guiren` | `chou` (甲 shares 丑未 with 戊庚), `wei` (甲 stands alone at 未丑) | `chou` |
 | 六壬 | `zhouye` | `branch` (晝 from 卯 to 申), `solar` (actual sunrise and sunset) | `branch` |
+| 曆注 | `shensha` | `xieji` (only those 《協紀辨方書》 ratifies, cut to the day and the direction), later a named lineage | `xieji` |
 | 七政四餘 | `xiudu` | which 宿度 table, by 曆: `shixian` (時憲曆), `shoushi` (授時曆) | `shixian` |
 | 七政四餘 | `ziqi` | `off`, or a named transmission with its epoch | `off` |
 | 七政四餘 | `luohou` | which node is 羅睺: `ascending`, `descending` | to be decided |
@@ -187,7 +188,10 @@ default from dunjia's.
 
 `dayBoundary` and `trueSolarTime` are shared with dunjia and keep their
 meanings: a board that read the day differently from the pillars beside it
-would be two calendars in one output.
+would be two calendars in one output. The 曆注 share neither, because the
+almanac layer is not a board: it is a page of a published book, a pure
+function of the civil date reckoned as the lunar date is, and its one
+divergence of its own is which 神煞 enter. See phase 15.
 
 **Derived constraint**: no function in `core` reads a global default. Options
 arrive as arguments, and the chart carries them in its own output — a saved
@@ -1380,13 +1384,13 @@ already fills several ways — 八字, 紫微斗數, 七政四餘 — and naming
 after the Western instance is what makes people go looking for the missing
 Chinese one and graft it onto whatever board is at hand. In the 五術
 (山醫命相卜) the class is 命 (mìng), fate, and it is a sibling of 卜 (bǔ),
-divination, not a gap inside it. Dunjia is 卜. So is 六壬. What phase 15 adds
+divination, not a gap inside it. Dunjia is 卜. So is 六壬. What phase 16 adds
 is 命, and it is added *as* 命, on a board built for it.
 
 **What this admits.** A second and a third engine under the same roof, each
 with its own input type, its own output and its own entries in
 `docs/sources.md`. 八字 was always here — it arrived as the substrate a dunjia
-chart is cast from — and phase 15 makes explicit what that already implied:
+chart is cast from — and phase 16 makes explicit what that already implied:
 this project computes fate arts as well as divinatory boards.
 
 **What it does not admit, and this is the whole of it.** Reading a *dunjia*
@@ -1863,22 +1867,136 @@ rather than code.
 
 ### Phase 15 — The almanac layer
 
-**Planned.** The cheapest of the three and the one a reader of dunjia will
-notice missing, because dunjia already chooses hours and directions and the
-almanac is what that choice was always read beside: 建除十二神 (from the month
-branch and the day branch), 二十八宿值日 (a continuous count from an epoch),
-and the 神煞 — but only some.
+**Planned, and next.** The cheapest of the three and the one a reader of
+dunjia will notice missing, because dunjia already chooses hours and
+directions and the almanac is what that choice was always read beside:
+建除十二神, 二十八宿值日, and the 神煞 — but only some. It is also the one
+of the three that adds no board: nothing is laid and nothing is asked, and
+an almanac is the same page for everybody who opens it on the same day. It
+is a *layer*, as its name has said all along, and the difference does work
+twice below — it keeps the layer out of the consultation, and it decides
+which day the page describes.
+
+**Three blocks, and their costs are not alike**: a day's work, a number, and
+the phase.
+
+- **建除十二神** is arithmetic on two branches the engine has carried since
+  phase 2: 建 where the day branch meets the month branch, the other eleven
+  in order behind it. The rule was run against the reference before it was
+  written down here: 2026-08-04 to -11 gives 平定執 · 執破危成收, the month
+  changing at 立秋 between the doubled 執 — and the famous doubling is not a
+  second rule but the month branch stepping on a day the day branch also
+  steps.
+- **二十八宿值日** is a continuous count of days, and its whole content is
+  one number, the epoch. The epoch is over-determined in a way almost
+  nothing in this project is: twenty-eight is four weeks, so each lodge
+  rides a fixed weekday, and the tradition wrote the check into the names —
+  the planet in 鬼金羊 is 金, and 2026-08-14, a Friday, is 鬼 in the
+  reference, which holds the lock (日 on Sunday through 土 on Saturday) on
+  every one of four hundred sampled days. The count crosses the 節 unbroken
+  where 建除 doubles; the two blocks disagree about what a boundary is, and
+  both are right.
+- **The 神煞 are the phase**, and the rest of this section is mostly about
+  bounding them.
 
 **The source is why this phase exists at all.** 《協紀辨方書》 (1741,
 imperially commissioned, in the 四庫全書) is the one work of its kind that
 **adjudicates between conflicting folk rules and says which it rejects and
 why**. For a project whose register of numbers is `docs/sources.md`, a source
-that shows its own reasoning is worth more than three that agree.
+that shows its own reasoning is worth more than three that agree. And it is a
+book of 選擇 — choosing days and bearings is what it is *for* — which is why
+it can bound the phase twice, below.
 
-**The 神煞 are the risk, and the source is also the bound on it.** There are
-hundreds of them and they diverge by lineage. Only those the 協紀 itself
-ratifies are defensible here; the rest are left out and said to be left out,
-as 三奇得使 was.
+**The 神煞 are the risk, and the bound is two cuts, not one.** There are
+hundreds of them and they diverge by lineage. The first cut is the source's:
+only those the 協紀 itself ratifies are defensible here; the rest are left
+out and said to be left out, as 三奇得使 was. The second cut is the layer's
+purpose, and it is what makes the first affordable: dunjia chooses hours and
+directions, so what enters is what the 協紀 attaches to **the quality of the
+day and the bearing of a direction** — not the full register it ratifies for
+weddings, burials and the digging of wells. The 時家 hour-gods stay out with
+that register: the page's grain is the day, and the hour already has a whole
+art standing on it. The arithmetic behind the second cut is the catalog's:
+every name is hanzi, a toned pinyin and a gloss in two languages, so the
+twelve and the twenty-eight arrive bounded by definition and every 神煞
+beyond them is four catalog lines that have to be worth writing — the
+largest set of names any phase has added, if it is let grow. The set ships
+as `shensha` in § 3, one implemented value from day one: lineages diverge
+here the way schools diverge in dunjia, and a second set must be able to
+arrive without breaking a shared URL.
+
+**A runnable reference exists and is already in the house.**
+`lunar-javascript` — the witness every pillar was verified against in phases
+1 and 2 — computes the whole layer per civil date: the 值星, the lodge, and
+the day's lists of 吉神 and 凶煞. So this layer can be compared before it is
+written, which is a luxury phase 13 had to go abroad for. Two reservations,
+recorded before use rather than after:
+
+- **It emits simplified characters** — the 值星 arrive as 开 and 闭, 天倉 as
+  天仓 — the defect that makes `kinqimen` throw on five terms of twenty-four
+  (§ 5). The comparison normalises before comparing, and none of its strings
+  enter the engine.
+- **It encodes a modern 通書, not the 協紀.** Its 神煞 lists are somebody's
+  compilation. Where the two disagree, the 協紀 adjudicates — that is what
+  it is here for — and the disagreement goes into `docs/sources.md`.
+  Agreement with it weighs what § 5 says agreement with `qimen-dunjia`
+  weighs: consistent with a common implementation, never verified.
+
+**A page, not an instant — decided here, because this is where the layer
+could have gone wrong quietly.** 值日 names its own grain: the layer
+describes a civil day, and the day is reckoned as the lunar date is — on
+120°E, the same instant carrying the same page in Rome and in Beijing,
+`dayBoundary` and `trueSolarTime` never consulted. The alternative was
+considered and set aside: reading the chart's pillars instead would move the
+值星 at 23:00 under `zishi` and hold the old month until the 節's own hour —
+an instant-grain 建除 no source consulted states, where the page's grain is
+stated by every page: the reference gives the whole 節 day to the new month,
+執執 across 立秋 and 閉閉 across 白露 alike. What the decision costs is
+already priced in: every chart prints a 120°E lunar date beside a
+zone-following day pillar, and the layer stands on the lunar date's side of
+that line. On most days the page's ganzhi and the chart's day pillar agree;
+in the hours where they part — the 子 hours, the hours before a 節 strikes —
+the pillars describe the chart and the page describes the day, each says
+which it is, and a test pins both. The 協紀's own statement of the 節-day
+rule is looked up before the block is written; if it states the other grain,
+this paragraph changes, rather than the code diverging from it silently.
+
+**Valence travels, advice does not, and this layer is where the two arrive
+welded together.** A 神煞's name is frequently its verdict — 天德 is a
+blessing and 月破 is a breaking, named and weighed in one line of the source
+— and that is `Pattern`'s valence over again: an attribute of the
+configuration, carried as identifier, hanzi and glyph, never as prose. But
+the 協紀 hands nearly every one down *inside* its 宜忌 — this day suits,
+this day forbids — and a 宜忌 is advice: ordering days, dating an act,
+telling somebody what to do, the engine's own stated stop. The line falls
+where `purposes.ts` already drew it for the gates. What a gate is chosen
+*for* ships there on three concordant witnesses, and it ships expanding into
+criteria a caller could have written by hand, shown and editable, never a
+filter applied out of sight — so if the almanac ever feeds the scan, that is
+the shape it feeds it in: a criterion somebody chose, not a day the engine
+blessed. What never ships is the register itself, 宜嫁娶 and 忌動土 day by
+day — a catalogue of undertakings longer than eight is exactly what
+`purposes.ts` says the eight protect against, and a surface printing
+«suitable for travel» under a date would be this project advising in a
+caption what it declines to compute in code.
+
+**It is not an instrument, and the consultation rules catch it from both
+sides.** Nothing is asked of an almanac, so there is nothing for the
+question to come before: it takes no place in the instrument field. And it
+does not enter the fence, by phase 14's own argument: the 值星 is a function
+of the month and day branch the board already shows, so a model reading 平
+beside the pillars that yield 平 counts one datum twice and calls it
+corroboration. Where the layer lives is **the sections that are addresses**
+— the day's line beside the pillars on the chart and 六壬 pages, where
+nothing is being asked — and, when it earns it, the scan: 擇日 is what the
+協紀 is for, and choosing a time is the one place this engine already lets a
+purpose expand into criteria that can be seen.
+
+**And one debt is paid before the layer starts.** `docs/sources.md` has no
+六壬 section: the 月將 table, the 寄宮, the 九宗門 and their precedence
+stand in this file and in `liuren.ts`'s comments, not in the register
+CLAUDE.md calls mandatory. A third layer's tables do not land in a register
+the second board never entered.
 
 ### Phase 16 — 七政四餘
 
