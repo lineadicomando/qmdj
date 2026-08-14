@@ -345,7 +345,9 @@ describe('matchRuns', () => {
   });
 
   it('rules out the whole run where the configuration belongs to no palace', () => {
-    const runs = scan('2026-01-01', '2026-02-01');
+    // The shared week, like every test here: 伏吟 falls on the board thirty
+    // times in it, and a month of its own bought nothing but the wall clock.
+    const runs = WEEK();
     const boards = runs.filter((run) =>
       run.chart.patterns.some((found) => found.id === 'fuyin' && found.palace === undefined),
     );
