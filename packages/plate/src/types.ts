@@ -157,6 +157,70 @@ export interface PlateCaptions {
  */
 export type PlateDirections = Partial<Record<DirectionId, string>>;
 
+/**
+ * What the drawing needs of a Liu Ren board.
+ *
+ * Redeclared here for the reason everything in this file is: the package that
+ * draws must not be able to reach the package that computes. A real
+ * `LiurenBoard` satisfies this structurally, and `test/types.test.ts` proves
+ * it still does.
+ *
+ * Looser than the engine's in one way worth noticing: `rule`, `keti` and
+ * `position` are plain strings here where the engine has unions of nine,
+ * fifteen and three. The drawing looks a label up by them and writes what it
+ * finds; a value it has never heard of costs it a caption, not a picture.
+ */
+export interface PlateLiuren {
+  yuejiang: { hanzi: string; branch: { hanzi: string; index: number } };
+  day: { hanzi: string };
+  hour: { hanzi: string; index: number };
+  /** The 天盤 by palace of the 地盤: `heaven[i]` stands over branch `i`. */
+  heaven: readonly { hanzi: string; index: number }[];
+  /** The general over each palace of the 地盤, in the same order. */
+  generals: readonly { hanzi: string; id: string }[];
+  courses: readonly PlateCourse[];
+  transmissions: readonly PlateTransmission[];
+  rule: string;
+  keti?: string | undefined;
+  /** Set on a board drawn by a rule no reference implementation covers. */
+  unverified?: true | undefined;
+}
+
+export interface PlateCourse {
+  /** 一課 to 四課. They are written right to left, as the tradition writes them. */
+  number: number;
+  upper: { hanzi: string };
+  lower: { hanzi: string };
+}
+
+export interface PlateTransmission {
+  position: string;
+  branch: { hanzi: string };
+  general: { hanzi: string; id: string };
+  hiddenStem?: { hanzi: string } | undefined;
+  /** 空亡 — the branch falls outside the day's decade and carries no stem. */
+  empty: boolean;
+}
+
+/** What to write around a Liu Ren board, keyed by the engine's identifiers. */
+export interface PlateLiurenLabels {
+  rule?: Record<string, string>;
+  keti?: Record<string, string>;
+  transmission?: Record<string, string>;
+  /** A word for 空亡, written where a transmission has no stem under it. */
+  empty?: string;
+  /** The line said on a board whose rule nothing could check. */
+  unverified?: string;
+}
+
+export interface PlateLiurenOptions {
+  size?: number;
+  scheme?: 'light' | 'dark' | 'auto';
+  labels?: PlateLiurenLabels;
+  /** A line over the board — the moment it was laid for, usually. */
+  heading?: string;
+}
+
 export interface PlateOptions {
   /**
    * Side of the square, in pixels. Default 900.

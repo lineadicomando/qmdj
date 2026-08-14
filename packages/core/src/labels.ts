@@ -1,5 +1,6 @@
 import type { MessageKey, Translator } from '@qimendunjia/i18n';
 import { BRANCHES, STEMS, type Ganzhi } from './ganzhi.js';
+import { GENERALS, KETI, LIUREN_RULES } from './liuren.js';
 import {
   DIRECTIONS,
   GATES,
@@ -66,6 +67,43 @@ export function chartLabels(t: Translator): ChartLabels {
       VALENCE_IDS.map((id) => [id, t(`label.valence.${id}` as MessageKey)]),
     ),
     layer: Object.fromEntries(LAYERS.map((id) => [id, t(`label.layer.${id}` as MessageKey)])),
+  };
+}
+
+/**
+ * The words for what a Liu Ren board contains, in one locale.
+ *
+ * Built for the same reason `chartLabels` is: the drawing knows no language,
+ * and two surfaces naming the same rule differently is the drift this exists
+ * to prevent.
+ */
+export interface LiurenLabels {
+  general: Record<string, string>;
+  rule: Record<string, string>;
+  keti: Record<string, string>;
+  transmission: Record<string, string>;
+  /** The word for 空亡, where a transmission has no stem under it. */
+  empty: string;
+  /** The line a board carries when nothing could check the rule that drew it. */
+  unverified: string;
+}
+
+export function liurenLabels(t: Translator): LiurenLabels {
+  return {
+    general: Object.fromEntries(
+      GENERALS.map((general) => [general.id, t(`label.general.${general.id}` as MessageKey)]),
+    ),
+    rule: Object.fromEntries(
+      Object.keys(LIUREN_RULES).map((id) => [id, t(`label.liurenRule.${id}` as MessageKey)]),
+    ),
+    keti: Object.fromEntries(
+      Object.keys(KETI).map((id) => [id, t(`label.keti.${id}` as MessageKey)]),
+    ),
+    transmission: Object.fromEntries(
+      ['chu', 'zhong', 'mo'].map((id) => [id, t(`label.transmission.${id}` as MessageKey)]),
+    ),
+    empty: t('cli.value.emptyBranch'),
+    unverified: t('cli.value.liurenUnverified'),
   };
 }
 

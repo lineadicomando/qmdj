@@ -12,9 +12,9 @@ anything.
 | `packages/i18n` | message catalogs and locale negotiation. A leaf: depends on nothing |
 | `packages/geo` | location lookup over a local GeoNames dataset (SQLite) |
 | `packages/core` | calculation engine and the `qimen` CLI: solar terms, lunar calendar, sexagenary cycles, Four Pillars, Qi Men charts, Liu Ren boards, scanning an interval |
-| `packages/plate` | the drawing: nine palaces, glyphs, SVG and PNG |
-| `packages/mcp` | MCP server: eight tools, four resources, stdio transport |
-| `apps/web` | SvelteKit: four sections at `/en` and `/it`, plus nine GET endpoints under `/api` |
+| `packages/plate` | the drawings: the nine palaces of a chart, the ring of twelve of a 六壬 board, glyphs, SVG and PNG |
+| `packages/mcp` | MCP server: nine tools, four resources, stdio transport |
+| `apps/web` | SvelteKit: four sections at `/en` and `/it`, plus ten GET endpoints under `/api` |
 
 npm workspaces monorepo, Node ≥ 22, ESM, TypeScript.
 
@@ -98,7 +98,8 @@ the engine falls back to Moshier, which needs no files.
 - **A chart carries the options that produced it.** No function in `core` reads
   a global default: a saved chart must reproduce identically.
 - **`packages/plate` imports nothing from `core`, not even types.** It
-  redeclares the shape it needs and a test asserts the two still agree. The
+  redeclares the shape it needs — of a chart and of a 六壬 board alike — and a
+  test asserts the copies still agree. The
   CLI lives in `core` and draws, so the other direction would close a cycle —
   and a drawing that could reach the engine would end up computing.
 - **The PNG lives at `@qimendunjia/plate/png`**, a separate entry point: it

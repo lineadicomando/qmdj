@@ -138,7 +138,14 @@ export {
   type YuejiangId,
 } from './liuren.js';
 
-export { chartLabels, sayBranch, sayGanzhi, type ChartLabels } from './labels.js';
+export {
+  chartLabels,
+  liurenLabels,
+  sayBranch,
+  sayGanzhi,
+  type ChartLabels,
+  type LiurenLabels,
+} from './labels.js';
 
 export {
   formatBazi,

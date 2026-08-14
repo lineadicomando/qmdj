@@ -56,6 +56,7 @@ describe('what the server offers', () => {
       'compute_bazi',
       'compute_liuren',
       'compute_qimen_chart',
+      'draw_liuren',
       'draw_qimen_chart',
       'lunar_date',
       'scan_moments',
@@ -73,6 +74,7 @@ describe('what the server offers', () => {
     expect(byName.get('compute_qimen_chart')).toMatch(/OMIT date and time/);
     expect(byName.get('search_location')).toMatch(/do not invent/i);
     expect(byName.get('draw_qimen_chart')).toMatch(/not instead of it/);
+    expect(byName.get('draw_liuren')).toMatch(/not instead of it/);
     expect(byName.get('compute_bazi')).toMatch(/do not guess/i);
     // The board of the other 式 answers a question asked now, and the mistake
     // worth heading off is laying it for a birth as if it were a natal chart.

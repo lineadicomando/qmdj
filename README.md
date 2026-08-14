@@ -153,9 +153,9 @@ longer there.
 | `packages/i18n` | message catalogs and locale negotiation. A leaf: depends on nothing |
 | `packages/geo` | location lookup over a local GeoNames dataset (SQLite) |
 | `packages/core` | the engine, and the `qimen` command |
-| `packages/plate` | the drawing: nine palaces framed by the compass, the configurations listed under them, SVG and PNG |
-| `packages/mcp` | MCP server, eight tools, stdio |
-| `apps/web` | SvelteKit: four sections at `/en` and `/it`, nine endpoints under `/api` |
+| `packages/plate` | the drawings: the nine palaces framed by the compass with the configurations under them, and the ring of twelve of a 六壬 board, SVG and PNG |
+| `packages/mcp` | MCP server, nine tools, stdio |
+| `apps/web` | SvelteKit: four sections at `/en` and `/it`, ten endpoints under `/api` |
 
 npm workspaces, Node ≥ 22, ESM, TypeScript.
 

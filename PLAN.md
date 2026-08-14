@@ -1619,10 +1619,25 @@ throws or comes back short.
 > expected values in the open, and a 17 280-row oracle is not a test, it is
 > the thing tests are written *from*.
 
-**Surfaces.** The `new-feature` procedure, unchanged, with one addition that
-is not small: `packages/plate` needs a *second drawing* — the four courses
-and the three transmissions above the 天地盤 — and it still imports nothing
-from `core`, so it redeclares that shape too and a test proves the two agree.
+**Surfaces.** The `new-feature` procedure, unchanged, and the one addition
+that was not small is done: `packages/plate` carries a **second drawing**. Not
+a grid of nine — the 六壬 board is a *ring of twelve*, the branches round the
+edge of a four-by-four with the four inner cells left for what the board
+turned out to be, which is the arrangement every printed 課式 uses and puts the
+south at the top like the compass on the other board. Each palace stacks three
+things: the general above, the 天盤 branch large in the middle, the palace's
+own branch faint underneath, because the ground is what a reader orients by
+and not what they read. The lessons are written right to left and the
+transmissions downwards.
+
+Two things it had to learn that the first drawing already knew. Type is
+**fitted** to the middle rather than set at a size and hoped for: the caption
+arrives from a caller in a language this package does not know, and an English
+gloss is three times the width of the hanzi it renders — the first render put
+`the eight concentrated` straight through two palaces. And `plate` still
+imports nothing from `core`, so the board's shape is redeclared beside the
+chart's and `test/types.test.ts` proves both copies still take the real thing
+without a cast.
 
 ### Phase 14 — The almanac layer
 

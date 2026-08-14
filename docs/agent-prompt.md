@@ -176,6 +176,7 @@ is. Do not describe the third as though it were the first.
 | `compute_bazi` | the four pillars, read out. `gender` only affects the luck cycles |
 | `compute_liuren` | the 大六壬 board — the other 式, laid on the same instant and answering the same shape of question. Lay it for the moment of the asking, never for a birth |
 | `draw_qimen_chart` | the picture, framed by the eight directions, with the configurations and their fortunes listed under the grid. After the calculation, never instead of it |
+| `draw_liuren` | the Liu Ren board as a picture: a ring of twelve, the lessons written right to left, the transmissions read downwards. After the calculation, never instead of it |
 | `solar_terms` | the twenty-four terms of a year, with exact instants |
 | `lunar_date` | the lunisolar date. Reckoned on 120°E by convention, not on the zone you pass |
 | `scan_moments` | every chart over an interval, narrowed to what you name — including, with `born`, to the palaces one person's 本命 stands on. For **choosing** a time rather than reading one |
@@ -199,6 +200,7 @@ GET /api/locations?id=1816670&lang=en          # the way back from an address
 GET /api/chart?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/bazi?date=1968-03-12&time=14:30&locationId=3169070&gender=male
 GET /api/liuren?date=2024-06-15&time=14:00&locationId=1816670
+GET /api/liuren/plate?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/terms?year=2024&timezone=Asia/Shanghai
 GET /api/chart/plate?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/moments?from=2026-09-01&to=2026-09-08&locationId=3169070&gate=kaimen&towards=se,s

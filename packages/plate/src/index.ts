@@ -29,9 +29,15 @@ export {
 } from './geometry.js';
 export { FONT_STACK, PALETTES, styleSheet, type Palette, type Scheme } from './palette.js';
 export { renderChartSvg, STRENGTH_MARKS } from './svg.js';
+export { renderLiurenSvg, DEFAULT_LIUREN_SIZE } from './liuren-svg.js';
 export type {
   Named,
   PlateCaptions,
+  PlateCourse,
+  PlateLiuren,
+  PlateLiurenLabels,
+  PlateLiurenOptions,
+  PlateTransmission,
   PlateChart,
   PlateDirections,
   PlateLabels,

@@ -18,6 +18,7 @@ import {
   formatSolarTerms,
   formatWarnings,
   liurenBoard,
+  liurenLabels,
   lunarDate,
   matchRuns,
   sayGanzhi,
@@ -28,7 +29,7 @@ import {
   type ScanCriteria,
 } from '@qimendunjia/core';
 import { searchLocations } from '@qimendunjia/geo';
-import { renderChartSvg } from '@qimendunjia/plate';
+import { renderChartSvg, renderLiurenSvg } from '@qimendunjia/plate';
 import { z } from 'zod';
 import {
   birthSchema,
@@ -443,6 +444,57 @@ export function registerDrawQimenChart(server: McpServer, context: ToolContext):
         });
 
         return ok(svg);
+      } catch (error) {
+        return fail(describeError(error, t));
+      }
+    },
+  );
+}
+
+export function registerDrawLiuren(server: McpServer, context: ToolContext): void {
+  server.registerTool(
+    'draw_liuren',
+    {
+      title: 'Draw a 大六壬 board',
+      description:
+        'Renders a Liu Ren board as an SVG: a ring of twelve rather than a grid of nine, with ' +
+        'each palace of the 地盤 carrying the general above it and the 天盤 branch over its own ' +
+        'ground, the four lessons written right to left, and the three transmissions read ' +
+        'downwards. ' +
+        'CALL THIS AFTER compute_liuren, not instead of it: a picture carries the glyphs but ' +
+        'not the warnings, and not the readings beside the names. Show the person both, or ' +
+        'show them the data alone.',
+      inputSchema: {
+        date: dateSchema,
+        time: timeSchema,
+        ...placeSchema,
+        guiren: z.enum(['chou', 'wei']).optional().describe('Which verse seats the 貴人.'),
+        ...optionSchema,
+        size: z.number().int().min(240).max(2048).optional().describe('Side in pixels. Default 720.'),
+        lang: langSchema,
+      },
+    },
+    async (args) => {
+      const t = translatorFor(args.lang);
+      try {
+        const { moment } = resolveInput(args, context);
+        const options: LiurenOptions = { ...DEFAULT_LIUREN_OPTIONS };
+        if (args.guiren) options.guiren = args.guiren;
+
+        const board = liurenBoard(
+          { term: moment.solarTerm.term, day: moment.pillars.day, hour: moment.hourBranch },
+          options,
+        );
+
+        return ok(
+          renderLiurenSvg(board, {
+            size: args.size ?? 720,
+            labels: liurenLabels(t),
+            heading:
+              `${sayGanzhi(board.day, t)} ${board.day.hanzi} · ${board.hour.hanzi} · ` +
+              `${t('cli.field.yuejiang')} ${board.yuejiang.hanzi} ${board.yuejiang.branch.hanzi}`,
+          }),
+        );
       } catch (error) {
         return fail(describeError(error, t));
       }

@@ -1,7 +1,14 @@
-import { computeQimenChart, initEphemeris, resolveMoment, DEFAULT_OPTIONS } from '@qimendunjia/core';
-import type { QimenChart } from '@qimendunjia/core';
+import {
+  computeQimenChart,
+  initEphemeris,
+  liurenBoard,
+  resolveMoment,
+  DEFAULT_LIUREN_OPTIONS,
+  DEFAULT_OPTIONS,
+} from '@qimendunjia/core';
+import type { LiurenBoard, QimenChart } from '@qimendunjia/core';
 import { describe, expect, it } from 'vitest';
-import type { PlateChart } from '../src/types.js';
+import type { PlateChart, PlateLiuren } from '../src/types.js';
 
 /**
  * The guard on the one rule this package exists to keep.
@@ -71,5 +78,54 @@ describe('the redeclared shape', () => {
 
     expect(centre?.gate).toBeUndefined();
     expect(centre?.spirit).toBeUndefined();
+  });
+});
+
+const board: LiurenBoard = liurenBoard(
+  {
+    term: chart.moment.solarTerm.term,
+    day: chart.moment.pillars.day,
+    hour: chart.moment.hourBranch,
+  },
+  DEFAULT_LIUREN_OPTIONS,
+);
+
+describe('the redeclared board', () => {
+  it('accepts a real Liu Ren board without a cast', () => {
+    const asPlate: PlateLiuren = board;
+
+    expect(asPlate.heaven).toHaveLength(12);
+    expect(asPlate.generals).toHaveLength(12);
+  });
+
+  it('finds every field the drawing reads', () => {
+    const plate: PlateLiuren = board;
+
+    expect(plate.yuejiang.hanzi).toMatch(/^.{2}$/);
+    expect(typeof plate.yuejiang.branch.index).toBe('number');
+    expect(plate.day.hanzi).toMatch(/^.{2}$/);
+    expect(typeof plate.hour.index).toBe('number');
+    expect(typeof plate.rule).toBe('string');
+
+    for (const cell of plate.heaven) expect(typeof cell.hanzi).toBe('string');
+    for (const general of plate.generals) expect(typeof general.id).toBe('string');
+
+    expect(plate.courses).toHaveLength(4);
+    for (const course of plate.courses) {
+      expect(typeof course.number).toBe('number');
+      expect(typeof course.upper.hanzi).toBe('string');
+      // 一課 stands on the day stem and the other three on branches; the
+      // drawing writes whichever it is handed and does not ask which.
+      expect(typeof course.lower.hanzi).toBe('string');
+    }
+
+    expect(plate.transmissions).toHaveLength(3);
+    for (const transmission of plate.transmissions) {
+      expect(typeof transmission.position).toBe('string');
+      expect(typeof transmission.empty).toBe('boolean');
+      // The stem is absent exactly when the branch is 空亡, and the drawing
+      // reads that absence rather than a flag.
+      expect(transmission.hiddenStem === undefined).toBe(transmission.empty);
+    }
   });
 });
