@@ -162,7 +162,7 @@ day one — as `house_system` is in undicesimacasa.
 | `centreLodging` | `kun` (寄坤二), `dun` (陽遁寄二 · 陰遁寄八) | `kun` |
 | `trueSolarTime` | boolean | `true` |
 | `yearBoundary` | `lichun` (立春), `chunjie` (正月初一) | `lichun` |
-| `ziHour` | `late` (23:00 → next day), `single` | `late` |
+| `dayBoundary` | `zishi` (23:00 → next day), `midnight` | `zishi` |
 | `system` | `shijia` (時家), later `rijia`/`yuejia`/`nianjia` | `shijia` |
 
 The first two are the most divisive and are not optional. The rest may ship with
@@ -807,10 +807,17 @@ not dispute: the eight gates and their errands, a bijection, expanded by
 `matchRuns` never hears of a purpose, and nothing is applied where it cannot
 be seen or edited. Everything past the gates — the stems as significators,
 the stars, the spirits — stays out, for the original reason; 三奇得使 remains
-the precedent for saying so rather than guessing. A second tradition of
-associations, if one arrives, is a second table behind a `tradition`
-parameter, and no shared link breaks: a purpose is not in a chart's address,
-the criteria it expands to are.
+the precedent for saying so rather than guessing. The `tradition` parameter
+this plan expected a second strand of associations to need was retired as a
+finding, not a deferral: laid side by side, the classical sources and the
+modern manuals put all eight errands at the same gate, and what they dispute
+is how *wide* each gate's domain runs — the gloss, not the chart — so the
+parameter would have selected between two identical columns. The divergences
+that are real name errands the table does not carry, and a table longer than
+eight stops being the gates read from the other side. Nothing forecloses it:
+a purpose is still not in a chart's address, the criteria it expands to are,
+so if that longer table is ever wanted the parameter can arrive without
+breaking a shared link. See the 八門 section of `docs/sources.md`.
 
 **The natal question is not answered here by comparing two charts.** Setting a
 birth chart against the chart of a moment is a modern and minority practice,

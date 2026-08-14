@@ -256,6 +256,7 @@ from the first release:
 | `trueSolarTime` | correct clock time to the Sun | `true` |
 | `yearBoundary` | 立春 or 正月初一 | `lichun` |
 | `dayBoundary` | the day pillar turns at 23:00 or at midnight | `zishi` |
+| `system` | which family of chart: the hour's (時家), the day's, the month's or the year's | `shijia` |
 
 `method` accepts `chaibu` and `zhirun` today, and they are different schools,
 not approximations of one another: under 拆補 each term is split into three

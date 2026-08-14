@@ -177,8 +177,9 @@ arrangement.
 
 ## The REST equivalent
 
-Every tool has an endpoint, and both read the same query string, so a chart is
-a shareable address.
+Every tool but `lunar_date` has an endpoint — the lunisolar date is the CLI's
+`qimen calendar` and nothing over HTTP — and tool and endpoint read the same
+query string, so a chart is a shareable address.
 
 ```
 GET /api/locations?q=Beijing&lang=en
@@ -193,8 +194,8 @@ GET /api/chart/prompt?date=2024-06-15&time=14:00&locationId=1816670&asked=true
 GET /api/chart?date=2024-06-15&time=14:00&locationId=1816670&born=1968-03-12&gender=female
 ```
 
-The last two answer `text/plain` rather than JSON. `text` is the chart said in
-words, exactly as the CLI prints it. `prompt` is that chart wrapped in this
+`chart/text` and `chart/prompt` answer `text/plain` rather than JSON. `text`
+is the chart said in words, exactly as the CLI prints it. `prompt` is that chart wrapped in this
 document, condensed and addressed to a model with no connection to any of
 this — what the interface copies to a clipboard for somebody to paste
 elsewhere. **You do not need either of them**: you are holding the data, and
