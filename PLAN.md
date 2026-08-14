@@ -1920,26 +1920,48 @@ the phase.
   reference, which holds the lock (日 on Sunday through 土 on Saturday) on
   every one of four hundred sampled days. The count crosses the 節 unbroken
   where 建除 doubles; the two blocks disagree about what a boundary is, and
-  both are right.
+  both are right. **And the 協紀 will not warrant it** — see below, because
+  that is the finding that reshaped this phase.
 - **The 神煞 are the phase**, and the rest of this section is mostly about
   bounding them.
 
-**The source is why this phase exists at all.** 《協紀辨方書》 (1741,
-imperially commissioned, in the 四庫全書) is the one work of its kind that
-**adjudicates between conflicting folk rules and says which it rejects and
-why**. For a project whose register of numbers is `docs/sources.md`, a source
-that shows its own reasoning is worth more than three that agree. And it is a
-book of 選擇 — choosing days and bearings is what it is *for* — which is why
-it can bound the phase twice, below.
+**The source is why this phase exists at all.** 《欽定協紀辨方書》, 三十六卷,
+imperially commissioned in 乾隆四年 (1739) and in the 四庫全書 — this document
+said 1741, which is the date usually given for its presentation rather than its
+commission, and the two should not be conflated again. It is the one work of
+its kind that **adjudicates between conflicting folk rules and says which it
+rejects and why**: 卷三十六 is 辨訛, a whole chapter of rejections. For a
+project whose register of numbers is `docs/sources.md`, a source that shows its
+own reasoning is worth more than three that agree. And it is a book of 選擇 —
+choosing days and bearings is what it is *for* — which is why it can bound the
+phase twice, below.
+
+**It was read before any of this was written, and it moved three things.**
+That is the order phase 13 learned the hard way and paid for; here it was
+followed first, and the reading is what the rest of this section reports.
 
 **The 神煞 are the risk, and the bound is two cuts, not one.** There are
 hundreds of them and they diverge by lineage. The first cut is the source's:
 only those the 協紀 itself ratifies are defensible here; the rest are left
-out and said to be left out, as 三奇得使 was. The second cut is the layer's
-purpose, and it is what makes the first affordable: dunjia chooses hours and
-directions, so what enters is what the 協紀 attaches to **the quality of the
-day and the bearing of a direction** — not the full register it ratifies for
-weddings, burials and the digging of wells. The 時家 hour-gods stay out with
+out and said to be left out, as 三奇得使 was. **That register has now been
+counted rather than guessed at: 義例, 卷三 to 卷八, carries about a hundred
+entries**, each with its derivation and the compilers' argument for it. A
+hundred names is four hundred catalog lines in two languages, which is why the
+first cut alone does not bound this phase.
+
+The second cut is the layer's purpose, and it is what makes the first
+affordable: dunjia chooses hours and directions, so what enters is what the
+協紀 attaches to **the quality of the day and the bearing of a direction** —
+not the full register it ratifies for weddings, burials and the digging of
+wells. **The source splits its own register on very nearly that line**, which
+is why the cut is a reading of it rather than something imposed on it: the
+年神 govern bearings — 大將軍, 豹尾, 歲破, 太陰, 白虎 — and the 月神 govern
+days. And 卷四 states a consolidation that shrinks the block again before it
+is written: 「凡月神之以十二辰起例者……今一以建除統之」 — every month-god
+reckoned round the twelve branches is 建除 under another name, and the
+compilers say so explicitly, 「今為類聚之而悉統於建除」. A good part of what
+looks like a hundred separate quantities is one quantity with a hundred names,
+which is the opposite of the problem this phase feared. The 時家 hour-gods stay out with
 that register: the page's grain is the day, and the hour already has a whole
 art standing on it. The arithmetic behind the second cut is the catalog's:
 every name is hanzi, a toned pinyin and a gloss in two languages, so the
@@ -1949,6 +1971,28 @@ largest set of names any phase has added, if it is let grow. The set ships
 as `shensha` in § 3, one implemented value from day one: lineages diverge
 here the way schools diverge in dunjia, and a second set must be able to
 arrive without breaking a shared URL.
+
+**And the source refuses one of the three blocks, which is the finding this
+phase turned on.** 二十八宿值日 was listed above as the cheap middle block, on
+the assumption that the 協紀 stood behind it. It does not. 卷一 records that
+the compilers went looking for a Chinese basis for the lodge-day assignment and
+found none — 「徧閱羣書莫可考究，及見西域《吉凶時日善惡宿曜經》乃得其說。蓋
+彼國不知十干十二支之名而用二十八宿以紀日」 — and 卷三十六 辨訛 disposes of
+it outright: 「二十八宿選擇之法來自西域……與中國風俗逈然不同……**並不可從**」.
+
+**A source chosen because it rejects things rejected something.** The honest
+consequence is not to drop the block but to stop claiming the wrong warrant
+for it, and the distinction the 協紀 itself draws is the one this engine
+already lives by. What 辨訛 refuses is the **宜忌** — the lodges as grounds for
+choosing a day, the 密日, the thirteen lodges said to suit the cutting of
+cloth. This engine was never going to ship a 宜忌; that was settled two
+sections above, for every 神煞 at once. What remains is the **count**, which is
+a calendrical artefact every printed almanac carries, which the 協紀 describes
+accurately even while declining to follow it, and which is checkable against
+two implementations and against the weekday lock. So the lodge ships as a
+count and a name, with the source's refusal of its doctrine recorded beside it
+rather than hidden — and the epoch, being what the block *is*, takes its
+warrant from the references and from the lock, never from the 協紀.
 
 **A runnable reference exists and is already in the house.**
 `lunar-javascript` — the witness every pillar was verified against in phases
@@ -1982,9 +2026,19 @@ zone-following day pillar, and the layer stands on the lunar date's side of
 that line. On most days the page's ganzhi and the chart's day pillar agree;
 in the hours where they part — the 子 hours, the hours before a 節 strikes —
 the pillars describe the chart and the page describes the day, each says
-which it is, and a test pins both. The 協紀's own statement of the 節-day
-rule is looked up before the block is written; if it states the other grain,
-this paragraph changes, rather than the code diverging from it silently.
+which it is, and a test pins both.
+
+**The 協紀 was asked, and it states the day grain in one clause.** 卷四
+建除十二神, quoting the 厯書: 「厯家以建除滿平定執破危成收開閉凡十二日周而
+復始，觀所值以定吉凶。**每月交節則疊兩值日**。其法從月建上起建，與斗杓所指
+相應。如正月建寅則寅日起建，順行十二辰是也」. The doubling at the 交節 is
+stated outright, and it is stated as a doubled **值日** — a rule that doubles a
+*day* cannot be a rule about an instant, because an instant-grained 建除 would
+move the god mid-day and double nothing. The same sentence gives the
+construction: 建 opens on the day whose branch is the month's, and the twelve
+run forward. This is what was measured against `lunar-javascript` before the
+text was found — 執執 across 立秋, 閉閉 across 白露 — so the reference, the
+text and the plan agree, and the paragraph above stands as written.
 
 **Valence travels, advice does not, and this layer is where the two arrive
 welded together.** A 神煞's name is frequently its verdict — 天德 is a
