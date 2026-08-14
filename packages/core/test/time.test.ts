@@ -87,6 +87,10 @@ describe('resolveTime', () => {
     const cases: [Record<string, string>, string][] = [
       [{ date: '15/06/2024', time: '12:00', timezone: 'Europe/Rome' }, 'INVALID_DATE'],
       [{ date: '2024-06-15', time: 'noon', timezone: 'Europe/Rome' }, 'INVALID_TIME'],
+      // The right shape and impossible hands: admitted, it reached the
+      // calendar and came back as an invalid *date* naming the whole wall
+      // clock, which says nothing about which half of it was wrong.
+      [{ date: '2024-06-15', time: '25:70', timezone: 'Europe/Rome' }, 'INVALID_TIME'],
       [{ date: '2024-06-15', time: '12:00', timezone: 'Mars/Olympus' }, 'UNKNOWN_TIMEZONE'],
     ];
 
@@ -98,6 +102,15 @@ describe('resolveTime', () => {
         expect(error).toBeInstanceOf(ChartError);
         expect((error as ChartError).code).toBe(code);
       }
+    }
+  });
+
+  it('names the time that was wrong, and not the wall clock it was part of', () => {
+    try {
+      resolveTime({ date: '2024-06-15', time: '25:70', timezone: 'Europe/Rome' });
+      expect.unreachable('should have thrown');
+    } catch (error) {
+      expect((error as ChartError).params).toEqual({ time: '25:70' });
     }
   });
 });

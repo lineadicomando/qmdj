@@ -28,7 +28,10 @@ export interface TimeResolution {
 }
 
 const DATE_PATTERN = /^-?\d{4,}-\d{2}-\d{2}$/;
-const TIME_PATTERN = /^\d{2}:\d{2}(:\d{2})?$/;
+// Hours to 23 and minutes to 59 in the pattern itself: `25:70` has the right
+// shape, and admitted here it came back from the calendar as an invalid
+// *date* naming the whole wall clock instead of the time that was wrong.
+const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/;
 
 /**
  * Converts a local date and time to Universal Time, applying the historical
