@@ -641,9 +641,14 @@ function bazhuan(context: Context): Drawn {
  */
 function fuyin(context: Context): Drawn {
   const { day } = context;
-  const opening = day.stem.yang ? lodgingOf(day.stem) : day.branch;
+  const lodging = lodgingOf(day.stem);
+  const opening = day.stem.yang ? lodging : day.branch;
+  // A branch that punishes itself hands the board nothing, so the rule crosses
+  // to the other seat: a board opened on the stem's takes the branch's, and
+  // one opened on the branch's takes the stem's.
+  const other = day.stem.yang ? day.branch : lodging;
   const second = punishment(opening);
-  const middle = second.index === opening.index ? day.branch : second;
+  const middle = second.index === opening.index ? other : second;
   const third = punishment(middle);
   const last = third.index === middle.index ? (BRANCHES[(middle.index + 3) % 12] as Branch) : third;
   return {
