@@ -59,7 +59,7 @@ compatible with it. The GeoNames data is CC BY 4.0.
 | Four pillars | 四柱 with 藏干, 十神, 納音, 十二長生, 空亡, 大運 |
 | Qi Men charts | 時家 by the 拆補 or 置閏 method: four plates, configurations, seasonal states, 門宮 and 星宮 relations, the post horse of the day and of the hour |
 | Liu Ren boards | 大六壬: the 天地盤 by 月將加時, the 四課, the 三傳 by the 九宗門, the 十二天將, the 遁干 and the 空亡 |
-| Almanac | 曆注: 建除十二神, 二十八宿值日, the 十二神 and twenty-six 年神 — the officer, the lodge and the god of the day, and the bearings the year holds, reckoned on 120°E beside the chart rather than inside it |
+| Almanac | 曆注: 建除十二神, 二十八宿值日, the 十二神, twenty-six 年神 and the four 德 of the month — the officer, the lodge and the god of the day, and the bearings the year holds, reckoned on 120°E beside the chart rather than inside it |
 | Choosing a time | 擇時擇方: every chart over an interval, narrowed to the palaces answering stated criteria |
 
 It reports **arrangements and what the tradition calls them**. A gate stands

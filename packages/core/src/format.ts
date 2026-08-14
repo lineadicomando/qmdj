@@ -1,5 +1,5 @@
 import type { MessageKey, Translator } from '@qimendunjia/i18n';
-import type { Almanac, YearGod } from './almanac.js';
+import type { Almanac, YearGodSeat } from './almanac.js';
 import type { Bazi } from './bazi/index.js';
 import { palace, YUAN_HANZI, YUAN_PINYIN, type QimenChart } from './dunjia/index.js';
 import { BRANCHES, type Ganzhi } from './ganzhi.js';
@@ -148,8 +148,7 @@ function lunar(date: LunarDate, t: Translator): string {
  * A branch for most of them and a stem for 歲德 and its 合, because that is
  * what the source gives and neither is turned into the other here.
  */
-function seatOf(god: YearGod, t: Translator): string {
-  const seat = god.seat;
+function seatOf(seat: YearGodSeat, t: Translator): string {
   if (seat.kind === 'branch') {
     return `${t(`label.branch.${seat.branch.id}` as MessageKey)} ${seat.branch.hanzi}`;
   }
@@ -173,11 +172,21 @@ export function formatAlmanac(page: Almanac, t: Translator): string {
   const gods = page.yearGods
     .map(
       (god) =>
-        `${god.hanzi} ${god.pinyin} ${t(`label.yeargod.${god.id}` as MessageKey)} → ${seatOf(god, t)}`,
+        `${god.hanzi} ${god.pinyin} ${t(`label.yeargod.${god.id}` as MessageKey)} → ${seatOf(god.seat, t)}`,
     )
     .join('\n' + ' '.repeat(24));
+  // The virtues of the month: where each sits, and 「所值之日」 marked where
+  // this day is one of them.
+  const virtues = page.monthGods
+    .map((god) => {
+      const seat = god.seat ? seatOf(god.seat, t) : '—';
+      return `${god.hanzi} ${god.pinyin} → ${seat}${god.onDay ? ' ·' : ''}`;
+    })
+    .join('   ');
+
   return [
     `  ${pad(t('cli.field.jianchu'), 20)}${officer(page, t)}`,
+    `  ${pad(t('cli.field.monthGods'), 20)}  ${virtues}`,
     `  ${pad(t('cli.field.yearGods'), 20)}${page.year.hanzi} — ${gods}`,
   ].join('\n');
 }

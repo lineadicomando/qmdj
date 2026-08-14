@@ -459,6 +459,92 @@ export function yearGodsOf(year: Ganzhi): readonly YearGod[] {
   }));
 }
 
+
+export type MonthGodId = 'tiande' | 'tiandehe' | 'yuede' | 'yuedehe';
+
+export interface MonthGod {
+  id: MonthGodId;
+  hanzi: string;
+  pinyin: string;
+  /**
+   * Where it sits for this month, or `undefined` where it has none.
+   *
+   * Only 天德合 is ever absent: 「四仲之月天徳居四維，故無合也」 — in the four
+   * 仲 months the 天德 stands on a corner trigram, and a trigram has no 五合.
+   */
+  seat?: YearGodSeat;
+  /**
+   * Whether **this day** carries it, which is the seat and the day agreeing.
+   *
+   * A god seated on a stem is carried by the day of that stem: 「所值之日」.
+   * One seated on a trigram is a bearing only — 「所理之方」 — and no day can
+   * carry it, which is why the four 仲 months have a 天德 and no 天德日.
+   */
+  onDay: boolean;
+}
+
+/**
+ * The four virtues, by the branch of the month.
+ *
+ * Each is enumerated whole, and each pair checks the other: 月德合 and 天德合
+ * are the 五合 of their own 德, which the source says outright — 「月徳合者，
+ * 即各以月徳所合之干為之」 — so the four tables are really two, stated twice.
+ *
+ * 歴例 for 月德: 「正五九月在丙，二六十月在甲，三七十一月在壬，四八十二月在
+ * 庚」, and 曹震圭 gives the reason, 「寅午戌三合為火，以丙為徳」 — the yang
+ * stem of the phase the month's own triad belongs to.
+ *
+ * 堪輿經 for 天德: 「正月丁，二月坤，三月壬，四月辛，五月乾，六月甲，七月癸，
+ * 八月艮，九月丙，十月乙，十一月巽，十二月庚」 — eight stems and, in the four
+ * 仲 months, the four corner trigrams.
+ */
+const MONTH_GODS: readonly { id: MonthGodId; hanzi: string; pinyin: string }[] = [
+  { id: 'tiande', hanzi: '天德', pinyin: 'tiāndé' },
+  { id: 'tiandehe', hanzi: '天德合', pinyin: 'tiāndéhé' },
+  { id: 'yuede', hanzi: '月德', pinyin: 'yuèdé' },
+  { id: 'yuedehe', hanzi: '月德合', pinyin: 'yuèdéhé' },
+];
+
+/** 天德 by month branch, 子 first. A stem index, or a palace number negated. */
+const TIANDE: readonly number[] = [-4, 6, 3, -2, 8, 7, -6, 0, 9, -8, 2, 1];
+
+/** 月德 by month branch, 子 first: the yang stem of the triad's phase. */
+const YUEDE: readonly number[] = [8, 6, 2, 0, 8, 6, 2, 0, 8, 6, 2, 0];
+
+/** The 五合 partner of a stem: 甲己, 乙庚, 丙辛, 丁壬, 戊癸. */
+const heOf = (stem: number): number => (stem + 5) % 10;
+
+/** The four virtues for a month, and whether this day carries each. */
+export function monthGodsOf(monthBranch: Branch, day: Ganzhi): readonly MonthGod[] {
+  const tiande = TIANDE[monthBranch.index] as number;
+  const yuede = YUEDE[monthBranch.index] as number;
+
+  const stemSeat = (index: number): YearGodSeat => ({
+    kind: 'stem',
+    stem: STEMS[index] as Stem,
+  });
+  const seats: Record<MonthGodId, YearGodSeat | undefined> = {
+    tiande:
+      tiande >= 0
+        ? stemSeat(tiande)
+        : { kind: 'trigram', trigram: PALACES.find((p) => p.number === -tiande) as Palace },
+    tiandehe: tiande >= 0 ? stemSeat(heOf(tiande)) : undefined,
+    yuede: stemSeat(yuede),
+    yuedehe: stemSeat(heOf(yuede)),
+  };
+
+  return MONTH_GODS.map(({ id, hanzi, pinyin }) => {
+    const seat = seats[id];
+    return {
+      id,
+      hanzi,
+      pinyin,
+      ...(seat ? { seat } : {}),
+      onDay: seat?.kind === 'stem' && seat.stem.index === day.stem.index,
+    };
+  });
+}
+
 export interface Almanac {
   /** The officer holding the day. */
   officer: Officer;
@@ -482,6 +568,8 @@ export interface Almanac {
   year: Ganzhi;
   /** The 年神 that stand on a bearing, from the branch of that year. */
   yearGods: readonly YearGod[];
+  /** The four virtues of the month, and whether this day carries each. */
+  monthGods: readonly MonthGod[];
   /**
    * True on the second of the two days a 交節 gives the same officer.
    *
@@ -530,6 +618,7 @@ export function almanacAt(julianDayUT: number, context: EphemerisContext): Alman
     doubled: calendarDayNumber(jie.julianDayUT) === dayNumber,
     year,
     yearGods: yearGodsOf(year),
+    monthGods: monthGodsOf(monthBranch, day),
   };
 }
 

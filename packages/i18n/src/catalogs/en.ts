@@ -420,6 +420,11 @@ export const en = {
 
   'label.yeargod.jinshen': 'the metal spirit',
 
+  'label.monthgod.tiande': 'the virtue of heaven',
+  'label.monthgod.tiandehe': 'heaven\'s virtue joined',
+  'label.monthgod.yuede': 'the virtue of the month',
+  'label.monthgod.yuedehe': 'the month\'s virtue joined',
+
   'label.keti.yuanshou': 'the head',
   'label.keti.zhongshen': 'the second hearing',
   'label.keti.zhiyi': 'knowing the one',
@@ -932,6 +937,7 @@ export const en = {
   'cli.field.correction': 'correction',
   'cli.field.term': 'term',
   'cli.field.jie': 'month opened at',
+  'cli.field.monthGods': 'Virtues of the month',
   'cli.field.yearGods': 'Year gods',
   'cli.field.jianchu': 'Day officer',
   'cli.field.lunar': 'lunar',

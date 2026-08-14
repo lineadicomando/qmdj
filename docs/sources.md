@@ -1037,6 +1037,51 @@ of each entry is 宜忌 — 「其地不可興造移徙嫁娶逺行」, 「所�
 「不可嫁娶納奴婢進六畜及興造」. None of it travels. What remains is a name and
 a bearing, which is exactly what this engine says of a gate or a star.
 
+### 四德 — the first of the month gods
+
+The layer's other half opens here. 卷四 says most of the 月神 are 建除 under
+other names — 「凡月神之以十二辰起例者……今一以建除統之」 — so what is worth
+adding are the ones that are not, and the four virtues are the first of those:
+enumerated, important enough that every printed almanac carries them, and
+reckoned from the month's branch rather than round the twelve.
+
+| | the source's words |
+|---|---|
+| 月德 | 歴例:「正五九月在丙，二六十月在甲，三七十一月在壬，四八十二月在庚」, with 曹震圭's reason, 「寅午戌三合為火，以丙為徳」 |
+| 月德合 | 「正五九月在辛，二六十月在己，三七十一月在丁，四八十二月在乙」, and 「即各以月徳所合之干為之」 |
+| 天德 | 堪輿經:「正月丁，二月坤，三月壬，四月辛，五月乾，六月甲，七月癸，八月艮，九月丙，十月乙，十一月巽，十二月庚」 |
+| 天德合 | 「正月壬，三月丁，四月丙，六月己，七月戊，九月辛，十月庚，十二月乙是也。**四仲之月天徳居四維，故無合也**」 |
+
+**Four tables that are really two.** Each 合 is the 五合 of its own 德 and the
+source says so, so the pair states the same fact twice and the second is a check
+on the first. The 天德 of the four 仲 months is a **corner trigram**, not a stem
+— which is why those months have no 天德合, and why no day can carry a 天德
+there: 「所理之方」 is a bearing and 「所值之日」 is a day, and a trigram is only
+ever the first.
+
+**Against the reference, and the disagreement is left standing.**
+
+| | | |
+|---|---|---|
+| 天德合 | 3 650 / 3 650 | **100 %** |
+| 月德合 | 3 645 / 3 650 | 99.86 % |
+| 天德 | 3 635 / 3 650 | 99.59 % |
+| 月德 | 3 624 / 3 650 | 99.29 % |
+
+`lunar-javascript`'s 吉神 list marks these on a handful of days the quoted tables
+do not, and by a rule that has not been identified. **The tables are shipped as
+quoted**: each is enumerated whole in the source, each is confirmed by its own
+五合 partner, and 天德合 agreeing on every one of 3 650 days is a strong check
+on the 天德 table it is derived from. The reference is one implementation and
+the register weighs it as one. The disagreement is recorded rather than tuned
+away, and it is unexplained rather than dismissed.
+
+**An error this comparison caught**, worth recording because it is the kind the
+tests could not: the 天德 table was first entered with 癸 where the text has 庚
+for the 丑 month. 天德合 fell to 98.4 % and 天德 to 98.0 % at once, and fixing
+the one cell took 天德合 to 100 %. A table checked only against itself would
+have kept it.
+
 ### What the source refuses, and what that cost
 
 The phase this block belongs to named 二十八宿值日 as its cheap middle third,

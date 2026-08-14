@@ -400,6 +400,11 @@ export const it: Record<MessageKey, string> = {
 
   'label.yeargod.jinshen': 'lo spirito del metallo',
 
+  'label.monthgod.tiande': 'la virtù del cielo',
+  'label.monthgod.tiandehe': 'la virtù del cielo congiunta',
+  'label.monthgod.yuede': 'la virtù del mese',
+  'label.monthgod.yuedehe': 'la virtù del mese congiunta',
+
   'label.keti.yuanshou': 'il capo',
   'label.keti.zhongshen': 'il riesame',
   'label.keti.zhiyi': "conoscere l'uno",
@@ -735,6 +740,7 @@ export const it: Record<MessageKey, string> = {
   'cli.field.correction': 'correzione',
   'cli.field.term': 'termine',
   'cli.field.jie': 'mese aperto il',
+  'cli.field.monthGods': 'Virtù del mese',
   'cli.field.yearGods': 'Dèi dell\'anno',
   'cli.field.jianchu': 'Ufficiale del giorno',
   'cli.field.lunar': 'lunare',

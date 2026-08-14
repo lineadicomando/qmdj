@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { almanacAt, dayGodOf, lodgeOn, officerOf, yearGodsOf, DAY_GOD_LIST, LODGES, OFFICERS } from '../src/almanac.js';
+import { almanacAt, dayGodOf, lodgeOn, monthGodsOf, officerOf, yearGodsOf, DAY_GOD_LIST, LODGES, OFFICERS } from '../src/almanac.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
 import { BRANCHES, ganzhiOf, type Branch, type Ganzhi } from '../src/ganzhi.js';
 import { toJulianDay } from '../src/time.js';
@@ -333,6 +333,53 @@ describe('建除十二神', () => {
     expect(seats('乙')).toBe(seats('庚'));
     expect(seats('丙')).toBe(seats('辛'));
     expect(new Set(['甲', '乙', '丙', '丁', '戊'].map(seats)).size).toBe(5);
+  });
+
+  it('gives the month its four virtues, as the tables enumerate them', () => {
+    const virtue = (month: string, id: string): string => {
+      const seat = monthGodsOf(branch(month), ganzhiOf(0)).find((g) => g.id === id)?.seat;
+      if (!seat) return '—';
+      return seat.kind === 'stem' ? seat.stem.hanzi : seat.kind === 'trigram' ? seat.trigram.hanzi : '';
+    };
+
+    // 歴例:「月徳者，正五九月在丙，二六十月在甲，三七十一月在壬，四八十二月在
+    // 庚」 — the months counted from 寅.
+    for (const m of ['寅', '午', '戌']) expect(virtue(m, 'yuede')).toBe('丙');
+    for (const m of ['卯', '未', '亥']) expect(virtue(m, 'yuede')).toBe('甲');
+    for (const m of ['辰', '申', '子']) expect(virtue(m, 'yuede')).toBe('壬');
+    for (const m of ['巳', '酉', '丑']) expect(virtue(m, 'yuede')).toBe('庚');
+    // 「月徳合者……正五九月在辛，二六十月在己，三七十一月在丁，四八十二月在乙」
+    expect(virtue('寅', 'yuedehe')).toBe('辛');
+    expect(virtue('卯', 'yuedehe')).toBe('己');
+
+    // 堪輿經:「天徳者，正月丁，二月坤，三月壬，四月辛，五月乾，六月甲，七月癸，
+    // 八月艮，九月丙，十月乙，十一月巽，十二月庚」.
+    const months = ['寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥', '子', '丑'];
+    expect(months.map((m) => virtue(m, 'tiande'))).toEqual([
+      '丁', '坤', '壬', '辛', '乾', '甲', '癸', '艮', '丙', '乙', '巽', '庚',
+    ]);
+    // 「四仲之月天徳居四維，故無合也」 — and only there.
+    for (const m of ['卯', '午', '酉', '子']) expect(virtue(m, 'tiandehe')).toBe('—');
+    for (const m of ['寅', '辰', '巳', '未']) expect(virtue(m, 'tiandehe')).not.toBe('—');
+    // 「天徳合者……正月壬，三月丁，四月丙，六月己，七月戊，九月辛，十月庚，
+    // 十二月乙是也」.
+    expect(['寅', '辰', '巳', '未', '申', '戌', '亥', '丑'].map((m) => virtue(m, 'tiandehe'))).toEqual([
+      '壬', '丁', '丙', '己', '戊', '辛', '庚', '乙',
+    ]);
+  });
+
+  it('marks 所值之日 only where a virtue sits on a stem', () => {
+    // A god on a trigram is a bearing and no day can carry it.
+    const gods = (month: string, dayIndex: number) => monthGodsOf(branch(month), ganzhiOf(dayIndex));
+    // 寅月 天德 is 丁; a 丁 day carries it.
+    const dingDay = Array.from({ length: 60 }, (_, i) => i).find(
+      (i) => ganzhiOf(i).stem.hanzi === '丁',
+    ) as number;
+    expect(gods('寅', dingDay).find((g) => g.id === 'tiande')?.onDay).toBe(true);
+    // 午月 天德 is 乾, so no day of any stem carries it.
+    for (let i = 0; i < 60; i += 1) {
+      expect(gods('午', i).find((g) => g.id === 'tiande')?.onDay).toBe(false);
+    }
   });
 
   it('keeps every seat the source gives to more than one god', () => {
