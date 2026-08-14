@@ -163,6 +163,34 @@ input, select, button, textarea {
 button:hover { background: var(--tint); }
 
 /*
+ * A button that is found rather than noticed.
+ *
+ * The two ways out of a section — copy, print — are not what anybody came to
+ * press: they are what is there once the answer is. So they are lighter than
+ * anything that asks for a calculation, and they are lighter *together*: the
+ * pair sits in one corner of every section, and two buttons a hand apart in
+ * two different weights read as two unrelated controls rather than as a pair.
+ *
+ * Here rather than in either component because that is what kept them apart
+ * once already — one carried the look, the other set `border: 0` and lost it,
+ * and neither had a reason to know about the other. `Takeaway` puts them side
+ * by side; this is what makes them match.
+ */
+.quiet-button {
+  font-size: 0.8rem;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+  border: 1px solid var(--rule);
+  background: none;
+  color: var(--faint);
+}
+.quiet-button:hover:not(:disabled) {
+  color: var(--ink);
+  background: none;
+  border-color: var(--edge);
+}
+
+/*
  * A ticked box in the page's ink rather than the browser's blue.
  *
  * The moments section asks some thirty of these at once, and thirty marks in

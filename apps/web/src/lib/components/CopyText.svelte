@@ -42,6 +42,7 @@
        changing its word, and whoever cannot see it has to be told. -->
   <button
     type="button"
+    class="quiet-button"
     class:lead
     onclick={() => copier.run(produce)}
     disabled={copier.busy}
@@ -66,17 +67,9 @@
   /* The mark sits with the word rather than above it: a button is one line. */
   button { display: inline-flex; align-items: baseline; gap: 0.4em; }
   .copy { display: grid; justify-items: start; gap: 0.4rem; }
-  /* Lighter than anything that asks for a calculation: found, not noticed. */
-  button {
-    font: inherit;
-    font-size: 0.8rem;
-    padding: 0.3rem 0.7rem;
-    cursor: pointer;
-    border: 1px solid var(--rule);
-    background: none;
-    color: var(--faint);
-  }
-  button:hover:not(:disabled) { color: var(--ink); border-color: var(--edge); }
+  /* The look is `.quiet-button` in `app.css`, shared with the print button
+     beside it. What stays here is what belongs to copying alone. */
+  button { font: inherit; }
   button:disabled { cursor: progress; opacity: 0.6; }
   .lead { color: var(--ink); border-color: var(--edge); }
   .failure { color: var(--alarm); margin: 0; font-size: 0.85rem; }

@@ -13,23 +13,13 @@
   let { t }: { t: Translator } = $props();
 </script>
 
-<button type="button" onclick={() => window.print()}>
+<button type="button" class="quiet-button" onclick={() => window.print()}>
   <Icon name="print" />
   {t('form.print')}
 </button>
 
 <style>
-  button {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.4em;
-    font: inherit;
-    font-size: 0.9em;
-    color: var(--faint);
-    background: none;
-    border: 0;
-    padding: 0 0.2rem;
-    cursor: pointer;
-  }
-  button:hover { color: var(--ink); }
+  /* The look is `.quiet-button` in `app.css`, shared with the copy button
+     beside it: this one had `border: 0` and was the odd one of the pair. */
+  button { display: inline-flex; align-items: baseline; gap: 0.4em; font: inherit; }
 </style>
