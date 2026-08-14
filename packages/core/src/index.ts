@@ -137,6 +137,7 @@ export {
   type OfficerId,
   type YearGod,
   type YearGodId,
+  type YearGodSeat,
 } from './almanac.js';
 
 export {

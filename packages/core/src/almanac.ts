@@ -1,5 +1,5 @@
 import { sunCrossing, type EphemerisContext } from './ephemeris.js';
-import { dayGanzhi, yearGanzhi, BRANCHES, type Branch, type Ganzhi } from './ganzhi.js';
+import { dayGanzhi, yearGanzhi, BRANCHES, STEMS, type Branch, type Ganzhi, type Stem } from './ganzhi.js';
 import { VALENCE, type Valence } from './dunjia/patterns.js';
 import { calendarDayNumber, CALENDAR_ZONE } from './lunar.js';
 import { fromJulianDay } from './time.js';
@@ -234,14 +234,33 @@ export type YearGodId =
   | 'taisui' | 'suipo' | 'dajiangjun' | 'taiyin' | 'huangfan' | 'baowei'
   | 'sangmen' | 'diaoke' | 'baihu' | 'bingfu' | 'sifu' | 'dasha'
   | 'jiesha' | 'zaisha' | 'suisha'
-  | 'dahao' | 'xiaohao' | 'suizhide';
+  | 'dahao' | 'xiaohao' | 'suizhide'
+  | 'suide' | 'suidehe';
+
+/**
+ * Where a 年神 stands — and it is not always a branch.
+ *
+ * Most of 卷三 seats its gods on the twelve branches, but 歲德 and its 合 are
+ * given as **stems**: 「甲年在己，乙年在乙，丙年在辛……」. The two are reported
+ * as what the source says they are and are not converted into one another. A
+ * 二十四山 compass does seat eight of the ten stems, but it seats neither 戊
+ * nor 己 — and 己 is in that very table — so any mapping to a direction would
+ * be this file inventing the part the source left out.
+ *
+ * A third kind is coming and is deliberately not written yet: 博士 「常與奏書
+ * 對衝，如奏書在艮，博士在坤也」 stands on a **corner trigram**, as 奏書, 力士
+ * and 蠶室 do. It arrives when those entries are read, not before.
+ */
+export type YearGodSeat =
+  | { kind: 'branch'; branch: Branch }
+  | { kind: 'stem'; stem: Stem };
 
 export interface YearGod {
   id: YearGodId;
   hanzi: string;
   pinyin: string;
-  /** The branch it stands on, which is a bearing and not a date. */
-  branch: Branch;
+  /** Where it stands. A bearing or a stem, never a date. */
+  seat: YearGodSeat;
 }
 
 /**
@@ -276,7 +295,14 @@ export interface YearGod {
  * and none of that travels. What remains is a name and a bearing, which is
  * what the engine says of a gate or a star and for the same reason.
  */
-const YEAR_GODS: readonly { id: YearGodId; hanzi: string; pinyin: string; seat: (year: number) => number }[] = [
+const YEAR_GODS: readonly {
+  id: YearGodId;
+  hanzi: string;
+  pinyin: string;
+  /** By the year's branch, unless `byStem`. */
+  seat: (year: number) => number;
+  byStem?: true;
+}[] = [
   // 太歲 stands on the year's own branch.
   { id: 'taisui', hanzi: '太歲', pinyin: 'tàisuì', seat: (y) => y },
   // 「歲破者，太歲所衝之辰也……子年在午，順行十二辰是也」.
@@ -324,17 +350,26 @@ const YEAR_GODS: readonly { id: YearGodId; hanzi: string; pinyin: string; seat: 
   // 矣」 — the branch where 歲德's 五合 partner stands. The entry then says
   // where that lands: 「其辰又為死符，又為小耗」, which is 歲前五辰.
   { id: 'suizhide', hanzi: '歲枝德', pinyin: 'suìzhīdé', seat: (y) => (y + 5) % 12 },
+  // The two that stand on a stem, and on the year's stem rather than its
+  // branch. 「歲德合者，歲德五合之干是也：甲年在己，乙年在乙，丙年在辛，丁年
+  // 在丁，戊年在癸，己年在己，庚年在乙，辛年在辛，壬年在丁，癸年在癸。故歲德
+  // 屬陽，歲德合屬隂」 — so 歲德 is the 五合 partner of that table, which the
+  // sentence states as a relation rather than leaving to be guessed.
+  { id: 'suide', hanzi: '歲德', pinyin: 'suìdé', byStem: true, seat: (g) => [0, 6, 2, 8, 4, 0, 6, 2, 8, 4][g] as number },
+  { id: 'suidehe', hanzi: '歲德合', pinyin: 'suìdéhé', byStem: true, seat: (g) => [5, 1, 7, 3, 9, 5, 1, 7, 3, 9][g] as number },
 ];
 
 export const YEAR_GOD_IDS: readonly YearGodId[] = YEAR_GODS.map((g) => g.id);
 
-/** Where each of the six stands, for a year branch. */
-export function yearGodsOf(yearBranch: Branch): readonly YearGod[] {
-  return YEAR_GODS.map(({ id, hanzi, pinyin, seat }) => ({
+/** Where each of them stands, for a year. */
+export function yearGodsOf(year: Ganzhi): readonly YearGod[] {
+  return YEAR_GODS.map(({ id, hanzi, pinyin, seat, byStem }) => ({
     id,
     hanzi,
     pinyin,
-    branch: BRANCHES[seat(yearBranch.index)] as Branch,
+    seat: byStem
+      ? ({ kind: 'stem', stem: STEMS[seat(year.stem.index)] as Stem } as const)
+      : ({ kind: 'branch', branch: BRANCHES[seat(year.branch.index)] as Branch } as const),
   }));
 }
 
@@ -408,7 +443,7 @@ export function almanacAt(julianDayUT: number, context: EphemerisContext): Alman
     jie: jie.term,
     doubled: calendarDayNumber(jie.julianDayUT) === dayNumber,
     year,
-    yearGods: yearGodsOf(year.branch),
+    yearGods: yearGodsOf(year),
   };
 }
 

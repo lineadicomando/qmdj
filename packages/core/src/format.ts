@@ -1,5 +1,5 @@
 import type { MessageKey, Translator } from '@qimendunjia/i18n';
-import type { Almanac } from './almanac.js';
+import type { Almanac, YearGod } from './almanac.js';
 import type { Bazi } from './bazi/index.js';
 import { palace, YUAN_HANZI, YUAN_PINYIN, type QimenChart } from './dunjia/index.js';
 import { BRANCHES, type Ganzhi } from './ganzhi.js';
@@ -142,6 +142,18 @@ function lunar(date: LunarDate, t: Translator): string {
  * learns nothing and loses nothing; a reader who sees them differ has been
  * told why in the one place it could matter.
  */
+/**
+ * Where a year god stands, said in the reader's language.
+ *
+ * A branch for most of them and a stem for 歲德 and its 合, because that is
+ * what the source gives and neither is turned into the other here.
+ */
+function seatOf(god: YearGod, t: Translator): string {
+  return god.seat.kind === 'branch'
+    ? `${t(`label.branch.${god.seat.branch.id}` as MessageKey)} ${god.seat.branch.hanzi}`
+    : `${t(`label.stem.${god.seat.stem.id}` as MessageKey)} ${god.seat.stem.hanzi}`;
+}
+
 export function formatAlmanac(page: Almanac, t: Translator): string {
   // Two lines, because they answer two questions. The first is what kind of
   // day this is; the second is which way things stand, which is the axis
@@ -149,7 +161,7 @@ export function formatAlmanac(page: Almanac, t: Translator): string {
   const gods = page.yearGods
     .map(
       (god) =>
-        `${god.hanzi} ${god.pinyin} ${t(`label.yeargod.${god.id}` as MessageKey)} → ${t(`label.branch.${god.branch.id}` as MessageKey)}`,
+        `${god.hanzi} ${god.pinyin} ${t(`label.yeargod.${god.id}` as MessageKey)} → ${seatOf(god, t)}`,
     )
     .join('\n' + ' '.repeat(24));
   return [

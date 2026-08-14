@@ -2077,7 +2077,7 @@ stand in this file and in `liuren.ts`'s comments, not in the register
 CLAUDE.md calls mandatory. A third layer's tables do not land in a register
 the second board never entered.
 
-**建除十二神, 二十八宿值日, the 十二神 and eighteen 年神 are built; the rest of 卷三 is not.** `almanac.ts`, `almanacAt`, and the
+**建除十二神, 二十八宿值日, the 十二神 and twenty 年神 are built; the rest of 卷三 is not.** `almanac.ts`, `almanacAt`, and the
 page beside the pillars on the CLI, the API, the MCP tools, the chart page and
 the 六壬 page. Agreement with `lunar-javascript` on **14 600 / 14 600 days of
 2000 to 2039** for the officer and again for the lodge with its 七政; the 480
@@ -2123,7 +2123,7 @@ officers'.
 **The 年神 are the layer's other axis, and its weakest evidence.** A chart
 chooses an hour *and a direction*, and 卷三 puts the year's gods on the second.
 Eighteen are in — 太歲, 歲破, 大將軍, 太陰, 黃幡, 豹尾, 喪門, 弔客, 白虎, 病符,
-死符, 大煞, the three 煞, 大耗, 小耗 and 歲枝德 — each one whose seat the source states outright and completely
+死符, 大煞, the three 煞, 大耗, 小耗, 歲枝德 and the pair 歲德 · 歲德合 — each one whose seat the source states outright and completely
 without leaning on a god defined elsewhere, and each of its worked enumerations
 asserted in the tests. **Seats are shared and stay shared**: 太陰 and 弔客 are
 both 歲後二辰, 大耗 stands where 歲破 does, and one branch a year is 死符, 小耗
@@ -2141,9 +2141,15 @@ it stands, 「此恐有悞」. Neither is taken. Reading past the places a sourc
 marks as beyond it would waste the only property that made it better than three
 that agree.
 
-The rest of 卷三 is **unread rather than refused**: several entries key on the
-year *stem* and seat on a stem rather than a branch, which wants a type this
-layer has not needed yet; 大耗 and 小耗 are stated only inside a 「是亦一説也」 and are not
+**A seat is not always a branch, and the union says so.** 歲德 and its 合 are
+given as *stems* keyed to the year's stem, and they are carried as stems: the
+二十四山 seats eight of the ten, but not 戊 and not 己, and 己 is in that very
+table — so converting would be this layer supplying what the source withheld.
+A third arm is already visible and deliberately unwritten: 博士 stands on a
+corner trigram, 「如奏書在艮，博士在坤也」, and it arrives with 奏書 and 力士
+rather than before them.
+
+The rest of 卷三 is **unread rather than refused**; 大耗 and 小耗 are stated only inside a 「是亦一説也」 and are not
 taken on that footing, and 羣醜 turns out not to be a seat at all but the
 condition of 太陰 and 大將軍 coinciding. The boundary is declared so that it is
 a boundary.

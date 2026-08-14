@@ -409,6 +409,9 @@ export const en = {
   'label.yeargod.xiaohao': 'the small wasting',
   'label.yeargod.suizhide': 'the branch virtue of the year',
 
+  'label.yeargod.suide': 'the virtue of the year',
+  'label.yeargod.suidehe': 'the virtue\'s companion',
+
   'label.keti.yuanshou': 'the head',
   'label.keti.zhongshen': 'the second hearing',
   'label.keti.zhiyi': 'knowing the one',

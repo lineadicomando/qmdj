@@ -164,7 +164,9 @@
     <span class="gods">
       {page.year.hanzi} —
       {#each page.yearGods as god}
-        <span class="glyph">{god.hanzi}</span>&nbsp;{t(`label.branch.${god.branch.id}` as MessageKey)}{' '}
+        <span class="glyph">{god.hanzi}</span>&nbsp;{god.seat.kind === 'branch'
+          ? t(`label.branch.${god.seat.branch.id}` as MessageKey)
+          : t(`label.stem.${god.seat.stem.id}` as MessageKey)}{' '}
       {/each}
     </span>
     </p>

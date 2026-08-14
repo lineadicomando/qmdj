@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { almanacAt, dayGodOf, lodgeOn, officerOf, yearGodsOf, DAY_GOD_LIST, LODGES, OFFICERS } from '../src/almanac.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
-import { BRANCHES, type Branch } from '../src/ganzhi.js';
+import { BRANCHES, ganzhiOf, type Branch, type Ganzhi } from '../src/ganzhi.js';
 import { toJulianDay } from '../src/time.js';
 import { computeQimenChart } from '../src/dunjia/index.js';
 import { chartTranscript } from '../src/prompt.js';
@@ -27,6 +27,17 @@ const noonAt = (year: number, month: number, day: number): number =>
   toJulianDay(year, month, day, 12) - 8 / 24;
 
 const branch = (hanzi: string): Branch => BRANCHES.find((b) => b.hanzi === hanzi) as Branch;
+
+/** A year whose branch is `hanzi`; the stem does not matter to a branch seat. */
+const yearWithBranch = (hanzi: string): Ganzhi =>
+  Array.from({ length: 60 }, (_, i) => ganzhiOf(i)).find(
+    (g) => g.branch.hanzi === hanzi,
+  ) as Ganzhi;
+
+const branchSeat = (year: string, god: string): string => {
+  const seat = yearGodsOf(yearWithBranch(year)).find((g) => g.id === god)?.seat;
+  return seat?.kind === 'branch' ? seat.branch.hanzi : '';
+};
 
 describe('建除十二神', () => {
   it('opens the count where the month branch and the day branch meet', () => {
@@ -184,8 +195,7 @@ describe('建除十二神', () => {
     // 丑年則在亥，寅年則在子」; 大將軍「寅夘辰歲……居正北，巳午未……正東，
     // 申酉戌……正南，亥子丑……正西」; 黄幡「寅午戌歲在戌，申子辰歲在辰，
     // 亥夘未歲在未，巳酉丑歲在丑」; 豹尾「常居黄幡對衝」.
-    const seat = (year: string, god: string): string =>
-      yearGodsOf(branch(year)).find((g) => g.id === god)?.branch.hanzi ?? '';
+    const seat = (year: string, god: string): string => branchSeat(year, god);
 
     expect(seat('子', 'suipo')).toBe('午');
     expect([seat('子', 'taiyin'), seat('丑', 'taiyin'), seat('寅', 'taiyin')]).toEqual([
@@ -216,8 +226,7 @@ describe('建除十二神', () => {
   });
 
   it('seats the 三煞 on the 絕, the 胎 and the 養 of the year\'s triad', () => {
-    const seat = (year: string, god: string): string =>
-      yearGodsOf(branch(year)).find((g) => g.id === god)?.branch.hanzi ?? '';
+    const seat = (year: string, god: string): string => branchSeat(year, god);
 
     // 李鼎祚's enumeration is of 歲煞 alone, and it checks the other two:
     // 「寅午戌煞在丑，巳酉丑煞在辰，申子辰煞在未，亥夘未煞在戌」.
@@ -235,14 +244,35 @@ describe('建除十二神', () => {
     for (const y of BRANCHES) expect(['丑', '辰', '未', '戌']).toContain(seat(y.hanzi, 'suisha'));
   });
 
+  it('seats 歲德 and its 合 on a stem, as the source gives them', () => {
+    // 「甲年在己，乙年在乙，丙年在辛，丁年在丁，戊年在癸，己年在己，庚年在乙，
+    // 辛年在辛，壬年在丁，癸年在癸。故歲德屬陽，歲德合屬隂」 — and 歲德 is the
+    // 五合 partner of that table, which the same sentence states.
+    const stemSeat = (yearStem: string, god: string): string => {
+      const year = Array.from({ length: 60 }, (_, i) => ganzhiOf(i)).find(
+        (g) => g.stem.hanzi === yearStem,
+      ) as Ganzhi;
+      const seat = yearGodsOf(year).find((g) => g.id === god)?.seat;
+      return seat?.kind === 'stem' ? seat.stem.hanzi : '';
+    };
+
+    const table = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+    expect(table.map((y) => stemSeat(y, 'suidehe'))).toEqual([
+      '己', '乙', '辛', '丁', '癸', '己', '乙', '辛', '丁', '癸',
+    ]);
+    // The 五合 of each of those: 甲己, 乙庚, 丙辛, 丁壬, 戊癸.
+    expect(table.map((y) => stemSeat(y, 'suide'))).toEqual([
+      '甲', '庚', '丙', '壬', '戊', '甲', '庚', '丙', '壬', '戊',
+    ]);
+  });
+
   it('keeps every seat the source gives to more than one god', () => {
     // 「美惡不嫌同位，吉凶不嫌同名」. 卷三 says this twice — of 太陰 and 弔客
     // in the 總論, and of 死符 · 小耗 · 歲枝德 in the 歲枝德 entry — and 大耗
     // stands where 歲破 does. Deduplicating any of them would report a
     // tidiness nobody transmitted.
     for (const year of BRANCHES) {
-      const at = (id: string): string =>
-        yearGodsOf(year).find((g) => g.id === id)?.branch.hanzi ?? '';
+      const at = (id: string): string => branchSeat(year.hanzi, id);
 
       expect(at('taiyin')).toBe(at('diaoke'));
       expect(at('suipo')).toBe(at('dahao'));
