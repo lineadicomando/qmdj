@@ -171,7 +171,7 @@ the engine falls back to Moshier, which needs no files.
 - **An art that is natively about a life gets a board of its own, never
   dunjia's.** The engine computes 命 (mìng), the fate arts, as well as 卜
   (bǔ), the divinatory boards — 八字 was always here, as the substrate a chart
-  is cast from, and `PLAN.md` § 4 phases 13 to 15 add 六壬, the almanac layer
+  is cast from, and `PLAN.md` § 4 phases 13, 15 and 16 add 六壬, the almanac layer
   and 七政四餘. Calling that class "the natal chart" is the error that
   produced the modern natal Qi Men: the Western natal chart is one instance of
   a class the tradition already fills several ways, and naming the class after

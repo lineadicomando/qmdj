@@ -169,7 +169,8 @@ The first two are the most divisive and are not optional. The rest may ship with
 a single implemented value provided the parameter already exists in the type:
 adding it later breaks the API, MCP, the CLI, and every shared URL at once.
 
-The same rule governs the boards phases 13 to 15 add, and their divergences are
+The same rule governs the boards phases 13, 15 and 16 add, and their
+divergences are
 listed here rather than beside the phase because this table is where a reader
 looks for them. Each board carries its own input type; none of them inherits a
 default from dunjia's.
@@ -1338,7 +1339,8 @@ here is usually one entry.
 
 ### The scope widens, and the standard does not move
 
-**Phases 13 to 15 are a different kind of work from the twelve above them.**
+**Phases 13, 15 and 16 are a different kind of work from the twelve above
+them.**
 Those built one engine and told it on six surfaces. These add *boards this
 project does not yet have*, and the reason to write the decision down before
 the code is that the same widening, done carelessly, is precisely how the
@@ -1368,6 +1370,11 @@ through the palaces at all. `nianming.ts` stays exactly as it is. The scope
 widened; the standard for what may be computed did not. A board earns its
 place here by having a procedure a source states, never by filling a hole in
 a catalogue.
+
+**Phase 14 is the exception to all of this**, and it is not a board: it is what
+the consultation has to become once there are two of them. It sits between
+六壬 and the almanac because it is the debt phase 13 opened, and a debt is paid
+before more is borrowed.
 
 **And the order is by correlation, not by interest.** 六壬 is the sibling of
 dunjia inside the 三式 — same input, same act, same substrate, and a Ming
@@ -1673,7 +1680,131 @@ imports nothing from `core`, so the board's shape is redeclared beside the
 chart's and `test/types.test.ts` proves both copies still take the real thing
 without a cast.
 
-### Phase 14 — The almanac layer
+### Phase 14 — The consultation takes a second instrument
+
+**Planned, and the debt phase 13 opened.** The consultation casts a Qi Men
+chart at the instant of the asking. There are two boards now, and the question
+is not which to show but *what a consultation is* when the act has more than
+one instrument.
+
+**One consultation, and the instrument is a field of it.** Not two
+consultations side by side, which would privilege one art by the accident of
+which was built first; not a door with two choices, which puts a click in
+front of the question and the whole point of this page is that the question
+comes first. The root of a language stays the one consultation, and what is
+chosen before pressing is which board the instant is laid on.
+
+**The options say what they are for, never what they are called.** «When to
+move, and which way» against «what is going on, and with whom» — because
+somebody arriving with a question recognises the shape of their own, and
+somebody arriving at `Qi Men` and `Liu Ren` is choosing between two words they
+cannot weigh. The same rule that makes an option reading `chou` unusable.
+
+**And the choice stands before the press and nowhere after it.** This is the
+constraint the rest follows from. A tab, a toggle, a «see the other board»
+under the result: every one of them lies about the hour. Either it casts again
+— and then it is a different instant, not the instant of the question — or it
+shows a board laid for a moment nobody asked at. **The instrument may be
+chosen anywhere before the casting and at no point after it.** A reader who
+wants the other board changes the field and presses again, which is a new
+consultation of a new instant, and the page says so rather than pretending the
+two are one.
+
+The question they typed survives that. It is the same question; only the
+instant is new, and making them write it out again would be a punishment for
+changing their mind.
+
+**One board in the fence, and what that saves.** The prompt is where this decision earns its keep, and it is worth setting down
+what the alternative would have cost — because the alternative was nearly
+built.
+
+Two boards of one instant in one prompt invite three failures. The obvious one
+is that a model merges them into a single verdict, inventing a correspondence
+doctrine that no text carries: the 三式 were held as one competence and read
+**separately, then compared**, never fused.
+
+The second is not obvious and is worse. **The two boards are not independent
+witnesses.** They share the day pillar, the 旬, the 空亡, the 遁干 and seven of
+the eight 八神 — 螣蛇, 太陰, 六合, 白虎, 玄武, 朱雀, 勾陳 all stand among the
+十二天將. Where they agree, that is frequently *the same fact printed twice*.
+A model writing "both boards confirm" would be counting one datum as two, and
+would do it with complete confidence, because convergence is exactly the shape
+a reading expects to find. Not a miscalculation — **a false evidence produced
+by the shape of the output itself**, which is the worst failure this project
+can ship.
+
+The third is quieter. The refusal of the 用神 does not weigh the same on the
+two. On a Qi Men chart it is total: without a 用神 the board is a map with no
+pin, and a model must choose one to say anything at all. A Liu Ren board hands
+over its 三傳 already drawn, by nine rules that ask the reader nothing. Put the
+two in one prompt and a model will find the second far easier to talk about —
+and the reading will lean that way **not because it is more pertinent but
+because it is more readable without deciding**.
+
+All three are gone by construction rather than by warning. No non-fusion
+clause to write, no paragraph for a model to recite unasked — which
+`agent-prompt.md` already records as the reason an earlier one was cut.
+
+**What is not lost, and where it went.** Casting more than one 式 on an instant and comparing them is transmitted
+practice, and forbidding it would be this project deciding against a text. It
+is not forbidden: **it moved to the sections that are addresses.**
+`/[lang]/chart` and `/[lang]/liuren` already take the same instant from the
+same query string, and `carriedSearch` already walks a moment from one to the
+other. There nothing is asked — no question travels, no prompt is built, the
+reader is *looking* rather than *asking*.
+
+> A consultation is an act and takes one instrument. Comparing instruments is
+> an observation, and it lives where nothing is being asked.
+
+Which is also the right line on the discipline. Comparing the 三式 is a
+practitioner's technique, and the consultation is built for somebody who is not
+one — which is precisely the reader who would invent the fusion.
+
+**年命 is offered under one instrument and not the other.** The consultation
+already asks for a birth, and hands the 本命 and 行年 to the
+prompt inside the fence. That stays, under Qi Men, where a person is not in
+the chart at all until they are placed in it.
+
+Under Liu Ren it is **not offered**, and the reason is structural rather than
+cautious: the querent is already in the board. The first course stands on the
+day stem, which *is* the person asking, and the third on the day branch, which
+is the matter or the other party. A 本命 laid beside that would be a second way
+of naming somebody the board has already named, and two names for one person
+is how a reading acquires a relation that was never there. The fields for the
+birth appear with the instrument that uses them and are absent with the one
+that does not.
+
+**What it touches.** `readingPrompt` stops being about a chart. **Two bodies and a shared
+preamble**, not one function over a union: one speaks of palaces, of the 用神
+the reader still has to choose, and of a 凶 that is not advice; the other of
+四課 and 三傳, of 課體 that are names and not verdicts, and of a 返吟 whose rule
+no reference implementation covers. `/api/chart/prompt` is misnamed under
+this and becomes the consultation's, with the instrument among its parameters
+— and `asked=true` stays the only thing the server is ever told about the
+question.
+
+The instrument travels in the address, because the consultation's rule is that
+the **setup** travels and the question does not, and which board to lay is
+setup exactly as `trueSolarTime` is.
+
+`docs/agent-prompt.md` is written throughout as though there were one board.
+It has to become a shared preamble and two halves, and that is prose work
+rather than code.
+
+**Two things left open on purpose.**
+
+- **Whether the Liu Ren prompt tells a model that the 三傳 arrive already
+  drawn.** It is true, and it stops a model reordering them. It is also an
+  invitation to treat them as *the* answer — and the 用神 is still the
+  reader's: which of the four courses stands for what was asked, the board
+  does not say.
+- **How much the consultation shows under a Liu Ren board.** The section at
+  `/[lang]/liuren` shows the drawing, the transmissions, the lessons, the
+  whole 天地盤 and the rule. A consultation may want less: there the reader is
+  not studying the board, they are about to hand it to something that will
+  read it.
+
+### Phase 15 — The almanac layer
 
 **Planned.** The cheapest of the three and the one a reader of dunjia will
 notice missing, because dunjia already chooses hours and directions and the
@@ -1692,7 +1823,7 @@ hundreds of them and they diverge by lineage. Only those the 協紀 itself
 ratifies are defensible here; the rest are left out and said to be left out,
 as 三奇得使 was.
 
-### Phase 15 — 七政四餘
+### Phase 16 — 七政四餘
 
 **Planned, and scoped before it is started, because two of its questions have
 no answer in the sky.**
@@ -1835,9 +1966,17 @@ phase 3 onward work can proceed surface by surface, following the procedure of
 the `new-feature` skill: calculation in `core` with tests, then the CLI, then the
 surfaces together, then the documentation — never omitted.
 
-Phases 13 to 15 are ordered by correlation and by cost, and the order is not
-arbitrary: 六壬 reuses the substrate and has few divergences, the almanac layer
-is derivable from what phase 1 already computes and rests on a single
+Phases 13, 15 and 16 are ordered by correlation and by cost, and the order is
+not arbitrary: 六壬 reuses the substrate and has few divergences, the almanac
+layer is derivable from what phase 1 already computes and rests on a single
 authoritative source, and 七政四餘 needs two decisions taken before any code —
 the 宿度 table and what becomes of 紫氣. None of the three is a prerequisite of
 another. Each is a board of its own, and 六壬 is the one that pays first.
+
+**Phase 14 is not in that sequence and comes before the rest of it.** It adds
+no board: it is what the consultation has to become now that there are two,
+and it is a debt phase 13 opened rather than a thing anybody chose to build.
+A second board reached every surface that reads the engine and stopped at the
+one surface where somebody *asks* something — which is the surface where
+getting it wrong costs most, because that is the one that hands a board to a
+model.
