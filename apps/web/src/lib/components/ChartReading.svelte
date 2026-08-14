@@ -125,14 +125,17 @@
   printed because the page's day need not be the chart's: it turns on 120°E
   and on the date, where the pillars turn on the zone and the hour.
 -->
-{#if chart.moment.jianchu}
+{#if chart.moment.almanac}
+  {@const page = chart.moment.almanac}
   <p class="almanac">
-    <span class="glyph">{chart.moment.jianchu.officer.hanzi} {chart.moment.jianchu.officer.pinyin}</span>
-    {t(`label.officer.${chart.moment.jianchu.officer.id}` as MessageKey)}
-    · <span class="glyph">{chart.moment.jianchu.day.hanzi}</span>
-    {#if chart.moment.jianchu.doubled}
+    <span class="glyph">{page.officer.hanzi} {page.officer.pinyin}</span>
+    {t(`label.officer.${page.officer.id}` as MessageKey)}
+    · <span class="glyph">{page.day.hanzi}</span>
+    {#if page.doubled}
       <span class="doubled">({t('cli.value.jianchuDoubled')})</span>
     {/if}
+      · <span class="glyph">{page.lodge.hanzi}{page.lodge.planet.hanzi} {page.lodge.pinyin}</span>
+      {t(`label.lodge.${page.lodge.id}` as MessageKey)}
   </p>
 {/if}
 </div>

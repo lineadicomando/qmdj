@@ -123,7 +123,7 @@
     </div>
 
     <div>
-      <LiurenReading {board} {t} jianchu={moment?.jianchu ?? null} />
+      <LiurenReading {board} {t} almanac={moment?.almanac ?? null} />
 
     </div>
   </div>

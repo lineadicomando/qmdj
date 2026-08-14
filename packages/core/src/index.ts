@@ -119,10 +119,10 @@ export {
 } from './nianming.js';
 
 export {
-  jianchuAt,
+  almanacAt,
   officerOf,
   OFFICERS,
-  type Jianchu,
+  type Almanac,
   type Officer,
   type OfficerId,
 } from './almanac.js';

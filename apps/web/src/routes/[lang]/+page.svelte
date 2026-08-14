@@ -563,7 +563,7 @@
            on it. See `ChartReading`. -->
       <div>
         {#if liuren}
-          <LiurenReading board={chart} {t} jianchu={almanac} />
+          <LiurenReading board={chart} {t} {almanac} />
         {:else}
           <ChartReading {chart} {t} wide />
         {/if}

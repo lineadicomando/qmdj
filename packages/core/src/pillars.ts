@@ -1,4 +1,4 @@
-import { jianchuAt, type Jianchu } from './almanac.js';
+import { almanacAt, type Almanac } from './almanac.js';
 import { sunCrossing, type EphemerisContext } from './ephemeris.js';
 import type { ChartWarning } from './errors.js';
 import {
@@ -52,7 +52,7 @@ export interface Moment {
    * on the chart's zone and on the hour — so the two can disagree in the 子
    * hours and in the hours before a 節 strikes, and each says which it is.
    */
-  readonly jianchu: Jianchu;
+  readonly almanac: Almanac;
   /**
    * The lunar date, for display and for the methods that count by it.
    *
@@ -165,8 +165,8 @@ export function resolveMoment(
 
   // Enumerable for the same reason the lunar date is: a moment that
   // serialises without its page is a moment a surface has to ask twice for.
-  const jianchu = deferred(() => jianchuAt(time.julianDayUT, context));
-  Object.defineProperty(moment, 'jianchu', { get: jianchu, enumerable: true });
+  const almanac = deferred(() => almanacAt(time.julianDayUT, context));
+  Object.defineProperty(moment, 'almanac', { get: almanac, enumerable: true });
 
   // The futou is a fact about the day pillar, so the bookkeeping reads the
   // same day number the pillar was read from — shifted by the late hour of

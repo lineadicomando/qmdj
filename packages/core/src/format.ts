@@ -1,5 +1,5 @@
 import type { MessageKey, Translator } from '@qimendunjia/i18n';
-import type { Jianchu } from './almanac.js';
+import type { Almanac } from './almanac.js';
 import type { Bazi } from './bazi/index.js';
 import { palace, YUAN_HANZI, YUAN_PINYIN, type QimenChart } from './dunjia/index.js';
 import { BRANCHES, type Ganzhi } from './ganzhi.js';
@@ -142,14 +142,18 @@ function lunar(date: LunarDate, t: Translator): string {
  * learns nothing and loses nothing; a reader who sees them differ has been
  * told why in the one place it could matter.
  */
-export function formatAlmanac(page: Jianchu, t: Translator): string {
+export function formatAlmanac(page: Almanac, t: Translator): string {
   return `  ${pad(t('cli.field.jianchu'), 20)}${officer(page, t)}`;
 }
 
-function officer(page: Jianchu, t: Translator): string {
+function officer(page: Almanac, t: Translator): string {
   const name = `${page.officer.hanzi} ${page.officer.pinyin} ${t(`label.officer.${page.officer.id}` as MessageKey)}`;
   const doubled = page.doubled ? `  (${t('cli.value.jianchuDoubled')})` : '';
-  return `${name}  · ${page.day.hanzi}${doubled}`;
+  // The lodge carries its 七政 because that is half of how it is named — 鬼 is
+  // 鬼金 to anyone who has met it, and the planet is what ties the count to a
+  // weekday and lets a reader catch it if it ever slipped.
+  const lodge = `${page.lodge.hanzi}${page.lodge.planet.hanzi} ${page.lodge.pinyin} ${t(`label.lodge.${page.lodge.id}` as MessageKey)}`;
+  return `${name}  · ${page.day.hanzi}${doubled}  ·  ${lodge}`;
 }
 
 /**
@@ -194,7 +198,7 @@ export function formatMoment(
     [t('cli.field.jie'), term(moment.jie, zone, t)],
     [t('cli.field.lunar'), lunar(moment.lunar, t)],
   );
-  if (almanac) fields.push([t('cli.field.jianchu'), officer(moment.jianchu, t)]);
+  if (almanac) fields.push([t('cli.field.jianchu'), officer(moment.almanac, t)]);
 
   // One pillar to a line rather than four across the page. Said in words and
   // then in glyphs and then aloud, a pillar is some forty columns wide, and

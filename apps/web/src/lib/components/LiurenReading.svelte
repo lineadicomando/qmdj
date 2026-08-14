@@ -16,13 +16,13 @@
    * ephemerides and a native module into the browser bundle.
    */
   /**
-   * `jianchu` is the almanac's line for the day, when the caller has it.
+   * `almanac` is the page for the day, when the caller has it.
    *
    * Optional because it comes off the moment and not off the board: the 曆注
    * are not part of a 六壬 board any more than they are part of a chart. Both
    * pages that show a board have the moment beside it, and both pass it.
    */
-  let { board, t, jianchu = null }: { board: any; t: Translator; jianchu?: any } = $props();
+  let { board, t, almanac = null }: { board: any; t: Translator; almanac?: any } = $props();
 
   /**
    * Written out with their readings, because a name carries one.
@@ -149,12 +149,15 @@
        rule no reference implementation covers. -->
   <!-- The almanac's line, as under the chart: the page this board was read
        beside, quieter than the board and never inside it. -->
-  {#if jianchu}
+  {#if almanac}
+    {@const page = almanac}
     <p class="note">
-      <span class="glyph">{jianchu.officer.hanzi} {jianchu.officer.pinyin}</span>
-      {t(`label.officer.${jianchu.officer.id}` as MessageKey)}
-      · <span class="glyph">{jianchu.day.hanzi}</span>
-      {#if jianchu.doubled}({t('cli.value.jianchuDoubled')}){/if}
+      <span class="glyph">{page.officer.hanzi} {page.officer.pinyin}</span>
+      {t(`label.officer.${page.officer.id}` as MessageKey)}
+      · <span class="glyph">{page.day.hanzi}</span>
+      {#if page.doubled}({t('cli.value.jianchuDoubled')}){/if}
+      · <span class="glyph">{page.lodge.hanzi}{page.lodge.planet.hanzi} {page.lodge.pinyin}</span>
+      {t(`label.lodge.${page.lodge.id}` as MessageKey)}
     </p>
   {/if}
 

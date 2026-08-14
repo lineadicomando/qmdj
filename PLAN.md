@@ -2077,12 +2077,36 @@ stand in this file and in `liuren.ts`'s comments, not in the register
 CLAUDE.md calls mandatory. A third layer's tables do not land in a register
 the second board never entered.
 
-**建除十二神 is built, and the rest of the layer is not.** `almanac.ts`,
-`jianchuAt`, and the officer beside the pillars on the CLI, the API, the MCP
-tools, the chart page and the 六壬 page. Agreement with `lunar-javascript` on
-**14 600 / 14 600 days of 2000 to 2039**, and the 480 doubled days it found are
-twelve a year for forty years. `docs/sources.md` has the 曆注 section, written
-the day the quantity landed rather than owed.
+**建除十二神 and 二十八宿值日 are built; the 神煞 are not.** `almanac.ts`, `almanacAt`, and the
+page beside the pillars on the CLI, the API, the MCP tools, the chart page and
+the 六壬 page. Agreement with `lunar-javascript` on **14 600 / 14 600 days of
+2000 to 2039** for the officer and again for the lodge with its 七政; the 480
+doubled days are twelve a year for forty years. `docs/sources.md` has the 曆注
+section, written the day each quantity landed rather than owed.
+
+**The lodge shipped as a count, which is what the source left of it.** Its
+whole content is `(dayNumber + 11) % 28`, and the epoch is over-determined:
+twenty-eight is four sevens, so each lodge keeps one weekday for ever and the
+七政 in the name says which. An epoch out by anything but a multiple of seven
+breaks all twenty-eight at once, and a test asserts the lock over four hundred
+days — which is why one runnable reference was enough here where two are
+usually asked for. The 禽象 are out: 卷一 dates the animal images 近代 and
+shows them being built by 附會, and a construction a source dates late and
+explains the making of is not a transmission.
+
+**A check the source offered, which failed usefully.** 卷三十六 says the 楊公忌
+are the days the count gives 室. Laid against the received list of fixed lunar
+dates, this engine's 室 days match **2 of 78** over six years — and that is the
+協紀's own point rather than a defect here, since 「不論月之大小」 is its
+complaint: a list of fixed lunar dates cannot track a count of days once months
+differ in length. The passage is in 辨訛 because the folk rule has come apart
+from the cycle it claims, and the engine now says by how much.
+
+**One convention was extended, and only by one case.** 尾 wěi, 危 wēi and 胃
+wèi keep tone numbers, which is the existing rule. 壁 and 畢 are both bì in the
+same tone, where a tone number has nothing to say, so they take their place in
+the cycle: `bi13` and `bi18`. Written into `docs/sources.md` so it is not
+re-decided differently next time.
 
 **The doubling needed no code, which is how the grain proved itself.** Nothing
 in `almanac.ts` tests for a 節. The month branch advances on the same date the

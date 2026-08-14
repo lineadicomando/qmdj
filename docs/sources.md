@@ -830,6 +830,36 @@ stating the rule the comparison could most easily have got wrong, which is a
 better position than either alone. `liuren-ts-lib` exports a `jianChu` of its
 own and is the second runnable witness when a second is wanted.
 
+### 二十八宿值日 — the count, shipped without the doctrine
+
+Its whole content is one number, and one number is what `almanac.ts` holds:
+`(dayNumber + 11) % 28`, which puts 井 on 2026-01-01. Nothing about a date
+enters it — the cycle counts days, so it crosses a 節 unbroken where 建除
+doubles. The two blocks disagree about what a boundary is and both are right.
+
+**The epoch is over-determined, which is why one reference suffices for it.**
+Twenty-eight is four sevens, so a lodge keeps one weekday for ever, and the
+tradition wrote that check into the names: the 金 of 鬼金羊 is Friday. An epoch
+wrong by anything that is not a multiple of seven breaks all twenty-eight names
+at once, and a test walks four hundred days asserting the lock.
+
+Against `lunar-javascript`, over the same span as the officer:
+
+| | | |
+|---|---|---|
+| lodge **and** its 七政 | 14 600 / 14 600 | **100 %** |
+
+**A check the source suggests, which fails and is worth recording anyway.**
+卷三十六 says the 楊公忌 are the days the count gives 室 —
+「二十八宿次序順數值室宿之日即為楊公忌，不論月之大小，二十八日一週，每月遞退
+二日」 — with the received list running 正月十三, 二月十一 and so on. Laying
+this engine's 室 days against that list over six years gives **2 of 78**. The
+disagreement is the 協紀's own point and the reason the passage sits in 辨訛:
+「不論月之大小」 is the complaint, not the rule. A list of fixed lunar dates
+cannot track a count of days once the months differ in length, so the folk rule
+and the cycle it claims to come from have come apart. The numbers here say by
+how much.
+
 ### What the source refuses, and what that cost
 
 The phase this block belongs to named 二十八宿值日 as its cheap middle third,
@@ -849,6 +879,23 @@ but it will travel with the refusal beside it, and its epoch takes its warrant
 from the implementations and from the weekday lock, **never from this book**.
 
 ### What is not here
+
+**The 禽象**, the animal in the full name 鬼金羊. 卷一 calls the images
+「近代方有之」 and then shows how they were made: the four cardinal lodges taken
+as rat, hare, horse and cock, and the rest fitted round them by resemblance —
+附會, the source's own word for it. A construction a source dates late and
+shows the workings of is not a transmission. Out, as 三奇得使 is. The 七政 do
+travel, because they are how the lodge is named and because they are the check
+above.
+
+**Three lodge identifiers are not bare pinyin.** 尾 wěi, 危 wēi and 胃 wèi
+collide once the tone is dropped, so they keep tone numbers — `wei3`, `wei1`,
+`wei4` — as 驚門 and 景門 do. 壁 and 畢 are both **bì**, the same syllable in
+the same tone, where the tone number has nothing left to say; they take the one
+thing the cycle already orders them by, their place in it: `bi13` and `bi18`.
+This is the rule in `CLAUDE.md` extended by exactly one case, and it is written
+down here because it is the kind of thing that otherwise gets re-decided
+differently next time.
 
 The 宜忌 of each officer — what the 協紀 says 建 suits and 破 forbids — is the
 largest and best-attested thing in the source, and it is refused. It is advice:

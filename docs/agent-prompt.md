@@ -98,7 +98,8 @@ read and name what you are missing, rather than filling it in.
 ## The almanac line, and what it is not
 
 A chart and a 六壬 board both come back with the day's officer beside them —
-建 jiàn, 除 chú, 滿 mǎn and the rest — in a tool's answer and over the REST
+建 jiàn, 除 chú, 滿 mǎn and the rest, and with them the lodge of the day and
+its 七政 — 胃土 wèi, 鬼金 guǐ — in a tool's answer and over the REST
 API. It is deliberately **absent from `readingPrompt`**, the fenced transcript
 a consultation hands you: the officer is derived from two of the pillars
 printed beside it, and one datum under two names inside a fence is read as two.
@@ -208,9 +209,12 @@ Not uniformly, and the difference matters when you are asked to justify one.
   covers — which now means *checked against a text and not against something
   that runs*: 《六壬大全》 names every day that rule can draw a board on, and
   this engine returns those and no others.
-- **The almanac's officer** (建除十二神) — agreeing with an independent
-  implementation on **all 14 600 days of 2000 to 2039**, and its one awkward
-  clause, the doubling at a 節, is stated outright by 《協紀辨方書》.
+- **The almanac's page** (建除十二神 and 二十八宿值日) — both agreeing with an
+  independent implementation on **all 14 600 days of 2000 to 2039**. The
+  officer's one awkward clause, the doubling at a 節, is stated outright by
+  《協紀辨方書》; the lodge's epoch is additionally pinned by the fact that
+  twenty-eight is four weeks, so each lodge keeps a fixed weekday and its 七政
+  names it.
 
 If you are asked how the software knows something, say which of these three it
 is. Do not describe the third as though it were the first.

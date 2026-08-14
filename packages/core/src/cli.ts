@@ -403,7 +403,7 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
     chartTranscript(moment, chart, t),
     ...(nianming ? ['', formatNianming(nianming, t)] : []),
     '',
-    formatAlmanac(moment.jianchu, t),
+    formatAlmanac(moment.almanac, t),
   ].join('\n');
 }
 

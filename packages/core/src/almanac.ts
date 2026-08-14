@@ -57,7 +57,101 @@ export const OFFICERS: readonly Officer[] = [
   { id: 'bi', hanzi: '閉', pinyin: 'bì' },
 ];
 
-export interface Jianchu {
+
+export type LodgeId =
+  | 'jiao' | 'kang' | 'di' | 'fang' | 'xin' | 'wei3' | 'ji'
+  | 'dou' | 'niu' | 'nv' | 'xu' | 'wei1' | 'shi' | 'bi13'
+  | 'kui' | 'lou' | 'wei4' | 'mao' | 'bi18' | 'zi' | 'shen'
+  | 'jing' | 'gui' | 'liu' | 'xing' | 'zhang' | 'yi' | 'zhen';
+
+export interface Lodge {
+  id: LodgeId;
+  hanzi: string;
+  pinyin: string;
+  /** The one of the 七政 the lodge carries, which is what locks it to a weekday. */
+  planet: { hanzi: string; pinyin: string };
+}
+
+/**
+ * The 七政, in the order the lodges take them.
+ *
+ * Seven, against twenty-eight lodges, which is four weeks — so the planet a
+ * lodge carries is fixed and the tradition wrote the check into the names.
+ * See `LODGES` for what that buys.
+ */
+const PLANETS: readonly { hanzi: string; pinyin: string }[] = [
+  { hanzi: '木', pinyin: 'mù' },
+  { hanzi: '金', pinyin: 'jīn' },
+  { hanzi: '土', pinyin: 'tǔ' },
+  { hanzi: '日', pinyin: 'rì' },
+  { hanzi: '月', pinyin: 'yuè' },
+  { hanzi: '火', pinyin: 'huǒ' },
+  { hanzi: '水', pinyin: 'shuǐ' },
+];
+
+/**
+ * 二十八宿, in the order they hold the days.
+ *
+ * **Three identifiers are not bare pinyin, and both reasons are the rule.**
+ * 尾 wěi, 危 wēi and 胃 wèi drop to one syllable, so they keep their tone
+ * numbers, as 驚門 and 景門 do. 壁 and 畢 are both bì — the same syllable in
+ * the same tone — where a tone number has nothing left to say, so they take
+ * the one thing the cycle already orders them by: their place in it, `bi13`
+ * and `bi18`.
+ *
+ * **No 禽象.** The animal each lodge is given — 鬼金羊, 角木蛟 — is not here.
+ * 《協紀辨方書》卷一 calls the images 「近代方有之」 and then explains how they
+ * were built, by taking the four cardinal lodges as rat, hare, horse and cock
+ * and fitting the rest around them by resemblance: 附會, the source's word.
+ * A construction a source dates late and shows the workings of is not a
+ * transmission, and it is left out as 三奇得使 was.
+ */
+export const LODGES: readonly Lodge[] = (
+  [
+    ['jiao', '角', 'jiǎo'], ['kang', '亢', 'kàng'], ['di', '氐', 'dī'],
+    ['fang', '房', 'fáng'], ['xin', '心', 'xīn'], ['wei3', '尾', 'wěi'],
+    ['ji', '箕', 'jī'], ['dou', '斗', 'dǒu'], ['niu', '牛', 'niú'],
+    ['nv', '女', 'nǚ'], ['xu', '虛', 'xū'], ['wei1', '危', 'wēi'],
+    ['shi', '室', 'shì'], ['bi13', '壁', 'bì'], ['kui', '奎', 'kuí'],
+    ['lou', '婁', 'lóu'], ['wei4', '胃', 'wèi'], ['mao', '昴', 'mǎo'],
+    ['bi18', '畢', 'bì'], ['zi', '觜', 'zī'], ['shen', '參', 'shēn'],
+    ['jing', '井', 'jǐng'], ['gui', '鬼', 'guǐ'], ['liu', '柳', 'liǔ'],
+    ['xing', '星', 'xīng'], ['zhang', '張', 'zhāng'], ['yi', '翼', 'yì'],
+    ['zhen', '軫', 'zhěn'],
+  ] as const
+).map(([id, hanzi, pinyin], index) => ({
+  id: id as LodgeId,
+  hanzi,
+  pinyin,
+  planet: PLANETS[index % 7] as { hanzi: string; pinyin: string },
+}));
+
+/**
+ * Where the count is anchored, as an offset on the day number itself.
+ *
+ * The whole content of this block is this one number: the cycle is a count of
+ * days and nothing about a date enters it. `(dayNumber + 11) % 28` puts 井 on
+ * 2026-01-01, which is what the reference gives.
+ *
+ * **And the epoch is over-determined, which is why one reference is enough
+ * for it.** Twenty-eight is four sevens, so each lodge keeps a fixed weekday
+ * for ever, and the tradition wrote that into the names: the planet in the
+ * full name 鬼金羊 is 金, and every 鬼 day is a Friday. An epoch wrong by any
+ * amount that is not a multiple of seven breaks every one of the
+ * twenty-eight names at once. A test walks four hundred days and checks it.
+ *
+ * The count crosses a 節 unbroken, where 建除 doubles. The two blocks
+ * disagree about what a boundary is and both are right: one counts days, the
+ * other reads a month.
+ */
+const LODGE_EPOCH_OFFSET = 11;
+
+/** The lodge holding a day, by the day number alone. */
+export function lodgeOn(dayNumber: number): Lodge {
+  return LODGES[(dayNumber + LODGE_EPOCH_OFFSET) % 28] as Lodge;
+}
+
+export interface Almanac {
   /** The officer holding the day. */
   officer: Officer;
   /** The day the page describes, reckoned on the calendar's own meridian. */
@@ -66,6 +160,8 @@ export interface Jianchu {
   monthBranch: Branch;
   /** The 節 that opened that month. */
   jie: SolarTermDefinition;
+  /** 二十八宿值日 — the lodge holding the day, a count and never a date. */
+  lodge: Lodge;
   /**
    * True on the second of the two days a 交節 gives the same officer.
    *
@@ -90,14 +186,14 @@ export function officerOf(monthBranch: Branch, dayBranch: Branch): Officer {
 }
 
 /**
- * The 建除 page for an instant.
+ * The almanac's page for an instant.
  *
  * It takes an instant and no options, which is the whole of what makes it a
  * page rather than a chart: `dayBoundary` and `trueSolarTime` move the hour
  * and the day a chart is read at, and they do not move what an almanac
  * printed.
  */
-export function jianchuAt(julianDayUT: number, context: EphemerisContext): Jianchu {
+export function almanacAt(julianDayUT: number, context: EphemerisContext): Almanac {
   const dayNumber = calendarDayNumber(julianDayUT);
   const jie = monthOpeningOn(julianDayUT, dayNumber, context);
   const day = dayGanzhi(dayNumber);
@@ -105,6 +201,7 @@ export function jianchuAt(julianDayUT: number, context: EphemerisContext): Jianc
 
   return {
     officer: officerOf(monthBranch, day.branch),
+    lodge: lodgeOn(dayNumber),
     day,
     monthBranch,
     jie: jie.term,

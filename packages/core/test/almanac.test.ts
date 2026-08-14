@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { jianchuAt, officerOf, OFFICERS } from '../src/almanac.js';
+import { almanacAt, lodgeOn, officerOf, LODGES, OFFICERS } from '../src/almanac.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
 import { BRANCHES, type Branch } from '../src/ganzhi.js';
 import { toJulianDay } from '../src/time.js';
@@ -43,7 +43,7 @@ describe('建除十二神', () => {
   });
 
   it('names the officer of an ordinary day', () => {
-    const page = jianchuAt(noonAt(2026, 8, 4), context());
+    const page = almanacAt(noonAt(2026, 8, 4), context());
     expect(page.day.hanzi).toBe('庚戌');
     expect(page.monthBranch.hanzi).toBe('未');
     expect(page.officer.hanzi).toBe('平');
@@ -52,9 +52,9 @@ describe('建除十二神', () => {
 
   it('gives the same officer to the two days a 交節 doubles', () => {
     // 立秋 falls on 2026-08-07. 「每月交節則疊兩值日」.
-    const before = jianchuAt(noonAt(2026, 8, 6), context());
-    const onTheJie = jianchuAt(noonAt(2026, 8, 7), context());
-    const after = jianchuAt(noonAt(2026, 8, 8), context());
+    const before = almanacAt(noonAt(2026, 8, 6), context());
+    const onTheJie = almanacAt(noonAt(2026, 8, 7), context());
+    const after = almanacAt(noonAt(2026, 8, 8), context());
 
     expect([before.day.hanzi, onTheJie.day.hanzi, after.day.hanzi]).toEqual([
       '壬子',
@@ -67,9 +67,9 @@ describe('建除十二神', () => {
   });
 
   it('marks the second of the doubled days and not the first', () => {
-    expect(jianchuAt(noonAt(2026, 8, 6), context()).doubled).toBe(false);
-    expect(jianchuAt(noonAt(2026, 8, 7), context()).doubled).toBe(true);
-    expect(jianchuAt(noonAt(2026, 8, 8), context()).doubled).toBe(false);
+    expect(almanacAt(noonAt(2026, 8, 6), context()).doubled).toBe(false);
+    expect(almanacAt(noonAt(2026, 8, 7), context()).doubled).toBe(true);
+    expect(almanacAt(noonAt(2026, 8, 8), context()).doubled).toBe(false);
   });
 
   it('gives the whole of a 節 day to the new month, hour by hour', () => {
@@ -78,7 +78,7 @@ describe('建除十二神', () => {
     // the difference between the page and the month pillar, and it is the one
     // thing about this layer that could have gone wrong silently.
     for (const hour of [0, 6, 12, 18, 23]) {
-      const page = jianchuAt(toJulianDay(2026, 9, 7, hour) - 8 / 24, context());
+      const page = almanacAt(toJulianDay(2026, 9, 7, hour) - 8 / 24, context());
       expect(page.monthBranch.hanzi).toBe('酉');
       expect(page.officer.hanzi).toBe('閉');
       expect(page.doubled).toBe(true);
@@ -91,12 +91,12 @@ describe('建除十二神', () => {
     // Rome, where it is still the evening of the 15th, exactly as in Beijing.
     // The layer takes no timezone at all, which is what makes that true.
     const evening = toJulianDay(2026, 3, 15, 16);
-    expect(jianchuAt(evening, context()).day.hanzi).toBe('己丑');
-    expect(jianchuAt(evening, context()).officer.hanzi).toBe('開');
+    expect(almanacAt(evening, context()).day.hanzi).toBe('己丑');
+    expect(almanacAt(evening, context()).officer.hanzi).toBe('開');
 
     const morning = toJulianDay(2026, 3, 15, 4);
-    expect(jianchuAt(morning, context()).day.hanzi).toBe('戊子');
-    expect(jianchuAt(morning, context()).officer.hanzi).toBe('收');
+    expect(almanacAt(morning, context()).day.hanzi).toBe('戊子');
+    expect(almanacAt(morning, context()).officer.hanzi).toBe('收');
   });
 
   it('stays out of what a model is handed', () => {
@@ -116,7 +116,7 @@ describe('建除十二神', () => {
     const chart = computeQimenChart(when, options);
 
     // The officer of that day is 定, and the pillar it stands on is 庚戌.
-    expect(when.jianchu.officer.hanzi).toBe('定');
+    expect(when.almanac.officer.hanzi).toBe('定');
     const fenced = chartTranscript(when, chart, en, {});
 
     expect(fenced).toContain('庚戌');
@@ -124,8 +124,38 @@ describe('建除十二神', () => {
     expect(fenced).not.toContain(en('cli.field.jianchu'));
   });
 
+  it('runs the twenty-eight lodges in their own order, unbroken', () => {
+    // A count of days and nothing else: it crosses a 節 where 建除 doubles.
+    const run = Array.from({ length: 30 }, (_, i) => lodgeOn(2461042 + i).hanzi).join('');
+    expect(run).toBe('井鬼柳星張翼軫角亢氐房心尾箕斗牛女虛危室壁奎婁胃昴畢觜參井鬼');
+    expect(LODGES).toHaveLength(28);
+  });
+
+  it('keeps every lodge on its own weekday, which is what fixes the epoch', () => {
+    // Twenty-eight is four sevens, so a lodge holds one weekday for ever, and
+    // the tradition wrote the check into the names: the 金 in 鬼金羊 is Friday.
+    // An epoch out by anything that is not a multiple of seven breaks all 28.
+    const WEEKDAY_OF_PLANET: Record<string, number> = {
+      日: 0, 月: 1, 火: 2, 水: 3, 木: 4, 金: 5, 土: 6,
+    };
+    for (let dayNumber = 2461042; dayNumber < 2461042 + 400; dayNumber += 1) {
+      const lodge = lodgeOn(dayNumber);
+      // Julian Day Number 0 was a Monday, so this is the weekday with 0 = Sunday.
+      expect(WEEKDAY_OF_PLANET[lodge.planet.hanzi]).toBe((dayNumber + 1) % 7);
+    }
+  });
+
+  it('holds the lodge across a 節, where the officer doubles', () => {
+    const before = almanacAt(noonAt(2026, 8, 6), context());
+    const onTheJie = almanacAt(noonAt(2026, 8, 7), context());
+
+    expect(before.officer.hanzi).toBe(onTheJie.officer.hanzi);
+    expect(before.lodge.hanzi).not.toBe(onTheJie.lodge.hanzi);
+    expect(onTheJie.lodge.hanzi).toBe('婁');
+  });
+
   it('carries the 節 that opened the month it counted from', () => {
-    const page = jianchuAt(noonAt(2026, 8, 4), context());
+    const page = almanacAt(noonAt(2026, 8, 4), context());
     expect(page.jie.hanzi).toBe('小暑');
     expect(page.jie.kind).toBe('jie');
   });
