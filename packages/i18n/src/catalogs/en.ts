@@ -397,6 +397,13 @@ export const en = {
   'nav.consult': 'Consultation',
   'nav.sections': 'Sections',
 
+  // The section that walks Qi Men charts, named with the art it walks. The nav
+  // label cannot carry it — a header says where things are, not what they are
+  // made of — and this is where somebody reading results needs to know.
+  'moments.title': 'Choosing a time — Qi Men',
+  'moments.lead':
+    'Every hour between two dates is cast as a Qi Men chart, and the ones answering what you name below are listed. Criteria, not recommendations: what makes an hour worth acting in is a reading, and it is yours.',
+
   'scheme.label': 'Appearance',
   'scheme.auto': 'automatic',
   'scheme.light': 'light',

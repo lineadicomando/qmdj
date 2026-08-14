@@ -22,9 +22,12 @@
 
     <nav aria-label={t('nav.sections')}>
       <ul>
-        {#each SECTIONS as section (section.slug)}
+        {#each SECTIONS as section, index (section.slug)}
           {@const current = isCurrent(t.locale, section.slug, page.url.pathname)}
-          <li>
+          <!-- Space, not a rule and not a dropdown: the break between what a
+               reader does and what they look at is set in the one device this
+               page has for it. Nothing is hidden behind an interaction. -->
+          <li class:opens={index > 0 && SECTIONS[index - 1].group !== section.group}>
             <a
               href={href(t.locale, section.slug, carriedSearch(page.url.search))}
               aria-current={current ? 'page' : undefined}
@@ -81,6 +84,9 @@
     margin: 0.9rem 0 0;
     padding: 0;
   }
+  /* Twice the gap the list already sets, which reads as a division where
+     a wider gap of the same kind would read as an accident. */
+  nav li.opens { margin-inline-start: 1.6rem; }
   nav a { color: var(--faint); text-decoration: none; padding-bottom: 0.35rem; }
   nav a:hover { color: var(--ink); }
   nav a.current { color: var(--ink); border-bottom: 2px solid var(--ink); }

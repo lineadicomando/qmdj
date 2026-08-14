@@ -1,26 +1,42 @@
 import type { MessageKey } from '@qimendunjia/i18n';
 
 /**
- * The sections, in the order the header lists them.
+ * The sections, in the order the header lists them, and in two kinds.
  *
- * The consultation is first and lives at the root of a language, which is a
- * claim about what this site is for: the classical use of the method is a
- * question put at an instant, and the three sections after it are the
- * instruments that use serves itself with. Someone who arrives knowing what
- * they want arrives wanting to ask something.
+ * **Acts first, instruments after.** A consultation and the choosing of a
+ * time are things a reader *does*: one asks a question at an instant, the
+ * other looks through a stretch of them for an hour. The three that follow
+ * are boards they *look at*. That division is the one this site is arranged
+ * by, and the consultation leads because the classical use of these methods
+ * is a question put at an instant.
  *
- * The cost is paid knowingly and it is the chart's address. `/[lang]` was the
- * chart of now and is now a form: a link to a chart is `/[lang]/chart` with
- * the moment in it, and the links shared before this change land on the
- * consultation instead. What is bought is that the section which cannot be
- * addressed at all — see the page — is the one nobody has to find.
+ * It was written here before and stated as «the consultation, and the three
+ * sections after it are the instruments that use serves itself with» — which
+ * stopped being true when the 六壬 board made them four, one of which was an
+ * act. The order now says what the sentence always meant.
+ *
+ * **What the grouping does not say is which art a section uses.** Choosing a
+ * time walks Qi Men charts and only those, and no arrangement of a flat list
+ * can carry that: a nav says where things are, not what they are made of. It
+ * is said on that section's own page, in its title and in its opening line,
+ * which is where somebody reading results needs it.
+ *
+ * The cost of the order is paid knowingly and it is the chart's address.
+ * `/[lang]` was the chart of now and is now a form: a link to a chart is
+ * `/[lang]/chart` with the moment in it, and links shared before that change
+ * land on the consultation instead.
  */
-export const SECTIONS: readonly { slug: string; label: MessageKey }[] = [
-  { slug: '', label: 'nav.consult' },
-  { slug: 'chart', label: 'nav.chart' },
-  { slug: 'liuren', label: 'nav.liuren' },
-  { slug: 'bazi', label: 'nav.bazi' },
-  { slug: 'moments', label: 'nav.moments' },
+export const SECTIONS: readonly {
+  slug: string;
+  label: MessageKey;
+  /** Which of the two kinds it is, for the break the header sets between them. */
+  group: 'act' | 'instrument';
+}[] = [
+  { slug: '', label: 'nav.consult', group: 'act' },
+  { slug: 'moments', label: 'nav.moments', group: 'act' },
+  { slug: 'chart', label: 'nav.chart', group: 'instrument' },
+  { slug: 'liuren', label: 'nav.liuren', group: 'instrument' },
+  { slug: 'bazi', label: 'nav.bazi', group: 'instrument' },
 ];
 
 /**

@@ -353,10 +353,16 @@
   ].filter(Boolean));
 </script>
 
-<svelte:head><title>{t('nav.moments')}</title></svelte:head>
+<svelte:head><title>{t('moments.title')}</title></svelte:head>
 
-<!-- Named, not shown: the nav says which section this is — see `.offscreen`. -->
-<h1 class="offscreen">{t('nav.moments')}</h1>
+<!-- Named, not shown: the nav says which section this is — see `.offscreen`.
+     Named here with the art, which the nav label cannot carry: every criterion
+     below is a Qi Men one, and somebody reading the results has to know what
+     they were read off. -->
+<h1 class="offscreen">{t('moments.title')}</h1>
+
+<!-- The one line that says what this walks, before anybody narrows it. -->
+<p class="lead">{t('moments.lead')}</p>
 
 <FormPanel
   {t}
@@ -618,6 +624,7 @@
 {/if}
 
 <style>
+  .lead { margin: 0 0 1rem; color: var(--faint); font-size: 0.9rem; line-height: 1.55; }
   .failure { color: var(--alarm); }
   /* As many per row as the panel has room for, one when it has none: the
      criteria are `select`s holding words of very uneven length, and a fixed

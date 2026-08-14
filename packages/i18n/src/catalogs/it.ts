@@ -361,6 +361,13 @@ export const it: Record<MessageKey, string> = {
   'nav.consult': 'Consultazione',
   'nav.sections': 'Sezioni',
 
+  // La sezione che percorre carte Qi Men, nominata con l'arte che percorre.
+  // L'etichetta della nav non può portarlo — un'intestazione dice dove stanno
+  // le cose, non di cosa sono fatte — e qui serve a chi legge i risultati.
+  'moments.title': 'Scegliere il momento — Qi Men',
+  'moments.lead':
+    'Ogni ora fra due date viene posta come carta Qi Men, e sono elencate quelle che rispondono a ciò che indichi qui sotto. Criteri, non raccomandazioni: cosa renda un\'ora buona per agire è una lettura, ed è tua.',
+
   'scheme.label': 'Aspetto',
   'scheme.auto': 'automatico',
   'scheme.light': 'chiaro',
