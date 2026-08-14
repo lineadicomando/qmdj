@@ -11,6 +11,7 @@ import {
 import { createTranslator, type MessageKey } from '@qimendunjia/i18n';
 import {
   registerComputeBazi,
+  registerComputeLiuren,
   registerComputeQimenChart,
   registerDrawQimenChart,
   registerLunarDate,
@@ -63,6 +64,7 @@ export function createServer(context: ToolContext = {}): McpServer {
   registerSearchLocation(server, context);
   registerComputeQimenChart(server, context);
   registerComputeBazi(server, context);
+  registerComputeLiuren(server, context);
   registerDrawQimenChart(server, context);
   registerSolarTerms(server, context);
   registerLunarDate(server, context);

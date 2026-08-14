@@ -118,10 +118,31 @@ export {
   type Seat,
 } from './nianming.js';
 
+export {
+  DEFAULT_LIUREN_OPTIONS,
+  GENERALS,
+  KETI,
+  LIUREN_RULES,
+  liurenBoard,
+  lodgingOf,
+  yuejiangOf,
+  type Course,
+  type General,
+  type GeneralId,
+  type KetiId,
+  type LiurenBoard,
+  type LiurenOptions,
+  type LiurenRuleId,
+  type Transmission,
+  type Yuejiang,
+  type YuejiangId,
+} from './liuren.js';
+
 export { chartLabels, sayBranch, sayGanzhi, type ChartLabels } from './labels.js';
 
 export {
   formatBazi,
+  formatLiuren,
   formatMoment,
   formatNianming,
   formatQimenChart,

@@ -58,6 +58,7 @@ compatible with it. The GeoNames data is CC BY 4.0.
 | Lunar calendar | months, intercalary months, lunar dates, reckoned on 120°E |
 | Four pillars | 四柱 with 藏干, 十神, 納音, 十二長生, 空亡, 大運 |
 | Qi Men charts | 時家 by the 拆補 or 置閏 method: four plates, configurations, seasonal states, 門宮 and 星宮 relations, the post horse of the day and of the hour |
+| Liu Ren boards | 大六壬: the 天地盤 by 月將加時, the 四課, the 三傳 by the 九宗門, the 十二天將, the 遁干 and the 空亡 |
 | Choosing a time | 擇時擇方: every chart over an interval, narrowed to the palaces answering stated criteria |
 
 It reports **arrangements and what the tradition calls them**. A gate stands
@@ -153,8 +154,8 @@ longer there.
 | `packages/geo` | location lookup over a local GeoNames dataset (SQLite) |
 | `packages/core` | the engine, and the `qimen` command |
 | `packages/plate` | the drawing: nine palaces framed by the compass, the configurations listed under them, SVG and PNG |
-| `packages/mcp` | MCP server, seven tools, stdio |
-| `apps/web` | SvelteKit: four sections at `/en` and `/it`, eight endpoints under `/api` |
+| `packages/mcp` | MCP server, eight tools, stdio |
+| `apps/web` | SvelteKit: four sections at `/en` and `/it`, nine endpoints under `/api` |
 
 npm workspaces, Node ≥ 22, ESM, TypeScript.
 
@@ -182,6 +183,7 @@ a pillar turns on.
 ```sh
 qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lang en
 qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --method zhirun
+qimen liuren --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lang en
 qimen bazi  --date 1968-03-12 --time 14:30 --tz Europe/Rome --gender male
 qimen terms --year 2024 --tz Asia/Shanghai
 qimen calendar --date 2023-04-01
@@ -270,6 +272,15 @@ from the first release:
 | `yearBoundary` | 立春 or 正月初一 | `lichun` |
 | `dayBoundary` | the day pillar turns at 23:00 or at midnight | `zishi` |
 | `system` | which family of chart: the hour's (時家), the day's, the month's or the year's | `shijia` |
+
+The Liu Ren board keeps its own, because it is a second board and not a view
+of the first: a saved one has to reproduce on its own terms.
+
+| | | Default |
+|---|---|---|
+| `yuejiang` | when the 太陽 changes palace: at the 中氣, at the 節氣, or by its true longitude | `zhongqi` |
+| `guiren` | which verse seats the 貴人. It moves the twelve generals and never the three transmissions | `chou` |
+| `zhouye` | where the day is cut for the noble's two seats: on the hour branch, or at the real sunrise | `branch` |
 
 `method` accepts `chaibu` and `zhirun` today, and they are different schools,
 not approximations of one another: under 拆補 each term is split into three

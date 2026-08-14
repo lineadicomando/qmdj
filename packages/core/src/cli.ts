@@ -39,12 +39,18 @@ import { STEMS, type StemId } from './ganzhi.js';
 import {
   formatBazi,
   formatMoment,
+  formatLiuren,
   formatNianming,
   formatScan,
   formatSolarTerms,
   formatWarnings,
 } from './format.js';
 import { lunarDate } from './lunar.js';
+import {
+  DEFAULT_LIUREN_OPTIONS,
+  liurenBoard,
+  type LiurenOptions,
+} from './liuren.js';
 import { nianmingOf, yearsLived, type Nianming, type NianmingOptions } from './nianming.js';
 import { resolveMoment, type Moment } from './pillars.js';
 import { chartTranscript, readingPrompt } from './prompt.js';
@@ -82,7 +88,7 @@ class UsageError extends Error {
   }
 }
 
-const COMMANDS = ['chart', 'bazi', 'terms', 'calendar', 'scan'] as const;
+const COMMANDS = ['chart', 'liuren', 'bazi', 'terms', 'calendar', 'scan'] as const;
 type Command = (typeof COMMANDS)[number];
 
 interface Options {
@@ -115,12 +121,14 @@ interface Options {
   bornTime?: string;
   bornTz?: string;
   years?: string;
+  guiren?: string;
 }
 
 const HELP = `qimen — Qi Men Dun Jia charts and Four Pillars
 
 Usage
   qimen chart     [options]     the nine palaces for a moment
+  qimen liuren    [options]     the 大六壬 board for a moment
   qimen bazi      [options]     the four pillars, read out
   qimen terms     [options]     the twenty-four solar terms of a year
   qimen calendar  [options]     the lunar date of a moment
@@ -153,6 +161,9 @@ Narrowing a scan
   --method chaibu|zhirun          how the ju is determined; default: chaibu
   --yuan term|futou               under chaibu, where the third of the term is
                                   counted from; default: term
+  --guiren chou|wei               for \`liuren\`: which verse seats the 貴人.
+                                  It moves the twelve generals and never the
+                                  three transmissions; default: chou
   --lang en|it           default: the environment, then English
   --json                 the data, unformatted and untranslated
   --help
@@ -334,6 +345,22 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
       gender ? '' : `\n  ${t('cli.error.genderRequired')}`,
       warningsOf(moment, t),
     ].join('\n');
+  }
+
+  if (command === 'liuren') {
+    const board = liurenBoard(
+      {
+        term: moment.solarTerm.term,
+        day: moment.pillars.day,
+        hour: moment.hourBranch,
+      },
+      liurenOptionsFrom(options),
+    );
+    if (options.json) return JSON.stringify({ moment, liuren: board }, null, 2);
+    const parts = [formatMoment(moment, t), '', formatLiuren(board, t)];
+    const warnings = warningsOf(moment, t);
+    if (warnings !== '') parts.push(warnings);
+    return parts.join('\n');
   }
 
   const chart = computeQimenChart(moment, chartOptions);
@@ -586,6 +613,25 @@ function resolveOptions(options: Options): ChartOptions {
   return chartOptions;
 }
 
+/**
+ * The Liu Ren divergences, from the command line.
+ *
+ * The board keeps its own options rather than borrowing dunjia's: they are two
+ * boards and a saved one of either has to reproduce on its own terms. What
+ * they do share — where the day turns, whether the clock is corrected — has
+ * already been applied to the moment before this is reached.
+ */
+function liurenOptionsFrom(options: Options): LiurenOptions {
+  const liuren: LiurenOptions = { ...DEFAULT_LIUREN_OPTIONS };
+  if (options.guiren !== undefined) {
+    if (options.guiren !== 'chou' && options.guiren !== 'wei') {
+      throw new UsageError('cli.error.unknownValue', { option: '--guiren', value: options.guiren });
+    }
+    liuren.guiren = options.guiren;
+  }
+  return liuren;
+}
+
 const FLAGS: Record<string, keyof Options> = {
   '--date': 'date',
   '--time': 'time',
@@ -613,6 +659,7 @@ const FLAGS: Record<string, keyof Options> = {
   '--born-time': 'bornTime',
   '--born-tz': 'bornTz',
   '--years': 'years',
+  '--guiren': 'guiren',
 };
 
 function parse(argv: string[]): { command?: Command; options: Options } {

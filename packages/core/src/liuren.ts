@@ -188,6 +188,26 @@ const GUIREN: Record<LiurenOptions['guiren'], readonly (readonly [number, number
   wei: [[7, 1], [8, 0], [9, 11], [11, 9], [1, 7], [0, 8], [1, 7], [2, 6], [3, 5], [5, 3]],
 };
 
+/**
+ * The names of the four lessons and the three transmissions.
+ *
+ * Positions, and Chinese ones, so they travel as names: 初傳 is chūchuán to
+ * every reader and the catalog supplies the gloss beside it. They are here
+ * rather than in a surface for the same reason `NIANMING_NAMES` is.
+ */
+export const COURSE_NAMES = [
+  { hanzi: '一課', pinyin: 'yīkè' },
+  { hanzi: '二課', pinyin: 'èrkè' },
+  { hanzi: '三課', pinyin: 'sānkè' },
+  { hanzi: '四課', pinyin: 'sìkè' },
+] as const;
+
+export const TRANSMISSION_NAMES = {
+  chu: { hanzi: '初傳', pinyin: 'chūchuán' },
+  zhong: { hanzi: '中傳', pinyin: 'zhōngchuán' },
+  mo: { hanzi: '末傳', pinyin: 'mòchuán' },
+} as const;
+
 /** One of the four lessons (課). */
 export interface Course {
   /** 一課 to 四課, as the tradition numbers them. */

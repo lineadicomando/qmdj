@@ -1,5 +1,6 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import {
+  DEFAULT_LIUREN_OPTIONS,
   GATES,
   PATTERN_IDS,
   SPIRIT_IDS,
@@ -9,18 +10,21 @@ import {
   computeBazi,
   computeQimenChart,
   formatBazi,
+  formatLiuren,
   formatMoment,
   formatNianming,
   formatQimenChart,
   formatScan,
   formatSolarTerms,
   formatWarnings,
+  liurenBoard,
   lunarDate,
   matchRuns,
   sayGanzhi,
   scanCharts,
   solarTermsOfYear,
   systemTimezone,
+  type LiurenOptions,
   type ScanCriteria,
 } from '@qimendunjia/core';
 import { searchLocations } from '@qimendunjia/geo';
@@ -226,6 +230,71 @@ export function registerComputeBazi(server: McpServer, context: ToolContext): vo
             '',
             formatBazi(bazi, t),
             args.gender ? '' : `\n  ${t('cli.error.genderRequired')}`,
+            formatWarnings(moment, t),
+          ]
+            .filter((part) => part !== '')
+            .join('\n'),
+        );
+      } catch (error) {
+        return fail(describeError(error, t));
+      }
+    },
+  );
+}
+
+export function registerComputeLiuren(server: McpServer, context: ToolContext): void {
+  server.registerTool(
+    'compute_liuren',
+    {
+      title: 'Lay the 大六壬 board',
+      description:
+        'Lays the Da Liu Ren board for an instant: the 天地盤 turned by setting the general of ' +
+        'the month (月將) on the palace of the hour, the four lessons (四課) read off the ' +
+        "stem's lodging and the day branch, the three transmissions (三傳) drawn from them by " +
+        'the nine rules (九宗門), the twelve generals laid from the noble, and the hidden stem ' +
+        'and void state of each transmission. ' +
+        'Liu Ren is the sibling of Qi Men inside the 三式 and answers the same shape of ' +
+        'question: one asked now, read from the board the asking fell on. Lay it for the ' +
+        'instant of the question, not for a birth. ' +
+        'It reports which rule drew the transmissions and what the arrangement is called, and ' +
+        'nothing beyond that. It does not choose the 用神, rank the transmissions, date an ' +
+        'outcome or advise; those need a question to have been asked and belong to the reader. ' +
+        'A board drawn by 返吟 says so: that rule rests on a clause no reference implementation ' +
+        'covers.',
+      inputSchema: {
+        date: dateSchema,
+        time: timeSchema,
+        ...placeSchema,
+        guiren: z
+          .enum(['chou', 'wei'])
+          .optional()
+          .describe(
+            'Which verse seats the 貴人. It moves the twelve generals and never the three ' +
+              'transmissions. Default chou.',
+          ),
+        ...optionSchema,
+        lang: langSchema,
+      },
+    },
+    async (args) => {
+      const t = translatorFor(args.lang);
+      try {
+        const { moment, label } = resolveInput(args, context);
+        const options: LiurenOptions = { ...DEFAULT_LIUREN_OPTIONS };
+        if (args.guiren) options.guiren = args.guiren;
+
+        const board = liurenBoard(
+          { term: moment.solarTerm.term, day: moment.pillars.day, hour: moment.hourBranch },
+          options,
+        );
+
+        return ok(
+          [
+            `${t('cli.field.place')}: ${label}`,
+            '',
+            formatMoment(moment, t),
+            '',
+            formatLiuren(board, t),
             formatWarnings(moment, t),
           ]
             .filter((part) => part !== '')

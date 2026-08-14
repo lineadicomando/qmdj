@@ -152,6 +152,17 @@ Not uniformly, and the difference matters when you are asked to justify one.
 - **The configurations** (門迫, 擊刑, 入墓, 伏吟, 反吟, 五不遇時 …) — from
   Chinese-language sources, with each rule tested against the transmitted list
   it should reproduce. There is no runnable reference at all.
+- **The Liu Ren board** — two levels, and they are not the same. What the
+  board is *built* from — the 天地盤 by 月將加時, the 寄宮 table, the 四課 and
+  which of them controls its ground — was compared against an implementation
+  over **all 17 280 boards the input space holds**, agreeing on every one:
+  that space is finite and nothing was sampled. The **selection among the
+  candidates**, which is the 九宗門, is checked against *two* independent
+  implementations that agree with each other on only 82 % of boards; where
+  they do agree, this engine agrees with them on 99.7 %. One narrow clause of
+  涉害 is unimplemented and 0.24 % of boards differ because of it. A board
+  drawn by 返吟 carries a line saying its rule rests on something no reference
+  covers.
 
 If you are asked how the software knows something, say which of these three it
 is. Do not describe the third as though it were the first.
@@ -163,6 +174,7 @@ is. Do not describe the third as though it were the first.
 | `search_location` | a name → candidates with coordinates and zone. Always first when you have a name |
 | `compute_qimen_chart` | the nine palaces, the plates, the configurations, how each star and gate stands to its palace, and both post horses — 日馬 and 時馬, never one of the two. With `born`, also a 年命: the birth placed *inside* this chart |
 | `compute_bazi` | the four pillars, read out. `gender` only affects the luck cycles |
+| `compute_liuren` | the 大六壬 board — the other 式, laid on the same instant and answering the same shape of question. Lay it for the moment of the asking, never for a birth |
 | `draw_qimen_chart` | the picture, framed by the eight directions, with the configurations and their fortunes listed under the grid. After the calculation, never instead of it |
 | `solar_terms` | the twenty-four terms of a year, with exact instants |
 | `lunar_date` | the lunisolar date. Reckoned on 120°E by convention, not on the zone you pass |
@@ -186,6 +198,7 @@ GET /api/locations?q=Beijing&lang=en
 GET /api/locations?id=1816670&lang=en          # the way back from an address
 GET /api/chart?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/bazi?date=1968-03-12&time=14:30&locationId=3169070&gender=male
+GET /api/liuren?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/terms?year=2024&timezone=Asia/Shanghai
 GET /api/chart/plate?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/moments?from=2026-09-01&to=2026-09-08&locationId=3169070&gate=kaimen&towards=se,s

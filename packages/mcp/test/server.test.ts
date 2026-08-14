@@ -54,6 +54,7 @@ describe('what the server offers', () => {
 
     expect(tools.map((tool) => tool.name).sort()).toEqual([
       'compute_bazi',
+      'compute_liuren',
       'compute_qimen_chart',
       'draw_qimen_chart',
       'lunar_date',
@@ -73,6 +74,10 @@ describe('what the server offers', () => {
     expect(byName.get('search_location')).toMatch(/do not invent/i);
     expect(byName.get('draw_qimen_chart')).toMatch(/not instead of it/);
     expect(byName.get('compute_bazi')).toMatch(/do not guess/i);
+    // The board of the other 式 answers a question asked now, and the mistake
+    // worth heading off is laying it for a birth as if it were a natal chart.
+    expect(byName.get('compute_liuren')).toMatch(/not for a birth/i);
+    expect(byName.get('compute_liuren')).toMatch(/does not choose the 用神/i);
     // The two ways an agent turns a scan into something it is not: dropping
     // the direction, and answering a question that was not asked.
     expect(byName.get('scan_moments')).toMatch(/never the hour alone/i);

@@ -264,6 +264,80 @@ export const en = {
   'label.nianming.benming': 'year of the birth',
   'label.nianming.xingnian': 'year being lived',
 
+  // 六壬 — the second board. The names below are glosses beside the hanzi and
+  // never in place of them: 登明 is dēngmíng to every reader, and what changes
+  // per locale is only the phrase that tells an English reader what the name
+  // says.
+
+  // 月將 — the twelve seats of the Sun, which the board is turned by. They step
+  // back one branch at each 中氣.
+  'label.yuejiang.dengming': 'rising brightness',
+  'label.yuejiang.hekui': 'chief of the river',
+  'label.yuejiang.congkui': 'attendant chief',
+  'label.yuejiang.chuansong': 'the courier',
+  'label.yuejiang.xiaoji': 'lesser blessing',
+  'label.yuejiang.shengguang': 'victorious light',
+  'label.yuejiang.taiyi': 'the great one',
+  'label.yuejiang.tiangang': 'pole of the sky',
+  'label.yuejiang.taichong': 'great surge',
+  'label.yuejiang.gongcao': 'clerk of merits',
+  'label.yuejiang.daji': 'greater blessing',
+  'label.yuejiang.shenhou': 'divine consort',
+
+  // 十二天將 — laid around the noble, forwards or backwards according to the
+  // palace the noble came to stand over.
+  'label.general.guiren': 'the noble',
+  'label.general.tengshe': 'the flying serpent',
+  'label.general.zhuque': 'the vermilion bird',
+  'label.general.liuhe': 'the six harmonies',
+  'label.general.gouchen': 'the hooked array',
+  'label.general.qinglong': 'the azure dragon',
+  'label.general.tiankong': 'the void',
+  'label.general.baihu': 'the white tiger',
+  'label.general.taichang': 'the constant',
+  'label.general.xuanwu': 'the dark warrior',
+  'label.general.taiyin': 'the great yin',
+  'label.general.tianhou': 'the celestial queen',
+
+  // The four lessons and the three transmissions, by position.
+  'label.course.1': 'first lesson',
+  'label.course.2': 'second lesson',
+  'label.course.3': 'third lesson',
+  'label.course.4': 'fourth lesson',
+  'label.transmission.chu': 'first',
+  'label.transmission.zhong': 'middle',
+  'label.transmission.mo': 'last',
+
+  // 九宗門 — which of the nine rules drew the transmissions. A rule and not a
+  // verdict: it says how the board was read, never how it turned out.
+  'label.liurenRule.zeike': 'robbery and control',
+  'label.liurenRule.biyong': 'the like one',
+  'label.liurenRule.shehai': 'wading the harm',
+  'label.liurenRule.yaoke': 'control from afar',
+  'label.liurenRule.maoxing': 'at the fixed place',
+  'label.liurenRule.bieze': 'the separate charge',
+  'label.liurenRule.bazhuan': 'the eight concentrated',
+  'label.liurenRule.fuyin': 'the still plate',
+  'label.liurenRule.fanyin': 'the turned plate',
+
+  // 課體 — the named shape the board turned out to be. Carried the way a
+  // configuration of the nine palaces is: a name for an arrangement.
+  'label.keti.yuanshou': 'the head',
+  'label.keti.zhongshen': 'the second hearing',
+  'label.keti.zhiyi': 'knowing the one',
+  'label.keti.shehai': 'wading the harm',
+  'label.keti.haoshi': 'the reed arrow',
+  'label.keti.tanshe': 'the pellet shot',
+  'label.keti.hushi': "the tiger's gaze",
+  'label.keti.dongshe': 'the winter snake, eyes covered',
+  'label.keti.bieze': 'the separate charge',
+  'label.keti.bazhuan': 'the eight concentrated',
+  'label.keti.ziren': 'taking its own',
+  'label.keti.zixin': 'trusting its own',
+  'label.keti.duchuan': 'the blocked transmission',
+  'label.keti.wuyi': 'without support',
+  'label.keti.wuqin': 'without kin',
+
   // What somebody is choosing a time for. These are not names of gates: they
   // are the errands the transmitted lists put under each one, phrased as the
   // thing a reader recognises as their own. "Open" says a door is open and
@@ -671,6 +745,21 @@ export const en = {
   // classical direction: the chart is the hour's, and the person is placed in
   // it. Not a chart of a birth; see docs/sources.md.
   'cli.heading.nianming': 'Where the birth stands',
+  'cli.heading.liuren': 'The Liu Ren board',
+  'cli.field.yuejiang': 'general of the month',
+  'cli.field.plate': 'heaven over earth',
+  'cli.field.courses': 'four lessons',
+  'cli.field.transmissions': 'three transmissions',
+  'cli.field.drawnBy': 'drawn by',
+  'cli.field.keti': 'course',
+  'cli.field.half': 'half of the day',
+  'cli.value.dayHalf': 'day, 卯 to 申',
+  'cli.value.nightHalf': 'night, 酉 to 寅',
+  'cli.value.emptyBranch': 'empty',
+  // Said on a board no reference could check. The other rules were compared
+  // against two independent implementations; this one has a clause neither
+  // settles. See PLAN.md § 4 phase 13.
+  'cli.value.liurenUnverified': 'this rule is unfalsified: no reference implementation covers it',
   'cli.heading.scan': 'Charts from {from} to {to}',
   'cli.heading.criteria': 'Asked for',
   'cli.heading.warnings': 'Warnings',

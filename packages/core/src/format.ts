@@ -1,8 +1,17 @@
 import type { MessageKey, Translator } from '@qimendunjia/i18n';
 import type { Bazi } from './bazi/index.js';
 import { palace, YUAN_HANZI, YUAN_PINYIN, type QimenChart } from './dunjia/index.js';
-import type { Ganzhi } from './ganzhi.js';
+import { BRANCHES, type Ganzhi } from './ganzhi.js';
 import type { LunarDate } from './lunar.js';
+import {
+  COURSE_NAMES,
+  KETI,
+  LIUREN_RULES,
+  TRANSMISSION_NAMES,
+  type Course,
+  type LiurenBoard,
+  type Transmission,
+} from './liuren.js';
 import { NIANMING_NAMES, type Nianming, type Placement, type Seat } from './nianming.js';
 import type { Moment } from './pillars.js';
 import type { ScanMatch } from './scan.js';
@@ -373,6 +382,118 @@ function lodging(chart: QimenChart, t: Translator): string[] {
  * 演義 weighs a 本命 by 生旺 or 囚死, and that is a reading, which needs a
  * question this does not have.
  */
+/**
+ * The Liu Ren board, for a terminal and for an agent.
+ *
+ * The plate is printed as three rows against the twelve palaces of the earth,
+ * because that is what it is: the earth never moves, and what a reader needs
+ * to see is what has come to stand over each of its branches and which general
+ * rides there. The four lessons and the three transmissions follow, then the
+ * rule that drew them and the shape it turned out to be.
+ *
+ * Nothing is ranked and nothing is chosen. Which transmission a reader takes
+ * for their matter is theirs, and this prints them in the order the board
+ * produced them.
+ */
+export function formatLiuren(board: LiurenBoard, t: Translator): string {
+  const lines = [t('cli.heading.liuren')];
+
+  lines.push(
+    ...table(
+      [
+        [
+          t('cli.field.yuejiang'),
+          `${named(board.yuejiang, `label.yuejiang.${board.yuejiang.id}` as MessageKey, t)} · ` +
+            `${glyph(board.yuejiang.branch)} — ${named(board.yuejiang.term, `label.term.${board.yuejiang.term.id}` as MessageKey, t)}`,
+        ],
+        [
+          t('cli.field.half'),
+          t(board.half === 'day' ? 'cli.value.dayHalf' : 'cli.value.nightHalf'),
+        ],
+      ],
+      4,
+    ),
+  );
+
+  // Three rows over the same twelve columns: the ground, what stands on it,
+  // and who rides there. Aligned by `columns`, which counts a hanzi as the two
+  // terminal cells it occupies.
+  lines.push(
+    '',
+    `  ${t('cli.field.plate')}`,
+    ...table(
+      [
+        ['地', ...BRANCHES.map((branch) => branch.hanzi)],
+        ['天', ...board.heaven.map((branch) => branch.hanzi)],
+        ['將', ...board.generals.map((general) => general.hanzi)],
+      ],
+      1,
+    ).map((line) => `  ${line}`),
+  );
+
+  lines.push(
+    '',
+    `  ${t('cli.field.courses')}`,
+    ...table(board.courses.map((course) => courseRow(course, t)), 3).map((line) => `  ${line}`),
+  );
+
+  lines.push(
+    '',
+    `  ${t('cli.field.transmissions')}`,
+    ...table(
+      board.transmissions.map((transmission) => transmissionRow(transmission, t)),
+      3,
+    ).map((line) => `  ${line}`),
+  );
+
+  const rule = LIUREN_RULES[board.rule];
+  const rows: string[][] = [
+    [t('cli.field.drawnBy'), named(rule, `label.liurenRule.${board.rule}` as MessageKey, t)],
+  ];
+  if (board.keti) {
+    rows.push([
+      t('cli.field.keti'),
+      named(KETI[board.keti], `label.keti.${board.keti}` as MessageKey, t),
+    ]);
+  }
+  lines.push('', ...table(rows, 4));
+
+  // Said where it applies and not in a footnote: a board drawn by 返吟 rests on
+  // a rule no reference implementation covers.
+  if (board.unverified) lines.push('', `  ${t('cli.value.liurenUnverified')}`);
+
+  return lines.join('\n');
+}
+
+function courseRow(course: Course, t: Translator): string[] {
+  const name = COURSE_NAMES[course.number - 1] as { hanzi: string; pinyin: string };
+  return [
+    named(name, `label.course.${course.number}` as MessageKey, t),
+    glyph(course.upper),
+    '/',
+    glyph(course.lower),
+  ];
+}
+
+function transmissionRow(transmission: Transmission, t: Translator): string[] {
+  return [
+    named(
+      TRANSMISSION_NAMES[transmission.position],
+      `label.transmission.${transmission.position}` as MessageKey,
+      t,
+    ),
+    glyph(transmission.branch),
+    named(
+      transmission.general,
+      `label.general.${transmission.general.id}` as MessageKey,
+      t,
+    ),
+    // The decade covers ten branches and the board has twelve, so two of them
+    // carry no stem. That absence is the 空亡 and is reported as one.
+    transmission.hiddenStem ? glyph(transmission.hiddenStem) : t('cli.value.emptyBranch'),
+  ];
+}
+
 export function formatNianming(nianming: Nianming, t: Translator): string {
   const lines = [`${t('cli.heading.nianming')}`, ...placed(nianming.benming, 'benming', t)];
 

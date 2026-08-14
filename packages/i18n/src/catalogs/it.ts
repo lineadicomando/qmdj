@@ -244,6 +244,79 @@ export const it: Record<MessageKey, string> = {
   'label.nianming.benming': 'anno della nascita',
   'label.nianming.xingnian': 'anno che si vive',
 
+  // 六壬 — il secondo quadro. I nomi qui sotto sono glosse accanto agli hanzi e
+  // mai al loro posto: 登明 è dēngmíng per ogni lettore, e a cambiare con la
+  // lingua è solo la frase che dice cosa quel nome afferma.
+
+  // 月將 — i dodici seggi del Sole, per cui il quadro viene girato. Arretrano di
+  // un ramo a ogni 中氣.
+  'label.yuejiang.dengming': 'chiarore che sale',
+  'label.yuejiang.hekui': 'capo del fiume',
+  'label.yuejiang.congkui': 'capo seguace',
+  'label.yuejiang.chuansong': 'il corriere',
+  'label.yuejiang.xiaoji': 'fausto minore',
+  'label.yuejiang.shengguang': 'luce vittoriosa',
+  'label.yuejiang.taiyi': 'il grande uno',
+  'label.yuejiang.tiangang': 'perno del cielo',
+  'label.yuejiang.taichong': 'grande impeto',
+  'label.yuejiang.gongcao': 'scrivano dei meriti',
+  'label.yuejiang.daji': 'fausto maggiore',
+  'label.yuejiang.shenhou': 'sovrana divina',
+
+  // 十二天將 — disposti attorno al nobile, in avanti o all'indietro secondo il
+  // palazzo su cui il nobile è venuto a stare.
+  'label.general.guiren': 'il nobile',
+  'label.general.tengshe': 'il serpente alato',
+  'label.general.zhuque': "l'uccello vermiglio",
+  'label.general.liuhe': 'le sei armonie',
+  'label.general.gouchen': 'la schiera uncinata',
+  'label.general.qinglong': 'il drago azzurro',
+  'label.general.tiankong': 'il vuoto',
+  'label.general.baihu': 'la tigre bianca',
+  'label.general.taichang': 'il costante',
+  'label.general.xuanwu': 'il guerriero oscuro',
+  'label.general.taiyin': 'il grande yin',
+  'label.general.tianhou': 'la regina celeste',
+
+  // Le quattro lezioni e le tre trasmissioni, per posizione.
+  'label.course.1': 'prima lezione',
+  'label.course.2': 'seconda lezione',
+  'label.course.3': 'terza lezione',
+  'label.course.4': 'quarta lezione',
+  'label.transmission.chu': 'prima',
+  'label.transmission.zhong': 'mediana',
+  'label.transmission.mo': 'ultima',
+
+  // 九宗門 — quale delle nove regole ha tratto le trasmissioni. Una regola e non
+  // un verdetto: dice come il quadro è stato letto, mai come è andato.
+  'label.liurenRule.zeike': 'furto e controllo',
+  'label.liurenRule.biyong': 'il simile',
+  'label.liurenRule.shehai': 'guadare il danno',
+  'label.liurenRule.yaoke': 'controllo da lontano',
+  'label.liurenRule.maoxing': 'al posto fisso',
+  'label.liurenRule.bieze': "l'incarico separato",
+  'label.liurenRule.bazhuan': 'gli otto concentrati',
+  'label.liurenRule.fuyin': 'il quadro fermo',
+  'label.liurenRule.fanyin': 'il quadro rovesciato',
+
+  // 課體 — la figura nominata che il quadro è risultato essere. Portata come si
+  // porta una configurazione dei nove palazzi: un nome per una disposizione.
+  'label.keti.yuanshou': 'il capo',
+  'label.keti.zhongshen': 'il riesame',
+  'label.keti.zhiyi': "conoscere l'uno",
+  'label.keti.shehai': 'guadare il danno',
+  'label.keti.haoshi': 'la freccia di canna',
+  'label.keti.tanshe': 'il colpo di fionda',
+  'label.keti.hushi': 'lo sguardo della tigre',
+  'label.keti.dongshe': "la serpe d'inverno, a occhi coperti",
+  'label.keti.bieze': "l'incarico separato",
+  'label.keti.bazhuan': 'gli otto concentrati',
+  'label.keti.ziren': 'affidarsi a sé',
+  'label.keti.zixin': 'fidarsi di sé',
+  'label.keti.duchuan': 'la trasmissione ostruita',
+  'label.keti.wuyi': 'senza appoggio',
+  'label.keti.wuqin': 'senza congiunti',
+
   'label.purpose.opening': 'Aprire, viaggiare, un ufficio o un funzionario, commercio',
   'label.purpose.meeting': 'Incontrare qualcuno, matrimonio, chiedere un favore, riposare',
   'label.purpose.wealth': 'Denaro, guadagno, far crescere qualcosa',
@@ -484,6 +557,19 @@ export const it: Record<MessageKey, string> = {
   // verso classico: la carta è quella dell'ora, e la persona vi si colloca
   // dentro. Non è la carta di una nascita; vedi docs/sources.md.
   'cli.heading.nianming': 'Dove sta la nascita',
+  'cli.heading.liuren': 'Il quadro del Liu Ren',
+  'cli.field.yuejiang': 'generale del mese',
+  'cli.field.plate': 'cielo sopra terra',
+  'cli.field.courses': 'le quattro lezioni',
+  'cli.field.transmissions': 'le tre trasmissioni',
+  'cli.field.drawnBy': 'tratto per',
+  'cli.field.keti': 'figura',
+  'cli.field.half': 'metà del giorno',
+  'cli.value.dayHalf': 'giorno, da 卯 a 申',
+  'cli.value.nightHalf': 'notte, da 酉 a 寅',
+  'cli.value.emptyBranch': 'vuoto',
+  'cli.value.liurenUnverified':
+    'questa regola non è falsificata: nessuna implementazione di riferimento la copre',
   'cli.heading.scan': 'Carte dal {from} al {to}',
   'cli.heading.criteria': 'Richiesto',
   'cli.heading.warnings': 'Avvertenze',
