@@ -266,7 +266,7 @@ export const LIUREN_RULES: Record<LiurenRuleId, { hanzi: string; pinyin: string 
 export type KetiId =
   | 'yuanshou' | 'zhongshen' | 'zhiyi' | 'shehai'
   | 'haoshi' | 'tanshe' | 'hushi' | 'dongshe'
-  | 'bieze' | 'bazhuan' | 'ziren' | 'zixin' | 'duchuan' | 'wuyi' | 'wuqin';
+  | 'bieze' | 'bazhuan' | 'ziren' | 'zixin' | 'duchuan' | 'wuyi' | 'jinglan';
 
 export const KETI: Record<KetiId, { hanzi: string; pinyin: string }> = {
   yuanshou: { hanzi: '元首', pinyin: 'yuánshǒu' },
@@ -283,7 +283,7 @@ export const KETI: Record<KetiId, { hanzi: string; pinyin: string }> = {
   zixin: { hanzi: '自信', pinyin: 'zìxìn' },
   duchuan: { hanzi: '杜傳', pinyin: 'dùchuán' },
   wuyi: { hanzi: '無依', pinyin: 'wúyī' },
-  wuqin: { hanzi: '無親', pinyin: 'wúqīn' },
+  jinglan: { hanzi: '井欄', pinyin: 'jǐnglán' },
 };
 
 export interface LiurenBoard {
@@ -547,12 +547,20 @@ function biyong(context: Context, candidates: readonly Course[]): Drawn {
  * rather than by what they suffered — 見機 takes one standing on a 孟 palace
  * (寅申巳亥), and failing that 察微 takes one on a 仲 (子午卯酉).
  *
- * A tie that survives both is left to the order of the courses. **That is the
- * one place in this rule this engine chooses rather than follows, and it is
- * now known to be a gap rather than a silence**: 《六壬大全》卷一 breaks it —
- * 「復等柔辰剛日宜」, an equal depth going to the branch's seat on a yin day
- * and the stem's on a yang one — and the clause is not implemented here. See
- * the 六壬 section of `docs/sources.md`.
+ * A tie that survives both is left to the order of the courses, and 《六壬大全》
+ * 卷一 has a clause for exactly that — 「復等柔辰剛日宜」. **It was implemented
+ * and it moves nothing**: over the whole 8 640-board space, under all three
+ * readings of what 辰 and 日 name there, the clause never selects a different
+ * course from the one the order of the courses already gives. So it is not
+ * carried, because a branch that cannot be taken is not a rule, it is
+ * decoration on one.
+ *
+ * The line above it, 「孟深仲淺季當休」, is a live divergence rather than a
+ * settled one. Read in the verse's own order — depth first, the palaces
+ * breaking a tie — it scores 98.19 % against the reference where the order
+ * implemented here scores 99.58 %. This engine follows the two implementations
+ * and not the syntax, which is a choice and is recorded as one in the 六壬
+ * section of `docs/sources.md`.
  */
 function shehai(context: Context, candidates: readonly Course[]): Drawn {
   const depth = (course: Course): number => {
@@ -732,8 +740,9 @@ function fuyin(context: Context): Drawn {
  * days it names are the six this engine produces, opening on 亥 and 巳, which
  * are the 驛馬 of 丑 and of 未. Enumeration and derivation meet exactly.
  *
- * What the verse names 井欄 this file calls `wuqin` 無親, which it does not
- * carry. See `docs/sources.md`.
+ * The 課體 is the verse's own: 「無尅别有井欄名」. It used to be `wuqin` 無親,
+ * a name no source consulted carries, and the rename is the register catching
+ * one. See `docs/sources.md`.
  */
 function fanyin(context: Context): Drawn {
   const byControl = zeike(context);
@@ -742,7 +751,7 @@ function fanyin(context: Context): Drawn {
   return {
     branches: [horseBranch(day.branch), courses[2].upper, courses[0].upper],
     rule: 'fanyin',
-    keti: 'wuqin',
+    keti: 'jinglan',
   };
 }
 

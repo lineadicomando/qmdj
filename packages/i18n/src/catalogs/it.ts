@@ -315,7 +315,7 @@ export const it: Record<MessageKey, string> = {
   'label.keti.zixin': 'fidarsi di sé',
   'label.keti.duchuan': 'la trasmissione ostruita',
   'label.keti.wuyi': 'senza appoggio',
-  'label.keti.wuqin': 'senza congiunti',
+  'label.keti.jinglan': 'il parapetto del pozzo',
 
   'label.purpose.opening': 'Aprire, viaggiare, un ufficio o un funzionario, commercio',
   'label.purpose.meeting': 'Incontrare qualcuno, matrimonio, chiedere un favore, riposare',
@@ -564,7 +564,7 @@ export const it: Record<MessageKey, string> = {
   'prompt.liuren.keti':
     'La figura nominata 課體 kètǐ — 元首 yuánshǒu, 重審 zhòngshěn, 涉害 shèhài e le altre — è un nome per la forma in cui il quadro è caduto, nel modo in cui lo è una configurazione dei nove palazzi. Non è un verdetto sulla faccenda né una sorte per la persona. Dove la trascrizione dà un nome, riportalo come un nome.',
   'prompt.liuren.unverified':
-    'Questo quadro è stato tratto per 返吟 fǎnyín, e quella regola poggia su una clausola che nessuna implementazione indipendente copre. Ogni altra regola qui è stata verificata contro due. Dillo, se leggi da lì.',
+    'Questo quadro è stato tratto per 返吟 fǎnyín, la sola regola qui che nessuna implementazione indipendente copre. Non è per questo non verificata: 《六壬大全》 nomina ogni giorno in cui la regola può trarre un quadro e ogni apertura che dà, e questo motore restituisce quelli e nessun altro. Pesala come una regola verificata contro un testo anziché contro qualcosa che gira.',
   'prompt.liuren.board': 'Il quadro',
   'prompt.liuren.noQuestion':
     'Nessuna domanda è stata posta. Descrivi come sta il quadro — cosa ha girato il piano, cosa tengono le quattro lezioni, quale regola ha tratto le trasmissioni e quali sono — e fermati lì. Non scegliere una lezione, non leggere una sorte per nessuno, e non dare consigli.',
@@ -625,7 +625,7 @@ export const it: Record<MessageKey, string> = {
   'cli.value.nightHalf': 'notte, da 酉 a 寅',
   'cli.value.emptyBranch': 'vuoto',
   'cli.value.liurenUnverified':
-    'questa regola non è falsificata: nessuna implementazione di riferimento la copre',
+    'nessuna implementazione di riferimento copre questa regola; il testo classico enumera ogni quadro che essa può trarre, e questo motore li restituisce tutti',
   'cli.heading.scan': 'Carte dal {from} al {to}',
   'cli.heading.criteria': 'Richiesto',
   'cli.heading.warnings': 'Avvertenze',

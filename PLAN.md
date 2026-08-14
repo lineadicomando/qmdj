@@ -1651,10 +1651,18 @@ runnable reference before anything is written down — holds against
 recollection and was applied too widely: a text that can be quoted outranks an
 implementation that can be run, and the register wants the quotation anyway.
 What the verse settles beyond the three is recorded where it belongs, in the
-六壬 section of `docs/sources.md`: the 復等 tie-break this engine still does
-not implement, the 返吟 that no reference could check and the text checks
-exhaustively, and one clause in `fuyin` that is this implementation's reading
-rather than the verse's.
+六壬 section of `docs/sources.md`, and each of those was measured before it was
+believed. The 復等 tie-break turned out to have nothing to do: it was
+implemented under all three readings of 「柔辰剛日」 and moves none of the 8 640
+boards, because the order of the courses already gives what it asks for. The
+返吟 no reference could check, the text checks exhaustively — six days named,
+six days produced — so the `unverified` flag keeps its field and loses its
+sentence, which had come to claim more doubt than there is. 無親 was a 課體
+name nothing carries and is now 井欄, which the verse gives. And 「孟深仲淺季
+當休」 read as evaluation order scores 98.19 % where this engine's grouping
+scores 99.58 %, which is left standing as a divergence: a verse is not a
+program, its clause order need not be its evaluation order, and two
+implementations that agree with each other only 82.4 % of the time agree here.
 
 Where this engine ends up differing deliberately, that is a divergence to
 declare — possibly a parameter, as `yuan` became in phase 3 when the same

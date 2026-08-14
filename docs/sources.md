@@ -624,7 +624,10 @@ be quoted. Phase 15 was written with that in front of it.
 
 ### 返吟, which no reference could check, and the text checks exhaustively
 
-`liurenBoard` marks every 返吟 board `unverified`, because `kinliuren` defines
+`liurenBoard` marks every 返吟 board `unverified`, and still does — but what
+the surfaces say under that flag has changed, because what they said became
+false. «This rule is unfalsified» was true when no implementation covered it
+and nothing else did either. `kinliuren` defines
 the method and never dispatches to it. The verse closes that gap and closes it
 completely: 「若知六日該無尅，丑未同干丁己辛，丑日登眀未太乙」 — only six day
 pillars can reach a 返吟 with no control, they are the 丑 and 未 days of stems
@@ -637,23 +640,71 @@ Laying every 返吟 board this engine can produce gives **丁丑 己丑 辛丑 �
 and this implementation agree on the whole of the rule's domain by two different
 routes — the verse enumerating six cases, the engine deriving them.
 
+**So the flag stays and the sentence under it goes.** The field still names a
+true fact — no runnable reference covers this rule — and that fact is worth
+raising, because it is the one board here whose doctrine no second
+implementation could contradict. What it may no longer say is that the rule is
+unchecked. The CLI, the drawing, the page and the prompt now report the flag
+for what it is: a rule checked against a text rather than against something
+that runs, with the text naming every board it can draw. Removing the flag
+outright was the other option and was refused for the same reason it exists —
+a surface that stops distinguishing kinds of evidence is a surface whose
+confidence is uniform and whose accuracy is not.
+
 The same passage's 別責 note enumerates the day pillars that rule arises on —
 戊辰 戊午 丙辰 辛未 辛丑 丁酉 辛酉 — and the engine produces exactly those seven
 and no others. Neither of these is a sample.
 
-### What the text settles that the engine does not yet do
+### What the text settled, once it was measured
 
-- **復等柔辰剛日宜.** 涉害 ties are broken in the verse — an equal depth goes to
-  the branch's seat on a yin day and the stem's on a yang one. `shehai` leaves
-  a surviving tie to the order of the courses and its comment says so, calling
-  it "the one place in this rule it is choosing rather than following".
-  `PLAN.md` calls the 21 remaining disagreements "a question for 《六壬大全》,
-  not for another round of scoring". This is that question answered, and the
-  clause is not implemented.
-- **井欄, not 無親.** The verse names the 返吟 board that shows no control
-  井欄〔射〕. This engine's `KETI` calls it `wuqin` 無親, which the verse does
-  not carry. The name is the engine's and wants either a witness or a change.
-- **One clause is the engine's own.** `fuyin` takes the 冲 for the last
+Three things the verse says and the engine did not. Each was implemented and
+run over the whole space before anything was concluded, which is what turned
+two of them into something other than what they looked like.
+
+- **復等柔辰剛日宜 — a clause with nothing to do.** 涉害 ties are broken in the
+  verse: an equal depth goes to the branch's seat on a yin day and the stem's
+  on a yang one. `shehai` left a surviving tie to the order of the courses, and
+  `PLAN.md` called the disagreements that remain "a question for 《六壬大全》".
+  The question was put. **A tie survives the palaces on 540 of the 1 380 涉害
+  boards, and on none of them does the clause change the answer.** It was tried
+  under all three readings of what 辰 and 日 name — the 天盤 branch over the
+  day's seat, the seat itself, and the candidate standing on that palace — and
+  every one of them either agrees with the course order or has no opinion:
+
+  | reading of 柔辰剛日 | ties | clause agrees | clause has no candidate | **boards moved** |
+  |---|---|---|---|---|
+  | the 上神 over the seat | 540 | 240 | 300 | **0** |
+  | the seat itself | 540 | 24 | 516 | **0** |
+  | standing on that palace | 540 | 240 | 300 | **0** |
+
+  So the clause is not carried. A branch that cannot be taken is not a rule,
+  and the engine already satisfies the verse wherever the verse has anything
+  to say. That the two coincide over 8 640 boards is itself the check.
+
+- **孟深仲淺季當休 — the one place text and implementations part.** The verse's
+  own order puts depth first and the palaces second: 「路逢多尅為用取」 then
+  「孟深仲淺季當休」. This engine does the reverse, grouping by palace and
+  letting depth decide inside the group, which is how phase 13 read it after
+  scoring one order against the other. Read in the verse's syntactic order the
+  engine scores **8 484 / 8 640 = 98.19 %** against `liuren-ts-lib`; grouped
+  first it scores **8 604 / 8 640 = 99.58 %**. The 36 boards that separate them
+  are three day pillars — 丁卯, 辛卯, 己亥 — where a candidate on a 季 palace
+  is much the deeper and both references take it over a shallower 仲.
+
+  **This is a divergence and is left standing as one.** A verse is not a
+  program and its clause order need not be its evaluation order; two
+  implementations that disagree with each other 17.6 % of the time agree here.
+  The engine follows them, this file says it is a choice, and the alternative
+  reading is written down with its score so that changing it is a decision and
+  not a discovery.
+
+- **井欄, not 無親 — a name the register caught.** The verse names the 返吟
+  board that shows no control 井欄: 「無尅别有井欄名」. This engine's `KETI`
+  called it 無親, which no source consulted carries and which nothing in this
+  file could ever have supported. It is now `jinglan` 井欄 jǐnglán. This is
+  what the register is for, and it took writing the section to notice.
+
+- **One clause is still the engine's own.** `fuyin` takes the 冲 for the last
   transmission when the punishment revisits the middle *or the opening*. The
   verse gives only the first — 「次傳更復自刑者，冲取末傳不論刑」 — and the
   second disjunct is this implementation's reading of a case the line does not
@@ -731,7 +782,8 @@ source is registered for them here. They stay uncoloured until one is.
 | 寄宮 `dun` | the parameter exists and the second value is refused rather than guessed |
 | 六壬 `yuejiang` `jieqi` · `true` | the 四庫 verse's own table turns the general at the 中氣, and both references read it so. The other two values exist in the type and are refused rather than guessed |
 | 六壬 `zhouye` `solar` | no source consulted cuts the day at the actual sunrise. `OPTION_NOT_IMPLEMENTED` |
-| the 涉害 復等 clauses | **not refused — owed.** 「復等柔辰剛日宜」 is in the verse above and `shehai` does not implement it. See the 六壬 section |
+| the 涉害 復等 clause | implemented, measured, and dropped: it moves none of the 8 640 boards under any of three readings, because the order of the courses already gives what it asks for. See the 六壬 section |
+| the verse's clause order in 涉害 | 「孟深仲淺季當休」 read as evaluation order scores 98.19 % where the grouping this engine uses scores 99.58 %. Both references take the deeper 季; the divergence is recorded rather than resolved by preference |
 
 `bigfishmarquis-qimen` implements 茅山, 置閏 and all four systems, and is
 therefore a candidate reference for several of these. It is five months old

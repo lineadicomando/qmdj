@@ -336,7 +336,7 @@ export const en = {
   'label.keti.zixin': 'trusting its own',
   'label.keti.duchuan': 'the blocked transmission',
   'label.keti.wuyi': 'without support',
-  'label.keti.wuqin': 'without kin',
+  'label.keti.jinglan': 'the well railing',
 
   // What somebody is choosing a time for. These are not names of gates: they
   // are the errands the transmitted lists put under each one, phrased as the
@@ -743,7 +743,7 @@ export const en = {
   'prompt.liuren.keti':
     'The named course 課體 kètǐ — 元首 yuánshǒu, 重審 zhòngshěn, 涉害 shèhài and the rest — is a name for the shape the board fell into, in the way a configuration of the nine palaces is. It is not a verdict on the matter and not a fortune for the person. Where the transcript gives a name, report it as a name.',
   'prompt.liuren.unverified':
-    'This board was drawn by 返吟 fǎnyín, and that rule rests on a clause no independent implementation covers. Every other rule here was checked against two of them. Say so if you read from it.',
+    'This board was drawn by 返吟 fǎnyín, the one rule here no independent implementation covers. It is not unchecked: 《六壬大全》 names every day this rule can draw a board on and every opening it gives, and this engine returns those and no others. Weigh it as a rule checked against a text rather than against something that runs.',
   'prompt.liuren.board': 'The board',
   'prompt.liuren.noQuestion':
     'No question was asked. Describe how the board stands — what the plate turned, what the four courses hold, which rule drew the transmissions and what they are — and stop there. Do not choose a course, do not read a fortune for anybody, and do not advise.',
@@ -822,7 +822,8 @@ export const en = {
   // Said on a board no reference could check. The other rules were compared
   // against two independent implementations; this one has a clause neither
   // settles. See PLAN.md § 4 phase 13.
-  'cli.value.liurenUnverified': 'this rule is unfalsified: no reference implementation covers it',
+  'cli.value.liurenUnverified':
+    'no reference implementation covers this rule; the classical text enumerates every board it can draw, and this engine matches them',
   'cli.heading.scan': 'Charts from {from} to {to}',
   'cli.heading.criteria': 'Asked for',
   'cli.heading.warnings': 'Warnings',
