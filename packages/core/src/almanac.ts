@@ -232,7 +232,8 @@ export const DAY_GOD_LIST: readonly DayGod[] = DAY_GODS;
 
 export type YearGodId =
   | 'taisui' | 'suipo' | 'dajiangjun' | 'taiyin' | 'huangfan' | 'baowei'
-  | 'sangmen' | 'diaoke' | 'baihu' | 'bingfu' | 'sifu' | 'dasha';
+  | 'sangmen' | 'diaoke' | 'baihu' | 'bingfu' | 'sifu' | 'dasha'
+  | 'jiesha' | 'zaisha' | 'suisha';
 
 export interface YearGod {
   id: YearGodId;
@@ -251,6 +252,12 @@ export interface YearGod {
  * elsewhere — each was read one at a time and each of the source's own
  * enumerations is asserted in the tests. The rest of 卷三 has not been read
  * yet and is not guessed at. See `docs/sources.md`.
+ *
+ * **災煞 is the one here without an entry of its own**, and it is carried
+ * anyway: 卷三 names it only inside the 考原 discussion of the 三煞, but that
+ * discussion states the rule for all three at once and 李鼎祚's enumeration
+ * pins it. Splitting a group the source states as a group would be worse than
+ * the asymmetry, which is written down instead.
  *
  * **Two of them share a seat, and the source defends it.** 太陰 and 弔客 both
  * stand on 歲後二辰, and 卷三's 總論 raises exactly that objection — 「然太隂之
@@ -295,6 +302,14 @@ const YEAR_GODS: readonly { id: YearGodId; hanzi: string; pinyin: string; seat: 
   // and the reason given with it: 「申子辰三合為水，水旺於子」 and so round —
   // the cardinal the year's own triad prospers in.
   { id: 'dasha', hanzi: '大煞', pinyin: 'dàshà', seat: (y) => [0, 9, 6, 3][y % 4] as number },
+  // The 三煞, and they are one rule rather than three. 考原:「劫煞災煞歲煞是為
+  // 三煞……三合五行絕胎養之位也」 — the 絕, the 胎 and the 養 of the phase the
+  // year's own triad belongs to. 李鼎祚 enumerates the last of them and so
+  // checks the other two: 「寅午戌煞在丑，巳酉丑煞在辰，申子辰煞在未，亥夘未
+  // 煞在戌」, which is also why 歲煞「常居四季」 — 丑辰未戌 are the four 季.
+  { id: 'jiesha', hanzi: '劫煞', pinyin: 'jiéshà', seat: (y) => [5, 2, 11, 8][y % 4] as number },
+  { id: 'zaisha', hanzi: '災煞', pinyin: 'zāishà', seat: (y) => [6, 3, 0, 9][y % 4] as number },
+  { id: 'suisha', hanzi: '歲煞', pinyin: 'suìshà', seat: (y) => [7, 4, 1, 10][y % 4] as number },
 ];
 
 export const YEAR_GOD_IDS: readonly YearGodId[] = YEAR_GODS.map((g) => g.id);

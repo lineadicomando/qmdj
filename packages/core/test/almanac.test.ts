@@ -215,6 +215,26 @@ describe('建除十二神', () => {
     ]);
   });
 
+  it('seats the 三煞 on the 絕, the 胎 and the 養 of the year\'s triad', () => {
+    const seat = (year: string, god: string): string =>
+      yearGodsOf(branch(year)).find((g) => g.id === god)?.branch.hanzi ?? '';
+
+    // 李鼎祚's enumeration is of 歲煞 alone, and it checks the other two:
+    // 「寅午戌煞在丑，巳酉丑煞在辰，申子辰煞在未，亥夘未煞在戌」.
+    for (const y of ['寅', '午', '戌']) expect(seat(y, 'suisha')).toBe('丑');
+    for (const y of ['巳', '酉', '丑']) expect(seat(y, 'suisha')).toBe('辰');
+    for (const y of ['申', '子', '辰']) expect(seat(y, 'suisha')).toBe('未');
+    for (const y of ['亥', '卯', '未']) expect(seat(y, 'suisha')).toBe('戌');
+
+    // 「三煞在南方巳午未」 for a 申子辰 year, in the order 絕 · 胎 · 養.
+    expect([seat('子', 'jiesha'), seat('子', 'zaisha'), seat('子', 'suisha')]).toEqual([
+      '巳', '午', '未',
+    ]);
+
+    // 歲煞「常居四季」 — and only ever there.
+    for (const y of BRANCHES) expect(['丑', '辰', '未', '戌']).toContain(seat(y.hanzi, 'suisha'));
+  });
+
   it('lets 太陰 and 弔客 keep the one seat the source gives them both', () => {
     // 卷三's 總論 raises the objection itself — 「然太隂之方又為弔客者何歟」 —
     // and answers it: 「隂陽之義，美惡不嫌同位，各從其所用耳」. Deduplicating

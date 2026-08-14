@@ -401,6 +401,10 @@ export const en = {
   'label.yeargod.sifu': 'the tally of death',
   'label.yeargod.dasha': 'the great killing',
 
+  'label.yeargod.jiesha': 'the robbing killing',
+  'label.yeargod.zaisha': 'the calamity killing',
+  'label.yeargod.suisha': 'the year killing',
+
   'label.keti.yuanshou': 'the head',
   'label.keti.zhongshen': 'the second hearing',
   'label.keti.zhiyi': 'knowing the one',

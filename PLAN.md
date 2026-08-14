@@ -2077,7 +2077,7 @@ stand in this file and in `liuren.ts`'s comments, not in the register
 CLAUDE.md calls mandatory. A third layer's tables do not land in a register
 the second board never entered.
 
-**建除十二神, 二十八宿值日, the 十二神 and twelve 年神 are built; the rest of 卷三 is not.** `almanac.ts`, `almanacAt`, and the
+**建除十二神, 二十八宿值日, the 十二神 and fifteen 年神 are built; the rest of 卷三 is not.** `almanac.ts`, `almanacAt`, and the
 page beside the pillars on the CLI, the API, the MCP tools, the chart page and
 the 六壬 page. Agreement with `lunar-javascript` on **14 600 / 14 600 days of
 2000 to 2039** for the officer and again for the lodge with its 七政; the 480
@@ -2122,8 +2122,8 @@ officers'.
 
 **The 年神 are the layer's other axis, and its weakest evidence.** A chart
 chooses an hour *and a direction*, and 卷三 puts the year's gods on the second.
-Twelve are in — 太歲, 歲破, 大將軍, 太陰, 黃幡, 豹尾, 喪門, 弔客, 白虎, 病符,
-死符, 大煞 — each one whose seat the source states outright and completely
+Fifteen are in — 太歲, 歲破, 大將軍, 太陰, 黃幡, 豹尾, 喪門, 弔客, 白虎, 病符,
+死符, 大煞 and the three 煞 — each one whose seat the source states outright and completely
 without leaning on a god defined elsewhere, and each of its worked enumerations
 asserted in the tests. **Two of them share a branch and stay sharing it**: 太陰
 and 弔客 are both 歲後二辰, the 總論 raises that as an objection and answers it
@@ -2133,8 +2133,15 @@ the one block with no runnable reference**: `lunar-javascript` answers for 太�
 which needs no answering, and for none of the other five. Tier 3, said so.
 What *is* checked is the year the page turns on — 立春, on the date, 10 950 /
 10 950 — because a page that disagreed with itself about its own year would
-put every bearing one year out at once. The rest of 卷三 is **unread rather than refused**: some entries key on the
-year *stem*, 大耗 and 小耗 are stated only inside a 「是亦一説也」 and are not
+put every bearing one year out at once. **And two entries the source gives up on are the reason it was chosen.** 蠶室
+has a divination in it 「而今不可考矣」; 蠶命's received table is disowned where
+it stands, 「此恐有悞」. Neither is taken. Reading past the places a source
+marks as beyond it would waste the only property that made it better than three
+that agree.
+
+The rest of 卷三 is **unread rather than refused**: several entries key on the
+year *stem* and seat on a stem rather than a branch, which wants a type this
+layer has not needed yet; 大耗 and 小耗 are stated only inside a 「是亦一説也」 and are not
 taken on that footing, and 羣醜 turns out not to be a seat at all but the
 condition of 太陰 and 大將軍 coinciding. The boundary is declared so that it is
 a boundary.

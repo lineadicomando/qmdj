@@ -908,7 +908,7 @@ The other axis. A chart chooses an hour **and a direction**, and the 年神 are
 what the almanac puts on the second — 卷三 describes each as 所理之地 or
 所在之方, a bearing held for a year.
 
-Twelve are implemented. Each is one whose position 卷三 states outright and
+Fifteen are implemented. Each is one whose position 卷三 states outright and
 completely, in its own entry, without leaning on a god defined elsewhere:
 
 | | the source's words | |
@@ -925,6 +925,7 @@ completely, in its own entry, without leaning on a god defined elsewhere:
 | 病符 | 「常居歲後一辰」 | one behind |
 | 死符 | 「常居歲前五辰」 | five ahead |
 | 大煞 | 「子年在子，丑年在酉，寅年在午，夘年在夘，辰年又在子」, with 「申子辰三合為水，水旺於子」 | the cardinal the year's triad prospers in |
+| 劫煞 · 災煞 · 歲煞 | 考原:「劫煞災煞歲煞是為三煞……三合五行絕胎養之位也」, with 李鼎祚's 「寅午戌煞在丑，巳酉丑煞在辰，申子辰煞在未，亥夘未煞在戌」 | the 絕, the 胎 and the 養 of the year's triad |
 
 **Every one of those enumerations is asserted in `almanac.test.ts`**, from the
 text rather than from an implementation — which matters here more than
@@ -943,6 +944,15 @@ never reaches here, as `dayBoundary` does not.
 |---|---|---|
 | the page's year, against `lunar-javascript` | 10 950 / 10 950 | **100 %** |
 
+**The 三煞 are one rule and are taken as one.** They are also the entry where
+two accounts in the same passage check each other: 考原 derives all three as the
+絕, 胎 and 養 of the phase the year's triad belongs to, and 李鼎祚 enumerates
+歲煞 alone by triad — the two agree on every year, and 歲煞「常居四季」 falls out,
+since the 養 of any of the four phases is one of 丑辰未戌. **災煞 has no entry
+of its own** in 卷三 and is carried anyway, because the passage states the rule
+for all three at once; splitting a group the source states as a group would be
+worse than the asymmetry, so the asymmetry is recorded here instead.
+
 **Two share a seat, and the source defends it rather than tidying it.** 太陰
 and 弔客 both stand on 歲後二辰. 卷三's 總論 raises exactly that objection —
 「然太隂之方又為弔客者何歟」 — and answers it: 「隂陽之義，美惡不嫌同位，各從
@@ -954,9 +964,19 @@ one branch. A table that quietly deduplicated them would be reporting a
 tidiness nobody transmitted, and a test asserts they stay together for all
 twelve years.
 
-**Twelve, and the rest of 卷三 is unread rather than rejected.** What remains
-includes 劫煞, 歲煞, 大耗, 小耗, 歲德合, 歲枝德, 金神, 博士, 蠶室, 蠶命,
-破敗五鬼 and 日遊神. Some are keyed to the year *stem* rather than its branch;
+**Two the source itself gives up on.** 蠶室: 「其方位所在必有每歲蠶絲豐歉之占，
+**而今不可考矣**」 — there was a divination in it and it can no longer be
+recovered. 蠶命: the received table is set out and then disowned in three
+characters, 「**此恐有悞**」, with a variant from 《萬全廣濟》 beside it. Neither
+is here. A source that says where its own knowledge stopped is the reason this
+one was chosen, and taking what it disclaims would be reading past the part that
+makes it worth reading.
+
+**Fifteen, and the rest of 卷三 is unread rather than rejected.** What remains
+includes 大耗, 小耗, 歲德, 歲德合, 歲枝德, 金神, 博士, 破敗五鬼 and 日遊神.
+Several are keyed to the year *stem* and seat on a **stem** rather than a
+branch — 歲德合 is 「甲年在己，乙年在乙，丙年在辛……」 — which is a different
+kind of bearing and wants a type this engine has not yet had to write;
 some are stated only inside a discussion the source marks as one opinion among
 several — 大耗 and 小耗 arrive inside a 「是亦一説也」 and are not taken on
 that footing; and 羣醜 turns out not to be a seat at all but a condition, the

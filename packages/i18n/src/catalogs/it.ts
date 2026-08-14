@@ -381,6 +381,10 @@ export const it: Record<MessageKey, string> = {
   'label.yeargod.sifu': 'il segno della morte',
   'label.yeargod.dasha': 'la grande uccisione',
 
+  'label.yeargod.jiesha': 'l\'uccisione che deruba',
+  'label.yeargod.zaisha': 'l\'uccisione della sciagura',
+  'label.yeargod.suisha': 'l\'uccisione dell\'anno',
+
   'label.keti.yuanshou': 'il capo',
   'label.keti.zhongshen': 'il riesame',
   'label.keti.zhiyi': "conoscere l'uno",
