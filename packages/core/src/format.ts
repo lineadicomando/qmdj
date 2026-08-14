@@ -156,7 +156,14 @@ function seatOf(god: YearGod, t: Translator): string {
   if (seat.kind === 'stem') {
     return `${t(`label.stem.${seat.stem.id}` as MessageKey)} ${seat.stem.hanzi}`;
   }
-  return `${t(`label.palace.${seat.trigram.id}` as MessageKey)} ${seat.trigram.hanzi} ${seat.trigram.pinyin}`;
+  if (seat.kind === 'trigram') {
+    return `${t(`label.palace.${seat.trigram.id}` as MessageKey)} ${seat.trigram.hanzi} ${seat.trigram.pinyin}`;
+  }
+  // 金神 holds several at once, and they are said as a run rather than as a
+  // list: the source names them that way too, 午未申酉.
+  return seat.branches
+    .map((b) => `${t(`label.branch.${b.id}` as MessageKey)} ${b.hanzi}`)
+    .join(', ');
 }
 
 export function formatAlmanac(page: Almanac, t: Translator): string {

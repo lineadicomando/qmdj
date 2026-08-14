@@ -908,7 +908,7 @@ The other axis. A chart chooses an hour **and a direction**, and the 年神 are
 what the almanac puts on the second — 卷三 describes each as 所理之地 or
 所在之方, a bearing held for a year.
 
-Twenty-five are implemented. Each is one whose position 卷三 states outright and
+Twenty-six are implemented, which is all of 卷三 but one. Each is one whose position 卷三 states outright and
 completely, in its own entry, without leaning on a god defined elsewhere:
 
 | | the source's words | |
@@ -932,6 +932,7 @@ completely, in its own entry, without leaning on a god defined elsewhere:
 | 歲德 · 歲德合 | 「歲德合者，歲德五合之干是也：甲年在己，乙年在乙，丙年在辛……故歲德屬陽，歲德合屬隂」 | **a stem**, from the year's stem |
 | 破敗五鬼 | 厯例:「甲壬年在巽，乙癸年在艮，丙年在坤，丁年在震，戊年在離，己年在坎，庚年在兑，辛年在乾」 | **a trigram**, from the year's stem |
 | 奏書 · 博士 · 力士 · 蠶室 | 「常居近歲後維方……初起於乾」, 「常與奏書對衝，如奏書在艮，博士在坤也」, 「在太歲之前隅」, 「與力士對衝」 | **a corner trigram**, by the year's quarter |
+| 金神 | 「以年幹五虎元厯之逢庚辛及納音金之位者是也……故甲己年午未申酉為金神也」 | **several branches**, by running the year's months |
 
 **Every one of those enumerations is asserted in `almanac.test.ts`**, from the
 text rather than from an implementation — which matters here more than
@@ -1007,13 +1008,15 @@ surface says which kind it has.
 A third kind is a **trigram**, and it is reported as the palace it is rather
 than as a compass point, because the source's word is 艮 and not «northeast».
 
-**Twenty-five, and what is left of 卷三 is one entry and a shape.** 金神 is the
-shape: 「以年幹五虎元厯之逢庚辛及納音金之位者是也。假如甲己之年起丙寅順行，得
-庚午辛未，又壬申癸酉納音為劍鋒金，故甲己年午未申酉為金神也」 — **several
-branches at once**, found by running 五虎遁 from the year stem and reading 納音,
-both of which this engine already has. It is the only year god so far that does
-not occupy a single seat, and it wants a fourth arm of the union rather than a
-fifth kind of guess. 日遊神 remains unread;
+A fourth is **several branches at once**, and it exists for one god. 金神 is not
+looked up but *run*: lay the year's twelve month pillars by 五虎遁 and take the
+branch of every month whose stem is 庚 or 辛, and of every month whose 納音 is
+metal. Both are machinery this file already has and this document already
+weighed — the month pillars against `lunar-javascript` over two centuries, the
+納音 over 479 charts — so the only new thing is the selection, and the source's
+one worked year checks it: 甲己年 comes back 午未申酉, which is what 卷三 says.
+
+**Twenty-six, and 日遊神 is the one entry of 卷三 left unread**;
 some are stated only inside a discussion the source marks as one opinion among
 several — 大耗 and 小耗 arrive inside a 「是亦一説也」 and are not taken on
 that footing; and 羣醜 turns out not to be a seat at all but a condition, the

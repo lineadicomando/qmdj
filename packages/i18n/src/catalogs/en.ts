@@ -418,6 +418,8 @@ export const en = {
   'label.yeargod.canshi': 'the silkworm chamber',
   'label.yeargod.pobaiwugui': 'the five ghosts of ruin',
 
+  'label.yeargod.jinshen': 'the metal spirit',
+
   'label.keti.yuanshou': 'the head',
   'label.keti.zhongshen': 'the second hearing',
   'label.keti.zhiyi': 'knowing the one',

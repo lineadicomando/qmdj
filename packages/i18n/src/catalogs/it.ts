@@ -398,6 +398,8 @@ export const it: Record<MessageKey, string> = {
   'label.yeargod.canshi': 'la camera dei bachi',
   'label.yeargod.pobaiwugui': 'i cinque spettri della rovina',
 
+  'label.yeargod.jinshen': 'lo spirito del metallo',
+
   'label.keti.yuanshou': 'il capo',
   'label.keti.zhongshen': 'il riesame',
   'label.keti.zhiyi': "conoscere l'uno",

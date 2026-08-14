@@ -168,7 +168,11 @@
           ? t(`label.branch.${god.seat.branch.id}` as MessageKey)
           : god.seat.kind === 'stem'
             ? t(`label.stem.${god.seat.stem.id}` as MessageKey)
-            : t(`label.palace.${god.seat.trigram.id}` as MessageKey)}{' '}
+            : god.seat.kind === 'trigram'
+              ? t(`label.palace.${god.seat.trigram.id}` as MessageKey)
+              : god.seat.branches
+                  .map((b: any) => t(`label.branch.${b.id}` as MessageKey))
+                  .join(', ')}{' '}
       {/each}
     </span>
     </p>

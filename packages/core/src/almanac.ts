@@ -1,5 +1,15 @@
 import { sunCrossing, type EphemerisContext } from './ephemeris.js';
-import { dayGanzhi, yearGanzhi, BRANCHES, STEMS, type Branch, type Ganzhi, type Stem } from './ganzhi.js';
+import { nayin } from './bazi/nayin.js';
+import {
+  dayGanzhi,
+  monthGanzhi,
+  yearGanzhi,
+  BRANCHES,
+  STEMS,
+  type Branch,
+  type Ganzhi,
+  type Stem,
+} from './ganzhi.js';
 import { PALACES, type Palace } from './dunjia/palaces.js';
 import { VALENCE, type Valence } from './dunjia/patterns.js';
 import { calendarDayNumber, CALENDAR_ZONE } from './lunar.js';
@@ -237,7 +247,8 @@ export type YearGodId =
   | 'jiesha' | 'zaisha' | 'suisha'
   | 'dahao' | 'xiaohao' | 'suizhide'
   | 'suide' | 'suidehe'
-  | 'zoushu' | 'boshi' | 'lishi' | 'canshi' | 'pobaiwugui';
+  | 'zoushu' | 'boshi' | 'lishi' | 'canshi' | 'pobaiwugui'
+  | 'jinshen';
 
 /**
  * Where a 年神 stands — and it is not always a branch.
@@ -259,7 +270,9 @@ export type YearGodId =
 export type YearGodSeat =
   | { kind: 'branch'; branch: Branch }
   | { kind: 'stem'; stem: Stem }
-  | { kind: 'trigram'; trigram: Palace };
+  | { kind: 'trigram'; trigram: Palace }
+  /** Several at once. Only 金神, which is not one bearing but a set of them. */
+  | { kind: 'branches'; branches: readonly Branch[] };
 
 export interface YearGod {
   id: YearGodId;
@@ -378,7 +391,34 @@ const YEAR_GODS: readonly {
   { id: 'boshi', hanzi: '博士', pinyin: 'bóshì', byTrigram: true, seat: (y) => cornerOf(y, 2) },
   { id: 'lishi', hanzi: '力士', pinyin: 'lìshì', byTrigram: true, seat: (y) => cornerOf(y, 1) },
   { id: 'canshi', hanzi: '蠶室', pinyin: 'cánshì', byTrigram: true, seat: (y) => cornerOf(y, 3) },
+  // The one that holds several bearings at once. See `jinshenSeats`.
+  { id: 'jinshen', hanzi: '金神', pinyin: 'jīnshén', byStem: true, seat: (g) => g },
 ];
+
+/**
+ * 金神, which is not one bearing but several, and is found by running the
+ * calendar rather than by looking anything up.
+ *
+ * 「以年幹五虎元厯之逢庚辛及納音金之位者是也。假如甲己之年起丙寅順行，得庚午
+ * 辛未，又壬申癸酉納音為劍鋒金，故甲己年午未申酉為金神也」 — lay the twelve
+ * month pillars of the year by 五虎遁, and take the branch of every month whose
+ * **stem is 庚 or 辛**, and of every month whose **納音 is metal**. Both are
+ * machinery this engine already has and has already checked; nothing here is a
+ * table. The source's one worked year comes back 午未申酉, and a test says so.
+ */
+function jinshenSeats(yearStem: number): readonly Branch[] {
+  const seats: Branch[] = [];
+  for (let step = 0; step < 12; step += 1) {
+    // The year's months open at 寅, which is where 五虎遁 starts.
+    const monthBranch = (2 + step) % 12;
+    const pillar = monthGanzhi(yearStem, monthBranch);
+    const metalStem = pillar.stem.hanzi === '庚' || pillar.stem.hanzi === '辛';
+    if (metalStem || nayin(pillar).element === 'jin') {
+      seats.push(BRANCHES[monthBranch] as Branch);
+    }
+  }
+  return seats;
+}
 
 /**
  * The four corners a year's quarter puts its gods on, as palace numbers.
@@ -403,7 +443,9 @@ export function yearGodsOf(year: Ganzhi): readonly YearGod[] {
     id,
     hanzi,
     pinyin,
-    seat: byTrigram
+    seat: id === 'jinshen'
+      ? ({ kind: 'branches', branches: jinshenSeats(year.stem.index) } as const)
+      : byTrigram
       ? ({
           kind: 'trigram',
           trigram: PALACES.find(

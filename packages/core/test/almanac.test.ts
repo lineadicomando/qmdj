@@ -312,6 +312,27 @@ describe('建除十二神', () => {
     ]);
   });
 
+  it('finds 金神 by running the calendar, not by looking it up', () => {
+    // 「假如甲己之年起丙寅順行，得庚午辛未，又壬申癸酉納音為劍鋒金，故甲己年
+    // 午未申酉為金神也」 — the branch of every month whose stem is 庚 or 辛,
+    // and of every month whose 納音 is metal. It is the one god here that holds
+    // more than one bearing.
+    const seats = (yearStem: string): string => {
+      const year = Array.from({ length: 60 }, (_, i) => ganzhiOf(i)).find(
+        (g) => g.stem.hanzi === yearStem,
+      ) as Ganzhi;
+      const seat = yearGodsOf(year).find((g) => g.id === 'jinshen')?.seat;
+      return seat?.kind === 'branches' ? seat.branches.map((b) => b.hanzi).join('') : '';
+    };
+
+    expect(seats('甲')).toBe('午未申酉');
+    expect(seats('己')).toBe('午未申酉');
+    // 五虎遁 repeats every five stems, so the ten years give five answers.
+    expect(seats('乙')).toBe(seats('庚'));
+    expect(seats('丙')).toBe(seats('辛'));
+    expect(new Set(['甲', '乙', '丙', '丁', '戊'].map(seats)).size).toBe(5);
+  });
+
   it('keeps every seat the source gives to more than one god', () => {
     // 「美惡不嫌同位，吉凶不嫌同名」. 卷三 says this twice — of 太陰 and 弔客
     // in the 總論, and of 死符 · 小耗 · 歲枝德 in the 歲枝德 entry — and 大耗
