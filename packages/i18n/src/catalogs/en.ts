@@ -483,14 +483,12 @@ export const en = {
   'consult.lead':
     'Ask a question and get a prompt, ready to paste into ChatGPT, Claude or another assistant.',
   'consult.cast': 'Cast the chart',
-  // The panel of fields, named by what is in it. Not `form.legend` — «The
-  // moment and the place» is what the other sections ask for, and here the
-  // moment is normally the instant of the press and the question is the
-  // thing being filled in.
-  'consult.legend': 'Your question, and where you are asking from',
-  // What reopening it offers, which is the question and not the moment: a
-  // second consultation begins by rewriting the question, and everything
-  // else in there is setup somebody set once.
+  // What reopening the panel offers, which is the question and not the
+  // moment: a second consultation begins by rewriting the question, and
+  // everything else in there is setup somebody set once. It is also the only
+  // thing that names the panel — the fields label themselves and the first
+  // line of the page says what they are for, so there is no heading over
+  // them.
   'consult.change': 'Change the question',
   // Over the board, on the sheet somebody prints. The instant is the answer
   // to *which* chart this is, and on paper it is the only answer there is.

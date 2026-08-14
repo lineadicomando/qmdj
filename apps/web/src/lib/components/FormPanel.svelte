@@ -18,8 +18,14 @@
      * Two sections ask for a moment and one asks for an interval, and
      * "Change the moment" over a pair of dates names the wrong thing. A
      * disclosure has to say what opening it gives you.
+     *
+     * `null` where the fields already say it. On the consultation the panel
+     * holds one thing the reader composes, under a label of its own, on a
+     * page whose first line says what the whole of it is for — a heading over
+     * that is a third way of saying the same thing, and it stands where the
+     * question ought to be.
      */
-    legend?: MessageKey;
+    legend?: MessageKey | null;
     reopenLabel?: MessageKey;
     /**
      * Whether there is anything below for a closed panel to make room for.
@@ -102,7 +108,7 @@
 <section class="panel" class:closed={!open} bind:this={panel}>
   <div class="bar">
     {#if open}
-      <h2>{t(legend)}</h2>
+      {#if legend}<h2>{t(legend)}</h2>{/if}
       {#if closable}
         <button type="button" onclick={() => (open = false)} aria-label={t('form.close')}>×</button>
       {/if}
@@ -152,6 +158,9 @@
   }
   .said { display: flex; align-items: center; gap: 0.5rem 1rem; flex-wrap: wrap; }
   h2 { font-size: 0.9rem; font-weight: 400; color: var(--faint); margin: 0 0 0.2rem; }
+  /* The × keeps the far end whether or not there is a heading to be spaced
+     away from: `space-between` sends an only child to the near one. */
+  .bar > button { margin-inline-start: auto; }
   .bar button {
     border: 0;
     background: none;

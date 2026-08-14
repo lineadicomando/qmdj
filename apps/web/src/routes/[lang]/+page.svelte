@@ -325,7 +325,7 @@
   <FormPanel
     {t}
     bind:this={panel}
-    legend="consult.legend"
+    legend={null}
     reopenLabel="consult.change"
     closable={chart !== undefined}
     onsubmit={consult}
