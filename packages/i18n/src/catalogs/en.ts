@@ -640,15 +640,11 @@ export const en = {
   'footer.privacy': 'Privacy',
   'footer.notes': 'Notes',
 
-  'notes.title': 'Notes on what this computes',
-  'notes.method':
-    'Charts are cast by the chaibu method. Other schools lay out other charts from the same instant; the zhirun and maoshan methods are not implemented, and are refused rather than quietly substituted.',
-  'notes.interpretation':
-    'The engine reports arrangements, and the names and fortunes the tradition attaches to them. That a gate stands over a palace whose phase it controls is a fact anyone can check off the plates, that the arrangement is called 門迫 is its name, and that 門迫 is 凶 is part of that name rather than a judgement about your day: the sources do not name a configuration and rate it separately. What the engine will not do is anything that needs a question to have been asked — it does not choose which palace bears on what you want to know, does not rank the palaces or the hours, and does not advise. Reading is yours.',
-  'notes.certainty':
-    'The numbers are not equally sure. Solar terms, the lunar calendar and the four pillars were checked against published astronomical tables through an independent implementation, over 1 926 dates from 1902 to 2098. The Qi Men layout was checked against one open implementation, which means consistent with it, not verified. The configurations come from Chinese-language sources with no runnable reference at all.',
-  'notes.script':
-    'Names are shown in your language with the Chinese beside them. The Chinese is the name, not a translation of one: without it nothing here can be checked against a book or a second implementation.',
+  // The section is deliberately empty until the engine stops moving: what is
+  // computed, how sure each number is and what is refused all change with
+  // every board added, and a note that lags behind the engine misinforms
+  // exactly the reader who came here to check. See PLAN.md § 4 phase 17.
+  'notes.title': 'Section still being defined',
 
   'privacy.title': 'Privacy',
   'privacy.nothing':

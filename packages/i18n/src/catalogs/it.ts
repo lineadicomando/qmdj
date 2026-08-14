@@ -508,15 +508,7 @@ export const it: Record<MessageKey, string> = {
   'footer.privacy': 'Privacy',
   'footer.notes': 'Note',
 
-  'notes.title': 'Note su ciò che viene calcolato',
-  'notes.method':
-    'Le carte sono poste con il metodo chaibu. Altre scuole dispongono altre carte dallo stesso istante; i metodi zhirun e maoshan non sono implementati, e vengono rifiutati invece che sostituiti in silenzio.',
-  'notes.interpretation':
-    'Il motore riporta le disposizioni, e i nomi e le sorti che la tradizione vi attacca. Che una porta stia sopra un palazzo di cui domina la fase è un fatto che chiunque può verificare sulle piastre; che quella disposizione si chiami 門迫 è il suo nome; e che 門迫 sia 凶 fa parte di quel nome, non è un giudizio sulla tua giornata: le fonti non nominano una configurazione per poi valutarla a parte. Ciò che il motore non fa è tutto quello che presuppone una domanda posta — non sceglie quale palazzo riguardi ciò che vuoi sapere, non ordina né i palazzi né le ore, non consiglia. La lettura è tua.',
-  'notes.certainty':
-    'I numeri non sono ugualmente sicuri. Termini solari, calendario lunare e quattro pilastri sono stati confrontati, tramite un\'implementazione indipendente, con tavole astronomiche pubblicate, su 1.926 date dal 1902 al 2098. La disposizione Qi Men è stata confrontata con una sola implementazione aperta: vuol dire coerente con quella, non verificata. Le configurazioni vengono da fonti in cinese, senza alcun riferimento eseguibile.',
-  'notes.script':
-    'I nomi sono mostrati nella tua lingua con il cinese accanto. Il cinese è il nome, non la sua traduzione: senza, nulla di quanto è qui può essere verificato contro un libro o una seconda implementazione.',
+  'notes.title': 'Sezione in corso di definizione',
 
   'privacy.title': 'Privacy',
   'privacy.nothing':
