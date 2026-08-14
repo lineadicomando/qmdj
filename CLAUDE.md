@@ -165,7 +165,21 @@ the engine falls back to Moshier, which needs no files.
   is the doctrine `purposes.ts` declines, from the sources it names as
   unusable, and it is where a model invents most confidently. The natal frame
   that used to say so instead of saying anything is gone; see `PLAN.md` § 4
-  and the 年命 section of `docs/sources.md`.
+  and the 年命 section of `docs/sources.md`. **This rule is about the dunjia
+  board and is not loosened by the one below it.**
+- **An art that is natively about a life gets a board of its own, never
+  dunjia's.** The engine computes 命 (mìng), the fate arts, as well as 卜
+  (bǔ), the divinatory boards — 八字 was always here, as the substrate a chart
+  is cast from, and `PLAN.md` § 4 phases 13 to 15 add 六壬, the almanac layer
+  and 七政四餘. Calling that class "the natal chart" is the error that
+  produced the modern natal Qi Men: the Western natal chart is one instance of
+  a class the tradition already fills several ways, and naming the class after
+  that instance sends people looking for the missing Chinese one and grafting
+  it onto whatever board is at hand. Each board arrives with its own input
+  type, its own output and its own sources; none inherits a default from
+  dunjia's, and none lends dunjia a doctrine it does not have. **The scope
+  widened, the standard did not**: a board earns its place by having a
+  procedure a source states, never by filling a hole in a catalogue.
 - **The lunar calendar is reckoned on 120°E, never on the chart's zone.** It
   is a published artefact: the same instant carries the same lunar date in
   Rome and in Beijing. Chinese wartime and summer clocks do not move it. The

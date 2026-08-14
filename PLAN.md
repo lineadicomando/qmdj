@@ -169,6 +169,25 @@ The first two are the most divisive and are not optional. The rest may ship with
 a single implemented value provided the parameter already exists in the type:
 adding it later breaks the API, MCP, the CLI, and every shared URL at once.
 
+The same rule governs the boards phases 13 to 15 add, and their divergences are
+listed here rather than beside the phase because this table is where a reader
+looks for them. Each board carries its own input type; none of them inherits a
+default from dunjia's.
+
+| Board | Parameter | Values | Proposed default |
+|---|---|---|---|
+| 六壬 | `yuejiang` | `zhongqi` (太陽過宮 at the 中氣), `jieqi`, `true` (太陽實躔) | `zhongqi` |
+| 六壬 | `guirenSong` | `geng` (甲戊庚牛羊), `jian` (甲戊兼牛羊) | `geng` |
+| 六壬 | `zhouye` | `branch` (晝 from 卯 to 申), `solar` (actual sunrise and sunset) | `branch` |
+| 七政四餘 | `xiudu` | which 宿度 table, by 曆: `shixian` (時憲曆), `shoushi` (授時曆) | `shixian` |
+| 七政四餘 | `ziqi` | `off`, or a named transmission with its epoch | `off` |
+| 七政四餘 | `luohou` | which node is 羅睺: `ascending`, `descending` | to be decided |
+| 七政四餘 | `minggong` | `ascendant` (the true rising degree), `yuejiang` (立命 by 月將加時) | to be decided |
+
+`dayBoundary` and `trueSolarTime` are shared with dunjia and keep their
+meanings: a board that read the day differently from the pillars beside it
+would be two calendars in one output.
+
 **Derived constraint**: no function in `core` reads a global default. Options
 arrive as arguments, and the chart carries them in its own output — a saved
 chart must reproduce identically.
@@ -1317,6 +1336,151 @@ here is usually one entry.
 
 ---
 
+### The scope widens, and the standard does not move
+
+**Phases 13 to 15 are a different kind of work from the twelve above them.**
+Those built one engine and told it on six surfaces. These add *boards this
+project does not yet have*, and the reason to write the decision down before
+the code is that the same widening, done carelessly, is precisely how the
+modern natal Qi Men got invented.
+
+**The class is 命, and calling it "the natal chart" is the mistake itself.**
+The Western natal chart is one instance of a class the Chinese tradition
+already fills several ways — 八字, 紫微斗數, 七政四餘 — and naming the class
+after the Western instance is what makes people go looking for the missing
+Chinese one and graft it onto whatever board is at hand. In the 五術
+(山醫命相卜) the class is 命 (mìng), fate, and it is a sibling of 卜 (bǔ),
+divination, not a gap inside it. Dunjia is 卜. So is 六壬. What phase 15 adds
+is 命, and it is added *as* 命, on a board built for it.
+
+**What this admits.** A second and a third engine under the same roof, each
+with its own input type, its own output and its own entries in
+`docs/sources.md`. 八字 was always here — it arrived as the substrate a dunjia
+chart is cast from — and phase 15 makes explicit what that already implied:
+this project computes fate arts as well as divinatory boards.
+
+**What it does not admit, and this is the whole of it.** Reading a *dunjia*
+chart as a chart of a life is still refused, and for the unchanged reason:
+the mapping of the nine palaces onto parts of a life is attributed to nobody,
+and where a classical text does read a life from a chart of a birth
+(《奇門遁甲統宗》卷十二) it does so through the 六親 of the stems and not
+through the palaces at all. `nianming.ts` stays exactly as it is. The scope
+widened; the standard for what may be computed did not. A board earns its
+place here by having a procedure a source states, never by filling a hole in
+a catalogue.
+
+**And the order is by correlation, not by interest.** 六壬 is the sibling of
+dunjia inside the 三式 — same input, same act, same substrate, and a Ming
+practitioner held the three as one competence. 七政四餘 correlates with 八字,
+not with dunjia; it is the most interesting of the three and the most
+expensive, and it goes last because it is the only one with a question nobody
+can answer from the sky.
+
+### Phase 13 — The second board
+
+**Planned.** 大六壬. The extension the engine is already built for: the same
+instant, the same 時辰, the same ganzhi machinery, and an act of the same
+shape as the consultation — a question asked now, answered from the moment it
+was asked in.
+
+**Why it is cheap here.** `ganzhi.ts`, `pillars.ts` and `time.ts` are most of
+the substrate. What is new is one construction, and it is procedural
+throughout — which is what makes it fit a project whose engine answers no
+question:
+
+1. **天地盤** — the 地盤 fixed, the 天盤 turned so the 月將 sits on the branch
+   of the hour (月將加時).
+2. **四課** — the day stem through its 寄宮, the day branch, and the 天盤
+   above each, twice over.
+3. **三傳** — 初傳, 中傳, 末傳, by the 九宗門 applied in order: 賊剋, 比用,
+   涉害, 遙剋, 昴星, 別責, 八專, and the two degenerate boards 伏吟 and 返吟.
+   Nine named rules with stated conditions and a stated precedence. This is
+   the part that has to be right, and it is the part that is testable.
+4. **十二天將** — 貴人 placed from the day stem and the half of the day, the
+   other eleven laid forward or backward from it.
+5. **遁干 and 空亡** from the day's 旬, both of which the engine already has.
+
+**Its divergences are few and famous**, which is unusual and welcome: when the
+太陽 changes palace, whether 庚 or 辛 rides with 甲戊 in the 貴人 verse, and
+where the day half is cut. All three are in § 3.
+
+**What it will not carry.** The 課體 — 元首, 重審, 涉害, 蒿矢, 冬蛇掩目 and
+the rest — are *names of configurations* and belong in the output exactly as
+`Pattern` does, hanzi and pinyin and identifier. The 占斷 that the manuals
+hang on them do not: choosing the 用神, ranking the transmissions, dating an
+outcome. The line is the one already drawn, and it falls in the same place.
+
+**Sources, and the rule that bites hardest.** 《大六壬大全》 (四庫全書) and
+《六壬指南》 (陳公獻, Ming) state the construction; 《六壬視斯》 is a third
+witness on the 九宗門. But **none of this may be written down from memory** —
+phases 1 to 3 learned that more than once. A runnable reference has to be
+found and agreed with before a single rule enters `docs/sources.md`;
+`kinliuren` (PyPI, by the author of the `kinqimen` already used in phase 3)
+is the first candidate to try, and if it does not run or does not agree, that
+finding is itself worth writing down. Until then everything above is a plan,
+not a citation.
+
+**Surfaces.** The `new-feature` procedure, unchanged, with one addition that
+is not small: `packages/plate` needs a *second drawing* — the four courses
+and the three transmissions above the 天地盤 — and it still imports nothing
+from `core`, so it redeclares that shape too and a test proves the two agree.
+
+### Phase 14 — The almanac layer
+
+**Planned.** The cheapest of the three and the one a reader of dunjia will
+notice missing, because dunjia already chooses hours and directions and the
+almanac is what that choice was always read beside: 建除十二神 (from the month
+branch and the day branch), 二十八宿值日 (a continuous count from an epoch),
+and the 神煞 — but only some.
+
+**The source is why this phase exists at all.** 《協紀辨方書》 (1741,
+imperially commissioned, in the 四庫全書) is the one work of its kind that
+**adjudicates between conflicting folk rules and says which it rejects and
+why**. For a project whose register of numbers is `docs/sources.md`, a source
+that shows its own reasoning is worth more than three that agree.
+
+**The 神煞 are the risk, and the source is also the bound on it.** There are
+hundreds of them and they diverge by lineage. Only those the 協紀 itself
+ratifies are defensible here; the rest are left out and said to be left out,
+as 三奇得使 was.
+
+### Phase 15 — 七政四餘
+
+**Planned, and scoped before it is started, because two of its questions have
+no answer in the sky.**
+
+**The half that is free.** `ephemeris.ts` already exposes a generic
+`bodyLongitude(jd, body, context)` over Swiss Ephemeris and calls it for the
+Sun and the Moon and nothing else. This project pays the AGPL for sweph and
+uses a fraction of it. The 七政 are seven more calls.
+
+**The 四餘 are the phase.** 羅睺 and 計都 are the lunar nodes and are
+computable, but which node bears which name diverges by lineage — a
+parameter, which is fine, and the kind of thing this project is built to
+carry. 月孛 is the lunar apogee, mean or true — again a parameter. **紫氣 has
+no referent.** It is a conventional cycle of about twenty-eight years,
+computed by table from an epoch, and the 萬年曆 do not agree with one another.
+There are two honest exits and no third: omit it, and say the output is
+七政三餘 rather than pretending otherwise; or ship it as a named transmission
+with its epoch cited and its lineage named, which is a kind of entry
+`docs/sources.md` has never had to make. `ziqi` defaults to `off` in § 3 for
+that reason — the default is the exit that claims least.
+
+**And the frame is a decision, not a detail.** *Where* a planet is, is
+arithmetic; *which 宿 and at what 度* requires committing to a table of 宿度
+and an epoch, and 《授時曆》 and 《時憲曆》 give different widths for the same
+twenty-eight lodges. Likewise the 命宮: the true rising degree and the 立命 of
+月將加時 are two methods, not one method described twice.
+
+**What it reads, and what it does not.** 《果老星宗》 and 《星學大成》
+(萬民英, Ming) are the texts, and they are prose-verdict doctrine of exactly
+the kind this engine does not import. The engine computes the geometry — the
+positions, the lodges, the 命宮, the twelve palaces — names what the tradition
+names, and stops. That it is a fate art changes what is on the board. It does
+not change what the board is allowed to say.
+
+---
+
 ## 5. Risks, worst first
 
 1. **Sources of truth — partly resolved, and worth reading carefully.**
@@ -1422,3 +1586,10 @@ bench for the calendrical layer, and an error there propagates everywhere. From
 phase 3 onward work can proceed surface by surface, following the procedure of
 the `new-feature` skill: calculation in `core` with tests, then the CLI, then the
 surfaces together, then the documentation — never omitted.
+
+Phases 13 to 15 are ordered by correlation and by cost, and the order is not
+arbitrary: 六壬 reuses the substrate and has few divergences, the almanac layer
+is derivable from what phase 1 already computes and rests on a single
+authoritative source, and 七政四餘 needs two decisions taken before any code —
+the 宿度 table and what becomes of 紫氣. None of the three is a prerequisite of
+another. Each is a board of its own, and 六壬 is the one that pays first.
