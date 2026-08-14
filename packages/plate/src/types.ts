@@ -174,8 +174,17 @@ export interface PlateLiuren {
   yuejiang: { hanzi: string; branch: { hanzi: string; index: number } };
   day: { hanzi: string };
   hour: { hanzi: string; index: number };
-  /** The 天盤 by palace of the 地盤: `heaven[i]` stands over branch `i`. */
-  heaven: readonly { hanzi: string; id: string; index: number }[];
+  /**
+   * The 天盤 by palace of the 地盤: `heaven[i]` stands over branch `i`.
+   *
+   * `element` is read for the ink, not for a calculation: a branch **is** its
+   * phase, and the relation between what stands on a palace and the palace it
+   * stands on is what the whole method turns on — 賊剋 asks which of the two
+   * controls the other. Written in the phase's own colour that relation is
+   * visible before a character is read. See `palette.ts` for the argument,
+   * which the chart makes for its stems.
+   */
+  heaven: readonly { hanzi: string; id: string; index: number; element: string }[];
   /** The general over each palace of the 地盤, in the same order. */
   generals: readonly { hanzi: string; id: string }[];
   courses: readonly PlateCourse[];
@@ -189,16 +198,16 @@ export interface PlateLiuren {
 export interface PlateCourse {
   /** 一課 to 四課. They are written right to left, as the tradition writes them. */
   number: number;
-  upper: { hanzi: string; id: string };
+  upper: { hanzi: string; id: string; element: string };
   /** A branch, or the day stem where the first lesson stands on it. */
-  lower: { hanzi: string; id: string };
+  lower: { hanzi: string; id: string; element: string };
 }
 
 export interface PlateTransmission {
   position: string;
-  branch: { hanzi: string; id: string };
+  branch: { hanzi: string; id: string; element: string };
   general: { hanzi: string; id: string };
-  hiddenStem?: { hanzi: string; id: string } | undefined;
+  hiddenStem?: { hanzi: string; id: string; element: string } | undefined;
   /** 空亡 — the branch falls outside the day's decade and carries no stem. */
   empty: boolean;
 }

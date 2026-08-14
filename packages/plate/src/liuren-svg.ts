@@ -32,6 +32,9 @@ import type {
  * already chosen.
  */
 
+/** The five phases, as classes the sheet turns into ink colours. */
+const PHASES = ['mu', 'huo', 'tu', 'jin', 'shui'] as const;
+
 /** Side of the square, in pixels, unless told otherwise. */
 export const DEFAULT_LIUREN_SIZE = 900;
 
@@ -81,7 +84,12 @@ export function renderLiurenSvg(board: PlateLiuren, options: PlateLiurenOptions 
       .qmdj text { fill: var(--qmdj-ink); }
       .qmdj .faint { fill: var(--qmdj-faint); }
       .qmdj .word { fill: var(--qmdj-word); }
+      ${PHASES.map((phase) => `.qmdj .${phase} { fill: var(--qmdj-ink-${phase}); }`).join('\n      ')}
       .qmdj .rule { stroke: var(--qmdj-rule); fill: none; }
+      /* No fill declared here, so the tint each palace carries as an
+         attribute is the one that lands: a declaration would outrank it,
+         which is the trap the chart's stylesheet notes for its anchors. */
+      .qmdj .cell { stroke: var(--qmdj-rule); }
       .qmdj .ground { fill: var(--qmdj-ground); }
     </style>`,
     '<g class="qmdj">',
@@ -132,9 +140,9 @@ function upperBlock(
   // day stem and takes a stem's word, which is why the two maps are separate.
   board.courses.forEach((course: PlateCourse, index) => {
     const x = size - margin - column * (index + 0.5);
-    parts.push(text(x, top + height * 0.22, course.upper.hanzi, glyph));
+    parts.push(text(x, top + height * 0.22, course.upper.hanzi, glyph, course.upper.element));
     parts.push(...worded(x, top + height * 0.33, labels.branch?.[course.upper.id], small, column * 0.95));
-    parts.push(text(x, top + height * 0.62, course.lower.hanzi, glyph, 'faint'));
+    parts.push(text(x, top + height * 0.62, course.lower.hanzi, glyph, course.lower.element));
     parts.push(
       ...worded(
         x,
@@ -164,7 +172,7 @@ function upperBlock(
     if (name) parts.push(text(x, y, name, small, 'faint', 'start'));
     x += column * 1.1;
 
-    parts.push(text(x, y, transmission.branch.hanzi, glyph, undefined, 'start'));
+    parts.push(text(x, y, transmission.branch.hanzi, glyph, transmission.branch.element, 'start'));
     parts.push(...worded(x, y + small * 1.5, labels.branch?.[transmission.branch.id], small, column, 'start'));
     x += column * 0.85;
 
@@ -175,7 +183,9 @@ function upperBlock(
     x += column * 1.75;
 
     if (transmission.hiddenStem) {
-      parts.push(text(x, y, transmission.hiddenStem.hanzi, small * 1.3, 'faint', 'start'));
+      parts.push(
+        text(x, y, transmission.hiddenStem.hanzi, small * 1.3, transmission.hiddenStem.element, 'start'),
+      );
       parts.push(
         ...worded(x, y + small * 1.5, labels.stem?.[transmission.hiddenStem.id], small, column * 1.25, 'start'),
       );
@@ -213,8 +223,14 @@ function ringOf(
     const y = top + row * cell;
     const middleX = x + cell / 2;
 
+    // The tint comes from the palace's **own** branch and therefore never
+    // moves: the ring is a fixed ground, and what changes from hour to hour is
+    // the ink standing on it. The chart tints a palace by its phase for the
+    // same reason and to the same faintness — enough to group the board at a
+    // glance, never enough to be read instead of the glyphs.
     parts.push(
-      `<rect x="${round(x)}" y="${round(y)}" width="${round(cell)}" height="${round(cell)}" class="rule"/>`,
+      `<rect x="${round(x)}" y="${round(y)}" width="${round(cell)}" height="${round(cell)}" ` +
+        `fill="var(--qmdj-element-${GROUND[branch]})" class="cell"/>`,
     );
 
     const general = board.generals[branch];
@@ -227,7 +243,7 @@ function ringOf(
     // room for the second is reserved rather than hoped for.
     parts.push(text(middleX, y + cell * 0.145, general?.hanzi ?? '', cell * 0.13, 'faint'));
     parts.push(...worded(middleX, y + cell * 0.26, labels.general?.[general?.id ?? ''], cell * 0.082, room));
-    parts.push(text(middleX, y + cell * 0.68, over?.hanzi ?? '', cell * 0.24));
+    parts.push(text(middleX, y + cell * 0.68, over?.hanzi ?? '', cell * 0.24, over?.element));
     parts.push(...worded(middleX, y + cell * 0.8, labels.branch?.[over?.id ?? ''], cell * 0.082, room));
     parts.push(text(middleX, y + cell * 0.95, HANZI[branch] as string, cell * 0.115, 'faint'));
   }
@@ -320,8 +336,17 @@ function fitted(content: string, size: number, room: number): number {
   return width <= room ? size : (size * room) / width;
 }
 
-/** The twelve branches, for the ground of each palace. */
+/** The twelve branches, for the ground of each palace, and their phases. */
 const HANZI = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'] as const;
+
+/**
+ * The phase of each palace of the 地盤, which is the phase of its own branch.
+ *
+ * Written out rather than taken from the board, because the ground is not
+ * something a board reports: 子 is water at every hour of every day, and a
+ * drawing that had to be told so could be told wrongly.
+ */
+const GROUND = ['shui', 'tu', 'mu', 'mu', 'tu', 'huo', 'huo', 'tu', 'jin', 'jin', 'tu', 'shui'] as const;
 
 function ariaLabel(board: PlateLiuren): string {
   const three = board.transmissions.map((t) => t.branch.hanzi).join('');

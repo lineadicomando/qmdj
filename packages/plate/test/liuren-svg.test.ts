@@ -2,6 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { renderLiurenSvg } from '../src/liuren-svg.js';
 import type { PlateLiuren } from '../src/types.js';
 
+/** A branch is its phase, and so is a stem. The board reads this for ink. */
+const ELEMENT: Record<string, string> = {
+  子: 'shui', 丑: 'tu', 寅: 'mu', 卯: 'mu', 辰: 'tu', 巳: 'huo',
+  午: 'huo', 未: 'tu', 申: 'jin', 酉: 'jin', 戌: 'tu', 亥: 'shui',
+};
+
 /**
  * A board laid by hand, so this file depends on no engine.
  *
@@ -17,35 +23,40 @@ const BOARD: PlateLiuren = {
     ['申', 'shen'], ['酉', 'you'], ['戌', 'xu'], ['亥', 'hai'],
     ['子', 'zi'], ['丑', 'chou'], ['寅', 'yin'], ['卯', 'mao'],
     ['辰', 'chen'], ['巳', 'si'], ['午', 'wu'], ['未', 'wei'],
-  ].map(([hanzi, id], index) => ({ hanzi: hanzi as string, id: id as string, index })),
+  ].map(([hanzi, id], index) => ({
+    hanzi: hanzi as string,
+    id: id as string,
+    index,
+    element: ELEMENT[hanzi as string] as string,
+  })),
   generals: ['玄武', '太陰', '天后', '貴人', '螣蛇', '朱雀', '六合', '勾陳', '青龍', '天空', '白虎', '太常'].map(
     (hanzi, i) => ({ hanzi, id: `g${i}` }),
   ),
   courses: [
-    { number: 1, upper: { hanzi: '卯', id: 'mao' }, lower: { hanzi: '丁', id: 'ding' } },
-    { number: 2, upper: { hanzi: '亥', id: 'hai' }, lower: { hanzi: '卯', id: 'mao' } },
-    { number: 3, upper: { hanzi: '卯', id: 'mao' }, lower: { hanzi: '未', id: 'wei' } },
-    { number: 4, upper: { hanzi: '亥', id: 'hai' }, lower: { hanzi: '卯', id: 'mao' } },
+    { number: 1, upper: { hanzi: '卯', id: 'mao', element: 'mu' }, lower: { hanzi: '丁', id: 'ding', element: 'huo' } },
+    { number: 2, upper: { hanzi: '亥', id: 'hai', element: 'shui' }, lower: { hanzi: '卯', id: 'mao', element: 'mu' } },
+    { number: 3, upper: { hanzi: '卯', id: 'mao', element: 'mu' }, lower: { hanzi: '未', id: 'wei', element: 'tu' } },
+    { number: 4, upper: { hanzi: '亥', id: 'hai', element: 'shui' }, lower: { hanzi: '卯', id: 'mao', element: 'mu' } },
   ],
   transmissions: [
     {
       position: 'chu',
-      branch: { hanzi: '卯', id: 'mao' },
+      branch: { hanzi: '卯', id: 'mao', element: 'mu' },
       general: { hanzi: '勾陳', id: 'gouchen' },
       empty: true,
     },
     {
       position: 'zhong',
-      branch: { hanzi: '亥', id: 'hai' },
+      branch: { hanzi: '亥', id: 'hai', element: 'shui' },
       general: { hanzi: '貴人', id: 'guiren' },
-      hiddenStem: { hanzi: '辛', id: 'xin' },
+      hiddenStem: { hanzi: '辛', id: 'xin', element: 'jin' },
       empty: false,
     },
     {
       position: 'mo',
-      branch: { hanzi: '未', id: 'wei' },
+      branch: { hanzi: '未', id: 'wei', element: 'tu' },
       general: { hanzi: '太常', id: 'taichang' },
-      hiddenStem: { hanzi: '丁', id: 'ding' },
+      hiddenStem: { hanzi: '丁', id: 'ding', element: 'huo' },
       empty: false,
     },
   ],
@@ -64,7 +75,10 @@ describe('the Liu Ren drawing', () => {
 
   it('draws twelve palaces and no more', () => {
     // Four by four is sixteen cells; only the twelve on the edge are palaces.
-    expect(svg.match(/<rect[^>]*class="rule"/g) ?? []).toHaveLength(12);
+    expect(svg.match(/<rect[^>]*class="cell"/g) ?? []).toHaveLength(12);
+    // Each carries the tint of its own branch, which never moves: the ring is
+    // a fixed ground and what changes hour to hour is the ink on it.
+    expect(svg).toContain('fill="var(--qmdj-element-shui)" class="cell"');
   });
 
   it('writes each palace its own branch, its 天盤 and its general', () => {
@@ -143,7 +157,7 @@ describe('the Liu Ren drawing', () => {
   it('scales without changing the layout', () => {
     const small = renderLiurenSvg(BOARD, { size: 360 });
     expect(small).toMatch(/viewBox="0 0 360 \d/);
-    expect((small.match(/<rect[^>]*class="rule"/g) ?? []).length).toBe(12);
+    expect((small.match(/<rect[^>]*class="cell"/g) ?? []).length).toBe(12);
   });
 
   it('carries both schemes when asked for neither', () => {

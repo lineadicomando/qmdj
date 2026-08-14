@@ -1654,6 +1654,29 @@ drawn by one of them carried `the eight concentrated` in the middle of the
 picture and again underneath. Both the drawing and the page now drop the 課體
 when it repeats the rule.
 
+**And it is coloured, by the argument the palette already makes.** `palette.ts`
+keeps `elementInk` for *the glyphs that are a phase* — «a stem is fire, not a
+thing filed under fire, and the relation between the two stems standing in a
+palace is the first thing anyone reads off a chart». That transfers to this
+board and lands harder: a branch is its phase exactly as a stem is, and the
+relation between what stands on a palace and what it stands on is not the
+first thing read here, **it is the rule**. 賊剋 asks which of the two controls
+the other, and written in the phases' own inks that question is answered
+before a character is.
+
+So the branches take the ink — on the ring, in the four lessons, in the three
+transmissions — and each palace takes a **tint from its own branch**, which
+never moves. The ring is a fixed ground and what changes hour to hour is the
+ink standing on it, which is what the board *is*. On a 伏吟 board the two
+agree in every cell, and the picture is what 伏吟 means.
+
+Not a line of doctrine was added for it: `Branch.element` has been in
+`ganzhi.ts` since phase 1. **What was left alone is the 十二天將.** They carry
+five-phase assignments the tradition transmits, and colouring them would be
+this file adding a table from memory with no entry in `docs/sources.md` — the
+one thing that is never done here. They stay in the neutral ink until a source
+is registered for them.
+
 **And it is read in a European language, as the chart is.** Every name on the
 board carries its word underneath — the twelve generals, and the branch that
 has come to stand on each palace — because the picture is what travels and a
