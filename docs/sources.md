@@ -200,14 +200,18 @@ to its branch's, because neither is read differently for standing next to the
 other. A test asserts that, and asserts that no named thing anywhere in the
 engine is missing its reading.
 
-**The drawing is the one surface that does not print it**, and not by
-oversight: a register in a palace is a glyph and a word wrapped to at most two
-lines, and the line a reading would take is the register beneath it — six
-names to a palace, nine palaces, at every size, since the plate is
-proportional. The reading stands beside the drawing instead of in it, in the
-page that embeds it and in the transcript, which is the bargain the band under
-the grid already strikes for a fortune. `Named` in `packages/plate/src/types.ts`
-says so where somebody would go looking for the field.
+**The drawing prints it under the board and not in the palace**, which is a
+placement rather than an omission: a register in a palace is a glyph and a word
+wrapped to at most two lines, and the line a reading would take is the register
+beneath it — six names to a palace, nine palaces, at every size, since the
+plate is proportional. So both boards carry a band under them, asked for by a
+heading, where every name on the paper is said once: the palaces, the stems,
+the stars, the gates, the spirits and the branches of the compass on the grid
+of nine; the twelve branches, the twelve generals and whatever stems turned up
+on the ring of twelve. The list is the same length at every hour, because what
+the hour changes is where the names stand and not which of them stand. See
+`packages/plate/src/readings.ts`, and the tone-mark probe in `png.ts` that
+refuses to rasterise a reading no font on the machine can draw.
 
 ---
 

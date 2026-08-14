@@ -532,7 +532,7 @@
           src={plate}
           alt=""
           width={liuren ? 900 : 900}
-          height={liuren ? 1220 : 1035}
+          height={liuren ? 1379 : 1280}
           class="screen"
         />
         <!-- The same board in the light scheme, for paper and nothing else.
@@ -542,7 +542,7 @@
             src={paper}
             alt=""
             width={liuren ? 900 : 900}
-            height={liuren ? 1220 : 1035}
+            height={liuren ? 1379 : 1280}
             class="paper"
           />
         {/if}

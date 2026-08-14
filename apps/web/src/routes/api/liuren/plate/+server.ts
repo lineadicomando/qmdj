@@ -47,6 +47,10 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
       heading:
         `${sayGanzhi(board.day, t)} ${board.day.hanzi} · ${board.hour.hanzi} · ` +
         `${t('cli.field.yuejiang')} ${board.yuejiang.hanzi} ${board.yuejiang.branch.hanzi}`,
+      // The twelve branches, the twelve generals and the stems the board turned
+      // up, each said aloud under the ring — for the same reason the chart's
+      // plate carries them: the picture is the half of this that travels.
+      readings: t('cli.heading.readings'),
     });
 
     setHeaders({

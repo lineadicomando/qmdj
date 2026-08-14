@@ -255,9 +255,11 @@
 
       The picture is as tall as the list of configurations under the board
       makes it, and how many the hour fell into is only known once the answer
-      is here — between one and nine, mostly three to six. So this is the shape
-      of a middling chart, which is what the browser holds the space at until
-      the real one arrives and settles it.
+      is here — between one and nine, mostly three to six. The band of readings
+      under that one does not move: the same names stand on every chart, and
+      what the hour changes is where they stand. So this is the shape of a
+      middling chart, measured over a year of them, and what the browser holds
+      the space at until the real one arrives and settles it.
     -->
     <!-- The board and the key to its marks are one thing in this grid: the
          gap between the picture and the reading is two rems, and a legend
@@ -267,7 +269,7 @@
         src={plate}
         alt=""
         width="900"
-        height="1035"
+        height="1280"
         class="screen"
         class:settling={drawn !== plate}
         onload={() => (drawn = plate)}
@@ -275,7 +277,7 @@
       <!-- The same board in the colours of paper, drawn only where the two
            differ and shown only by a printer. -->
       {#if onPaper}
-        <img src={paper} alt="" width="900" height="1035" class="paper" />
+        <img src={paper} alt="" width="900" height="1280" class="paper" />
       {/if}
       <!-- Under the picture and above the words: the marks it explains are in
            the picture, and a key that came after the reading would be found

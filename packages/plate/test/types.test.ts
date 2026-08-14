@@ -65,6 +65,27 @@ describe('the redeclared shape', () => {
     }
   });
 
+  it('hands over a reading for every name the band under it says aloud', () => {
+    // The readings are optional in the redeclared shape — a caller on an older
+    // engine draws a shorter band rather than failing — which is exactly why
+    // it has to be checked here that this engine leaves none of them out. A
+    // name silently missing its reading is a name that quietly stops being
+    // listed, and nothing else would notice.
+    const plate: PlateChart = chart;
+
+    for (const palace of plate.palaces) {
+      for (const named of [palace.palace, palace.earth, palace.heaven, palace.star]) {
+        expect(named.pinyin).toMatch(/\S/);
+      }
+      // The centre has neither, and says so by their absence rather than by a
+      // blank standing in for them.
+      if (palace.gate) expect(palace.gate.pinyin).toMatch(/\S/);
+      if (palace.spirit) expect(palace.spirit.pinyin).toMatch(/\S/);
+    }
+
+    for (const pattern of plate.patterns) expect(pattern.pinyin).toMatch(/\S/);
+  });
+
   it('names the five phases the way the palette keys them', () => {
     // The palette looks its tints up by the engine's element identifiers. A
     // rename there would leave every palace untinted and nothing would fail.
@@ -120,6 +141,9 @@ describe('the redeclared board', () => {
     }
 
     expect(plate.transmissions).toHaveLength(3);
+    for (const cell of plate.heaven) expect(cell.pinyin).toMatch(/\S/);
+    for (const general of plate.generals) expect(general.pinyin).toMatch(/\S/);
+
     for (const transmission of plate.transmissions) {
       expect(typeof transmission.position).toBe('string');
       expect(typeof transmission.empty).toBe('boolean');

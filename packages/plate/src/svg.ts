@@ -1,4 +1,5 @@
 import {
+  COMPASS_READINGS,
   CORNERS,
   EDGES,
   cells,
@@ -9,6 +10,7 @@ import {
   type Register,
 } from './geometry.js';
 import { FONT_STACK, styleSheet } from './palette.js';
+import { drawReadings, said, wrapped, type Said } from './readings.js';
 import type {
   Named,
   PlateChart,
@@ -78,11 +80,20 @@ export function renderChartSvg(chart: PlateChart, options: PlateOptions = {}): s
   // what it carries — so the entries have to be gathered before the layout is
   // settled rather than after it.
   const listed = captions?.configurations ? configurations(chart) : [];
-  const geometry = layout(size, {
+  const around = {
     captions: captions !== undefined,
     compass: compass !== undefined,
     configurations: listed.length,
-  });
+  };
+  // Two passes, because each half of the readings band needs the other: the
+  // wrap needs the width and the height of the paper needs the wrap. `margin`
+  // and `cell` depend on neither band, so a provisional layout yields the true
+  // width to wrap against and the final one is called with the line count.
+  const provisional = layout(size, around);
+  const aloud = captions?.readings
+    ? wrapped(saidOnBoard(chart, compass), (provisional.cell * 3) / provisional.font.reading)
+    : [];
+  const geometry = layout(size, { ...around, readings: aloud.length });
   const byNumber = new Map(chart.palaces.map((palace) => [palace.palace.number, palace]));
   const marked = markedPalaces(chart);
 
@@ -122,6 +133,22 @@ export function renderChartSvg(chart: PlateChart, options: PlateOptions = {}): s
       drawConfigurations(listed, captions?.configurations as string, geometry, labels, byNumber),
     );
   }
+  if (aloud.length > 0) {
+    // Under the configurations and above the captions, which is where it
+    // belongs in reading order too: what this chart turned out to be, then how
+    // to say any of it, then what the drawing is and is not.
+    const top = geometry.margin + geometry.cell * 3 + geometry.compass.band + geometry.foot.band;
+    parts.push(
+      ...drawReadings(aloud, captions?.readings as string, {
+        x: geometry.margin,
+        heading: top + geometry.aloud.heading,
+        first: top + geometry.aloud.first,
+        step: geometry.aloud.step,
+        size: geometry.font.reading,
+        maxWidth: geometry.cell * 3,
+      }),
+    );
+  }
   if (captions) parts.push(drawCaptions(chart, captions, geometry));
   parts.push('</g></svg>');
 
@@ -158,6 +185,42 @@ function configurations(chart: PlateChart): Entry[] {
 
   for (const entry of entries) entry.palaces.sort((a, b) => a - b);
   return entries;
+}
+
+/**
+ * Everything the board names, gathered register by register.
+ *
+ * **The list is the same length on every chart**, and that is the fact this
+ * band rests on. A board carries nine palaces, nine stems, nine stars, eight
+ * gates and eight spirits at every hour of every dun, because what the hour
+ * changes is where they stand and not which of them stand: the two plates hold
+ * the same nine stems between them, the centre has no gate and no spirit, and
+ * a yin dun swaps two spirits for two others without moving the count. So the
+ * paper is the same height on every chart and the reader stepping the hour
+ * sees the picture hold still — where the configurations band, listing what
+ * this hour turned out to be, swings between one line and nine.
+ *
+ * The order is the order a palace is read in: what it was dealt, then what
+ * came to stand over it. The strengths are not here — they are drawn as a ramp
+ * of five marks rather than as glyphs, and a mark has nothing to say aloud.
+ */
+function saidOnBoard(chart: PlateChart, compass: PlateDirections | undefined): Said[][] {
+  const palaces = chart.palaces;
+
+  const groups = [
+    said(palaces.map((palace) => palace.palace)),
+    said(palaces.flatMap((palace) => [palace.earth, palace.heaven])),
+    said(palaces.map((palace) => palace.star)),
+    said(palaces.map((palace) => palace.gate)),
+    said(palaces.map((palace) => palace.spirit)),
+  ];
+
+  // The branches of the frame, and only where the frame was drawn. They are
+  // the one thing on the board glossed by nothing at all, so on a chart that
+  // has them they are the line of this band that earns it most.
+  if (compass) groups.push(said(COMPASS_READINGS));
+
+  return groups.filter((group) => group.length > 0);
 }
 
 /** Which configurations fell where, so a palace can be marked with them. */
@@ -576,6 +639,12 @@ function drawConfigurations(
         (pattern.layer ? labels.layer?.[pattern.layer] : undefined) ?? '';
 
     const runs: Run[] = [...tinted(pattern, labels.pattern, 'mark')];
+    // The configuration says itself aloud here rather than again in the band
+    // below: these lines are short and flush left, so the reading fits where
+    // the name already stands and costs no line at all. Set like the glyph it
+    // follows and not smaller — a tone mark on a letter half the width of a
+    // hanzi is the first thing to go illegible.
+    if (pattern.pinyin) runs.push({ text: `${GAP}${pattern.pinyin}`, className: 'faint' });
     if (pattern.valence) {
       // Quieter than the name it qualifies, and quieter is now a shade rather
       // than a whisper: `word` sits just under `mark`. Set at full strength

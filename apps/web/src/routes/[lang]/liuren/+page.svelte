@@ -114,12 +114,12 @@
         src={plate}
         alt=""
         width="900"
-        height="1220"
+        height="1379"
         class="screen"
         class:settling={drawn !== plate}
         onload={() => (drawn = plate)}
       />
-      {#if onPaper}<img src={paper} alt="" width="900" height="1220" class="paper" />{/if}
+      {#if onPaper}<img src={paper} alt="" width="900" height="1379" class="paper" />{/if}
     </div>
 
     <div>

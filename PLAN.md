@@ -1119,9 +1119,16 @@ expects.
 
 ### Phase 11 — The readings under the board
 
-**Planned.** The drawing is the one surface that prints hanzi without their
-readings, against the rule that a name carries its reading. This is the design
-that closes it.
+**Done**, and after phases 12, 13 and 14 rather than before them, which is why
+it closes two surfaces and not one. The drawing was the one surface that
+printed hanzi without their readings, against the rule that a name carries its
+reading — and by the time this landed there were two drawings and the 六壬
+section had opened two more places in HTML where a glyph stood with no sound:
+the twelve branches of the 地盤 in its table, and the name of the rule that
+drew the transmissions, both written out in the component with no reading
+beside them because the client cannot import them from the engine. Fixed with
+the band and not after it: the rule is the rule, and a phase named after it
+that left two columns unsaid would be the same omission with a better excuse.
 
 **Why it cannot go in the palace, which is where it belongs.** A register is a
 glyph with a word under it wrapped to at most two lines, and the spacing was
@@ -1204,13 +1211,34 @@ palace to a screen reader that does not need the pinyin spelled at it; the
 palace registers, per the arithmetic above; and the captions naming the chief
 star and gate, which the caller composes whole and can spell as it likes.
 
-The cost, at the default 900: the paper goes from 900×1012 to about 900×1204
-on a chart with three configurations — a third taller than the square, and the
-square itself unchanged. The two notes saying the drawing carries no reading —
-on `Named` in `packages/plate/src/types.ts`, and in the transliteration section
-of `docs/sources.md` — are replaced by what it now does when this lands.
+**The twelve branches of the compass came in, and they were not in the design.**
+This was written before the frame was the frame it is now, and its list of what
+the band carries was the list of what a palace holds. But the branches around
+the grid are the one thing on the board glossed by nothing at all — the eight
+directions are worded outside them and 丑 is not, because "second double hour"
+is not what it means to anybody — so on a chart drawn with a compass they are
+the line of this band that earns it most. They are written out in
+`geometry.ts` beside the glyphs, which are written out there too: the frame is
+the same frame on every chart, and a drawing that had to be told what stands
+in it could be told wrongly.
 
-> Commits: `Carries the reading beside the name on the board` · `Writes the readings under the grid` · `Says the configurations' names aloud too` · `Refuses to rasterise a reading no font can draw` · `Asks the drawing for the readings it can now write`
+**And the ring of twelve got the same band, from the same code.** `readings.ts`
+holds the gathering, the wrap and the drawing of it, and both renderers call
+it: two boards with different geometries and one problem, and a band that
+drifted between them would teach a reader two habits for one lookup. The count
+holds there too — twelve branches and twelve generals on every board there is,
+plus the one to four stems the day and the transmissions turned up, which is a
+line either way. What is not in it: the rule and the 課體, which are set in the
+middle of the ring as words in the reader's own language and have no glyph to
+be said aloud.
+
+The cost, at the default 900: the grid goes from 900×1012 to 900×1300 on a
+chart with four configurations and a compass — the square itself unchanged, and
+ten lines of band under it, evenly filled rather than packed to the width,
+since a group whose last line holds one name reads as a mistake. The ring goes
+from 900×1220 to 900×1379. The two notes saying the drawing carries no reading
+— on `Named` in `packages/plate/src/types.ts`, and in the transliteration
+section of `docs/sources.md` — are replaced by what it now does.
 
 ---
 

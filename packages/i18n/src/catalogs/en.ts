@@ -773,6 +773,10 @@ export const en = {
   'cli.heading.terms': 'Solar terms of {year}',
   'cli.heading.calendar': 'Lunar date',
   'cli.heading.patterns': 'Configurations',
+  // The band under a drawing, where every name on it is said aloud. It exists
+  // because the picture is what travels: on the page the readings stand in the
+  // table beside it, and a picture sent on or printed has nobody to ask.
+  'cli.heading.readings': 'How the names are said',
   // `{branch}` is the branch the horse stands on, said in words and in hanzi.
   // 寄宮: the centre has no palace of its own, so its stem is read at one
   // that has a direction, a gate and a spirit.

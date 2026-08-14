@@ -1,4 +1,5 @@
 import { FONT_STACK, styleSheet } from './palette.js';
+import { drawReadings, said, wrapped, type Said } from './readings.js';
 import type {
   PlateCourse,
   PlateLiuren,
@@ -72,7 +73,19 @@ export function renderLiurenSvg(board: PlateLiuren, options: PlateLiurenOptions 
   const ring = size - margin * 2;
   const cell = ring / 4;
   const foot = board.unverified && labels.unverified ? size * 0.05 : 0;
-  const height = margin + headingRoom + upper + ring + margin + foot;
+
+  // The names said aloud, under the ring. The wrap needs a width and the paper
+  // needs the wrap, and here the width is settled before either — the ring is
+  // the side less two margins, and no band moves it.
+  const reading = size * 0.017;
+  const readingStep = size * 0.023;
+  const aloud = options.readings ? wrapped(saidOnBoard(board), ring / reading) : [];
+  // The air over the heading is the ring's own rule doubled: the cells are
+  // drawn edge to edge and a line set close under them reads as a thirteenth
+  // palace rather than as something said about the twelve.
+  const band = aloud.length ? size * 0.05 + readingStep * aloud.length + size * 0.012 : 0;
+
+  const height = margin + headingRoom + upper + ring + band + margin + foot;
 
   const ringTop = margin + headingRoom + upper;
 
@@ -104,14 +117,59 @@ export function renderLiurenSvg(board: PlateLiuren, options: PlateLiurenOptions 
   parts.push(...ringOf(board, labels, { left: margin, top: ringTop, cell }));
   parts.push(...middle(board, labels, { left: margin, top: ringTop, cell }));
 
+  if (aloud.length > 0) {
+    parts.push(
+      ...drawReadings(aloud, options.readings as string, {
+        x: margin,
+        heading: ringTop + ring + size * 0.05,
+        first: ringTop + ring + size * 0.05 + readingStep * 0.8,
+        step: readingStep,
+        size: reading,
+        maxWidth: ring,
+      }),
+    );
+  }
+
   if (foot > 0) {
     parts.push(
-      text(size / 2, ringTop + ring + margin + foot * 0.5, labels.unverified as string, size * 0.024, 'faint'),
+      text(size / 2, ringTop + ring + band + margin + foot * 0.5, labels.unverified as string, size * 0.024, 'faint'),
     );
   }
 
   parts.push('</g>', '</svg>');
   return parts.join('\n');
+}
+
+/**
+ * Everything the ring names, gathered register by register.
+ *
+ * Two groups of twelve and a short third, and the two twelves are on every
+ * board there is: the 天盤 is the 地盤 turned, so all twelve branches stand
+ * somewhere whatever the hour, and the twelve generals are one to a palace.
+ * What varies is the stems — the day's, under the first lesson, and whichever
+ * the transmissions came covered by, between one and four of them, which is a
+ * line either way. So this band, like the chart's, is very nearly the same
+ * height at every hour.
+ *
+ * The branches are taken from the 天盤 rather than from the ground under it,
+ * although both print the same twelve: the ground is written out inside this
+ * file and the heaven arrives from the engine with its reading on it. The rule
+ * and the 課體 are not here at all — they are set in the middle of the ring as
+ * words in the reader's language, and a word has no reading to give.
+ */
+function saidOnBoard(board: PlateLiuren): Said[][] {
+  const branches = said([...board.heaven].sort((one, other) => one.index - other.index));
+  // 一課 stands on the day stem and the other three stand on branches, and the
+  // shape this file was handed does not say which is which. It does not have
+  // to: the twelve branches are all in the group above, so whatever was said
+  // there is not a stem and is not said twice.
+  const already = new Set(branches.map((one) => one.hanzi));
+  const stems = said([
+    ...board.courses.map((course) => course.lower),
+    ...board.transmissions.map((transmission) => transmission.hiddenStem),
+  ]).filter((one) => !already.has(one.hanzi));
+
+  return [branches, said(board.generals), stems].filter((group) => group.length > 0);
 }
 
 /**

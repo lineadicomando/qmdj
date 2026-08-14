@@ -17,16 +17,34 @@
    */
   let { board, t }: { board: any; t: Translator } = $props();
 
-  const EARTH: readonly { id: string; hanzi: string }[] = [
-    { id: 'zi', hanzi: '子' }, { id: 'chou', hanzi: '丑' }, { id: 'yin', hanzi: '寅' },
-    { id: 'mao', hanzi: '卯' }, { id: 'chen', hanzi: '辰' }, { id: 'si', hanzi: '巳' },
-    { id: 'wu', hanzi: '午' }, { id: 'wei', hanzi: '未' }, { id: 'shen', hanzi: '申' },
-    { id: 'you', hanzi: '酉' }, { id: 'xu', hanzi: '戌' }, { id: 'hai', hanzi: '亥' },
+  /**
+   * Written out with their readings, because a name carries one.
+   *
+   * These two are the only places on this page where a glyph arrives from
+   * nowhere rather than from the engine — everything else comes off the board
+   * with its `pinyin` on it and goes through `glyph`. A copy that dropped the
+   * reading would be the one column of the one table where 戌 xū stands with
+   * no sound, which is the state the whole rule exists to prevent.
+   */
+  const EARTH: readonly { id: string; hanzi: string; pinyin: string }[] = [
+    { id: 'zi', hanzi: '子', pinyin: 'zǐ' }, { id: 'chou', hanzi: '丑', pinyin: 'chǒu' },
+    { id: 'yin', hanzi: '寅', pinyin: 'yín' }, { id: 'mao', hanzi: '卯', pinyin: 'mǎo' },
+    { id: 'chen', hanzi: '辰', pinyin: 'chén' }, { id: 'si', hanzi: '巳', pinyin: 'sì' },
+    { id: 'wu', hanzi: '午', pinyin: 'wǔ' }, { id: 'wei', hanzi: '未', pinyin: 'wèi' },
+    { id: 'shen', hanzi: '申', pinyin: 'shēn' }, { id: 'you', hanzi: '酉', pinyin: 'yǒu' },
+    { id: 'xu', hanzi: '戌', pinyin: 'xū' }, { id: 'hai', hanzi: '亥', pinyin: 'hài' },
   ];
 
-  const RULE_HANZI: Record<string, string> = {
-    zeike: '賊剋', biyong: '比用', shehai: '涉害', yaoke: '遙剋', maoxing: '昴星',
-    bieze: '別責', bazhuan: '八專', fuyin: '伏吟', fanyin: '返吟',
+  const RULES: Record<string, { hanzi: string; pinyin: string }> = {
+    zeike: { hanzi: '賊剋', pinyin: 'zéikè' },
+    biyong: { hanzi: '比用', pinyin: 'bǐyòng' },
+    shehai: { hanzi: '涉害', pinyin: 'shèhài' },
+    yaoke: { hanzi: '遙剋', pinyin: 'yáokè' },
+    maoxing: { hanzi: '昴星', pinyin: 'mǎoxīng' },
+    bieze: { hanzi: '別責', pinyin: 'biézé' },
+    bazhuan: { hanzi: '八專', pinyin: 'bāzhuān' },
+    fuyin: { hanzi: '伏吟', pinyin: 'fúyín' },
+    fanyin: { hanzi: '返吟', pinyin: 'fǎnyín' },
   };
 </script>
 
@@ -96,7 +114,7 @@
           <tr>
             <th scope="row">
               {t(`label.branch.${EARTH[palace].id}` as MessageKey)}
-              <span class="glyph">{EARTH[palace].hanzi}</span>
+              <span class="glyph">{glyph(EARTH[palace])}</span>
             </th>
             <td>{glyph(over)}</td>
             <td>
@@ -112,7 +130,7 @@
   <p class="drawn">
     {t('cli.field.drawnBy')}:
     <strong>{t(`label.liurenRule.${board.rule}` as MessageKey)}</strong>
-    <span class="glyph">{glyph({ hanzi: RULE_HANZI[board.rule] ?? '' })}</span>
+    <span class="glyph">{glyph(RULES[board.rule] ?? { hanzi: '' })}</span>
     <!-- 八專, 別責 and 涉害 name the shape with the same words as the rule
          that found it. Said once rather than twice. -->
     {#if board.keti && t(`label.keti.${board.keti}` as MessageKey) !== t(`label.liurenRule.${board.rule}` as MessageKey)}

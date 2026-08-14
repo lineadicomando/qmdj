@@ -18,14 +18,14 @@ const CHART: PlateChart = {
   },
   patterns: [],
   palaces: [1, 2, 3, 4, 5, 6, 7, 8, 9].map((number) => ({
-    palace: { number, hanzi: '坎', id: 'kan', element: 'shui' },
-    earth: { hanzi: '丙', id: 'bing', element: 'huo' },
-    heaven: { hanzi: '己', id: 'ji', element: 'tu' },
-    star: { hanzi: '天蓬', id: 'tianpeng' },
-    starStrength: { hanzi: '旺', id: 'wang' },
-    gate: number === 5 ? undefined : { hanzi: '休門', id: 'xiumen' },
-    gateStrength: number === 5 ? undefined : { hanzi: '旺', id: 'wang' },
-    spirit: number === 5 ? undefined : { hanzi: '值符', id: 'zhifu' },
+    palace: { number, hanzi: '坎', id: 'kan', element: 'shui', pinyin: 'kǎn' },
+    earth: { hanzi: '丙', id: 'bing', element: 'huo', pinyin: 'bǐng' },
+    heaven: { hanzi: '己', id: 'ji', element: 'tu', pinyin: 'jǐ' },
+    star: { hanzi: '天蓬', id: 'tianpeng', pinyin: 'tiānpéng' },
+    starStrength: { hanzi: '旺', id: 'wang', pinyin: 'wàng' },
+    gate: number === 5 ? undefined : { hanzi: '休門', id: 'xiumen', pinyin: 'xiūmén' },
+    gateStrength: number === 5 ? undefined : { hanzi: '旺', id: 'wang', pinyin: 'wàng' },
+    spirit: number === 5 ? undefined : { hanzi: '值符', id: 'zhifu', pinyin: 'zhífú' },
   })),
 };
 
@@ -56,6 +56,20 @@ describe('renderChartPng', { timeout: 30_000 }, () => {
     // A raster cannot ask the page what it prefers, so the two are genuinely
     // different files rather than one with a media query inside it.
     expect(light.equals(dark)).toBe(false);
+  });
+
+  it('rasterises the readings, tone marks and all', () => {
+    // The second probe, from the calling side: a machine that can draw the
+    // hanzi and not the ā ǎ ǖ of the pinyin refuses here rather than producing
+    // a picture whose band is a row of boxes. A taller image, and one that
+    // differs from the same chart without the band — which is what says the
+    // band drew something rather than reserving the paper for nothing.
+    const bare = renderChartPng(CHART, { width: 400 });
+    const aloud = renderChartPng(CHART, { width: 400, captions: { readings: 'Said aloud' } });
+
+    // Height sits at bytes 20-23 of the IHDR chunk, as the width does at 16.
+    expect(aloud.readUInt32BE(20)).toBeGreaterThan(bare.readUInt32BE(20));
+    expect(aloud.readUInt32BE(16)).toBe(400);
   });
 
   it('leaves no unresolved custom property in what it rasterises', () => {

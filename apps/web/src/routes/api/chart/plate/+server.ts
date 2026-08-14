@@ -59,6 +59,11 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
         // it and the palaces it fell in — including the two that belong to the
         // whole board and have no palace to be written in.
         configurations: t('cli.heading.patterns'),
+        // And every name on the board said aloud. Asked for here and not left
+        // to the page: the page has the readings in the table beside the
+        // drawing, and this endpoint is also what a reader saves, prints or
+        // sends on — where a glyph with no sound is unsayable and unlookupable.
+        readings: t('cli.heading.readings'),
       },
     });
 

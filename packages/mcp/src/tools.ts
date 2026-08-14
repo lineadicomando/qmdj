@@ -392,10 +392,11 @@ export function registerDrawQimenChart(server: McpServer, context: ToolContext):
       description:
         'Renders a chart as an SVG picture of the nine palaces, south at the top as the ' +
         'tradition draws it, framed by the eight directions and the twelve branches so that ' +
-        'the picture says which way it faces. ' +
+        'the picture says which way it faces. Every name on it is said aloud in a band ' +
+        'underneath, so it can be read by somebody who does not read Chinese. ' +
         'CALL THIS AFTER compute_qimen_chart, not instead of it: a picture carries the glyphs ' +
-        'but not the warnings, and not the note about which method cast it. Show the person ' +
-        'both, or show them the data alone.',
+        'and their readings but not the warnings, and not the note about which method cast it. ' +
+        'Show the person both, or show them the data alone.',
       inputSchema: {
         date: dateSchema,
         time: timeSchema,
@@ -440,6 +441,11 @@ export function registerDrawQimenChart(server: McpServer, context: ToolContext):
             // name and not for its fortune, and 伏吟 and 反吟 have no palace at
             // all — without this the picture is silent about both.
             configurations: t('cli.heading.patterns'),
+            // And the band under that, where every name is said aloud. A model
+            // has no use for a reading and the person it hands the picture to
+            // does: this is the one output here that leaves for a screen
+            // nobody controls, with no table beside it to look a glyph up in.
+            readings: t('cli.heading.readings'),
           },
         });
 
@@ -461,9 +467,11 @@ export function registerDrawLiuren(server: McpServer, context: ToolContext): voi
         'each palace of the 地盤 carrying the general above it and the 天盤 branch over its own ' +
         'ground, the four lessons written right to left, and the three transmissions read ' +
         'downwards. ' +
-        'CALL THIS AFTER compute_liuren, not instead of it: a picture carries the glyphs but ' +
-        'not the warnings, and not the readings beside the names. Show the person both, or ' +
-        'show them the data alone.',
+        'Every name on it is said aloud in a band underneath, so the picture can be read by ' +
+        'somebody who does not read Chinese. ' +
+        'CALL THIS AFTER compute_liuren, not instead of it: a picture carries the glyphs and ' +
+        'their readings but not the warnings, and not the rule that drew the transmissions in ' +
+        'words. Show the person both, or show them the data alone.',
       inputSchema: {
         date: dateSchema,
         time: timeSchema,
@@ -493,6 +501,10 @@ export function registerDrawLiuren(server: McpServer, context: ToolContext): voi
             heading:
               `${sayGanzhi(board.day, t)} ${board.day.hanzi} · ${board.hour.hanzi} · ` +
               `${t('cli.field.yuejiang')} ${board.yuejiang.hanzi} ${board.yuejiang.branch.hanzi}`,
+            // The names said aloud under the ring, as on the chart's plate and
+            // for the same reason: whoever is shown this picture is being shown
+            // twelve branches and twelve generals with no table beside them.
+            readings: t('cli.heading.readings'),
           }),
         );
       } catch (error) {

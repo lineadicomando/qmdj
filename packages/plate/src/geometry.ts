@@ -86,6 +86,22 @@ export interface Foot {
   step: number;
 }
 
+/**
+ * The band under everything, where the names are said aloud.
+ *
+ * The same shape as `Foot` and for the same reason — the paper grows downward
+ * and the square does not move — but a band of its own rather than more lines
+ * in that one: the configurations are what *this* chart turned out to be, and
+ * the readings are what everything on it is called. One swings between one
+ * line and nine as the hour steps; the other is the same list at every hour,
+ * because what the hour changes is where the names stand and not which of them
+ * stand.
+ *
+ * **So this band costs the same on every chart**, which is the fact the design
+ * rests on: a reader stepping the hour sees the picture hold still.
+ */
+export type Aloud = Foot;
+
 export interface Layout {
   /**
    * The side of the square: the width of the paper, and the height of
@@ -110,6 +126,8 @@ export interface Layout {
   compass: Compass;
   /** The band the configurations are listed in. Zero where there is none. */
   foot: Foot;
+  /** The band the names are said aloud in, under it. Zero where there is none. */
+  aloud: Aloud;
   /** Centres of the two columns, as fractions of the side. */
   column: { left: number; right: number };
   /** Widest a line inside a column may be, as a fraction of the side. */
@@ -132,6 +150,8 @@ export interface Layout {
     direction: number;
     /** One line of the band under the grid. */
     entry: number;
+    /** One line of the readings under that. */
+    reading: number;
   };
 }
 
@@ -141,6 +161,17 @@ export interface Around {
   compass?: boolean;
   /** How many configurations the band under the grid has to list. */
   configurations?: number;
+  /**
+   * How many lines of readings go under that.
+   *
+   * Lines and not names, because the wrap has to have happened already: the
+   * width to wrap against comes out of a layout, and the height of the paper
+   * comes out of the wrap. So a caller lays the drawing out twice — a
+   * provisional layout for the width, the true one with the count — and
+   * `margin` and `cell` depend on neither band, which is what makes the two
+   * passes agree. `test/svg.test.ts` pins that invariant.
+   */
+  readings?: number;
 }
 
 /**
@@ -170,17 +201,29 @@ export function layout(size: number, around: Around = {}): Layout {
     ? { band: size * 0.034 + step * entries + size * 0.012, heading: size * 0.026, first: size * 0.034 + step * 0.75, step }
     : { band: 0, heading: 0, first: 0, step };
 
-  // The square, and nothing but the square. The band does not come into it:
-  // it is written on the paper the square grew, not out of the square.
+  // The readings sit under the configurations, tighter than they are: an entry
+  // there is a sentence about this chart and an entry here is a name, and a
+  // lookup list set at the same rhythm as a statement reads as a second set of
+  // findings. Same arithmetic otherwise — a heading, the lines, and the air
+  // that keeps the last of them off the caption below.
+  const lines = around.readings ?? 0;
+  const aloudStep = size * 0.023;
+  const aloud: Aloud = lines
+    ? { band: size * 0.03 + aloudStep * lines + size * 0.012, heading: size * 0.024, first: size * 0.03 + aloudStep * 0.8, step: aloudStep }
+    : { band: 0, heading: 0, first: 0, step: aloudStep };
+
+  // The square, and nothing but the square. Neither band comes into it: they
+  // are written on the paper the square grew, not out of the square.
   const cell = (size - margin * 2) / 3;
 
   return {
     size,
     margin,
-    height: size + foot.band,
+    height: size + foot.band + aloud.band,
     cell,
     compass: { band, branch: band * 0.27, word: band * 0.76 },
     foot,
+    aloud,
     // Two columns, three registers each. On the left the board as it was
     // dealt — the two plates, then the palace itself; on the right what came
     // to stand over it — the spirit, the star, the gate. Every palace puts
@@ -217,6 +260,11 @@ export function layout(size: number, around: Around = {}): Layout {
       // A shade under the captions': the band is a list and reads as one, and
       // a list set at caption size competes with the line naming the chart.
       entry: size * 0.019,
+      // Smaller again, and the smallest thing on the paper that is still meant
+      // to be read: the readings are consulted a name at a time rather than
+      // read through, and set any larger they are the loudest block on a
+      // drawing whose subject is the grid.
+      reading: size * 0.017,
     },
   };
 }
@@ -257,6 +305,34 @@ export const EDGES: readonly Edge[] = [
   { direction: 'n', branches: ['丑', '子', '亥'], along: 'x', outward: 1 },
   { direction: 'e', branches: ['辰', '卯', '寅'], along: 'y', outward: -1 },
   { direction: 'w', branches: ['申', '酉', '戌'], along: 'y', outward: 1 },
+];
+
+/**
+ * The twelve branches of the compass, and how each of them is said.
+ *
+ * Written out here beside the glyphs of `EDGES`, which are written out here
+ * too: the frame is the same frame on every chart, so a drawing that had to be
+ * told what stands in it could be told wrongly. The readings belong with the
+ * glyphs they belong to.
+ *
+ * They are the one thing on the board that carries no word at all — the eight
+ * directions are glossed outside them and the branches are not, because
+ * "seconda ora doppia" is not what 丑 means to anybody. A reading is what can
+ * honestly be given for them, and the band under the board is where it goes.
+ */
+export const COMPASS_READINGS: readonly { hanzi: string; pinyin: string }[] = [
+  { hanzi: '子', pinyin: 'zǐ' },
+  { hanzi: '丑', pinyin: 'chǒu' },
+  { hanzi: '寅', pinyin: 'yín' },
+  { hanzi: '卯', pinyin: 'mǎo' },
+  { hanzi: '辰', pinyin: 'chén' },
+  { hanzi: '巳', pinyin: 'sì' },
+  { hanzi: '午', pinyin: 'wǔ' },
+  { hanzi: '未', pinyin: 'wèi' },
+  { hanzi: '申', pinyin: 'shēn' },
+  { hanzi: '酉', pinyin: 'yǒu' },
+  { hanzi: '戌', pinyin: 'xū' },
+  { hanzi: '亥', pinyin: 'hài' },
 ];
 
 /** The four corners, where a direction has a quarter of the sky and no branch of its own. */

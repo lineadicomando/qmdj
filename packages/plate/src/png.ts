@@ -40,7 +40,7 @@ export interface PngOptions extends Omit<PlateOptions, 'scheme'> {
  * opens the file.
  */
 export function renderChartPng(chart: PlateChart, options: PngOptions = {}): Buffer {
-  assertGlyphsRender();
+  assertGlyphsRender(options.captions?.readings !== undefined);
   const scheme = options.scheme ?? 'light';
   const svg = renderChartSvg(chart, {
     ...options,
@@ -58,6 +58,7 @@ export function renderChartPng(chart: PlateChart, options: PngOptions = {}): Buf
 }
 
 let glyphsChecked: boolean | undefined;
+let readingsChecked: boolean | undefined;
 
 /**
  * Refuses to draw where the glyphs would not appear.
@@ -68,11 +69,19 @@ let glyphsChecked: boolean | undefined;
  * the character drew no pixels and every chart from this process would be an
  * empty grid.
  *
+ * **A second question, asked only where the readings were.** `FONT_STACK` is
+ * CJK faces and `serif`, and the macron and the caron of ā ǎ ǖ live in Latin
+ * Extended-A and B, which those faces cover unevenly and the fallback covers
+ * or does not. A band of readings rasterised as a row of boxes — or as
+ * nothing — is the silent failure the first probe exists to prevent, one step
+ * further on: the picture still looks like a chart, and the half of it that
+ * exists for the reader with no Chinese is gone.
+ *
  * Checked once per process — fonts do not appear while a program runs — and
- * the message names the fix rather than the symptom.
+ * each message names the fix rather than the symptom.
  */
-function assertGlyphsRender(): void {
-  if (glyphsChecked) return;
+function assertGlyphsRender(readings: boolean): void {
+  if (glyphsChecked && (readingsChecked || !readings)) return;
 
   const probe = (content: string): Buffer => {
     const svg =
@@ -84,15 +93,32 @@ function assertGlyphsRender(): void {
     );
   };
 
-  if (probe('休').equals(probe(''))) {
-    throw new Error(
-      'No font on this system can draw Chinese characters, so every palace of the chart would come out empty. ' +
-        'Install one — on Debian and Ubuntu, `fonts-noto-cjk`; on Alpine, `font-noto-cjk`; on macOS one is present already. ' +
-        'SVG output is unaffected: it names the fonts and lets whoever displays it resolve them.',
-    );
+  if (!glyphsChecked) {
+    if (probe('休').equals(probe(''))) {
+      throw new Error(
+        'No font on this system can draw Chinese characters, so every palace of the chart would come out empty. ' +
+          'Install one — on Debian and Ubuntu, `fonts-noto-cjk`; on Alpine, `font-noto-cjk`; on macOS one is present already. ' +
+          'SVG output is unaffected: it names the fonts and lets whoever displays it resolve them.',
+      );
+    }
+    glyphsChecked = true;
   }
 
-  glyphsChecked = true;
+  if (readings && !readingsChecked) {
+    // Two ways for a reading to be unreadable, and both are asked about: drawn
+    // as nothing, which is the same test as above, and drawn as the box a font
+    // puts where it has no glyph — which is why the second comparison is
+    // against a private-use character no font has ever heard of.
+    const tone = probe('ǎ');
+    if (tone.equals(probe('')) || tone.equals(probe('\u{e000}'))) {
+      throw new Error(
+        'No font on this system can draw the tone marks of the pinyin, so the band of readings would come out empty or boxed. ' +
+          'Install a face with Latin Extended-A and B — on Debian and Ubuntu, `fonts-dejavu` beside the CJK one; on macOS one is present already — ' +
+          'or draw the chart without asking for `captions.readings`. SVG output is unaffected.',
+      );
+    }
+    readingsChecked = true;
+  }
 }
 
 /**

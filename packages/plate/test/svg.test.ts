@@ -13,6 +13,29 @@ const STEM_ELEMENT: Record<string, string> = {
 };
 
 /**
+ * How everything on the fixture is said, keyed by the glyph that says it.
+ *
+ * Keyed by hanzi rather than by identifier so that `cell` can attach a reading
+ * to each of its seventeen arguments without growing seventeen more: a name
+ * carries its reading, and in a fixture that is a lookup rather than a column.
+ */
+const READING: Record<string, string> = {
+  坎: 'kǎn', 坤: 'kūn', 震: 'zhèn', 巽: 'xùn', 中: 'zhōng',
+  乾: 'qián', 兌: 'duì', 艮: 'gèn', 離: 'lí',
+  甲: 'jiǎ', 乙: 'yǐ', 丙: 'bǐng', 丁: 'dīng', 戊: 'wù',
+  己: 'jǐ', 庚: 'gēng', 辛: 'xīn', 壬: 'rén', 癸: 'guǐ',
+  天蓬: 'tiānpéng', 天芮: 'tiānruì', 天沖: 'tiānchōng', 天輔: 'tiānfǔ', 天禽: 'tiānqín',
+  天心: 'tiānxīn', 天柱: 'tiānzhù', 天任: 'tiānrèn', 天英: 'tiānyīng',
+  休門: 'xiūmén', 生門: 'shēngmén', 傷門: 'shāngmén', 杜門: 'dùmén',
+  景門: 'jǐngmén', 死門: 'sǐmén', 驚門: 'jīngmén', 開門: 'kāimén',
+  值符: 'zhífú', 螣蛇: 'téngshé', 太陰: 'tàiyīn', 六合: 'liùhé',
+  勾陳: 'gōuchén', 朱雀: 'zhūquè', 九地: 'jiǔdì', 九天: 'jiǔtiān',
+  // The states of strength have readings too and are never in the band: they
+  // are drawn as a ramp of five marks, and a mark has nothing to say aloud.
+  旺: 'wàng', 相: 'xiàng', 休: 'xiū', 囚: 'qiú', 死: 'sǐ',
+};
+
+/**
  * A chart built by hand rather than computed: this package draws what it is
  * handed and must be testable without the engine anywhere near it.
  */
@@ -30,10 +53,10 @@ const CHART: PlateChart = {
     },
   },
   patterns: [
-    { id: 'kongwang', hanzi: '空亡', valence: { id: 'jixiong', hanzi: '吉凶' }, palace: 2 },
-    { id: 'kongwang', hanzi: '空亡', valence: { id: 'jixiong', hanzi: '吉凶' }, palace: 7 },
-    { id: 'jixing', hanzi: '擊刑', valence: { id: 'xiong', hanzi: '凶' }, palace: 4 },
-    { id: 'fuyin', hanzi: '伏吟', valence: { id: 'xiong', hanzi: '凶' }, layer: 'gate' },
+    { id: 'kongwang', hanzi: '空亡', pinyin: 'kōngwáng', valence: { id: 'jixiong', hanzi: '吉凶' }, palace: 2 },
+    { id: 'kongwang', hanzi: '空亡', pinyin: 'kōngwáng', valence: { id: 'jixiong', hanzi: '吉凶' }, palace: 7 },
+    { id: 'jixing', hanzi: '擊刑', pinyin: 'jīxíng', valence: { id: 'xiong', hanzi: '凶' }, palace: 4 },
+    { id: 'fuyin', hanzi: '伏吟', pinyin: 'fúyín', valence: { id: 'xiong', hanzi: '凶' }, layer: 'gate' },
   ],
   palaces: [
     cell(1, 'kan', '坎', 'shui', 'ji', '己', 'ren', '壬', 'tianfu', '天輔', 'xiu', '休', 'xiumen', '休門', 'qiu', '囚', 'liuhe', '六合'),
@@ -75,14 +98,14 @@ function cell(
   spirit: string,
 ) {
   return {
-    palace: { number, hanzi, id: palaceId, element },
-    earth: { hanzi: earth, id: earthId, element: STEM_ELEMENT[earthId] },
-    heaven: { hanzi: heaven, id: heavenId, element: STEM_ELEMENT[heavenId] },
-    star: { hanzi: star, id: starId },
-    starStrength: { hanzi: starStrength, id: starStrengthId },
-    gate: { hanzi: gate, id: gateId },
-    gateStrength: { hanzi: gateStrength, id: gateStrengthId },
-    spirit: { hanzi: spirit, id: spiritId },
+    palace: { number, hanzi, id: palaceId, element, pinyin: READING[hanzi] },
+    earth: { hanzi: earth, id: earthId, element: STEM_ELEMENT[earthId], pinyin: READING[earth] },
+    heaven: { hanzi: heaven, id: heavenId, element: STEM_ELEMENT[heavenId], pinyin: READING[heaven] },
+    star: { hanzi: star, id: starId, pinyin: READING[star] },
+    starStrength: { hanzi: starStrength, id: starStrengthId, pinyin: READING[starStrength] },
+    gate: { hanzi: gate, id: gateId, pinyin: READING[gate] },
+    gateStrength: { hanzi: gateStrength, id: gateStrengthId, pinyin: READING[gateStrength] },
+    spirit: { hanzi: spirit, id: spiritId, pinyin: READING[spirit] },
   };
 }
 
@@ -558,5 +581,140 @@ describe('the band of configurations', () => {
     expect(at('Configurations')).toBeGreaterThan(gridBottom);
     expect(at('void')).toBeGreaterThan(at('Configurations'));
     expect(at('void')).toBeLessThan(at('chief Canopy'));
+  });
+});
+
+describe('the band of readings', () => {
+  const LABELS = {
+    palace: { kan: 'north', kun: 'southwest' },
+    gate: { xiumen: 'Rest' },
+    pattern: { kongwang: 'void' },
+  };
+  const ALOUD = { captions: { readings: 'Said aloud' }, labels: LABELS };
+
+  /** Everything after the heading that asked for the band. */
+  const bandOf = (svg: string): string => svg.slice(svg.indexOf('>Said aloud<'));
+
+  /** The content of each line of it, heading included. */
+  const linesOf = (band: string): string[] =>
+    [...band.matchAll(/<text[^>]*>(.*?)<\/text>/g)].map((found) => found[1] as string);
+
+  it('is drawn only when it is given a heading', () => {
+    // The drawing carried hanzi and no readings until this band, and it still
+    // does for a caller that does not ask: the reading is the caption's cost,
+    // not a thing every picture has to grow.
+    expect(renderChartSvg(CHART, { labels: LABELS })).not.toContain('xiūmén');
+    expect(renderChartSvg(CHART, ALOUD)).toContain('xiūmén');
+  });
+
+  it('says every name on the board, register by register', () => {
+    const band = bandOf(renderChartSvg(CHART, ALOUD));
+
+    for (const reading of ['kǎn', 'gēng', 'tiānpéng', 'xiūmén', 'zhífú']) {
+      expect(band).toContain(reading);
+    }
+
+    // In the order a palace is read in: what it was dealt, then what came to
+    // stand over it. Never sorted by reading, which would be an index a reader
+    // cannot enter — somebody looking a glyph up does not know how it is said.
+    expect(band.indexOf('kǎn')).toBeLessThan(band.indexOf('gēng'));
+    expect(band.indexOf('gēng')).toBeLessThan(band.indexOf('tiānpéng'));
+    expect(band.indexOf('tiānpéng')).toBeLessThan(band.indexOf('xiūmén'));
+    expect(band.indexOf('xiūmén')).toBeLessThan(band.indexOf('zhífú'));
+  });
+
+  it('gives each register its own lines and never shares one', () => {
+    const lines = linesOf(bandOf(renderChartSvg(CHART, ALOUD)));
+    const holding = (reading: string): string[] => lines.filter((line) => line.includes(reading));
+
+    // A group needs no word in front of it because the shapes rhyme — a line
+    // of 門 is self-evidently the gates — and that only holds while a line is
+    // one register and nothing else.
+    expect(holding('kǎn')).toHaveLength(1);
+    expect(holding('kǎn')[0]).not.toContain('gēng');
+    expect(holding('xiūmén')[0]).not.toContain('zhífú');
+  });
+
+  it('says each name once, however many palaces it stands in', () => {
+    const band = bandOf(renderChartSvg(CHART, ALOUD));
+
+    // 癸 is dealt to the centre on both plates, and the band is a list of
+    // names rather than a census of where they fell.
+    expect(band.match(/guǐ/g) ?? []).toHaveLength(1);
+  });
+
+  it('costs the same on every chart, which is the fact it rests on', () => {
+    // What the hour changes is where the names stand and not which of them
+    // stand: nine palaces, nine stems, nine stars, eight gates, eight spirits,
+    // at every hour of every dun. So the paper is the same height on every
+    // chart and the reader stepping the hour sees the picture hold still —
+    // where the band above this one swings between one line and nine.
+    const dealt: PlateChart = { ...CHART, palaces: [...CHART.palaces].reverse() };
+    const box = (svg: string): number => Number(/viewBox="0 0 \d+ ([\d.]+)"/.exec(svg)?.[1]);
+
+    expect(box(renderChartSvg(dealt, ALOUD))).toBe(box(renderChartSvg(CHART, ALOUD)));
+  });
+
+  it('grows the paper downward and leaves the square alone', () => {
+    // The two passes: `margin` and `cell` depend on neither band, so the
+    // provisional layout that yields the width to wrap against agrees with the
+    // final one that was told how many lines came out of the wrap.
+    const bare = layout(900, { captions: true, compass: true, configurations: 3 });
+    const banded = layout(900, { captions: true, compass: true, configurations: 3, readings: 8 });
+
+    expect(banded.cell).toBeCloseTo(bare.cell, 6);
+    expect(banded.margin).toBeCloseTo(bare.margin, 6);
+    expect(banded.height - bare.height).toBeCloseTo(banded.aloud.band, 6);
+    expect(layout(900, { readings: 0 }).aloud.band).toBe(0);
+  });
+
+  it('says the branches of the frame only where the frame was drawn', () => {
+    // They are the one thing on the board glossed by nothing at all: the eight
+    // directions are worded outside them and 丑 is not, because "second double
+    // hour" is not what it means to anybody.
+    expect(bandOf(renderChartSvg(CHART, ALOUD))).not.toContain('chǒu');
+    expect(bandOf(renderChartSvg(CHART, { ...ALOUD, compass: { n: 'N' } }))).toContain('chǒu');
+  });
+
+  it('lists nothing that arrived without a reading', () => {
+    // A caller on an older engine draws a shorter band rather than a band of
+    // blanks, and a board with no readings at all draws no band — the way zero
+    // configurations are no band rather than a heading over nothing.
+    const mute = JSON.parse(JSON.stringify(CHART), (key: string, value: unknown) =>
+      key === 'pinyin' ? undefined : value,
+    ) as PlateChart;
+    const svg = renderChartSvg(mute, ALOUD);
+
+    expect(svg).not.toContain('Said aloud');
+    expect(svg).toContain('viewBox="0 0 900 900"');
+  });
+
+  it('leaves the configurations to say themselves in their own band', () => {
+    const svg = renderChartSvg(CHART, {
+      captions: { configurations: 'Configurations', readings: 'Said aloud' },
+      labels: LABELS,
+    });
+
+    // Those lines are short and flush left, so the reading fits where the name
+    // already stands and costs no line at all.
+    expect(svg).toContain('kōngwáng');
+    expect(bandOf(svg)).not.toContain('kōngwáng');
+  });
+
+  it('sits under the configurations and over the captions', () => {
+    const svg = renderChartSvg(CHART, {
+      size: 900,
+      captions: { configurations: 'Configurations', readings: 'Said aloud', chief: 'chief Canopy' },
+      labels: LABELS,
+    });
+    const at = (content: string): number =>
+      Number(
+        new RegExp(`<text x="[\\d.]+" y="([\\d.]+)"[^>]*>(<tspan[^>]*>)?${content}`).exec(svg)?.[1],
+      );
+
+    // Reading order down the paper: what this chart turned out to be, then how
+    // to say any of it, then what the drawing is and is not.
+    expect(at('Configurations')).toBeLessThan(at('Said aloud'));
+    expect(at('Said aloud')).toBeLessThan(at('chief Canopy'));
   });
 });

@@ -374,6 +374,16 @@ in a palace would be a name with no gloss, and there is no room beside it for
 the word. It also carries 伏吟 and 反吟, which belong to the whole board and
 have no palace to be marked in — without it the picture never mentions them.
 
+Under it stands a second band, where every name on the board is said aloud —
+the palaces, the stems, the stars, the gates, the spirits, the branches of the
+frame; on the 六壬 board the twelve branches, the twelve generals and whatever
+stems the transmissions came covered by. It is the same list at every hour,
+since what the hour changes is where the names stand and not which of them
+stand, so the paper is the same height on every chart. The readings are in the
+table beside the drawing too — but the picture is the half of this that
+travels, saved, printed or handed to somebody, and there it has no table to be
+looked up in.
+
 ## Contributing
 
 `CLAUDE.md` holds the constraints that have to be known before touching

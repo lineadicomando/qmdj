@@ -9,6 +9,31 @@ const ELEMENT: Record<string, string> = {
 };
 
 /**
+ * How each name is said, keyed by the glyph that says it.
+ *
+ * 戌 xū and 戊 wù are a pair the identifiers cannot part and the tones can,
+ * which is the whole argument for carrying the reading: the ring prints both.
+ */
+const READING: Record<string, string> = {
+  子: 'zǐ', 丑: 'chǒu', 寅: 'yín', 卯: 'mǎo', 辰: 'chén', 巳: 'sì',
+  午: 'wǔ', 未: 'wèi', 申: 'shēn', 酉: 'yǒu', 戌: 'xū', 亥: 'hài',
+  丁: 'dīng', 辛: 'xīn',
+  貴人: 'guìrén', 螣蛇: 'téngshé', 朱雀: 'zhūquè', 六合: 'liùhé',
+  勾陳: 'gōuchén', 青龍: 'qīnglóng', 天空: 'tiānkōng', 白虎: 'báihǔ',
+  太常: 'tàicháng', 玄武: 'xuánwǔ', 太陰: 'tàiyīn', 天后: 'tiānhòu',
+};
+
+/** A branch wherever one stands: on a lesson, under a transmission, on the ring. */
+function branch(hanzi: string, id: string) {
+  return {
+    hanzi,
+    id,
+    element: ELEMENT[hanzi] as string,
+    pinyin: READING[hanzi] as string,
+  };
+}
+
+/**
  * A board laid by hand, so this file depends on no engine.
  *
  * 冬至 seats the general at 丑; on the hour of 巳 every branch stands four
@@ -28,35 +53,36 @@ const BOARD: PlateLiuren = {
     id: id as string,
     index,
     element: ELEMENT[hanzi as string] as string,
+    pinyin: READING[hanzi as string] as string,
   })),
   generals: ['玄武', '太陰', '天后', '貴人', '螣蛇', '朱雀', '六合', '勾陳', '青龍', '天空', '白虎', '太常'].map(
-    (hanzi, i) => ({ hanzi, id: `g${i}` }),
+    (hanzi, i) => ({ hanzi, id: `g${i}`, pinyin: READING[hanzi] as string }),
   ),
   courses: [
-    { number: 1, upper: { hanzi: '卯', id: 'mao', element: 'mu' }, lower: { hanzi: '丁', id: 'ding', element: 'huo' } },
-    { number: 2, upper: { hanzi: '亥', id: 'hai', element: 'shui' }, lower: { hanzi: '卯', id: 'mao', element: 'mu' } },
-    { number: 3, upper: { hanzi: '卯', id: 'mao', element: 'mu' }, lower: { hanzi: '未', id: 'wei', element: 'tu' } },
-    { number: 4, upper: { hanzi: '亥', id: 'hai', element: 'shui' }, lower: { hanzi: '卯', id: 'mao', element: 'mu' } },
+    { number: 1, upper: branch('卯', 'mao'), lower: { hanzi: '丁', id: 'ding', element: 'huo', pinyin: 'dīng' } },
+    { number: 2, upper: branch('亥', 'hai'), lower: branch('卯', 'mao') },
+    { number: 3, upper: branch('卯', 'mao'), lower: branch('未', 'wei') },
+    { number: 4, upper: branch('亥', 'hai'), lower: branch('卯', 'mao') },
   ],
   transmissions: [
     {
       position: 'chu',
-      branch: { hanzi: '卯', id: 'mao', element: 'mu' },
-      general: { hanzi: '勾陳', id: 'gouchen' },
+      branch: branch('卯', 'mao'),
+      general: { hanzi: '勾陳', id: 'gouchen', pinyin: 'gōuchén' },
       empty: true,
     },
     {
       position: 'zhong',
-      branch: { hanzi: '亥', id: 'hai', element: 'shui' },
-      general: { hanzi: '貴人', id: 'guiren' },
-      hiddenStem: { hanzi: '辛', id: 'xin', element: 'jin' },
+      branch: branch('亥', 'hai'),
+      general: { hanzi: '貴人', id: 'guiren', pinyin: 'guìrén' },
+      hiddenStem: { hanzi: '辛', id: 'xin', element: 'jin', pinyin: 'xīn' },
       empty: false,
     },
     {
       position: 'mo',
-      branch: { hanzi: '未', id: 'wei', element: 'tu' },
-      general: { hanzi: '太常', id: 'taichang' },
-      hiddenStem: { hanzi: '丁', id: 'ding', element: 'huo' },
+      branch: branch('未', 'wei'),
+      general: { hanzi: '太常', id: 'taichang', pinyin: 'tàicháng' },
+      hiddenStem: { hanzi: '丁', id: 'ding', element: 'huo', pinyin: 'dīng' },
       empty: false,
     },
   ],
@@ -175,3 +201,71 @@ describe('the Liu Ren drawing', () => {
 function heightOf(svg: string): number {
   return Number(/height="([\d.]+)"/.exec(svg)?.[1]);
 }
+
+describe('the band of readings', () => {
+  const ALOUD = { readings: 'Said aloud' };
+  const bandOf = (svg: string): string => svg.slice(svg.indexOf('>Said aloud<'));
+
+  it('is drawn only when it is given a heading', () => {
+    expect(renderLiurenSvg(BOARD)).not.toContain('guìrén');
+    expect(renderLiurenSvg(BOARD, ALOUD)).toContain('guìrén');
+  });
+
+  it('says the twelve branches, the twelve generals and the stems that turned up', () => {
+    const band = bandOf(renderLiurenSvg(BOARD, ALOUD));
+
+    for (const reading of ['zǐ', 'hài', 'guìrén', 'tiānhòu', 'dīng', 'xīn']) {
+      expect(band).toContain(reading);
+    }
+    // The ground and the heaven print the same twelve, and the band says each
+    // of them once: the 天盤 is the 地盤 turned, not a second set of names.
+    expect(band.match(/mǎo/g) ?? []).toHaveLength(1);
+    // 卯 stands under three of the four lessons and is a branch wherever it
+    // stands, so it is not said again among the stems.
+    expect(band.indexOf('dīng')).toBeGreaterThan(band.indexOf('guìrén'));
+  });
+
+  it('gives each register its own lines', () => {
+    const lines = [...bandOf(renderLiurenSvg(BOARD, ALOUD)).matchAll(/<text[^>]*>(.*?)<\/text>/g)].map(
+      (found) => found[1] as string,
+    );
+    const holding = (reading: string): string[] => lines.filter((line) => line.includes(reading));
+
+    expect(holding('zǐ')[0]).not.toContain('guìrén');
+    expect(holding('guìrén')[0]).not.toContain('dīng');
+  });
+
+  it('grows the paper downward and leaves the ring alone', () => {
+    const box = (svg: string): number => Number(/viewBox="0 0 900 ([\d.]+)"/.exec(svg)?.[1]);
+    const bare = renderLiurenSvg(BOARD);
+    const banded = renderLiurenSvg(BOARD, ALOUD);
+
+    expect(box(banded)).toBeGreaterThan(box(bare));
+    // The twelve cells of the ring are where they were: the band is written on
+    // the paper the ring grew, exactly as on the other board.
+    const cells = (svg: string): string[] => svg.match(/<rect[^>]*class="cell"\/>/g) ?? [];
+    expect(cells(banded)).toEqual(cells(bare));
+  });
+
+  it('keeps the line about an unchecked rule under it', () => {
+    // The band is between the ring and that line, and the line is the last
+    // thing on the paper wherever it stands.
+    const svg = renderLiurenSvg(
+      { ...BOARD, rule: 'fanyin', unverified: true },
+      { ...ALOUD, labels: { unverified: 'No reference implementation covers this rule' } },
+    );
+    const at = (content: string): number =>
+      Number(new RegExp(`<text x="[\\d.]+" y="([\\d.]+)"[^>]*>(<tspan[^>]*>)?${content}`).exec(svg)?.[1]);
+
+    expect(at('Said aloud')).toBeLessThan(at('No reference'));
+    expect(at('No reference')).toBeLessThan(Number(/viewBox="0 0 900 ([\d.]+)"/.exec(svg)?.[1]));
+  });
+
+  it('lists nothing that arrived without a reading', () => {
+    const mute = JSON.parse(JSON.stringify(BOARD), (key: string, value: unknown) =>
+      key === 'pinyin' ? undefined : value,
+    ) as PlateLiuren;
+
+    expect(renderLiurenSvg(mute, ALOUD)).not.toContain('Said aloud');
+  });
+});

@@ -33,7 +33,7 @@ export interface PlateChart {
 }
 
 export interface PlatePalace {
-  palace: { number: number; hanzi: string; id: string; element: string };
+  palace: { number: number; hanzi: string; id: string; element: string; pinyin?: string | undefined };
   earth: Named;
   heaven: Named;
   star: Named;
@@ -46,20 +46,27 @@ export interface PlatePalace {
 /**
  * Everything on a plate has both: the hanzi is the name, the identifier is
  * how a caller finds a label for it.
- *
- * **No reading, and the omission is the layout's.** Every named thing in the
- * engine carries a `pinyin`, and every surface that sets type prints it — but
- * a register here is a glyph and a word wrapped to at most two lines, and the
- * third line a reading would take is the register below it. Six names to a
- * palace and nine palaces: there is no size at which this stops being true,
- * since the drawing is proportional and asking for more pixels buys no room.
- * A reader who needs the reading has it beside the drawing rather than in it —
- * the page that embeds the plate, the transcript, the CLI's own table — which
- * is the same bargain the band under the grid strikes for a fortune.
  */
 export interface Named {
   hanzi: string;
   id: string;
+  /**
+   * How the name is said: `xiūmén`, tone marks and all.
+   *
+   * **Not in the palace, and under the board instead.** A register here is a
+   * glyph with a word wrapped under it to at most two lines, and the third
+   * line a reading would take is the register below it — six names to a palace
+   * and nine palaces, at a drawing that is proportional throughout, so there
+   * is no size at which the room appears. It is written in the band the
+   * `readings` caption asks for, where the same list costs the same on every
+   * chart. See `readings.ts`.
+   *
+   * Optional, as everything here is optional that the drawing can do without:
+   * this package is handed charts and does not compute, so a caller on an
+   * older engine draws a shorter band rather than failing, and nothing without
+   * a reading is listed.
+   */
+  pinyin?: string | undefined;
   /**
    * The phase, where the thing named *is* one — a stem, a trigram. Absent on
    * a star or a gate, which have a phase only by way of the palace they rest
@@ -71,6 +78,16 @@ export interface Named {
 export interface PlatePattern {
   id: string;
   hanzi: string;
+  /**
+   * How the name is said, written inside the band that lists it.
+   *
+   * Those lines are short and flush left, so `name reading · fortune · palace`
+   * fits where it already stands and costs no line at all — which is why the
+   * configurations say themselves aloud in place rather than again underneath.
+   * The bare glyphs marking a palace stay bare and are glossed in the band,
+   * which is the bargain already struck there for a fortune.
+   */
+  pinyin?: string | undefined;
   palace?: number | undefined;
   /**
    * The fortune the tradition transmits with the name — 吉, 凶, or both.
@@ -141,6 +158,20 @@ export interface PlateCaptions {
    * without a band the drawing simply never mentions them.
    */
   configurations?: string;
+  /**
+   * The word for the band of readings under all of it, e.g. «Said aloud».
+   *
+   * Giving it is what draws the band, as with the one above. It lists every
+   * name on the board once — the palaces, the stems, the stars, the gates, the
+   * spirits, and the branches of the compass where one was drawn — grouped by
+   * register, each with the reading it is said by.
+   *
+   * A name carries its reading, and the drawing was the one surface in this
+   * project that printed hanzi without it. To the reader it is built for a
+   * glyph alone is a shape with no sound: unsayable, unsearchable, unaskable.
+   * See `readings.ts` for why a band and not the palace itself.
+   */
+  readings?: string;
 }
 
 /**
@@ -184,9 +215,9 @@ export interface PlateLiuren {
    * visible before a character is read. See `palette.ts` for the argument,
    * which the chart makes for its stems.
    */
-  heaven: readonly { hanzi: string; id: string; index: number; element: string }[];
+  heaven: readonly { hanzi: string; id: string; index: number; element: string; pinyin?: string | undefined }[];
   /** The general over each palace of the 地盤, in the same order. */
-  generals: readonly { hanzi: string; id: string }[];
+  generals: readonly { hanzi: string; id: string; pinyin?: string | undefined }[];
   courses: readonly PlateCourse[];
   transmissions: readonly PlateTransmission[];
   rule: string;
@@ -198,16 +229,16 @@ export interface PlateLiuren {
 export interface PlateCourse {
   /** 一課 to 四課. They are written right to left, as the tradition writes them. */
   number: number;
-  upper: { hanzi: string; id: string; element: string };
+  upper: { hanzi: string; id: string; element: string; pinyin?: string | undefined };
   /** A branch, or the day stem where the first lesson stands on it. */
-  lower: { hanzi: string; id: string; element: string };
+  lower: { hanzi: string; id: string; element: string; pinyin?: string | undefined };
 }
 
 export interface PlateTransmission {
   position: string;
-  branch: { hanzi: string; id: string; element: string };
-  general: { hanzi: string; id: string };
-  hiddenStem?: { hanzi: string; id: string; element: string } | undefined;
+  branch: { hanzi: string; id: string; element: string; pinyin?: string | undefined };
+  general: { hanzi: string; id: string; pinyin?: string | undefined };
+  hiddenStem?: { hanzi: string; id: string; element: string; pinyin?: string | undefined } | undefined;
   /** 空亡 — the branch falls outside the day's decade and carries no stem. */
   empty: boolean;
 }
@@ -241,6 +272,20 @@ export interface PlateLiurenOptions {
   labels?: PlateLiurenLabels;
   /** A line over the board — the moment it was laid for, usually. */
   heading?: string;
+  /**
+   * The word for the band of readings under the ring, e.g. «Said aloud».
+   *
+   * Giving it draws the band, as on the chart, and for the same reason: the
+   * ring prints the twelve branches twice over and the twelve generals beside
+   * them, and a glyph with no sound is unsayable to the reader this is built
+   * for. The list is the branches, the generals and whichever stems the board
+   * turned up — near enough the same list at every hour, since what the hour
+   * changes is where they stand.
+   *
+   * The rule and the 課體 are not in it: they are written in the middle of the
+   * ring as words in the reader's own language, with no glyph to be said.
+   */
+  readings?: string;
 }
 
 export interface PlateOptions {

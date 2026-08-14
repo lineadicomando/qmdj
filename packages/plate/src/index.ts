@@ -18,15 +18,18 @@ export {
   cells,
   layout,
   origin,
+  COMPASS_READINGS,
   CORNERS,
   EDGES,
   WRITTEN_ORDER,
+  type Aloud,
   type Cell,
   type Corner,
   type DirectionId,
   type Edge,
   type Layout,
 } from './geometry.js';
+export { type Said } from './readings.js';
 export { FONT_STACK, PALETTES, styleSheet, type Palette, type Scheme } from './palette.js';
 export { renderChartSvg, STRENGTH_MARKS } from './svg.js';
 export { renderLiurenSvg, DEFAULT_LIUREN_SIZE } from './liuren-svg.js';
