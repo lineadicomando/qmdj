@@ -429,6 +429,7 @@ export const it: Record<MessageKey, string> = {
   'form.strengthLegend': 'Come stanno la stella e la porta rispetto alla stagione',
 
   'form.copyChart': 'Copia la carta come testo',
+  'form.copyBoard': 'Copia il quadro come testo',
   'form.copyPrompt': 'Copia il prompt',
   'form.print': 'Stampa',
   'form.copied': 'Copiato',
@@ -455,9 +456,7 @@ export const it: Record<MessageKey, string> = {
   'consult.castAt': 'Posto per il {when}',
   'consult.castFailed': 'Non è stato possibile porre il quadro.',
 
-  'form.toConsult': 'Per far leggere una carta, con una domanda:',
 
-  'form.toPillars': 'Lo stesso istante nei quattro pilastri, con i gan che nascondono:',
 
   'form.promptPrivacy': 'I dati inseriti verranno inclusi nel prompt.',
   'form.question': 'La tua domanda',
@@ -586,6 +585,12 @@ export const it: Record<MessageKey, string> = {
   // modo di pesare due nomi cinesi. Il nome dell'arte segue le parole invece
   // di sostituirle: un metodo è una cosa cinese, ed è l'unico punto della
   // pagina in cui è quello a essere nominato.
+  // I due gruppi che la consultazione chiede in chiaro. Nessuna delle due
+  // intestazioni ripete l'etichetta di un campo: una nomina la coppia come
+  // coppia, l'altra nomina l'unica cosa che le sta accanto — che prende una
+  // cornice perché ce l'ha la coppia, non perché un controllo solo la volesse.
+  'form.group.asking': 'La domanda, e a quale quadro',
+  'form.group.standing': 'Da dove chiedi',
   'form.instrument': 'Che tipo di domanda è',
   'form.instrument.qimen': 'Quando muovermi, e da che parte — 奇門遁甲 qíméndùnjiǎ',
   'form.instrument.liuren': 'Cosa sta succedendo, e con chi — 大六壬 dàliùrén',

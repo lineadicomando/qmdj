@@ -13,6 +13,7 @@
 -->
 <script lang="ts">
   import { Copier, fetchText } from '$lib/copy.svelte';
+  import Icon from './Icon.svelte';
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
 
   interface Props {
@@ -46,6 +47,10 @@
     disabled={copier.busy}
     aria-live="polite"
   >
+    <!-- The mark and the word, never the mark alone. It turns into a tick on
+         success, which is the same confirmation the word gives and is what a
+         reader glancing back at the bar actually sees. -->
+    <Icon name={copier.copied ? 'copied' : 'copy'} />
     {copier.busy ? t('form.copying') : copier.copied ? t('form.copied') : t(label)}
   </button>
 
@@ -58,6 +63,8 @@
 </div>
 
 <style>
+  /* The mark sits with the word rather than above it: a button is one line. */
+  button { display: inline-flex; align-items: baseline; gap: 0.4em; }
   .copy { display: grid; justify-items: start; gap: 0.4rem; }
   /* Lighter than anything that asks for a calculation: found, not noticed. */
   button {

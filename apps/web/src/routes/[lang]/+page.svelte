@@ -51,7 +51,7 @@
   import { appearance } from '$lib/appearance.svelte';
   import { momentQuery, sayFailure, type Failure, type MomentInput } from '$lib/moment';
   import ChartReading from '$lib/components/ChartReading.svelte';
-  import CopyText from '$lib/components/CopyText.svelte';
+  import Takeaway from '$lib/components/Takeaway.svelte';
   import FormPanel from '$lib/components/FormPanel.svelte';
   import LiurenReading from '$lib/components/LiurenReading.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
@@ -321,14 +321,13 @@
   is two things to keep in step.
 -->
 {#snippet takeaway()}
-  <CopyText {t} lead label="form.copyPrompt" url={promptUrl} suffix={question.trim()} />
-  <!--
-    Printing is the other way out, and the one that owes nothing to anybody's
-    account. What comes off the printer is the question, the board in the
-    colours of paper, the four pillars and the reading — a sheet that can be
-    handed to somebody who reads charts, or simply kept.
-  -->
-  <button type="button" class="print" onclick={() => window.print()}>{t('form.print')}</button>
+  <Takeaway
+    {t}
+    lead
+    copyLabel="form.copyPrompt"
+    copyUrl={promptUrl}
+    copySuffix={question.trim()}
+  />
 {/snippet}
 
 <article>
@@ -362,6 +361,17 @@
     {#snippet fields()}
       <!-- Above the moment and above the button, because that is the order:
            the chart is cast for the instant the question is put. -->
+      <!--
+        Two groups in the open, and the second is one field on purpose.
+
+        The question and the board it is put to are one thing asked; the place
+        is another. Boxing only the first would leave the place as the one
+        control on the panel standing outside every group, which is the
+        asymmetry the scan was fixed for — there the interval took a box
+        *because* the criteria beside it had one.
+      -->
+      <fieldset class="asking">
+        <legend>{t('form.group.asking')}</legend>
       <label class="question">
         {t('form.question')}
         <!-- Five lines rather than two. What is typed here is the one thing on
@@ -389,6 +399,7 @@
           <option value="liuren">{t('form.instrument.liuren')}</option>
         </select>
       </label>
+      </fieldset>
 
       <!--
         The place in the open, and everything else behind the disclosure.
@@ -403,6 +414,7 @@
       <MomentForm
         {t}
         when="options"
+        openLegend="form.group.standing"
         bind:date={asked.date}
         bind:time={asked.time}
         bind:place={asked.place}
@@ -459,7 +471,6 @@
         twice.
       -->
       <div class="actions">
-        {#if chart && !spent}{@render takeaway()}{/if}
         <SubmitButton
           {t}
           label="consult.cast"
@@ -490,7 +501,7 @@
       together, reading as two unrelated controls.
     -->
     {#snippet controls()}
-      {#if chart && !spent}<div class="actions">{@render takeaway()}</div>{/if}
+      {#if chart && !spent}{@render takeaway()}{/if}
     {/snippet}
   </FormPanel>
 
@@ -570,6 +581,29 @@
    */
   .wide { max-width: none; }
 
+  /*
+   * Named, not boxed — the house style for a group of fields.
+   *
+   * The `fieldset` earns its place with a screen reader, which reads the
+   * legend before every field inside it; on screen it is a bold line over
+   * them, because a border here would make this the only framed thing on a
+   * panel whose other groups are named the same way and drawn not at all.
+   * See `MomentForm`, where the rule this matches lives.
+   */
+  .asking {
+    border: 0;
+    margin: 0 0 0.9rem;
+    padding: 0;
+    min-inline-size: 0;
+    display: grid;
+    gap: 0.8rem;
+  }
+  .asking legend {
+    padding: 0 0 0.45rem;
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--ink);
+  }
   .question { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 46rem; }
   /* Bounded: a `select` of two lines does not become clearer for being a
      panel wide. */
@@ -639,16 +673,6 @@
   .actions { display: flex; flex-wrap: wrap; align-items: start; gap: 0.6rem 0.9rem; }
   /* Beside the button that copies and dressed as its equal: they are the two
      ways out of this page, and neither of them leads. */
-  .print {
-    font: inherit;
-    font-size: 0.8rem;
-    padding: 0.3rem 0.7rem;
-    cursor: pointer;
-    border: 1px solid var(--edge);
-    background: none;
-    color: var(--ink);
-  }
-  .print:hover { background: var(--tint); }
   @media (prefers-reduced-motion: reduce) {
     .result { transition: none; }
   }
@@ -668,8 +692,7 @@
    */
   @media print {
     .lead { display: none; }
-    .print { display: none; }
-    .stale { opacity: 1; }
+      .stale { opacity: 1; }
     /*
      * Blocks, not a grid.
      *

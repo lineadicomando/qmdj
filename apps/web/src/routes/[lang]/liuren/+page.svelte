@@ -6,6 +6,7 @@
   import FormPanel from '$lib/components/FormPanel.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
   import LiurenReading from '$lib/components/LiurenReading.svelte';
+  import Takeaway from '$lib/components/Takeaway.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
 
   let { data } = $props();
@@ -87,21 +88,16 @@
       bind:place={asked.place}
       bind:trueSolarTime={asked.trueSolarTime}
       bind:dayBoundary={asked.dayBoundary}
+      bind:guiren
     />
-    <label>
-      <!-- The one divergence worth offering, and the label says what moving it
-           costs: it changes the generals and leaves the transmissions alone.
-           An option reading `chou` would be one nobody could choose on
-           purpose, so each says which verse it is in the reader's own words. -->
-      {t('form.guiren')}
-      <select bind:value={guiren}>
-        <option value="chou">{t('form.guiren.chou')}</option>
-        <option value="wei">{t('form.guiren.wei')}</option>
-      </select>
-      <small>{t('form.guiren.note')}</small>
-    </label>
     <SubmitButton {t} label="cli.heading.liuren" {busy} />
   {/snippet}
+  {#snippet controls()}
+    {#if board}
+      <Takeaway {t} copyLabel="form.copyBoard" copyUrl="/api/liuren/text?{address}" />
+    {/if}
+  {/snippet}
+
   {#snippet summary()}
     {data.moment.date || '—'}
     {data.moment.time}
@@ -129,44 +125,27 @@
     <div>
       <LiurenReading {board} {t} />
 
-      <div class="tools">
-        <button type="button" class="print" onclick={() => window.print()}>
-          {t('form.print')}
-        </button>
-      </div>
     </div>
   </div>
 {/if}
 
 <style>
-  label { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 26rem; }
-  label :global(select) { color: var(--ink); }
-  label small { font-size: 0.85em; }
 
   .result { transition: opacity 0.15s ease-out; display: grid; gap: 2rem; }
   .stale { opacity: 0.5; }
 
-  /* Left, not centred: the reading under it starts at the margin, and a
-     picture centred over a caption that is not shares no edge with it. */
-  .board img { width: 100%; max-width: 34rem; height: auto; display: block; }
+  /* Centred, as the chart's board is. An earlier version pushed the picture
+     to the margin so that it shared a left edge with the reading; sharing an
+     **axis** is the same fix made on the right half — the words are centred
+     as a block under it and stay left-aligned inside themselves, because a
+     centred line of prose is a line nobody can come back to. */
+  .board img { width: 100%; max-width: 34rem; height: auto; display: block; margin-inline: auto; }
   .board .paper { display: none; }
   /* Held in place while the next board is on its way, rather than blanking. */
   .screen { transition: opacity 0.2s ease-out; }
   .settling { opacity: 0.6; }
 
   .failure { color: var(--alarm); }
-  .tools { margin-top: 1.5rem; }
-  .print {
-    font: inherit;
-    font-size: 0.9em;
-    color: var(--faint);
-    background: none;
-    border: 1px solid var(--rule);
-    border-radius: 0.2rem;
-    padding: 0.3rem 0.7rem;
-    cursor: pointer;
-  }
-  .print:hover { color: var(--ink); border-color: var(--edge); }
 
   @media (prefers-reduced-motion: reduce) {
     .result, .screen { transition: none; }
@@ -183,7 +162,6 @@
     .result { display: block; }
     .board .screen { display: none; }
     .board .paper { display: block; }
-    .tools { display: none; }
-    .board img { max-width: 26rem; }
+      .board img { max-width: 26rem; }
   }
 </style>

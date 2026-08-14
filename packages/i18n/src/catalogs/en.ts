@@ -518,6 +518,7 @@ export const en = {
   // be told before reading it, and offering only the second would make the
   // plain text unreachable to whoever wants nothing to do with a model.
   'form.copyChart': 'Copy the chart as text',
+  'form.copyBoard': 'Copy the board as text',
   'form.copyPrompt': 'Copy the prompt',
   // The other way out of a cast chart, and the one that needs no account
   // anywhere: the sheet carries the question, the board, the four pillars and
@@ -575,18 +576,7 @@ export const en = {
   // `form.copyUnread`: on a first press nothing was ever cast to read again.
   'consult.castFailed': 'The board could not be laid.',
 
-  // Under the board, where somebody who wants a reading will be looking. It
-  // sends them on rather than offering a field here: the question belongs
-  // before the casting, and this page has already cast.
-  'form.toConsult': 'To have a chart read, with a question:',
 
-  // Beside it, the other section that answers about this same instant. The
-  // four pillars are already under the board — the chart is cast on them —
-  // and what the other section adds is what they conceal and how they stand.
-  // It says *this instant* because the section it leads to is more often
-  // asked about a birth, and arriving there with a chart's moment in the
-  // fields should not read as one.
-  'form.toPillars': 'The same instant as four pillars, with the stems they conceal:',
 
   'form.promptPrivacy': 'What you entered goes into the prompt.',
   // Required, and said in the label rather than by a mark nobody can read
@@ -781,6 +771,12 @@ export const en = {
   // their own and has no way to weigh two Chinese names. The name of the art
   // follows the words rather than replacing them: a method is a Chinese
   // thing, and this is the one place on the page where that is what is named.
+  // The two groups the consultation asks in the open. Neither legend repeats
+  // a field's own label: one names the pair as a pair, the other names the one
+  // thing beside it — which takes a box because the pair has one, not because
+  // a single control wanted framing.
+  'form.group.asking': 'The question, and which board',
+  'form.group.standing': 'Where you are asking from',
   'form.instrument': 'What kind of question is it',
   'form.instrument.qimen': 'When to move, and which way — 奇門遁甲 qíméndùnjiǎ',
   'form.instrument.liuren': 'What is going on, and with whom — 大六壬 dàliùrén',

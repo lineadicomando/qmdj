@@ -15,7 +15,9 @@
     dayBoundary = $bindable('zishi'),
     method = $bindable<string | undefined>(undefined),
     yuan = $bindable<string | undefined>(undefined),
+    guiren = $bindable<string | undefined>(undefined),
     when = 'fields',
+    openLegend,
     extra,
     extraLegend,
     extraSet = 0,
@@ -30,6 +32,24 @@
     method?: string | undefined;
     /** Bound with `method`, and shown only beside chaibu. */
     yuan?: string | undefined;
+    /**
+     * Bound where a 六壬 board is laid, and nowhere else.
+     *
+     * It sits here rather than in the open because it is what the other two
+     * are: a divergence between schools, a refinement of how the same instant
+     * is read. What decides *which board* the instant is laid on is not one of
+     * these and is asked in the open — see the consultation.
+     */
+    guiren?: string | undefined;
+    /**
+     * A name for the fields this asks in the open, where they need one.
+     *
+     * Given only where the section around it puts another named group beside
+     * them — the consultation does, and there the place would otherwise be the
+     * one thing on the panel standing outside every box. Left off everywhere
+     * else, because a box around the only group there is names it twice.
+     */
+    openLegend?: MessageKey;
     /**
      * Where the date and the time are asked for.
      *
@@ -84,6 +104,7 @@
     if (dayBoundary !== 'zishi') count += 1;
     if (method !== undefined && method !== 'chaibu') count += 1;
     if (yuan !== undefined && yuan !== 'term') count += 1;
+    if (guiren !== undefined && guiren !== 'chou') count += 1;
     return count;
   }
 
@@ -163,16 +184,37 @@
       {/if}
     {/if}
   {/if}
+
+  {#if guiren !== undefined}
+    <label>
+      {t('form.guiren')}
+      <select bind:value={guiren}>
+        <option value="chou">{t('form.guiren.chou')}</option>
+        <option value="wei">{t('form.guiren.wei')}</option>
+      </select>
+    </label>
+    <p class="note">{t('form.guiren.note')}</p>
+  {/if}
 {/snippet}
 
   <!-- What is asked in the open, side by side where there is room and stacked
        where there is not. Three things where the moment is the question, and
        one where it is now: the place, which fixes the hour wherever the
        instant came from. -->
-  <div class="row" class:sole={when === 'options'}>
-    {#if when === 'fields'}{@render moment()}{/if}
-    <LocationSearch {t} bind:selected={place} />
-  </div>
+  {#if openLegend}
+    <fieldset class="open">
+      <legend>{t(openLegend)}</legend>
+      <div class="row" class:sole={when === 'options'}>
+        {#if when === 'fields'}{@render moment()}{/if}
+        <LocationSearch {t} bind:selected={place} />
+      </div>
+    </fieldset>
+  {:else}
+    <div class="row" class:sole={when === 'options'}>
+      {#if when === 'fields'}{@render moment()}{/if}
+      <LocationSearch {t} bind:selected={place} />
+    </div>
+  {/if}
 
   <details bind:open>
     <!-- A label, not the note: what a disclosure is called has to say what
@@ -220,6 +262,9 @@
   </details>
 
 <style>
+  /* Named like the groups under the disclosure, so a panel that has both
+     reads as one form rather than as a box beside some loose fields. */
+  fieldset.open { margin: 0 0 0.9rem; }
   /*
    * As many columns as there is room for, and no breakpoint anywhere.
    *

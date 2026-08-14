@@ -5,7 +5,7 @@
   import { momentQuery, sayFailure, type MomentInput } from '$lib/moment';
   import { step, type Unit, type Wall } from '$lib/step';
   import ChartReading from '$lib/components/ChartReading.svelte';
-  import CopyText from '$lib/components/CopyText.svelte';
+  import Takeaway from '$lib/components/Takeaway.svelte';
   import FormPanel from '$lib/components/FormPanel.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
   import MomentSteps from '$lib/components/MomentSteps.svelte';
@@ -215,6 +215,11 @@
   {/snippet}
   {#snippet controls()}
     <MomentSteps {t} disabled={busy} {values} onstep={moved} onnow={now} />
+    <!-- The same corner in every section: finding them once is finding them
+         everywhere. Only where there is something to take away. -->
+    {#if chart}
+      <Takeaway {t} copyLabel="form.copyChart" copyUrl="/api/chart/text?{address}" />
+    {/if}
   {/snippet}
 </FormPanel>
 
@@ -282,70 +287,28 @@
       <!-- `wide`: the board above has the page to itself, so what it was cast
            from is set as its caption — at the drawing's own measure, centred
            on it. See `ChartReading`. -->
-      <ChartReading {chart} {t} wide />
       <!--
         The chart in words, and nothing more.
 
         Taking a chart to something that will read it is a different errand and
         lives in its own section, because there the question comes before the
-        casting and here it could only come after. A field for one under this
-        board would teach the wrong order — so what is left here is a pointer
-        to where the right one is kept.
+        casting and here it could only come after: a field for one under this
+        board would teach the wrong order. What used to stand here was a line
+        pointing at that section, and at the pillars beside it — both of which
+        the header already lists, and already carries this moment to. A
+        signpost to a door in the same room is furniture.
       -->
-      <div class="tools">
-        <div class="takeaway">
-          <CopyText {t} label="form.copyChart" url="/api/chart/text?{address}" />
-          <!-- The board, the four pillars and the reading onto a sheet. The
-               consultation prints the question with them; here there is none
-               to print, and that is the whole difference between the two. -->
-          <button type="button" class="print" onclick={() => window.print()}>
-            {t('form.print')}
-          </button>
-        </div>
-        <!--
-          The pillars above, said in full one section over.
-
-          Nothing is computed twice for it: the four pairs are already in the
-          reading, and what this leads to is the concealed stems, the gods and
-          the stages — the Four Pillars' own questions, kept where they are
-          answered. A link and not a panel, because the two are separate
-          methods and a page that folded one into the other would be reading
-          the chart for somebody.
-        -->
-        <p class="note">
-          {t('form.toPillars')}
-          <a href="/{t.locale}/bazi?{pillars}">{t('nav.bazi')}</a>
-        </p>
-        <p class="note">
-          {t('form.toConsult')}
-          <a href="/{t.locale}">{t('nav.consult')}</a>
-        </p>
-      </div>
+      <ChartReading {chart} {t} wide />
     </div>
   </section>
 {/if}
 
 <style>
   .failure { color: var(--alarm); }
-  .tools { margin-top: 1.5rem; display: grid; justify-items: start; gap: 0.6rem; }
-  /* The two things to do with the chart on screen, on a line, wrapping rather
-     than shrinking. */
-  .takeaway { display: flex; flex-wrap: wrap; align-items: start; gap: 0.6rem 0.9rem; }
   /* Dressed as the button beside it: neither of the two leads. */
-  .print {
-    font: inherit;
-    font-size: 0.8rem;
-    padding: 0.3rem 0.7rem;
-    cursor: pointer;
-    border: 1px solid var(--rule);
-    background: none;
-    color: var(--faint);
-  }
-  .print:hover { color: var(--ink); border-color: var(--edge); }
   /* Said only by a printer: on screen the panel says which moment this is. */
   .onPaper { display: none; }
   .paper { display: none; }
-  .note { margin: 0; font-size: 0.8rem; color: var(--faint); max-width: 62ch; }
   /* In the closed bar, beside text rather than under a label of its own. */
   .day { font-size: 0.9rem; padding: 0.15rem 0.35rem; color: var(--ink); }
   /*
@@ -424,8 +387,7 @@
     .result { display: block; }
     .board { margin-bottom: 1.2rem; }
     .onPaper { display: block; margin: 0 0 0.4rem; font-size: 0.85rem; color: var(--faint); }
-    .tools { display: none; }
-    .stale, .settling { opacity: 1; }
+      .stale, .settling { opacity: 1; }
     /* A picture on a sheet of paper, not one fitted to a window: `svh` means
        nothing to a printer, and left the board at the full measure of the
        page. 17cm is what A4 has between its margins with a little to spare. */

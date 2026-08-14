@@ -130,7 +130,9 @@
 
 <style>
   h2 { font-size: 1em; font-weight: 500; margin: 1.6rem 0 0.5rem; }
-  .words { max-width: 44rem; }
+  /* A block centred under the picture, with its own text left-aligned:
+     they share an axis, and nothing inside is centred. */
+  .words { max-width: 44rem; margin-inline: auto; }
   .caption { margin: 0 0 1rem; }
   .caption .term { color: var(--faint); }
   .glyph { color: var(--faint); font-size: 0.85em; }
