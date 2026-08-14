@@ -412,6 +412,12 @@ export const en = {
   'label.yeargod.suide': 'the virtue of the year',
   'label.yeargod.suidehe': 'the virtue\'s companion',
 
+  'label.yeargod.zoushu': 'the memorialist',
+  'label.yeargod.boshi': 'the erudite',
+  'label.yeargod.lishi': 'the strong man',
+  'label.yeargod.canshi': 'the silkworm chamber',
+  'label.yeargod.pobaiwugui': 'the five ghosts of ruin',
+
   'label.keti.yuanshou': 'the head',
   'label.keti.zhongshen': 'the second hearing',
   'label.keti.zhiyi': 'knowing the one',

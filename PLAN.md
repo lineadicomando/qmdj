@@ -2077,7 +2077,7 @@ stand in this file and in `liuren.ts`'s comments, not in the register
 CLAUDE.md calls mandatory. A third layer's tables do not land in a register
 the second board never entered.
 
-**建除十二神, 二十八宿值日, the 十二神 and twenty 年神 are built; the rest of 卷三 is not.** `almanac.ts`, `almanacAt`, and the
+**建除十二神, 二十八宿值日, the 十二神 and twenty-five 年神 are built; the rest of 卷三 is not.** `almanac.ts`, `almanacAt`, and the
 page beside the pillars on the CLI, the API, the MCP tools, the chart page and
 the 六壬 page. Agreement with `lunar-javascript` on **14 600 / 14 600 days of
 2000 to 2039** for the officer and again for the lodge with its 七政; the 480
@@ -2123,7 +2123,8 @@ officers'.
 **The 年神 are the layer's other axis, and its weakest evidence.** A chart
 chooses an hour *and a direction*, and 卷三 puts the year's gods on the second.
 Eighteen are in — 太歲, 歲破, 大將軍, 太陰, 黃幡, 豹尾, 喪門, 弔客, 白虎, 病符,
-死符, 大煞, the three 煞, 大耗, 小耗, 歲枝德 and the pair 歲德 · 歲德合 — each one whose seat the source states outright and completely
+死符, 大煞, the three 煞, 大耗, 小耗, 歲枝德, 歲德 and its 合, 破敗五鬼 and the
+four corner gods — each one whose seat the source states outright and completely
 without leaning on a god defined elsewhere, and each of its worked enumerations
 asserted in the tests. **Seats are shared and stay shared**: 太陰 and 弔客 are
 both 歲後二辰, 大耗 stands where 歲破 does, and one branch a year is 死符, 小耗
@@ -2145,9 +2146,14 @@ that agree.
 given as *stems* keyed to the year's stem, and they are carried as stems: the
 二十四山 seats eight of the ten, but not 戊 and not 己, and 己 is in that very
 table — so converting would be this layer supplying what the source withheld.
-A third arm is already visible and deliberately unwritten: 博士 stands on a
-corner trigram, 「如奏書在艮，博士在坤也」, and it arrives with 奏書 and 力士
-rather than before them.
+The third arm is a **trigram**, and it arrived with the entries that needed it:
+破敗五鬼 enumerated whole by 厯例, and the four corner gods — 奏書, 博士, 力士,
+蠶室 — which are the one derived table in this block and the one with a check
+from outside it. 卷三 states them as relations and says where the count opens;
+《萬全廣濟》, quoted in the 蠶命 entry, enumerates 蠶室 by quarter, and since the
+other three are fixed to it by 對衝 and by 前隅 · 後維, that one row checks all
+four. Weaker than an enumeration, stronger than a derivation alone, said to be
+both.
 
 The rest of 卷三 is **unread rather than refused**; 大耗 and 小耗 are stated only inside a 「是亦一説也」 and are not
 taken on that footing, and 羣醜 turns out not to be a seat at all but the

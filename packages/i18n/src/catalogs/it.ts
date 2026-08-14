@@ -392,6 +392,12 @@ export const it: Record<MessageKey, string> = {
   'label.yeargod.suide': 'la virtù dell\'anno',
   'label.yeargod.suidehe': 'il compagno della virtù',
 
+  'label.yeargod.zoushu': 'l\'estensore dei memoriali',
+  'label.yeargod.boshi': 'l\'erudito',
+  'label.yeargod.lishi': 'l\'uomo forte',
+  'label.yeargod.canshi': 'la camera dei bachi',
+  'label.yeargod.pobaiwugui': 'i cinque spettri della rovina',
+
   'label.keti.yuanshou': 'il capo',
   'label.keti.zhongshen': 'il riesame',
   'label.keti.zhiyi': "conoscere l'uno",

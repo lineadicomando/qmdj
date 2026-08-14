@@ -1,5 +1,6 @@
 import { sunCrossing, type EphemerisContext } from './ephemeris.js';
 import { dayGanzhi, yearGanzhi, BRANCHES, STEMS, type Branch, type Ganzhi, type Stem } from './ganzhi.js';
+import { PALACES, type Palace } from './dunjia/palaces.js';
 import { VALENCE, type Valence } from './dunjia/patterns.js';
 import { calendarDayNumber, CALENDAR_ZONE } from './lunar.js';
 import { fromJulianDay } from './time.js';
@@ -235,7 +236,8 @@ export type YearGodId =
   | 'sangmen' | 'diaoke' | 'baihu' | 'bingfu' | 'sifu' | 'dasha'
   | 'jiesha' | 'zaisha' | 'suisha'
   | 'dahao' | 'xiaohao' | 'suizhide'
-  | 'suide' | 'suidehe';
+  | 'suide' | 'suidehe'
+  | 'zoushu' | 'boshi' | 'lishi' | 'canshi' | 'pobaiwugui';
 
 /**
  * Where a 年神 stands — and it is not always a branch.
@@ -247,13 +249,17 @@ export type YearGodId =
  * nor 己 — and 己 is in that very table — so any mapping to a direction would
  * be this file inventing the part the source left out.
  *
- * A third kind is coming and is deliberately not written yet: 博士 「常與奏書
- * 對衝，如奏書在艮，博士在坤也」 stands on a **corner trigram**, as 奏書, 力士
- * and 蠶室 do. It arrives when those entries are read, not before.
+ * The third kind is a **trigram**: 破敗五鬼 is given by 厯例 as 「甲壬年在巽，
+ * 乙癸年在艮，丙年在坤，丁年在震，戊年在離，己年在坎，庚年在兑，辛年在乾」,
+ * and the four corner gods stand on 乾坤艮巽. A trigram is reported as the
+ * palace it is, which is the one place this layer touches dunjia's own
+ * vocabulary — and it touches it because the source's word *is* 艮, not
+ * «northeast».
  */
 export type YearGodSeat =
   | { kind: 'branch'; branch: Branch }
-  | { kind: 'stem'; stem: Stem };
+  | { kind: 'stem'; stem: Stem }
+  | { kind: 'trigram'; trigram: Palace };
 
 export interface YearGod {
   id: YearGodId;
@@ -301,7 +307,10 @@ const YEAR_GODS: readonly {
   pinyin: string;
   /** By the year's branch, unless `byStem`. */
   seat: (year: number) => number;
+  /** Read from the year's stem rather than its branch. */
   byStem?: true;
+  /** The seat is a trigram, given as a palace number. */
+  byTrigram?: true;
 }[] = [
   // 太歲 stands on the year's own branch.
   { id: 'taisui', hanzi: '太歲', pinyin: 'tàisuì', seat: (y) => y },
@@ -357,19 +366,53 @@ const YEAR_GODS: readonly {
   // sentence states as a relation rather than leaving to be guessed.
   { id: 'suide', hanzi: '歲德', pinyin: 'suìdé', byStem: true, seat: (g) => [0, 6, 2, 8, 4, 0, 6, 2, 8, 4][g] as number },
   { id: 'suidehe', hanzi: '歲德合', pinyin: 'suìdéhé', byStem: true, seat: (g) => [5, 1, 7, 3, 9, 5, 1, 7, 3, 9][g] as number },
+  // 破敗五鬼, from 厯例 and enumerated whole: 「甲壬年在巽，乙癸年在艮，丙年在
+  // 坤，丁年在震，戊年在離，己年在坎，庚年在兑，辛年在乾」. Ten stems, ten
+  // answers, nothing derived. Palace numbers: 巽4 艮8 坤2 震3 離9 坎1 兌7 乾6.
+  { id: 'pobaiwugui', hanzi: '破敗五鬼', pinyin: 'pòbàiwǔguǐ', byStem: true, byTrigram: true, seat: (g) => [4, 8, 2, 3, 9, 1, 7, 6, 4, 8][g] as number },
+  // The four that stand on the corners, by the year's quarter. 奏書
+  // 「常居近歲後維方……初起於乾」; 博士 「常與奏書對衝，如奏書在艮，博士在坤
+  // 也」; 力士 「在太歲之前隅」; 蠶室 「與力士對衝」. See `yearGodsOf` for the
+  // enumeration that checks the four against each other.
+  { id: 'zoushu', hanzi: '奏書', pinyin: 'zòushū', byTrigram: true, seat: (y) => cornerOf(y, 0) },
+  { id: 'boshi', hanzi: '博士', pinyin: 'bóshì', byTrigram: true, seat: (y) => cornerOf(y, 2) },
+  { id: 'lishi', hanzi: '力士', pinyin: 'lìshì', byTrigram: true, seat: (y) => cornerOf(y, 1) },
+  { id: 'canshi', hanzi: '蠶室', pinyin: 'cánshì', byTrigram: true, seat: (y) => cornerOf(y, 3) },
 ];
+
+/**
+ * The four corners a year's quarter puts its gods on, as palace numbers.
+ *
+ * The quarters run 亥子丑 · 寅夘辰 · 巳午未 · 申酉戌, and the corner immediately
+ * behind each is 乾 · 艮 · 巽 · 坤 — which is what 「常居近歲後維方」 and
+ * 「初起於乾」 say between them. `step` walks a quarter turn at a time: 0 is
+ * that corner, 1 the one ahead (力士 「在太歲之前隅」), 2 the one opposite
+ * (博士 「常與奏書對衝」), 3 the remaining one (蠶室 「與力士對衝」).
+ */
+function cornerOf(yearBranch: number, step: number): number {
+  const CORNERS = [6, 8, 4, 2]; // 乾 · 艮 · 巽 · 坤
+  const quarter = Math.floor(((yearBranch + 1) % 12) / 3);
+  return CORNERS[(quarter + step) % 4] as number;
+}
 
 export const YEAR_GOD_IDS: readonly YearGodId[] = YEAR_GODS.map((g) => g.id);
 
 /** Where each of them stands, for a year. */
 export function yearGodsOf(year: Ganzhi): readonly YearGod[] {
-  return YEAR_GODS.map(({ id, hanzi, pinyin, seat, byStem }) => ({
+  return YEAR_GODS.map(({ id, hanzi, pinyin, seat, byStem, byTrigram }) => ({
     id,
     hanzi,
     pinyin,
-    seat: byStem
-      ? ({ kind: 'stem', stem: STEMS[seat(year.stem.index)] as Stem } as const)
-      : ({ kind: 'branch', branch: BRANCHES[seat(year.branch.index)] as Branch } as const),
+    seat: byTrigram
+      ? ({
+          kind: 'trigram',
+          trigram: PALACES.find(
+            (p) => p.number === seat(byStem ? year.stem.index : year.branch.index),
+          ) as Palace,
+        } as const)
+      : byStem
+        ? ({ kind: 'stem', stem: STEMS[seat(year.stem.index)] as Stem } as const)
+        : ({ kind: 'branch', branch: BRANCHES[seat(year.branch.index)] as Branch } as const),
   }));
 }
 

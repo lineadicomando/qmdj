@@ -149,9 +149,14 @@ function lunar(date: LunarDate, t: Translator): string {
  * what the source gives and neither is turned into the other here.
  */
 function seatOf(god: YearGod, t: Translator): string {
-  return god.seat.kind === 'branch'
-    ? `${t(`label.branch.${god.seat.branch.id}` as MessageKey)} ${god.seat.branch.hanzi}`
-    : `${t(`label.stem.${god.seat.stem.id}` as MessageKey)} ${god.seat.stem.hanzi}`;
+  const seat = god.seat;
+  if (seat.kind === 'branch') {
+    return `${t(`label.branch.${seat.branch.id}` as MessageKey)} ${seat.branch.hanzi}`;
+  }
+  if (seat.kind === 'stem') {
+    return `${t(`label.stem.${seat.stem.id}` as MessageKey)} ${seat.stem.hanzi}`;
+  }
+  return `${t(`label.palace.${seat.trigram.id}` as MessageKey)} ${seat.trigram.hanzi} ${seat.trigram.pinyin}`;
 }
 
 export function formatAlmanac(page: Almanac, t: Translator): string {

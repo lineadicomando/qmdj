@@ -908,7 +908,7 @@ The other axis. A chart chooses an hour **and a direction**, and the 年神 are
 what the almanac puts on the second — 卷三 describes each as 所理之地 or
 所在之方, a bearing held for a year.
 
-Twenty are implemented. Each is one whose position 卷三 states outright and
+Twenty-five are implemented. Each is one whose position 卷三 states outright and
 completely, in its own entry, without leaning on a god defined elsewhere:
 
 | | the source's words | |
@@ -930,6 +930,8 @@ completely, in its own entry, without leaning on a god defined elsewhere:
 | 小耗 | 「常居大耗後一辰」, and 「舊歲破為小耗」 | five ahead |
 | 歲枝德 | 「甲既在子則巳上必己，己甲之合也，其所合之神所居之枝」, landing where the entry then says: 「其辰又為死符，又為小耗」 | five ahead |
 | 歲德 · 歲德合 | 「歲德合者，歲德五合之干是也：甲年在己，乙年在乙，丙年在辛……故歲德屬陽，歲德合屬隂」 | **a stem**, from the year's stem |
+| 破敗五鬼 | 厯例:「甲壬年在巽，乙癸年在艮，丙年在坤，丁年在震，戊年在離，己年在坎，庚年在兑，辛年在乾」 | **a trigram**, from the year's stem |
+| 奏書 · 博士 · 力士 · 蠶室 | 「常居近歲後維方……初起於乾」, 「常與奏書對衝，如奏書在艮，博士在坤也」, 「在太歲之前隅」, 「與力士對衝」 | **a corner trigram**, by the year's quarter |
 
 **Every one of those enumerations is asserted in `almanac.test.ts`**, from the
 text rather than from an implementation — which matters here more than
@@ -983,7 +985,18 @@ is here. A source that says where its own knowledge stopped is the reason this
 one was chosen, and taking what it disclaims would be reading past the part that
 makes it worth reading.
 
-**Not every seat is a branch, and the two kinds are not converted into one
+**The four corner gods are the one entry here that is derived rather than
+enumerated, and it has a check.** 卷三 states each of the four as a relation —
+the corner behind, the corner ahead, and the two opposites — and says where the
+count opens, 「初起於乾」, but gives no per-year table. What supplies the table
+is an enumeration of one of the four, quoted from 《萬全廣濟》 in the 蠶命
+entry: 「亥子丑年未坤申，寅夘辰年戌乾亥，巳午未年丑艮寅，申酉戌年辰巽巳」, with
+the worked case 「假如亥子丑年……蠶室在坤」. The derivation reproduces it on all
+four quarters, and since the other three are fixed to 蠶室 by 對衝 and by
+前隅 · 後維, one row checks all of them. The footing is weaker than an
+enumeration and stronger than a derivation alone, and is recorded as that.
+
+**Not every seat is a branch, and the kinds are not converted into one
 another.** 歲德 and 歲德合 are given as **stems**, keyed to the year's stem, so
 that is what they carry. A 二十四山 compass does seat eight of the ten stems,
 which would let a stem be reported as a direction — but it seats neither 戊 nor
@@ -991,13 +1004,16 @@ which would let a stem be reported as a direction — but it seats neither 戊 n
 file supplying the part the source left out, so `YearGodSeat` is a union and a
 surface says which kind it has.
 
-**Twenty, and the rest of 卷三 is unread rather than rejected.** What remains is
-金神, 博士, 破敗五鬼 and 日遊神 — and a third kind of seat is already visible in
-them: 博士 「常與奏書對衝，如奏書在艮，博士在坤也」 stands on a **corner
-trigram**, as 奏書, 力士 and 蠶室 do. That arm of the union arrives when those
-entries are read and not before. 金神 is a fourth shape again — 「以年幹五虎元
-厯之逢庚辛及納音金之位者」, several branches at once, found by running 五虎遁
-from the year stem and reading 納音;
+A third kind is a **trigram**, and it is reported as the palace it is rather
+than as a compass point, because the source's word is 艮 and not «northeast».
+
+**Twenty-five, and what is left of 卷三 is one entry and a shape.** 金神 is the
+shape: 「以年幹五虎元厯之逢庚辛及納音金之位者是也。假如甲己之年起丙寅順行，得
+庚午辛未，又壬申癸酉納音為劍鋒金，故甲己年午未申酉為金神也」 — **several
+branches at once**, found by running 五虎遁 from the year stem and reading 納音,
+both of which this engine already has. It is the only year god so far that does
+not occupy a single seat, and it wants a fourth arm of the union rather than a
+fifth kind of guess. 日遊神 remains unread;
 some are stated only inside a discussion the source marks as one opinion among
 several — 大耗 and 小耗 arrive inside a 「是亦一説也」 and are not taken on
 that footing; and 羣醜 turns out not to be a seat at all but a condition, the

@@ -266,6 +266,52 @@ describe('建除十二神', () => {
     ]);
   });
 
+  it('puts the corner gods where 《萬全廣濟》 says the 蠶室 is', () => {
+    // The four are derived from statements rather than from a table: 奏書
+    // 「常居近歲後維方……初起於乾」, 力士 「在太歲之前隅」, and each of the
+    // other two is the opposite of one of those. What checks the derivation is
+    // an enumeration of one of them, quoted in the 蠶命 entry: 「萬全廣濟云：
+    // 亥子丑年未坤申，寅夘辰年戌乾亥，巳午未年丑艮寅，申酉戌年辰巽巳」, with
+    // the worked case 「假如亥子丑年……蠶室在坤」.
+    const corner = (year: string, god: string): string => {
+      const seat = yearGodsOf(yearWithBranch(year)).find((g) => g.id === god)?.seat;
+      return seat?.kind === 'trigram' ? seat.trigram.hanzi : '';
+    };
+
+    for (const y of ['亥', '子', '丑']) expect(corner(y, 'canshi')).toBe('坤');
+    for (const y of ['寅', '卯', '辰']) expect(corner(y, 'canshi')).toBe('乾');
+    for (const y of ['巳', '午', '未']) expect(corner(y, 'canshi')).toBe('艮');
+    for (const y of ['申', '酉', '戌']) expect(corner(y, 'canshi')).toBe('巽');
+
+    // 「初起於乾」 — the count opens there, on the quarter 亥子丑.
+    expect(corner('子', 'zoushu')).toBe('乾');
+    // 「如奏書在艮，博士在坤也」.
+    expect(corner('寅', 'zoushu')).toBe('艮');
+    expect(corner('寅', 'boshi')).toBe('坤');
+    // 蠶室 is 力士's opposite, so the four fill the four corners and never
+    // double up.
+    for (const y of BRANCHES) {
+      const corners = ['zoushu', 'boshi', 'lishi', 'canshi'].map((g) => corner(y.hanzi, g));
+      expect(new Set(corners).size).toBe(4);
+    }
+  });
+
+  it('seats 破敗五鬼 on the trigram 厯例 enumerates for each stem', () => {
+    // 「甲壬年在巽，乙癸年在艮，丙年在坤，丁年在震，戊年在離，己年在坎，
+    // 庚年在兑，辛年在乾」 — ten stems, ten answers, nothing derived.
+    const at = (yearStem: string): string => {
+      const year = Array.from({ length: 60 }, (_, i) => ganzhiOf(i)).find(
+        (g) => g.stem.hanzi === yearStem,
+      ) as Ganzhi;
+      const seat = yearGodsOf(year).find((g) => g.id === 'pobaiwugui')?.seat;
+      return seat?.kind === 'trigram' ? seat.trigram.hanzi : '';
+    };
+
+    expect(['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'].map(at)).toEqual([
+      '巽', '艮', '坤', '震', '離', '坎', '兌', '乾', '巽', '艮',
+    ]);
+  });
+
   it('keeps every seat the source gives to more than one god', () => {
     // 「美惡不嫌同位，吉凶不嫌同名」. 卷三 says this twice — of 太陰 and 弔客
     // in the 總論, and of 死符 · 小耗 · 歲枝德 in the 歲枝德 entry — and 大耗
