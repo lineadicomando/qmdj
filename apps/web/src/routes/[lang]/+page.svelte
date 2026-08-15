@@ -106,13 +106,16 @@
   /** The board as it came back — a Qi Men chart, or a Liu Ren board. */
   let chart = $state<any>();
   /**
-   * The almanac's line for the instant that was cast.
+   * The moment that was cast, held apart from the board.
    *
-   * Held apart from `chart` because it belongs to neither board: a 六壬
-   * response carries the moment beside the board, a chart carries it inside,
-   * and the page under both is the same page either way.
+   * A 六壬 response carries it beside the board where a chart carries it
+   * inside, and what stands under both — the calendar it was laid from, the
+   * almanac page it is read beside — is the same either way. It is the whole
+   * moment and not one field of it: reaching for a field here is how this went
+   * stale once already, when `jianchu` was renamed under it and the line
+   * quietly stopped appearing.
    */
-  let almanac = $state<any>();
+  let castMoment = $state<any>();
   /** The fields, which withdraw once they have answered. */
   let panel: FormPanel | undefined = $state();
 
@@ -231,14 +234,14 @@
 
       if (!response.ok) {
         chart = undefined;
-        almanac = undefined;
+        castMoment = undefined;
         address = '';
         failure = body as Failure;
         return;
       }
 
       chart = liuren ? body.liuren : body.chart;
-      almanac = body.moment?.jianchu ?? null;
+      castMoment = body.moment ?? null;
       // Pinned to what the engine actually cast for. Under a question that is
       // the instant of the press, and it is the whole point of the mode: the
       // consultation belongs to that minute and not to whenever this is read.
@@ -563,7 +566,7 @@
            on it. See `ChartReading`. -->
       <div>
         {#if liuren}
-          <LiurenReading board={chart} {t} {almanac} />
+          <LiurenReading board={chart} {t} moment={castMoment} />
         {:else}
           <ChartReading {chart} {t} wide />
         {/if}

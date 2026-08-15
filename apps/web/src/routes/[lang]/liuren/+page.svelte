@@ -123,7 +123,7 @@
     </div>
 
     <div>
-      <LiurenReading {board} {t} almanac={moment?.almanac ?? null} />
+      <LiurenReading {board} {t} {moment} />
 
     </div>
   </div>

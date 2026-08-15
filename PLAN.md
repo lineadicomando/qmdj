@@ -1900,6 +1900,17 @@ and an entry in `docs/sources.md` written the day it landed. It reaches the CLI,
 the REST answers, four MCP tools and both board pages, and deliberately not the
 prompt's fence or `packages/plate`.
 
+**And the page said nothing about which layer it was showing.** The almanac
+arrived under the pillars as a run of glyphs — 定 dìng beside 庚戌 — with no
+word to say it was a second art rather than another field of the first, which
+is the confusion this project refuses everywhere else and was sitting in the
+markup. Meanwhile the *calendar* the chart is cast from — the term, the jie, the
+lunar date — was not on the page at all, though the CLI has printed all three
+since phase 4. `CalendarAndAlmanac.svelte` names the two groups apart and says
+which relation each has to the board: the calendar is what a chart was cast
+**from**, the almanac is what it was read **beside**. One component for both
+boards, since there were two copies of it drifting.
+
 **The web lagged the engine by two blocks and was caught by being asked.** The
 page rendered the officer, the lodge, the day's god and the 年神 and stopped
 there, while the CLI, the JSON and the MCP tools already carried the 四德 and

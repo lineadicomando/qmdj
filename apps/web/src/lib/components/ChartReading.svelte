@@ -16,6 +16,7 @@
   import { glyph } from '$lib/glyph';
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
   import PalaceTable from './PalaceTable.svelte';
+  import CalendarAndAlmanac from './CalendarAndAlmanac.svelte';
   import PillarPlate from './PillarPlate.svelte';
 
   /**
@@ -117,69 +118,11 @@
 <PillarPlate pillars={squares} {t} {wide} />
 
 <!--
-  The almanac's line for the day, under the pillars it belongs beside.
-
-  A line and never a panel: the 曆注 are not part of this board and are not
-  being asked anything — they are the page dunjia was always read against, and
-  a reader comparing the two is doing what the tradition did. Its ganzhi is
-  printed because the page's day need not be the chart's: it turns on 120°E
-  and on the date, where the pillars turn on the zone and the hour.
+  The calendar the chart was cast from, and the almanac page it was read
+  beside — named apart, because they are two relations and not one list. See
+  `CalendarAndAlmanac`.
 -->
-{#if chart.moment.almanac}
-  {@const page = chart.moment.almanac}
-  <p class="almanac">
-    <span class="glyph">{page.officer.hanzi} {page.officer.pinyin}</span>
-    {t(`label.officer.${page.officer.id}` as MessageKey)}
-    · <span class="glyph">{page.day.hanzi}</span>
-    {#if page.doubled}
-      <span class="doubled">({t('cli.value.jianchuDoubled')})</span>
-    {/if}
-      · <span class="glyph">{page.lodge.hanzi}{page.lodge.planet.hanzi} {page.lodge.pinyin}</span>
-      {t(`label.lodge.${page.lodge.id}` as MessageKey)}
-      · <span class="glyph">{page.god.hanzi} {page.god.pinyin}</span>
-      {t(`label.daygod.${page.god.id}` as MessageKey)}
-      <span class="glyph">{page.god.valence.hanzi}</span>
-    {#if page.monthGods}
-    <span class="gods">
-      {t('cli.field.monthGods')}:
-      {#each page.monthGods as god}
-        <span class="glyph" class:onday={god.onDay}>{god.hanzi}</span>&nbsp;{god.seat
-          ? god.seat.kind === 'stem'
-            ? t(`label.stem.${god.seat.stem.id}` as MessageKey)
-            : t(`label.palace.${god.seat.trigram.id}` as MessageKey)
-          : '—'}{' '}
-      {/each}
-    </span>
-    {/if}
-    <!-- Only the 神煞 the day carries. The list is mostly absences — 天赦 falls
-         a few times a year — and printing every «no» would bury the one «yes».
-         What each is *for* is 宜忌 and is not here. -->
-    {#if page.shensha?.some((g: any) => g.onDay)}
-      <span class="gods">
-        {t('cli.field.shensha')}:
-        {#each page.shensha.filter((g: any) => g.onDay) as god}
-          <span class="glyph">{god.hanzi}</span>&nbsp;{t(
-            `label.shensha.${god.id}` as MessageKey,
-          )}&nbsp;<span class="glyph">{god.valence.hanzi}</span>{' '}
-        {/each}
-      </span>
-    {/if}
-    <span class="gods">
-      {page.year.hanzi} —
-      {#each page.yearGods as god}
-        <span class="glyph">{god.hanzi}</span>&nbsp;{god.seat.kind === 'branch'
-          ? t(`label.branch.${god.seat.branch.id}` as MessageKey)
-          : god.seat.kind === 'stem'
-            ? t(`label.stem.${god.seat.stem.id}` as MessageKey)
-            : god.seat.kind === 'trigram'
-              ? t(`label.palace.${god.seat.trigram.id}` as MessageKey)
-              : god.seat.branches
-                  .map((b: any) => t(`label.branch.${b.id}` as MessageKey))
-                  .join(', ')}{' '}
-      {/each}
-    </span>
-  </p>
-{/if}
+<CalendarAndAlmanac moment={chart.moment} {t} />
 </div>
 
 <!--
@@ -245,22 +188,6 @@
    * element that holds this moves all of it together.
    */
   .ju { font-size: 1.1em; margin: 0 0 0.35rem; }
-  /*
-   * The almanac's line, set under the pillars and quieter than them.
-   *
-   * Smaller and dimmer because it is not the chart: it is the page the chart
-   * was read beside, and a reader who mistook it for a field of the board
-   * would be taking a whole second layer for part of this one.
-   */
-  .almanac { font-size: 0.85em; color: var(--faint); margin: 0.5rem 0 0; }
-  .wide .almanac { text-align: center; }
-  .almanac .doubled { opacity: 0.75; }
-  /* The bearings go on their own line: they answer a different question from
-     the day above them, and the one dunjia shares with this layer. */
-  .almanac .gods { display: block; margin-block-start: 0.15rem; }
-  /* A virtue the day actually carries is the news; where each merely sits is
-     the frame. The mark is weight and not colour, so it survives print. */
-  .almanac .onday { font-weight: 600; }
   /*
    * The caption's measure, mirrored from the drawing's own rule.
    *

@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import CalendarAndAlmanac from './CalendarAndAlmanac.svelte';
   import { glyph } from '$lib/glyph';
 
   /**
@@ -16,13 +17,14 @@
    * ephemerides and a native module into the browser bundle.
    */
   /**
-   * `almanac` is the page for the day, when the caller has it.
+   * `moment` is the instant this board was laid from, when the caller has it.
    *
-   * Optional because it comes off the moment and not off the board: the 曆注
-   * are not part of a 六壬 board any more than they are part of a chart. Both
-   * pages that show a board have the moment beside it, and both pass it.
+   * Optional, and it carries what stands *beside* the board rather than in it:
+   * the calendar it was laid from and the almanac page it is read against.
+   * Neither is part of a 六壬 board any more than either is part of a chart.
+   * Both pages that show a board have the moment, and both pass it.
    */
-  let { board, t, almanac = null }: { board: any; t: Translator; almanac?: any } = $props();
+  let { board, t, moment = null }: { board: any; t: Translator; moment?: any } = $props();
 
   /**
    * Written out with their readings, because a name carries one.
@@ -147,61 +149,11 @@
 
   <!-- Said where it applies and never in a footnote: this board rests on a
        rule no reference implementation covers. -->
-  <!-- The almanac's line, as under the chart: the page this board was read
-       beside, quieter than the board and never inside it. -->
-  {#if almanac}
-    {@const page = almanac}
-    <p class="note">
-      <span class="glyph">{page.officer.hanzi} {page.officer.pinyin}</span>
-      {t(`label.officer.${page.officer.id}` as MessageKey)}
-      · <span class="glyph">{page.day.hanzi}</span>
-      {#if page.doubled}({t('cli.value.jianchuDoubled')}){/if}
-      · <span class="glyph">{page.lodge.hanzi}{page.lodge.planet.hanzi} {page.lodge.pinyin}</span>
-      {t(`label.lodge.${page.lodge.id}` as MessageKey)}
-      · <span class="glyph">{page.god.hanzi} {page.god.pinyin}</span>
-      {t(`label.daygod.${page.god.id}` as MessageKey)}
-      <span class="glyph">{page.god.valence.hanzi}</span>
-    {#if page.monthGods}
-    <span class="gods">
-      {t('cli.field.monthGods')}:
-      {#each page.monthGods as god}
-        <span class="glyph" class:onday={god.onDay}>{god.hanzi}</span>&nbsp;{god.seat
-          ? god.seat.kind === 'stem'
-            ? t(`label.stem.${god.seat.stem.id}` as MessageKey)
-            : t(`label.palace.${god.seat.trigram.id}` as MessageKey)
-          : '—'}{' '}
-      {/each}
-    </span>
-    {/if}
-    <!-- Only the 神煞 the day carries. The list is mostly absences — 天赦 falls
-         a few times a year — and printing every «no» would bury the one «yes».
-         What each is *for* is 宜忌 and is not here. -->
-    {#if page.shensha?.some((g: any) => g.onDay)}
-      <span class="gods">
-        {t('cli.field.shensha')}:
-        {#each page.shensha.filter((g: any) => g.onDay) as god}
-          <span class="glyph">{god.hanzi}</span>&nbsp;{t(
-            `label.shensha.${god.id}` as MessageKey,
-          )}&nbsp;<span class="glyph">{god.valence.hanzi}</span>{' '}
-        {/each}
-      </span>
-    {/if}
-    <span class="gods">
-      {page.year.hanzi} —
-      {#each page.yearGods as god}
-        <span class="glyph">{god.hanzi}</span>&nbsp;{god.seat.kind === 'branch'
-          ? t(`label.branch.${god.seat.branch.id}` as MessageKey)
-          : god.seat.kind === 'stem'
-            ? t(`label.stem.${god.seat.stem.id}` as MessageKey)
-            : god.seat.kind === 'trigram'
-              ? t(`label.palace.${god.seat.trigram.id}` as MessageKey)
-              : god.seat.branches
-                  .map((b: any) => t(`label.branch.${b.id}` as MessageKey))
-                  .join(', ')}{' '}
-      {/each}
-    </span>
-    </p>
-  {/if}
+  <!-- The calendar this board was laid from and the almanac page it is read
+       beside, named apart. One component with the chart's, so the two cannot
+       drift. See `CalendarAndAlmanac`. -->
+  <CalendarAndAlmanac {moment} {t} />
+
 
   {#if board.unverified}
     <p class="note">{t('cli.value.liurenUnverified')}</p>
@@ -238,10 +190,6 @@
   thead th { color: var(--faint); font-weight: 400; font-size: 0.85em; }
   .drawn { margin-top: 1.4rem; }
   .note { color: var(--faint); font-size: 0.85em; }
-  .note .gods { display: block; margin-block-start: 0.15rem; }
-  /* A virtue the day actually carries is the news; where each merely sits is
-     the frame. Weight and not colour, so it survives print. */
-  .note .onday { font-weight: 600; }
 
   /* On paper the table gives up its scrolling frame: one that still clipped
      would print three rows of twelve and give no sign of the other nine. */
