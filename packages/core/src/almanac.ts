@@ -548,7 +548,9 @@ export function monthGodsOf(monthBranch: Branch, day: Ganzhi): readonly MonthGod
 
 export type ShenshaId =
   | 'tianshe' | 'sixiang' | 'jieshen' | 'jiukong' | 'wuxu' | 'wuhe' | 'wuli'
-  | 'sanhe' | 'linri';
+  | 'sanhe' | 'linri'
+  | 'liuhe' | 'dashi' | 'youhuo' | 'tiancang' | 'guiji' | 'yinde'
+  | 'yaoan' | 'jintang' | 'puhu' | 'shengxin' | 'xushi';
 
 export interface Shensha {
   id: ShenshaId;
@@ -643,6 +645,25 @@ const SHENSHA: readonly {
     holds: (m, d) =>
       d.branch.index === (m.index + 4) % 12 || d.branch.index === (m.index + 8) % 12,
   },
+  // Derived, each from a rule the source states and a second statement that
+  // agrees with it. By the month's branch, 子 first.
+  { id: 'liuhe', hanzi: '六合', pinyin: 'liùhé', valence: 'ji', holds: byMonth([1, 0, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2]) },
+  { id: 'tiancang', hanzi: '天倉', pinyin: 'tiāncāng', valence: 'ji', holds: byMonth([4, 3, 2, 1, 0, 11, 10, 9, 8, 7, 6, 5]) },
+  // By the month's triad: 大時 the 沐浴 of its phase, 遊禍 the 臨官.
+  { id: 'dashi', hanzi: '大時', pinyin: 'dàshí', valence: 'xiong', holds: (m, d) => d.branch.index === ([9, 6, 3, 0][m.index % 4] as number) },
+  { id: 'youhuo', hanzi: '遊禍', pinyin: 'yóuhuò', valence: 'xiong', holds: (m, d) => d.branch.index === ([11, 8, 5, 2][m.index % 4] as number) },
+  // 「孟月丑，仲月寅，季月子」.
+  { id: 'guiji', hanzi: '歸忌', pinyin: 'guījì', valence: 'xiong', holds: (m, d) => d.branch.index === ([2, 0, 1][m.index % 3] as number) },
+  // 「正月起酉，逆行六隂辰」 — the six yin branches walked backward.
+  { id: 'yinde', hanzi: '隂德', pinyin: 'yīndé', valence: 'ji', holds: byMonth([1, 11, 9, 7, 5, 3, 1, 11, 9, 7, 5, 3]) },
+  // The five of 卷六's 「自要安至續世凡九神」 that it enumerates outright, each
+  // walking the six yang branches in a yang month and the six yin in a yin one:
+  // 「陽建之月歴寅夘辰巳午未，隂建之月歴申酉戌亥子丑」.
+  { id: 'yaoan', hanzi: '要安', pinyin: 'yàoān', valence: 'ji', holds: byMonth([7, 1, 2, 8, 3, 9, 4, 10, 5, 11, 6, 0]) },
+  { id: 'jintang', hanzi: '金堂', pinyin: 'jīntáng', valence: 'ji', holds: byMonth([9, 3, 4, 10, 5, 11, 6, 0, 7, 1, 8, 2]) },
+  { id: 'puhu', hanzi: '普護', pinyin: 'pǔhù', valence: 'ji', holds: byMonth([1, 7, 8, 2, 9, 3, 10, 4, 11, 5, 0, 6]) },
+  { id: 'shengxin', hanzi: '聖心', pinyin: 'shèngxīn', valence: 'ji', holds: byMonth([4, 10, 11, 5, 0, 6, 1, 7, 2, 8, 3, 9]) },
+  { id: 'xushi', hanzi: '續世', pinyin: 'xùshì', valence: 'ji', holds: byMonth([6, 0, 1, 7, 2, 8, 3, 9, 4, 10, 5, 11]) },
   {
     id: 'linri', hanzi: '臨日', pinyin: 'línrì', valence: 'xiong',
     // 「陽建之月在三合前辰，隂建之月在三合後辰」, which the 按 names: 三合前辰
@@ -651,6 +672,11 @@ const SHENSHA: readonly {
     holds: (m, d) => d.branch.index === (m.index + (m.index % 2 === 0 ? 4 : 8)) % 12,
   },
 ];
+
+/** One branch to each month, given as a table indexed by the month's own. */
+function byMonth(table: readonly number[]): (m: Branch, d: Ganzhi) => boolean {
+  return (m, d) => d.branch.index === (table[m.index] as number);
+}
 
 /** Which quarter a month branch falls in: 0 春, 1 夏, 2 秋, 3 冬. */
 function seasonOf(monthBranch: Branch): number {

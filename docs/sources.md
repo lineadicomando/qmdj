@@ -1099,6 +1099,13 @@ nothing at all. They are the first entries under the `shensha` parameter of
 | 五合 · 五離 | 「五合者寅夘日也」 and 「反此則為申酉」 | nothing — the day branch alone |
 | 三合 | 考原:「各與其月建㑹成三合局也」, and 卷六's own twelve-month list | the month's triad, two days in twelve |
 | 臨日 | 「陽建之月在三合前辰，隂建之月在三合後辰」, the 按 naming them 定日 and 成日 | the month, one branch |
+| 六合 | 「正月在亥，逆行十二辰」, and 考原's 「月建與月將相合也」 | the month's own 六合 partner |
+| 天倉 | 「正月起寅，逆行十二辰」 | the month, one branch |
+| 大時 | 「正月起夘，逆行四仲」, and 曹震圭's 「月建三合五行沐浴之辰」 | the 沐浴 of the month's triad |
+| 遊禍 | 「正月起巳，逆行四孟」, and 「三合五行臨官之神」 | the 臨官 of the month's triad |
+| 歸忌 | 「孟月丑，仲月寅，季月子」 | which third of the year the month is |
+| 隂德 | 「正月起酉，逆行六隂辰」 | the month, and never a yang branch |
+| 要安 · 金堂 · 普護 · 聖心 · 續世 | enumerated month by month, with 曹震圭's 「陽建之月歴寅夘辰巳午未，隂建之月歴申酉戌亥子丑」 | the month, one branch each |
 
 **三合's enumeration has one cell that contradicts its own rule, and the rule
 is what ships.** 卷六 lists the twelve months and the twelfth reads 丑巳 — which
@@ -1112,6 +1119,20 @@ rule on every one of 3 650 days, which settles it from outside the text.
 「陽建之月在三合前辰，隂建之月在三合後辰」, and the 按 names those the 定 day
 and the 成 day — two clauses of 建除, which this layer already computes. All
 twelve of 歴例's branches fall out.
+
+**Most of these are stated twice, and the second statement is the check.** 六合
+is walked — 「正月在亥，逆行十二辰」 — and also named, 「月建與月將相合也」; 大時
+and 遊禍 are each walked round the 仲 or the 孟 and also given as a stage of the
+month's own triad, the 沐浴 and the 臨官. Where a source says a thing two ways,
+implementing one and testing against the other costs nothing and catches the
+transcription.
+
+**九神, of which five are here.** 卷六 says 「自要安至續世凡九神」 and enumerates
+要安, 金堂, 普護, 聖心, 續世 month by month; the other four of the nine are not
+enumerated in that run and are not guessed at. 曹震圭 gives the shape all five
+share — 「陽建之月歴寅夘辰巳午未，隂建之月歴申酉戌亥子丑」, a yang month walking
+the yang branches and a yin month the yin — which is what makes five tables one
+pattern rather than five things to get wrong separately.
 
 **九空 is stated twice and the two agree.** 「逆行四季」 walks backward round
 辰丑戌未; 曹震圭 instead names the branch that clashes with the 墓 of the
@@ -1132,7 +1153,11 @@ sentence is 宜忌 — 「其日忌修造倉庫出入貨財」 — and does not 
 
 | | | |
 |---|---|---|
-| 天赦 · 四相 · 五離 · 三合 · 臨日 | 3 650 / 3 650 | **100 %** |
+| 天赦 · 四相 · 五離 · 三合 · 臨日 · 大時 · 要安 · 聖心 · 續世 | 3 650 / 3 650 | **100 %** |
+| 六合 · 遊禍 · 歸忌 | 3 645 / 3 650 | 99.86 % |
+| 金堂 · 普護 | 3 641 / 3 650 | 99.75 % |
+| 天倉 | 3 639 / 3 650 | 99.70 % |
+| 隂德 | 3 624 / 3 650 | 99.29 % |
 | 九空 · 五合 | 3 645 / 3 650 | 99.86 % |
 | 解神 | 3 637 / 3 650 | 99.64 % |
 | 五虛 | 3 635 / 3 650 | 99.59 % |

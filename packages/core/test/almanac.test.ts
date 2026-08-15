@@ -461,6 +461,41 @@ describe('建除十二神', () => {
       expect(carries(m, b, 'linri')).toBe(true);
     }
 
+    // 六合:「正月在亥，逆行十二辰」, which 考原 gives as 「月建與月將相合」 —
+    // the 六合 partner of the month's own branch.
+    expect(carries('寅', '亥', 'liuhe')).toBe(true);
+    expect(carries('卯', '戌', 'liuhe')).toBe(true);
+    // 天倉:「正月起寅，逆行十二辰」.
+    expect(carries('寅', '寅', 'tiancang')).toBe(true);
+    expect(carries('卯', '丑', 'tiancang')).toBe(true);
+    // 大時 the 沐浴 of the month's triad, 遊禍 its 臨官 — each stated twice,
+    // 「正月起夘，逆行四仲」 and 「正月起巳，逆行四孟」 beside the phase rule.
+    for (const m of ['寅', '午', '戌']) {
+      expect(carries(m, '卯', 'dashi')).toBe(true);
+      expect(carries(m, '巳', 'youhuo')).toBe(true);
+    }
+    for (const m of ['申', '子', '辰']) {
+      expect(carries(m, '酉', 'dashi')).toBe(true);
+      expect(carries(m, '亥', 'youhuo')).toBe(true);
+    }
+    // 歸忌:「孟月丑，仲月寅，季月子」.
+    for (const m of ['寅', '巳', '申', '亥']) expect(carries(m, '丑', 'guiji')).toBe(true);
+    for (const m of ['子', '午', '卯', '酉']) expect(carries(m, '寅', 'guiji')).toBe(true);
+    for (const m of ['辰', '戌', '丑', '未']) expect(carries(m, '子', 'guiji')).toBe(true);
+    // 隂德:「正月起酉，逆行六隂辰」 — and never on a yang branch.
+    expect(carries('寅', '酉', 'yinde')).toBe(true);
+    expect(carries('卯', '未', 'yinde')).toBe(true);
+    for (const m of BRANCHES) {
+      for (const b of ['子', '寅', '辰', '午', '申', '戌']) {
+        expect(carries(m.hanzi, b, 'yinde')).toBe(false);
+      }
+    }
+    // The five of 「自要安至續世凡九神」 that 卷六 enumerates, at their heads.
+    for (const [id, b] of [['yaoan', '寅'], ['jintang', '辰'], ['puhu', '申'],
+                           ['shengxin', '亥'], ['xushi', '丑']] as const) {
+      expect(carries('寅', b, id)).toBe(true);
+    }
+
     // 五合「寅夘日也」 and 五離 「反此則為申酉」 — neither looks at the month.
     for (const m of ['寅', '午', '戌', '子']) {
       expect(carries(m, '寅', 'wuhe')).toBe(true);
