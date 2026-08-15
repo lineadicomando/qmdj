@@ -2292,10 +2292,13 @@ the last move. The art keeps the old law: 羅睺 at the descending node as 火�
 計都 at the ascending as 土餘, 月孛 at the lunar apogee as 水餘. So `luohou`
 defaults to `descending`, which is the reverse of what anyone reasoning from
 India would set, and both values ship because it is one call either way.
-**紫氣 has no referent** and is `off`: its rule is transmitted — 一年一宿,
-twenty-eight years round — and its epoch is not, and the rule without the
-epoch computes nothing. The board reports 三餘 and says so, which is the exit
-that claims least. The three that do compute are **mean** elements
+**紫氣 has no referent** and is `off` — and that, rather than any gap in the
+sources, is the whole reason. A rule exists and two witnesses carry it with
+its epoch constant. What cannot be had is a check: calibrated together at
+1300, the same table's 羅睺 is good to 0.25° in 2026 and its 月孛 is 69° out,
+and telling which case 紫氣 falls in requires a position in the sky to compare
+against. The board reports 三餘 and says so, which is the exit that claims
+least. The three that do compute are **mean** elements
 deliberately: they are 隱曜, and a mean motion is the only thing any text
 naming them was ever describing.
 

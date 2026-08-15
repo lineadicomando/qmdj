@@ -57,11 +57,15 @@ export interface QizhengOptions {
    * Whether 紫氣 enters, and by which transmission.
    *
    * `off` is the default and the output then says it carries 三餘, which is
-   * the honest count. 紫氣 has no referent in the sky: it is a cycle of about
-   * twenty-eight years reckoned by table from an epoch — 一年一宿, one lodge a
-   * year — and the 萬年曆 do not agree on where it starts. `yinianyisu` names
-   * that transmission and stays refused until an epoch can be cited, because
-   * the whole of it *is* the epoch.
+   * the honest count. The refusal is not for want of a rule: the rate is
+   * settled at one circuit in twenty-eight years, and 《張果星宗》 卷八 and
+   * 《三辰通載》 both give a procedure with its epoch constant. It is that
+   * 紫氣 has no referent, so nothing weighs the constant. Calibrate that same
+   * table at 1300 and run it forward: its 羅睺 is still good to 0.25° in 2026
+   * and its 月孛 is 69° out, because one 大數 is 0.01 % off and the other
+   * 0.20 %. 紫氣's could be either and the only test is a position in the sky
+   * to check against. The error is unbounded in principle rather than merely
+   * unknown, which no better source can mend. See `docs/sources.md` § 四餘.
    */
   ziqi: 'off' | 'yinianyisu';
 

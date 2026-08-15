@@ -1040,7 +1040,7 @@ export const en = {
   // Printed under every board, because a reader counting four names and
   // finding three is owed the reason on the page rather than in a document.
   'cli.value.threeRemainders':
-    'three, not four: 紫氣 is transmitted as a rule without an epoch, and the almanacs disagree on where it starts',
+    'three, not four: 紫氣 is a table and not a body, so there is no position in the sky against which its table could be checked',
   // Said once under a board whose frame nothing published can be held
   // against. See PLAN.md § 4 phase 16.
   'cli.value.qizhengFrame':

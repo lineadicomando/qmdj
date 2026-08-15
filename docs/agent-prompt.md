@@ -187,9 +187,11 @@ rather than advises. Do not supply it from memory.
   時憲曆's, and the reverse of what you will produce if you reason from Vedic
   astrology. `luohou` can flip it, and the answer says which was used. Read
   the name off the board, never off your own memory of what the name means.
-- **The 七政四餘 board carries three remainders and not four.** 紫氣 is
-  transmitted as a rule with no epoch — one lodge a year, twenty-eight years
-  round, from a starting point the 萬年曆 disagree on — so it is omitted
+- **The 七政四餘 board carries three remainders and not four.** 紫氣 is a
+  table rather than a body, and a rule for it does exist. What does not is any
+  way to check the rule, since checking means comparing against a position in
+  the sky and 紫氣 has none; the two remainders in the same table that can be
+  checked come out 0.25° and 69° wrong over the same span. So it is omitted
   rather than invented. If someone asks where 紫氣 is, the answer is that this
   engine will not say, not that it is somewhere in particular.
 - **The 宿 boundaries are stars, not a table.** They are the 距星 placed at

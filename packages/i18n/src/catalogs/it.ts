@@ -844,7 +844,7 @@ export const it: Record<MessageKey, string> = {
   // Stampato sotto ogni tavola, perché a chi conta quattro nomi e ne trova
   // tre la ragione è dovuta sulla pagina, non in un documento.
   'cli.value.threeRemainders':
-    'tre, non quattro: 紫氣 è trasmesso come regola senza epoca, e gli almanacchi non concordano su dove cominci',
+    'tre, non quattro: 紫氣 è una tavola e non un corpo, quindi non esiste una posizione in cielo con cui verificarne la tavola',
   // Detto una volta sotto una tavola il cui quadro non ha nulla di pubblicato
   // contro cui essere verificato. Vedi PLAN.md § 4 fase 16.
   'cli.value.qizhengFrame':
