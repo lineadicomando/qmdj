@@ -550,7 +550,8 @@ export type ShenshaId =
   | 'tianshe' | 'sixiang' | 'jieshen' | 'jiukong' | 'wuxu' | 'wuhe' | 'wuli'
   | 'sanhe' | 'linri'
   | 'liuhe' | 'dashi' | 'youhuo' | 'tiancang' | 'guiji' | 'yinde'
-  | 'yaoan' | 'jintang' | 'puhu' | 'shengxin' | 'xushi';
+  | 'yaoan' | 'jintang' | 'puhu' | 'shengxin' | 'xushi'
+  | 'yangde' | 'tianma' | 'bingjin' | 'tufu' | 'yuesha' | 'dinang';
 
 export interface Shensha {
   id: ShenshaId;
@@ -664,6 +665,38 @@ const SHENSHA: readonly {
   { id: 'puhu', hanzi: '普護', pinyin: 'pǔhù', valence: 'ji', holds: byMonth([1, 7, 8, 2, 9, 3, 10, 4, 11, 5, 0, 6]) },
   { id: 'shengxin', hanzi: '聖心', pinyin: 'shèngxīn', valence: 'ji', holds: byMonth([4, 10, 11, 5, 0, 6, 1, 7, 2, 8, 3, 9]) },
   { id: 'xushi', hanzi: '續世', pinyin: 'xùshì', valence: 'ji', holds: byMonth([6, 0, 1, 7, 2, 8, 3, 9, 4, 10, 5, 11]) },
+  // Three walked round the six yang branches from a stated head: 陽德
+  // 「正月起戌，順行六陽辰」, 天馬 「正月起午，順行六陽辰」, 兵禁 「正月起寅，
+  // 逆行六陽辰」. None of the three can fall on a yin branch.
+  { id: 'yangde', hanzi: '陽德', pinyin: 'yángdé', valence: 'ji', holds: byMonth([6, 8, 10, 0, 2, 4, 6, 8, 10, 0, 2, 4]) },
+  { id: 'tianma', hanzi: '天馬', pinyin: 'tiānmǎ', valence: 'ji', holds: byMonth([2, 4, 6, 8, 10, 0, 2, 4, 6, 8, 10, 0]) },
+  // **兵禁 is the one entry of this layer no reference carries at all.**
+  // `lunar-javascript` has no such name in either of its lists, so what looked
+  // like 91.7 % agreement was this engine's 303 days against a constant no.
+  // It rests on 「正月起寅，逆行六陽辰」 and on nothing that runs.
+  { id: 'bingjin', hanzi: '兵禁', pinyin: 'bīngjìn', valence: 'xiong', holds: byMonth([6, 4, 2, 0, 10, 8, 6, 4, 2, 0, 10, 8]) },
+  // 土符, enumerated month by month, and 曹震圭 gives the same thing by season:
+  // 「春三月歴巳酉丑……夏三月歴寅午戌」 — a season's three months take a triad.
+  { id: 'tufu', hanzi: '土符', pinyin: 'tǔfú', valence: 'xiong', holds: byMonth([8, 0, 1, 5, 9, 2, 6, 10, 3, 7, 11, 4]) },
+  // 月煞, also called 月虛: 「正月起丑，逆行四季」, and the 按 says it is the
+  // year's own 歲煞 read on the month — 「在嵗為嵗煞，在月為月煞，無二義也」 —
+  // which is why this is the same [7, 4, 1, 10] the year god uses.
+  { id: 'yuesha', hanzi: '月煞', pinyin: 'yuèshà', valence: 'xiong', holds: (m, d) => d.branch.index === ([7, 4, 1, 10][m.index % 4] as number) },
+  // 地囊, two whole day pillars to a month, enumerated outright.
+  {
+    id: 'dinang', hanzi: '地囊', pinyin: 'dìnáng', valence: 'xiong',
+    // Two whole pillars to a month, so they are matched as pillars: a
+    // substring test over a run of them finds pairs straddling the join —
+    // '辛未辛酉' contains '未辛', which is not a day the source names.
+    holds: (m, d) =>
+      (
+        [
+          ['辛未', '辛酉'], ['乙酉', '乙未'], ['庚子', '庚午'], ['癸未', '癸丑'],
+          ['甲子', '甲寅'], ['己卯', '己丑'], ['戊辰', '戊午'], ['癸未', '癸巳'],
+          ['丙寅', '丙申'], ['丁卯', '丁巳'], ['戊辰', '戊子'], ['庚戌', '庚子'],
+        ][m.index] as readonly string[]
+      ).includes(`${d.stem.hanzi}${d.branch.hanzi}`),
+  },
   {
     id: 'linri', hanzi: '臨日', pinyin: 'línrì', valence: 'xiong',
     // 「陽建之月在三合前辰，隂建之月在三合後辰」, which the 按 names: 三合前辰

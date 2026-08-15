@@ -496,6 +496,24 @@ describe('建除十二神', () => {
       expect(carries('寅', b, id)).toBe(true);
     }
 
+    // Three walked round the six yang branches from a stated head, so none of
+    // the three can ever fall on a yin branch.
+    expect(carries('寅', '戌', 'yangde')).toBe(true);
+    expect(carries('寅', '午', 'tianma')).toBe(true);
+    expect(carries('寅', '寅', 'bingjin')).toBe(true);
+    for (const m of BRANCHES) {
+      for (const b of ['丑', '卯', '巳', '未', '酉', '亥']) {
+        for (const id of ['yangde', 'tianma', 'bingjin'] as const) {
+          expect(carries(m.hanzi, b, id)).toBe(false);
+        }
+      }
+    }
+    // 土符, enumerated, and 曹震圭's season reading: 「春三月歴巳酉丑」.
+    expect([carries('寅', '丑', 'tufu'), carries('卯', '巳', 'tufu'), carries('辰', '酉', 'tufu')])
+      .toEqual([true, true, true]);
+    // 月煞 is the year's 歲煞 read on the month — 「無二義也」.
+    for (const m of ['寅', '午', '戌']) expect(carries(m, '丑', 'yuesha')).toBe(true);
+
     // 五合「寅夘日也」 and 五離 「反此則為申酉」 — neither looks at the month.
     for (const m of ['寅', '午', '戌', '子']) {
       expect(carries(m, '寅', 'wuhe')).toBe(true);

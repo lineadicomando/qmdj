@@ -220,7 +220,10 @@ Not uniformly, and the difference matters when you are asked to justify one.
   《協紀辨方書》; the lodge's epoch is additionally pinned by the fact that
   twenty-eight is four weeks, so each lodge keeps a fixed weekday and its 七政
   names it. The **十二神** agree over 7 300 days, and their rule is one the
-  協紀 derived itself after rejecting the two it inherited. The **six 年神** are
+  協紀 derived itself after rejecting the two it inherited. Of the almanac's
+  twenty-six 神煞, **兵禁 alone has no runnable reference of any kind** — no
+  implementation consulted carries the name — and 地囊 has the weakest agreement
+  at 94.9 %. Both are in `docs/sources.md`; say so if you quote either. The **six 年神** are
   the exception in this layer: they have no runnable reference at all, and rest
   on 《協紀辨方書》卷三 with the source's own worked lists reproduced in tests.
   Say so if you quote a bearing.

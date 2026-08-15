@@ -1106,6 +1106,10 @@ nothing at all. They are the first entries under the `shensha` parameter of
 | 歸忌 | 「孟月丑，仲月寅，季月子」 | which third of the year the month is |
 | 隂德 | 「正月起酉，逆行六隂辰」 | the month, and never a yang branch |
 | 要安 · 金堂 · 普護 · 聖心 · 續世 | enumerated month by month, with 曹震圭's 「陽建之月歴寅夘辰巳午未，隂建之月歴申酉戌亥子丑」 | the month, one branch each |
+| 陽德 · 天馬 · 兵禁 | 「正月起戌，順行六陽辰」, 「正月起午，順行六陽辰」, 「正月起寅，逆行六陽辰」 | the six yang branches, never a yin one |
+| 土符 | enumerated, with 曹震圭's 「春三月歴巳酉丑……夏三月歴寅午戌」 | the month, one branch |
+| 月煞 | 「正月起丑，逆行四季」, and the 按: 「在嵗為嵗煞，在月為月煞，無二義也」 | the year god's own rule, read on the month |
+| 地囊 | enumerated: 「正月庚子庚午，二月癸未癸丑，三月甲子甲寅……」 | two whole day pillars to a month |
 
 **三合's enumeration has one cell that contradicts its own rule, and the rule
 is what ships.** 卷六 lists the twelve months and the twelfth reads 丑巳 — which
@@ -1157,7 +1161,23 @@ sentence is 宜忌 — 「其日忌修造倉庫出入貨財」 — and does not 
 | 六合 · 遊禍 · 歸忌 | 3 645 / 3 650 | 99.86 % |
 | 金堂 · 普護 | 3 641 / 3 650 | 99.75 % |
 | 天倉 | 3 639 / 3 650 | 99.70 % |
-| 隂德 | 3 624 / 3 650 | 99.29 % |
+| 隂德 · 陽德 | ~3 625 / 3 650 | 99.3 % |
+| 地囊 | 3 462 / 3 650 | **94.85 %**, the weakest here |
+
+**兵禁 has no figure, and that is the finding.** `lunar-javascript` carries no
+such name in either of its lists, so the 91.7 % this comparison first printed
+was **this engine's 303 days measured against a constant no** — not an
+agreement at all. Of the twenty-six 神煞 here it is the only one the reference
+does not carry; it rests on 「正月起寅，逆行六陽辰」 and on nothing that runs.
+An agreement percentage against a reference that lacks the entry is not an
+agreement percentage, and the number is withheld rather than quoted.
+
+**地囊 caught an error of this file's own, and keeps a real disagreement.** The
+first implementation matched the day against a *run* of the month's two pillars
+as one string, so `辛未辛酉` matched `未辛` — a day the source never names. That
+is fixed. What remains is 94.85 %, the weakest agreement in the layer, and it is
+a genuine divergence: the reference marks 地囊 on more days than the enumeration
+gives, which suggests a longer table than 卷六 prints. Recorded, not tuned.
 | 九空 · 五合 | 3 645 / 3 650 | 99.86 % |
 | 解神 | 3 637 / 3 650 | 99.64 % |
 | 五虛 | 3 635 / 3 650 | 99.59 % |
