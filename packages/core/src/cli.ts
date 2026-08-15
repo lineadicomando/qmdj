@@ -343,7 +343,14 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
     const bazi = computeBazi(moment, gender ? { gender } : {}, context);
     if (options.json) return JSON.stringify({ moment, bazi }, null, 2);
     return [
-      formatMoment(moment, t),
+      // The one command that prints pillars and leaves the almanac's line out.
+      // It printed it until now by the default of `formatMoment` rather than
+      // by a decision, and the decision goes the other way: this is the moment
+      // read as a person, and 曆注 weighs a day as the occasion of an
+      // undertaking. See `formatMoment` for the three reasons and `PLAN.md`
+      // § 4 phase 15. The JSON above still carries it, because a caller who
+      // wants the layer for this instant is asking, not being shown.
+      formatMoment(moment, t, { almanac: false }),
       '',
       formatBazi(bazi, t),
       gender ? '' : `\n  ${t('cli.error.genderRequired')}`,

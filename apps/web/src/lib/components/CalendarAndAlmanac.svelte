@@ -14,8 +14,8 @@
   mistake this project refuses everywhere else, and it was sitting in the
   markup.
 
-  One component, used by both boards, because there were two copies of it and
-  the copy that drifts is never the one being looked at.
+  One component, used by both boards and by the pillars, because there were
+  two copies of it and the copy that drifts is never the one being looked at.
 -->
 <script lang="ts">
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
@@ -23,8 +23,21 @@
   /**
    * The moment as data, not as a type: the client imports only types from
    * `core`, and what arrives here has crossed HTTP as JSON in any case.
+   *
+   * `almanac` is false in one place, the Four Pillars, and the reason is the
+   * one this component was written to enforce rather than an exception to it.
+   * The calendar belongs there more than it belongs here — the 節 is what the
+   * month pillar turns at, so a birth three hours from 立秋 has a column that
+   * hangs on it. The almanac does not: 曆注 is 擇日, a day weighed as the
+   * occasion of an undertaking, and a birth is not an undertaking. Beside four
+   * pillars read as a person it would be read as a remark about the person,
+   * and three things make that certain rather than likely — 建除 is a function
+   * of the month and day branches printed a hand's width above, 天德 月德 天馬
+   * 劫煞 三合 六合 太陰 白虎 大耗 are all names the 八字 tradition also uses and
+   * derives otherwise, and no source reads this page against a nativity. That
+   * is the graft the natal Qi Men was made of. See `PLAN.md` § 4 phase 15.
    */
-  let { moment, t }: { moment: any; t: Translator } = $props();
+  let { moment, t, almanac = true }: { moment: any; t: Translator; almanac?: boolean } = $props();
 
   /**
    * Every field is guarded on its own, and the guard is not superstition.
@@ -33,7 +46,7 @@
    * the engine meets is an answer cast before it existed. One guard round the
    * whole block would throw the calendar away to protect a 神煞.
    */
-  const page = $derived(moment?.almanac);
+  const page = $derived(almanac ? moment?.almanac : undefined);
 </script>
 
 <div class="beside">

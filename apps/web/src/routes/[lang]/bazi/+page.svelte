@@ -4,6 +4,7 @@
   import { page } from '$app/state';
   import type { MessageKey } from '@qimendunjia/i18n';
   import { momentQuery, sayFailure, type MomentInput } from '$lib/moment';
+  import CalendarAndAlmanac from '$lib/components/CalendarAndAlmanac.svelte';
   import FormPanel from '$lib/components/FormPanel.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
   import PillarPlate from '$lib/components/PillarPlate.svelte';
@@ -148,6 +149,19 @@
            a flag nobody reading a web page has. -->
       <p class="note">{t('form.needed.gender')}</p>
     {/if}
+
+    <!--
+      The calendar the pillars were cast from, and here the case is stronger
+      than on the chart: there the term decides the ju, here the 節 decides one
+      of the four columns above it. A birth three hours from 立秋 stood on a
+      boundary, and until this line the page gave no sign of it.
+
+      Without the almanac, and that is the component's own rule rather than an
+      exception to it — see `CalendarAndAlmanac`. 曆注 weighs a day as the
+      occasion of an undertaking; a birth is not one, and beside pillars read
+      as a person the page would be read as a remark about the person.
+    -->
+    <CalendarAndAlmanac moment={result.moment} {t} almanac={false} />
   </div>
 {/if}
 

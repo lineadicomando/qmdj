@@ -144,6 +144,24 @@ describe('bazi', () => {
     expect(out).not.toContain('Luck cycles');
     expect(out).toContain('--gender');
   });
+
+  it("leaves the almanac's line out, where every other command prints it", async () => {
+    // The instant read as a person. 曆注 weighs a day as the occasion of an
+    // undertaking, and a birth is not one — while 天德, 劫煞 and half a dozen
+    // more are names 八字 also uses and derives otherwise. The calendar the
+    // pillars turn on stays: the 節 is what the month column moves at.
+    await run(['bazi', ...MOMENT, '--gender', 'male', '--lang', 'en']);
+
+    expect(out).not.toContain('Day officer');
+    expect(out).not.toContain('定 dìng');
+    expect(out).toContain('month opened at');
+  });
+
+  it('carries the almanac in the JSON, which is asked for rather than shown', async () => {
+    await run(['bazi', ...MOMENT, '--gender', 'male', '--json']);
+
+    expect(JSON.parse(out).moment.almanac.officer.id).toBe('ding');
+  });
 });
 
 describe('terms and calendar', () => {

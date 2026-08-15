@@ -1919,6 +1919,31 @@ from every one of them. Both components now show all of it. The lesson is the
 `new-feature` skill's own and it needed relearning: a surface left behind does
 not announce itself, because everything that *is* there works.
 
+**And the pillars page was the sixth surface, but only for half the layer.**
+Asked whether the almanac belonged in `/[lang]/bazi` too, the answer came back
+split, and the split is the finding. The **calendar** belonged there and was
+missing — more plainly than anywhere else, because on the chart page the term
+decides the ju while here the 節 decides one of the four columns being read: a
+birth three hours from 立秋 stood on a boundary and the page gave no sign of
+it. The **almanac** does not belong there, and the three reasons are not the
+ones the two board pages face. 曆注 is 擇日, a day weighed as the occasion of
+an undertaking, and a birth is not an undertaking — no source reads this page
+against a nativity, so putting it there is a graft, which is what the modern
+natal Qi Men is made of. 天德, 月德, 天馬, 劫煞, 三合, 六合, 太陰, 白虎 and 大耗
+are all names the 八字 tradition also uses and derives otherwise, so beside
+four pillars a reader folds two arts into one — worse than a datum counted
+twice, which is two arts sharing glyphs. And phase 14's double-counting
+argument holds here by eye rather than by inference: 建除 comes from the month
+and day branches printed a hand's width above it. So `CalendarAndAlmanac`
+takes an `almanac` prop and the pillars page passes `false`.
+
+**The CLI had already decided it, the other way and by default.** `qimen bazi`
+printed the officer's line because `formatMoment` prints it unless told not
+to, and the one caller that told it not to was the prompt. It is the second
+now. The JSON still carries the layer under `bazi --json`, and the difference
+is the one the whole layer turns on: a caller reading JSON asked for it, a
+reader looking at a transcript is being shown it.
+
 **What it does not hold is declared rather than missing**, and the phase's own
 「but only some」 is where that was allowed for: 往亡, 氣往亡, 反支, 上朔 and the
 four of 卷六's nine it does not enumerate are unread; 母倉 waits on the 土旺用事

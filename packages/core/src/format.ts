@@ -219,13 +219,24 @@ function officer(page: Almanac, t: Translator): string {
 /**
  * The instant, its pillars, and the calendrical facts they rest on.
  *
- * `almanac` is false in exactly one place and the reason is not tidiness: the
- * officer is a function of the month branch and the day branch, **both of
- * which the block below already prints**, so a model handed the two together
- * reads one datum twice and calls the second a corroboration of the first.
- * The layer belongs where nothing is being asked — a terminal, an agent's
- * answer, a page — and never inside a prompt's fence. See `PLAN.md` § 4
- * phase 15 and the test that keeps this true.
+ * `almanac` is false in two places and neither for tidiness.
+ *
+ * **The prompt**, because the officer is a function of the month branch and
+ * the day branch, **both of which the block below already prints**, so a model
+ * handed the two together reads one datum twice and calls the second a
+ * corroboration of the first.
+ *
+ * **The Four Pillars**, because there the same instant is read as a person.
+ * 曆注 weighs a day as the occasion of an undertaking and a birth is not an
+ * undertaking; no source reads this page against a nativity; and 天德 月德
+ * 天馬 劫煞 三合 六合 太陰 白虎 大耗 are names the 八字 tradition also uses and
+ * derives otherwise, so beside four pillars a reader folds two arts into one.
+ * The double-counting argument holds there too, and by eye rather than by
+ * inference: the two branches the officer comes from are inches above it.
+ *
+ * Everywhere else the layer is shown, because everywhere else the pillars
+ * describe an instant rather than somebody. See `PLAN.md` § 4 phase 15 and the
+ * tests that keep both of these true.
  */
 export function formatMoment(
   moment: Moment,
