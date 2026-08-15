@@ -135,14 +135,6 @@ function lunar(date: LunarDate, t: Translator): string {
 }
 
 /**
- * The day's officer, said with its ganzhi.
- *
- * The pillar is printed beside it because the page's day is not always the
- * chart's: it turns on 120°E and on the date. A reader who sees the two agree
- * learns nothing and loses nothing; a reader who sees them differ has been
- * told why in the one place it could matter.
- */
-/**
  * Where a year god stands, said in the reader's language.
  *
  * A branch for most of them and a stem for 歲德 and its 合, because that is
@@ -184,13 +176,30 @@ export function formatAlmanac(page: Almanac, t: Translator): string {
     })
     .join('   ');
 
+  // What the season gives the day, listed only where it gives it: these are
+  // rare — 天赦 falls a few times a year — and a line of «no» every other day
+  // would bury the one day it says «yes».
+  const seasonal = page.seasonGods
+    .filter((god) => god.onDay)
+    .map((god) => `${god.hanzi} ${god.pinyin} ${t(`label.seasongod.${god.id}` as MessageKey)}`)
+    .join('   ');
+
   return [
     `  ${pad(t('cli.field.jianchu'), 20)}${officer(page, t)}`,
+    ...(seasonal ? [`  ${pad(t('cli.field.seasonGods'), 20)}  ${seasonal}`] : []),
     `  ${pad(t('cli.field.monthGods'), 20)}  ${virtues}`,
     `  ${pad(t('cli.field.yearGods'), 20)}${page.year.hanzi} — ${gods}`,
   ].join('\n');
 }
 
+/**
+ * The day's officer, said with its ganzhi.
+ *
+ * The pillar is printed beside it because the page's day is not always the
+ * chart's: it turns on 120°E and on the date. A reader who sees the two agree
+ * learns nothing and loses nothing; a reader who sees them differ has been
+ * told why in the one place it could matter.
+ */
 function officer(page: Almanac, t: Translator): string {
   const name = `${page.officer.hanzi} ${page.officer.pinyin} ${t(`label.officer.${page.officer.id}` as MessageKey)}`;
   const doubled = page.doubled ? `  (${t('cli.value.jianchuDoubled')})` : '';

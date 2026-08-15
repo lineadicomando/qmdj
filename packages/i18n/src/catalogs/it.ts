@@ -405,6 +405,9 @@ export const it: Record<MessageKey, string> = {
   'label.monthgod.yuede': 'la virtù del mese',
   'label.monthgod.yuedehe': 'la virtù del mese congiunta',
 
+  'label.seasongod.tianshe': 'il perdono del cielo',
+  'label.seasongod.sixiang': 'i quattro ministri',
+
   'label.keti.yuanshou': 'il capo',
   'label.keti.zhongshen': 'il riesame',
   'label.keti.zhiyi': "conoscere l'uno",
@@ -741,6 +744,7 @@ export const it: Record<MessageKey, string> = {
   'cli.field.term': 'termine',
   'cli.field.jie': 'mese aperto il',
   'cli.field.monthGods': 'Virtù del mese',
+  'cli.field.seasonGods': 'Dato dalla stagione',
   'cli.field.yearGods': 'Dèi dell\'anno',
   'cli.field.jianchu': 'Ufficiale del giorno',
   'cli.field.lunar': 'lunare',

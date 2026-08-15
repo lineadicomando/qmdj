@@ -1082,6 +1082,32 @@ for the 丑 month. 天德合 fell to 98.4 % and 天德 to 98.0 % at once, and fi
 the one cell took 天德合 to 100 %. A table checked only against itself would
 have kept it.
 
+### 天赦 and 四相 — what a season gives a day
+
+Two more from 卷五, and they are keyed to neither the month nor the year but to
+the **season**: the quarter the month's branch falls in.
+
+| | the source's words | |
+|---|---|---|
+| 天赦 | 歴例:「春戊寅，夏甲午，秋戊申，冬甲子是也」 | a whole day pillar, so it falls a few times a year |
+| 四相 | 歴例:「春丙丁，夏戊己，秋壬癸，冬甲乙」, with 曹震圭's 「春木王生丙丁」 | day stems: the phase the season's phase produces |
+
+Both agree with `lunar-javascript` on **3 650 / 3 650 days**, which is the
+cleanest result in this half of the layer and worth saying beside the 四德's
+99.3 %: nothing here is being tuned to reach a number, and where a table is
+right the comparison says so outright.
+
+四相 carries a refusal of its own inside the derivation, and the source states
+it: 「惟庚辛者金也，能殺萬物，故不用」 — no season gives 庚 or 辛, though the
+producing-phase rule would hand them 秋's. A test asserts the absence, because
+it is the kind of clause an implementation silently regularises.
+
+**母倉 was read and is not here.** Its table is 「春亥子，夏寅卯，秋辰戌丑未，
+冬申酉，**土王後巳午**」, and the last clause needs the 土旺用事 stretches — the
+eighteen days before each season closes, when 土 rules — which this engine does
+not compute. A 母倉 without them would be right for most of a year and silently
+wrong for seventy-two days of it, which is worse than not having one.
+
 ### What the source refuses, and what that cost
 
 The phase this block belongs to named 二十八宿值日 as its cheap middle third,

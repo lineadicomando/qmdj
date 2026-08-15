@@ -425,6 +425,9 @@ export const en = {
   'label.monthgod.yuede': 'the virtue of the month',
   'label.monthgod.yuedehe': 'the month\'s virtue joined',
 
+  'label.seasongod.tianshe': 'the pardon of heaven',
+  'label.seasongod.sixiang': 'the four ministers',
+
   'label.keti.yuanshou': 'the head',
   'label.keti.zhongshen': 'the second hearing',
   'label.keti.zhiyi': 'knowing the one',
@@ -938,6 +941,7 @@ export const en = {
   'cli.field.term': 'term',
   'cli.field.jie': 'month opened at',
   'cli.field.monthGods': 'Virtues of the month',
+  'cli.field.seasonGods': 'Given by the season',
   'cli.field.yearGods': 'Year gods',
   'cli.field.jianchu': 'Day officer',
   'cli.field.lunar': 'lunar',

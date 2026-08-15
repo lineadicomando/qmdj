@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { almanacAt, dayGodOf, lodgeOn, monthGodsOf, officerOf, yearGodsOf, DAY_GOD_LIST, LODGES, OFFICERS } from '../src/almanac.js';
+import { almanacAt, dayGodOf, lodgeOn, monthGodsOf, officerOf, seasonGodsOf, yearGodsOf, DAY_GOD_LIST, LODGES, OFFICERS } from '../src/almanac.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
 import { BRANCHES, ganzhiOf, type Branch, type Ganzhi } from '../src/ganzhi.js';
 import { toJulianDay } from '../src/time.js';
@@ -379,6 +379,43 @@ describe('建除十二神', () => {
     // 午月 天德 is 乾, so no day of any stem carries it.
     for (let i = 0; i < 60; i += 1) {
       expect(gods('午', i).find((g) => g.id === 'tiande')?.onDay).toBe(false);
+    }
+  });
+
+  it('gives the season its two days, and only on the pillars named', () => {
+    const carries = (month: string, dayIndex: number, id: string): boolean =>
+      seasonGodsOf(branch(month), ganzhiOf(dayIndex)).find((g) => g.id === id)?.onDay ?? false;
+    const pillar = (hanzi: string): number =>
+      Array.from({ length: 60 }, (_, i) => i).find(
+        (i) => `${ganzhiOf(i).stem.hanzi}${ganzhiOf(i).branch.hanzi}` === hanzi,
+      ) as number;
+
+    // 歴例:「天赦者，春戊寅，夏甲午，秋戊申，冬甲子是也」 — a whole pillar, so
+    // it is the rarest thing this layer reports.
+    expect(carries('寅', pillar('戊寅'), 'tianshe')).toBe(true);
+    expect(carries('午', pillar('甲午'), 'tianshe')).toBe(true);
+    expect(carries('申', pillar('戊申'), 'tianshe')).toBe(true);
+    expect(carries('子', pillar('甲子'), 'tianshe')).toBe(true);
+    // The right pillar in the wrong season is not one.
+    expect(carries('午', pillar('戊寅'), 'tianshe')).toBe(false);
+    // And a whole spring holds exactly one 天赦 pillar in the sixty.
+    expect(
+      Array.from({ length: 60 }, (_, i) => carries('卯', i, 'tianshe')).filter(Boolean),
+    ).toHaveLength(1);
+
+    // 「四相者，春丙丁，夏戊己，秋壬癸，冬甲乙」 — stems, so two days in ten.
+    expect(carries('寅', pillar('丙子'), 'sixiang')).toBe(true);
+    expect(carries('寅', pillar('丁丑'), 'sixiang')).toBe(true);
+    expect(carries('寅', pillar('甲子'), 'sixiang')).toBe(false);
+    expect(carries('亥', pillar('甲子'), 'sixiang')).toBe(true);
+    // 「惟庚辛者金也，能殺萬物，故不用」 — no season gives them.
+    for (const m of ['寅', '巳', '申', '亥']) {
+      for (const p of ['庚', '辛']) {
+        const day = Array.from({ length: 60 }, (_, i) => i).find(
+          (i) => ganzhiOf(i).stem.hanzi === p,
+        ) as number;
+        expect(carries(m, day, 'sixiang')).toBe(false);
+      }
     }
   });
 

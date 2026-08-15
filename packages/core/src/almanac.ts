@@ -545,6 +545,68 @@ export function monthGodsOf(monthBranch: Branch, day: Ganzhi): readonly MonthGod
   });
 }
 
+
+export type SeasonGodId = 'tianshe' | 'sixiang';
+
+export interface SeasonGod {
+  id: SeasonGodId;
+  hanzi: string;
+  pinyin: string;
+  /** Whether this day is one. These are day qualities and have no bearing. */
+  onDay: boolean;
+}
+
+/**
+ * The gods a **season** gives its days, rather than a month or a year.
+ *
+ * Two of them, and both enumerated in 卷五 by season — which here means the
+ * quarter the month's branch falls in, 寅卯辰 · 巳午未 · 申酉戌 · 亥子丑.
+ *
+ * 天赦 is 「春戊寅，夏甲午，秋戊申，冬甲子」: a whole day pillar, so it falls at
+ * most a few times a year and is the rarest thing this layer reports.
+ *
+ * 四相 is 「春丙丁，夏戊己，秋壬癸，冬甲乙」 — day stems, and 曹震圭 gives the
+ * reason: 「春木王生丙丁，夏火王生戊己，秋金王生壬癸，冬水王生甲乙」, the phase
+ * the season's own phase produces. He also says why the list has no 庚辛:
+ * 「惟庚辛者金也，能殺萬物，故不用」.
+ *
+ * **母倉 is not here**, and its own entry says why it cannot be yet: 「春亥子，
+ * 夏寅卯，秋辰戌丑未，冬申酉，**土王後巳午**」. The last clause needs the
+ * 土旺用事 stretches, which this engine does not compute, and a 母倉 without
+ * them would be right for most of the year and silently wrong for seventy-two
+ * days of it.
+ */
+const SEASON_GODS: readonly {
+  id: SeasonGodId;
+  hanzi: string;
+  pinyin: string;
+  /** By season: 春 · 夏 · 秋 · 冬. A day pillar's hanzi, or the stems. */
+  by: readonly string[];
+}[] = [
+  { id: 'tianshe', hanzi: '天赦', pinyin: 'tiānshè', by: ['戊寅', '甲午', '戊申', '甲子'] },
+  { id: 'sixiang', hanzi: '四相', pinyin: 'sìxiàng', by: ['丙丁', '戊己', '壬癸', '甲乙'] },
+];
+
+/** Which quarter a month branch falls in: 0 春, 1 夏, 2 秋, 3 冬. */
+const seasonOf = (monthBranch: Branch): number => Math.floor(((monthBranch.index + 10) % 12) / 3);
+
+/** The seasonal gods, and whether this day is one of them. */
+export function seasonGodsOf(monthBranch: Branch, day: Ganzhi): readonly SeasonGod[] {
+  const season = seasonOf(monthBranch);
+  return SEASON_GODS.map(({ id, hanzi, pinyin, by }) => {
+    const wanted = by[season] as string;
+    return {
+      id,
+      hanzi,
+      pinyin,
+      onDay:
+        id === 'tianshe'
+          ? `${day.stem.hanzi}${day.branch.hanzi}` === wanted
+          : wanted.includes(day.stem.hanzi),
+    };
+  });
+}
+
 export interface Almanac {
   /** The officer holding the day. */
   officer: Officer;
@@ -570,6 +632,8 @@ export interface Almanac {
   yearGods: readonly YearGod[];
   /** The four virtues of the month, and whether this day carries each. */
   monthGods: readonly MonthGod[];
+  /** What the season gives the day: 天赦 and 四相. */
+  seasonGods: readonly SeasonGod[];
   /**
    * True on the second of the two days a 交節 gives the same officer.
    *
@@ -619,6 +683,7 @@ export function almanacAt(julianDayUT: number, context: EphemerisContext): Alman
     year,
     yearGods: yearGodsOf(year),
     monthGods: monthGodsOf(monthBranch, day),
+    seasonGods: seasonGodsOf(monthBranch, day),
   };
 }
 
