@@ -1371,23 +1371,82 @@ end of the Ming met this by printing 參 before 觜, which was resisted. In
 distances**, to λ Ori for 觜 and ζ Ori for 參, and the transmitted order came
 back.
 
-This engine takes the Qing assignment, and the measurement is what argues for
-it rather than the authority:
+**《欽定儀象考成》, 允祿 et al., 四庫全書本 子部 天文算法類, 卷一 恆星總紀** —
+the work states it, and states its reasoning, in one passage:
+
+> 二十八宿次舍，自古皆觜宿在前，參宿在後。其以何星作距，古無明文。《唐書》云
+> 「古以參右肩為距」，失之太遠。《文獻通考》載宋兩朝《天文志》云「觜三星距西
+> 南星，參十星距中星西第一星」。西法觜宿距中上星，參宿亦距中西一星。今按：
+> 觜宿中上星在西南星前僅六分餘，而西南星小、中上星大，則以中上星作距可也。
+> 若參宿以中西一星作距，則觜宿之黃道度已在參宿後一度餘，即赤道度亦在參宿後
+> 三十一分餘。今依次順序，以參宿中三星之東一星作距星，則觜宿黃道度恆在參前
+> 一度弱，與觜前參後之序合。
+
+觜's 距 is 中上星, which is λ Ori; 參's is 中三星之東一星, the eastern of the
+belt's three, which is ζ Ori. Three prior assignments are named and refused on
+the way — the 《唐書》's 參右肩 as 失之太遠, the Song 《天文志》's pair by way of
+《文獻通考》, and the 西法's own 參距中西一星 — so the choice is argued and not
+merely decreed. The passage is at PDF pp. 7–8 of the 卷一~卷三 scan on the
+shelf; the reading was taken off the page images, the OCR of that volume being
+worthless.
+
+This engine takes the Qing assignment, and the measurement agrees with the
+authority rather than standing in for it:
 
 | laid with | ring closes | out of order | width of 觜 |
 |---|---|---|---|
 | φ¹ Ori and δ Ori | yes | **1 of 28** | **−1.24°** |
 | λ Ori and ζ Ori | yes | 0 of 28 | 0.97° |
 
-**And that is the whole verification of the frame, which is worth being
-explicit about.** Nothing here is checked against a published table of 宿度,
-because no table is being copied — there is no reference implementation of
-"the boundaries are where the stars are". What stands in its place is
-over-determination, the same argument the 值日宿 epoch stands on: twenty-eight
-widths, each with a transmitted shape, and the ring has to close on 360°. A
-single wrong 距星 either reverses a pair or doubles a width. 觜 is the tightest
-of the twenty-eight constraints, about a degree wide, and only one pair of
-stars threads it. The test walks the ring at five epochs from 1700 to 2200.
+**0.97° is the text's own 一度弱.** 儀象考成 counts 360 to the circle, as its
+own 宮度分秒 columns do, so 「觜宿黃道度恆在參前一度弱」 — a little under one
+度 — is the same quantity this engine measures from the stars, arrived at
+without the sentence. That is the closest thing the frame has to a published
+value to check against, and it was found after the frame was built.
+
+**The verification of the frame is over-determination, and it is now joined by
+one star checked against a printed place.** Nothing here copies a table of
+宿度 — there is no reference implementation of "the boundaries are where the
+stars are" — so what carries the frame is the same argument the 值日宿 epoch
+stands on: twenty-eight widths, each with a transmitted shape, and the ring
+has to close on 360°. A single wrong 距星 either reverses a pair or doubles a
+width. 觜 is the tightest of the twenty-eight constraints, about a degree wide,
+and only one pair of stars threads it. The test walks the ring at five epochs
+from 1700 to 2200.
+
+**What the 儀象考成 scan adds is a place, for one 距星, at a stated epoch.**
+卷二 declares it — 「今以乾隆九年甲子恆星黃赤經緯度…各將赤道歲差列於其下」,
+so **1744, with per-star precession** — and the 黃道星紀宮 table on the shelf
+reaches 斗 and 牛 and no further. 斗宿一 is on PDF p. 154, and 牛宿一 falls
+half a degree into 玄枵宮, which opens on the scan's last page. So the check
+is one star of twenty-eight:
+
+| 斗宿一 φ Sgr | 儀象考成, 1744 | this engine, 1744-01-01 | Δ |
+|---|---|---|---|
+| 黃道經 | 丑 6° 35′ 42″ | 丑 6° 35′ 41.5″ | **0.5″** |
+| 黃道緯 | 南 3° 54′ 35″ | 南 3° 55′ 17.1″ | 42.1″ |
+| 赤道經 | 丑 7° 24′ 13″ | 丑 7° 24′ 12.4″ | **0.6″** |
+| 赤道緯 | 南 27° 13′ 25″ | 南 27° 13′ 34.7″ | 9.7″ |
+| 赤道歲差 | 加 57.07″/yr | 56.32″/yr by m + n·sin α·tan δ | 0.75″ |
+
+**The column that misses is not the column the frame reads, and the table
+misses it against itself.** Carry the table's own 赤道 place to the ecliptic
+under 儀象考成's own 黃赤大距 of 23°29′30″ and its 黃道經 comes back to the
+last printed digit, 0.0″; its 黃道緯 comes back 29″ away. Under the true
+obliquity of 1744, 23°28′28″, the longitude is still right to 0.5″ and the
+latitude is 32″ off the other way. So the 黃道 columns are computed from the
+赤道 ones rather than measured twice — they are not two witnesses — and the
+latitude column is the weak one in the source, not here.
+
+**One star is one star, and the sub-arcsecond agreements are luckier than the
+catalogue is good.** The declination residual, near 10″, is the honest scale
+of an eighteenth-century place; two coordinates landing inside a second is
+partly chance. What the check does establish is that this frame and a printed
+Qing frame describe the same star to something like ten arcseconds at an epoch
+282 years back — some three hundred times finer than 觜 is wide, and 觜 is the
+narrowest of the twenty-eight. It is a comparison the section could not make
+before the scan arrived.
+Twenty-six of the twenty-eight remain unchecked, in 卷四 onward.
 
 Against the transmitted 赤道距度 in 365¼ 度 — which is a *different quantity*,
 equatorial where these are ecliptic, and so a check on shape and never on

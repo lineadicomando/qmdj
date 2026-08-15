@@ -2327,6 +2327,17 @@ shape, a ring that must close on 360°, and 觜 as a one-degree needle only the
 right pair threads. It is the argument the 值日宿 epoch stands on, and it is
 weaker evidence than a runnable reference. Say so at the surface.
 
+**That last paragraph was true when the phase closed and is no longer the
+whole of it.** A scan of 《儀象考成》 卷一~卷三 reached the shelf afterwards,
+and it carries two things the phase had to do without: the 觜/參 assignment
+argued in the compilers' own words, ending on 「觜宿黃道度恆在參前一度弱」 —
+which is the 0.97° above, stated by the source — and a star table for
+乾隆九年甲子 (1744) whose 斗宿一 agrees with this engine's place to 0.5″ in
+ecliptic longitude. One 距星 of twenty-eight, the other twenty-six being in
+卷四 onward. The frame still copies no table and still stands on
+over-determination; what changed is that it is no longer the only thing said
+for it. See the 七政四餘 section of `docs/sources.md`.
+
 **命宮 is 立命 by 加時**, which the texts state in a line: the hour laid on the
 Sun's palace, counted forward to 卯. It gives a palace and no degree, which is
 what the rule has to give, and it is checked against the sky rather than

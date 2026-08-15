@@ -23,6 +23,14 @@
 # comes out at 0°58', which is the shape the tables describe. That is the
 # check, and it is over-determined the way the 值日宿 epoch is.
 #
+# 卷一 恆星總紀 states the assignment and its reason, and the reason ends on
+# the width: 「以參宿中三星之東一星作距星，則觜宿黃道度恆在參前一度弱」 —
+# 觜 a little under one 度 ahead of 參, in a work that counts 360 to the
+# circle. The 0°58' above is that sentence, measured from the stars instead of
+# read. 斗宿一's place in the same work's 1744 table agrees with this file's
+# to 0.5" in ecliptic longitude. Both checks are written out in the 七政四餘
+# section of docs/sources.md.
+#
 # The order below is the transmitted order of the 宿, which is also the order
 # of increasing longitude. Nothing reads it: the engine looks each star up by
 # its nomenclature name. It is here so the file can be read.
