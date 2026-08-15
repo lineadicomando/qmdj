@@ -5,7 +5,16 @@ import { ganzhiOf } from '../src/ganzhi.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
 import { resolveMoment, type Moment } from '../src/pillars.js';
 import { nianmingOf } from '../src/nianming.js';
-import { chartTranscript, readingPrompt } from '../src/prompt.js';
+import {
+  baziReadingPrompt,
+  baziTranscript,
+  chartTranscript,
+  qizhengReadingPrompt,
+  qizhengTranscript,
+  readingPrompt,
+} from '../src/prompt.js';
+import { computeBazi } from '../src/bazi/index.js';
+import { qizhengBoard, DEFAULT_QIZHENG_OPTIONS } from '../src/qizheng.js';
 import { DEFAULT_OPTIONS, type Place } from '../src/types.js';
 
 /**
@@ -262,5 +271,154 @@ describe('the prompt with a 年命 in it', () => {
 
   it('is written in the locale it was handed', () => {
     expect(withBirth(createTranslator('it'))).toContain('Non è la carta di una nascita');
+  });
+});
+
+/**
+ * The boards of 命, where the refusal changes shape.
+ *
+ * A board of 卜 withholds the 用神 and a model must choose one to say anything;
+ * these arrive with their parts already named, so what has to be asserted is
+ * that the prompt says outright what the names are not. And that no question
+ * line is anywhere in them: nothing is asked of these boards, so the machinery
+ * the other two end on must be absent rather than empty.
+ */
+describe('the prompt for a board of 命', () => {
+  function board() {
+    const at = moment();
+    return qizhengBoard(
+      { julianDay: at.julianDayUT, hour: at.hourBranch },
+      DEFAULT_QIZHENG_OPTIONS,
+      context,
+    );
+  }
+
+  /** A birth with a direction for the count, so the decade cycles are there. */
+  function pillars() {
+    return computeBazi(moment(), { gender: 'male' }, context);
+  }
+
+  it('puts the 七政四餘 board inside a fence and its bounds outside', () => {
+    const at = moment();
+    const text = qizhengReadingPrompt(at, board(), en);
+    const fenced = text.slice(text.indexOf('```'), text.lastIndexOf('```'));
+    const instructions = text.slice(0, text.indexOf('```'));
+
+    expect(fenced).toContain('命宮');
+    expect(fenced).toContain('2024-06-15T14:00:00+08:00');
+    expect(instructions).toContain('names of the seats');
+    expect(instructions).toContain('not an assignment of a life');
+  });
+
+  /**
+   * The two lines that say how sure this board is. They are the reason a
+   * `/prompt` could be written for it at all: its weakest quantity and its
+   * unverifiable frame both travel inside the prompt, where a model that
+   * would otherwise recite them as fact has to read them first.
+   */
+  it('carries what the 七政四餘 board is least sure of', () => {
+    const instructions = qizhengReadingPrompt(moment(), board(), en);
+
+    expect(instructions).toContain('one source and three derivations');
+    expect(instructions).toContain('over-determination');
+    // 紫氣 is absent from the board and the prompt says so rather than leaving
+    // a reader to count three where a name promises four.
+    expect(instructions).toContain('紫氣');
+    expect(instructions).toContain('Do not supply it');
+  });
+
+  it('puts the four pillars inside a fence and the withheld 用神 outside', () => {
+    const at = moment();
+    const text = baziReadingPrompt(at, pillars(), en);
+    const fenced = text.slice(text.indexOf('```'), text.lastIndexOf('```'));
+    const instructions = text.slice(0, text.indexOf('```'));
+
+    expect(fenced).toContain('2024-06-15T14:00:00+08:00');
+    expect(instructions).toContain('用神');
+    expect(instructions).toContain('this engine does not choose');
+    // The 大運 are a timeline of pillars and the commonest thing to do with
+    // them is the one thing the engine refuses everywhere else: dating.
+    expect(instructions).toContain('大運');
+    expect(instructions).toContain('not a timeline of events');
+  });
+
+  /** Without a direction for the count there are no cycles, so the rule that
+   * bounds them would be naming something absent from the fence. */
+  it('says nothing about the decades when none were computed', () => {
+    const text = baziReadingPrompt(moment(), computeBazi(moment(), {}, context), en);
+
+    expect(text).not.toContain('大運');
+  });
+
+  it('ends on what to do without a question, and never on a question line', () => {
+    const at = moment();
+
+    for (const text of [qizhengReadingPrompt(at, board(), en), baziReadingPrompt(at, pillars(), en)]) {
+      expect(text).toContain('is not a');
+      expect(text).toContain('asked questions');
+      // The 卜 machinery, absent rather than empty: there is no question to
+      // withhold and no line for a browser to append one to.
+      expect(text).not.toContain('The question asked is');
+      expect(text).not.toContain('No question was asked. Describe how the chart stands');
+      expect(text).toContain('do not advise');
+    }
+  });
+
+  it('carries the bounds every prompt has', () => {
+    const at = moment();
+
+    for (const text of [qizhengReadingPrompt(at, board(), en), baziReadingPrompt(at, pillars(), en)]) {
+      expect(text).toContain('food for thought and entertainment');
+      expect(text).toContain('The reading is yours');
+      // The birth time, which is load-bearing on both and on neither of the
+      // two boards of 卜: those are cast at an instant somebody was present for.
+      expect(text).toContain('時辰');
+    }
+  });
+
+  it('is written in the locale it was handed', () => {
+    const at = moment();
+    const it = createTranslator('it');
+
+    expect(qizhengReadingPrompt(at, board(), it)).toContain('Rispondi in italiano.');
+    expect(qizhengReadingPrompt(at, board(), it)).toContain('nomi trasmessi dei seggi');
+    expect(baziReadingPrompt(at, pillars(), it)).toContain('elemento favorevole');
+    // The names are not a locale and stand in both.
+    expect(baziReadingPrompt(at, pillars(), it)).toContain('用神');
+  });
+
+  /**
+   * The same rule the chart's prompt is held to, and these two need it more.
+   * Their instructions name far more glyphs than a chart's do — twelve seats,
+   * ten gods, twelve stages, four remainders — and every one of them is a name
+   * the reader is being told *not* to read as a verdict. A name somebody
+   * cannot say is a name they cannot look up to check that.
+   */
+  it('carries a reading beside every glyph it writes', () => {
+    const at = moment();
+
+    for (const t of [en, createTranslator('it')]) {
+      for (const text of [qizhengReadingPrompt(at, board(), t), baziReadingPrompt(at, pillars(), t)]) {
+        const instructions = text.slice(0, text.indexOf('```'));
+
+        for (const glyphs of instructions.matchAll(/[一-鿿]+/gu)) {
+          const beside = instructions.slice(glyphs.index, glyphs.index + glyphs[0].length + 2);
+          expect(beside).toMatch(/[一-鿿] \p{Script=Latin}/u);
+        }
+      }
+    }
+  });
+
+  it('names where each board can be seen again, and only when told', () => {
+    const at = moment();
+
+    expect(qizhengTranscript(at, board(), en)).not.toContain('http');
+    expect(qizhengTranscript(at, board(), en, { source: 'https://example.org/q' })).toContain(
+      'https://example.org/q',
+    );
+    expect(baziTranscript(at, pillars(), en)).not.toContain('http');
+    expect(baziTranscript(at, pillars(), en, { source: 'https://example.org/b' })).toContain(
+      'https://example.org/b',
+    );
   });
 });

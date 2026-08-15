@@ -214,11 +214,16 @@ export {
 } from './format.js';
 
 export {
+  baziReadingPrompt,
+  baziTranscript,
   chartTranscript,
   liurenReadingPrompt,
   liurenTranscript,
+  qizhengReadingPrompt,
+  qizhengTranscript,
   readingPrompt,
   type LiurenReadingRequest,
+  type MingReadingRequest,
   type ReadingRequest,
 } from './prompt.js';
 

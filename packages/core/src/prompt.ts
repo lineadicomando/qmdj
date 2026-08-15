@@ -1,15 +1,19 @@
 import type { Translator } from '@qimendunjia/i18n';
+import type { Bazi } from './bazi/index.js';
 import type { QimenChart } from './dunjia/index.js';
 import {
+  formatBazi,
   formatLiuren,
   formatMoment,
   formatNianming,
   formatQimenChart,
+  formatQizheng,
   formatWarnings,
 } from './format.js';
 import type { LiurenBoard } from './liuren.js';
 import type { Nianming } from './nianming.js';
 import type { Moment } from './pillars.js';
+import type { QizhengBoard } from './qizheng.js';
 
 /**
  * The chart handed to somebody who will read it, with what they have to know.
@@ -32,14 +36,24 @@ import type { Moment } from './pillars.js';
  * and for the same reason: the surface chooses the language, the engine holds
  * no catalog and decides nothing about who is reading.
  *
- * **There are two boards and there is one in a prompt.** Not because a reader
- * could not hold both, but because a model given both will merge them into a
+ * **There are four boards and there is one in a prompt.** Not because a reader
+ * could not hold two, but because a model given two will merge them into a
  * verdict no text licenses, and — worse — will read their agreement as
- * corroboration when the two share the day pillar, the decade, the void
- * branches and seven of the eight spirits. Where they agree it is frequently
- * one fact printed twice. So the two functions below never meet: a
- * consultation is an act and takes one instrument, and comparing instruments
- * happens where nothing is being asked. See `PLAN.md` § 4 phase 14.
+ * corroboration when they overlap. And they overlap everywhere: the chart and
+ * the 六壬 board share the day pillar, the decade, the void branches and seven
+ * of the eight spirits; the twelve palaces of a 七政四餘 board *are* the ring
+ * the 六壬 generals are seated on; and a 八字 is the four pillars every one of
+ * the other three is laid from. Where two agree it is frequently one fact
+ * printed twice. So the functions below never meet: a consultation takes one
+ * instrument, and comparing instruments happens where nothing is being asked.
+ * See `PLAN.md` § 4 phases 14 and 18.
+ *
+ * **Two of the four are boards of 卜 and two are boards of 命**, and the
+ * difference reaches into the shape of the prompt rather than only its
+ * contents. A board of 卜 is cast for a question and the prompt ends on the
+ * line that introduces one. A board of 命 is laid on a birth, nothing is asked
+ * of it, and the prompt ends on what to do with it instead — which is also why
+ * `MingReadingRequest` has no `question` field to leave empty.
  */
 
 /**
@@ -271,5 +285,170 @@ export function readingPrompt(
     '```',
     '',
     aim,
+  ].join('\n');
+}
+
+/**
+ * What is being asked of a board of 命, which is nothing.
+ *
+ * There is no `question`, and the absence is the design rather than a field
+ * nobody got round to. A board of 卜 is cast *for* a question and cannot be
+ * read without one being chosen; a board of 命 is laid on a birth and stands
+ * whether anybody asks anything or not.
+ *
+ * What a question would actually do here is worse than useless. A reader who
+ * writes *what about my career* has named a palace — 官祿宮 is printed on this
+ * board, in words — and a model handed the two together goes to that seat
+ * without ever making a choice it could be asked to justify. That is the same
+ * failure the 用神 rule exists to prevent, arriving by a door the 卜 boards do
+ * not have. So the topic is not collected, and the prompt says instead that
+ * which seat bears on what is the reader's. See `CLAUDE.md` and `PLAN.md` § 4
+ * phase 18.
+ */
+export interface MingReadingRequest {
+  /** Where the board can be seen again, if the caller knows an address. */
+  source?: string;
+}
+
+/**
+ * The 七政四餘 board said in full: the instant, its pillars, the eleven bodies
+ * with their lodges and degrees, the 命宮 and the twelve seats.
+ *
+ * One rendering, as the other three have one, so that what somebody pastes is
+ * what they were looking at. The almanac's officer is left out for the reason
+ * `chartTranscript` leaves it out, and it bites harder here: this board prints
+ * a lodge against every body, and the almanac's 值日宿 is a lodge of another
+ * kind entirely — the day's place in a cycle of twenty-eight, not anything's
+ * position in the sky. Two unlike things under one word, inside one fence, is
+ * a confusion a model has no way to catch.
+ */
+export function qizhengTranscript(
+  moment: Moment,
+  board: QizhengBoard,
+  t: Translator,
+  extra: { source?: string } = {},
+): string {
+  const warnings = formatWarnings(moment, t);
+  return [
+    formatMoment(moment, t, { almanac: false }),
+    '',
+    formatQizheng(board, t),
+    ...(warnings ? ['', warnings] : []),
+    ...(extra.source ? ['', `  ${t('prompt.source', { url: extra.source })}`] : []),
+  ].join('\n');
+}
+
+/** The board, the instructions for reading it, and what it is laid on. */
+export function qizhengReadingPrompt(
+  moment: Moment,
+  board: QizhengBoard,
+  t: Translator,
+  request: MingReadingRequest = {},
+): string {
+  return [
+    `# ${t('prompt.qizheng.heading')}`,
+    '',
+    t('prompt.qizheng.role'),
+    '',
+    t('prompt.language'),
+    '',
+    // First and load-bearing. On a board of 卜 the refusal is a withholding —
+    // the 用神 is absent and a model must choose one to say anything at all.
+    // Here the seats arrive *named*, so there is nothing to withhold and the
+    // rule has to be stated outright or the labels do the reading.
+    `- ${t('prompt.qizheng.houses')}`,
+    `- ${t('prompt.ming.time')}`,
+    `- ${t('prompt.qizheng.remainders')}`,
+    `- ${t('prompt.qizheng.noScore')}`,
+    `- ${t('prompt.ming.noAdvice')}`,
+    `- ${t('prompt.yours')}`,
+    // How sure, said among the rules rather than in a document: the direction
+    // the twelve are numbered in is the weakest quantity on this board, and
+    // the frame the lodges are cut by is the one thing here that no runnable
+    // reference covers. A model that recites neither will read both as fact.
+    `- ${t('prompt.qizheng.direction')}`,
+    `- ${t('prompt.qizheng.frame')}`,
+    '',
+    t('prompt.names'),
+    '',
+    t('prompt.disclaimer'),
+    '',
+    `## ${t('prompt.qizheng.board')}`,
+    '',
+    '```',
+    qizhengTranscript(moment, board, t, request.source ? { source: request.source } : {}),
+    '```',
+    '',
+    // Where a board of 卜 ends on the question, this ends on what there is to
+    // do without one.
+    t('prompt.qizheng.read'),
+  ].join('\n');
+}
+
+/**
+ * The 八字 said in full: the instant, the four pillars, the day master, the
+ * void branches, the gods and concealed stems of each pillar, and the decade
+ * luck where a direction was given for it.
+ *
+ * `formatMoment` prints the four pillars and `formatBazi` follows it with what
+ * is read *off* them — which is how the CLI prints a birth and why the second
+ * block does not repeat the first in words.
+ */
+export function baziTranscript(
+  moment: Moment,
+  bazi: Bazi,
+  t: Translator,
+  extra: { source?: string } = {},
+): string {
+  const warnings = formatWarnings(moment, t);
+  return [
+    formatMoment(moment, t, { almanac: false }),
+    '',
+    formatBazi(bazi, t),
+    ...(warnings ? ['', warnings] : []),
+    ...(extra.source ? ['', `  ${t('prompt.source', { url: extra.source })}`] : []),
+  ].join('\n');
+}
+
+/** The pillars, the instructions for reading them, and what they are laid on. */
+export function baziReadingPrompt(
+  moment: Moment,
+  bazi: Bazi,
+  t: Translator,
+  request: MingReadingRequest = {},
+): string {
+  return [
+    `# ${t('prompt.bazi.heading')}`,
+    '',
+    t('prompt.bazi.role'),
+    '',
+    t('prompt.language'),
+    '',
+    // The counterpart of the 用神 rule, and the reason this board needs one at
+    // all: what is missing here is not a palace but the favourable element,
+    // and a model will supply it unasked because every manual it has read
+    // begins by doing so.
+    `- ${t('prompt.bazi.yongshen')}`,
+    `- ${t('prompt.ming.time')}`,
+    `- ${t('prompt.bazi.gods')}`,
+    `- ${t('prompt.bazi.stages')}`,
+    // Only where a direction was given for the cycles, since without one they
+    // are absent from the transcript and the rule would name nothing.
+    ...(bazi.luck ? [`- ${t('prompt.bazi.luck')}`] : []),
+    `- ${t('prompt.bazi.noScore')}`,
+    `- ${t('prompt.ming.noAdvice')}`,
+    `- ${t('prompt.yours')}`,
+    '',
+    t('prompt.names'),
+    '',
+    t('prompt.disclaimer'),
+    '',
+    `## ${t('prompt.bazi.board')}`,
+    '',
+    '```',
+    baziTranscript(moment, bazi, t, request.source ? { source: request.source } : {}),
+    '```',
+    '',
+    t('prompt.bazi.read'),
   ].join('\n');
 }

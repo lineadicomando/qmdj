@@ -763,6 +763,49 @@ export const it: Record<MessageKey, string> = {
   'prompt.liuren.board': 'Il quadro',
   'prompt.liuren.noQuestion':
     'Nessuna domanda è stata posta. Descrivi come sta il quadro — cosa ha girato il piano, cosa tengono le quattro lezioni, quale regola ha tratto le trasmissioni e quali sono — e fermati lì. Non scegliere una lezione, non leggere una sorte per nessuno, e non dare consigli.',
+  // Le tavole di 命, e ciò che le separa dalle due sopra. Una tavola di 卜 è
+  // posta per una domanda e finisce sulla riga che la introduce; queste sono
+  // stese su una nascita, non si chiede loro nulla, e il prompt finisce su
+  // cosa farne senza domanda. Anche il rifiuto cambia forma: dove una carta
+  // trattiene il 用神 e costringe a una scelta, queste arrivano con le parti
+  // già nominate, quindi ciò che va detto a un modello è che un nome non è un
+  // verdetto. Vedi `PLAN.md` § 4 fase 18.
+  'prompt.ming.time':
+    'Tutto ciò che segue è stato calcolato dalla nascita esattamente come è stata fornita, e l\'ora del giorno è portante: la tradizione divide il giorno in dodici 時辰 shíchén di due ore ciascuno, e una nascita al di là di un confine produce una tavola diversa. Vicino alla mezzanotte può spostarsi il giorno stesso. Se l\'ora era approssimativa, ricostruita o arrotondata, dillo prima di leggere e di\' quali parti della lettura ne restano scosse — non leggere oltre, e non dare per certa un\'ora solo perché è stampata.',
+  'prompt.ming.noAdvice':
+    'Nulla di ciò che segue è un verdetto sulla persona. Un nome che la tradizione dà a una fase — 死 sǐ, 囚 qiú, 絕 jué — è la sua parola per uno stadio di un ciclo, nel modo in cui inverno è una parola per uno stadio dell\'anno, e non una sentenza pronunciata su una vita. Non dire a nessuno che cosa è, che cosa gli accadrà, o che cosa farne. Dove è stampato il verdetto di una fonte, riportalo come suo e di\' di chi è.',
+  'prompt.qizheng.heading': 'Leggere un quadro di Qi Zheng Si Yu',
+  'prompt.qizheng.role':
+    'Qui sotto è disposto un quadro di Qi Zheng Si Yu: i sette governatori, i residui, e i dodici palazzi dell\'eclittica con le dimore in cui i corpi sono caduti. È stato calcolato da un\'effemeride, non da te: leggilo esattamente come sta, e non aggiungervi nulla. Nessun corpo, nessuna dimora, nessun grado, nessun palazzo che non sia scritto lì. **Non è un oroscopo occidentale e le sue parti non sono quelle di uno** — non importare aspetti, orbi, domicili o un sistema di case, e non tradurlo in uno per leggerlo. Se manca qualcosa che ti serve, di\' che manca.',
+  'prompt.qizheng.houses':
+    'I dodici 人事宮 rénshìgōng — 命宮 mìnggōng, 財帛宮 cáibógōng, 官祿宮 guānlùgōng e gli altri — sono stampati accanto ai palazzi su cui sono caduti. Sono i **nomi trasmessi dei seggi**, non l\'assegnazione di una vita ad essi: il quadro dice dove ogni nome cade e non dice assolutamente nulla su che cosa stia accadendo in quella parte della vita di qualcuno. Quale seggio riguardi ciò che si sta leggendo è scelta del lettore, esattamente come lo è il 用神 yòngshén di una carta Qi Men, e il software che ha prodotto questo non ha scelto nulla. Di\' quale seggio stai leggendo e perché quello. Un corpo che sta in 財帛宮 cáibógōng è un corpo che sta in un palazzo che ha un nome; non è un\'affermazione sul denaro.',
+  'prompt.qizheng.remainders':
+    'I 四餘 sìyú sono quattro e tre sono stampati. 羅睺 luóhóu sta al nodo discendente, 計都 jìdū all\'ascendente e 月孛 yuèbèi all\'apogeo lunare — la legge che gli 星命家 xīngmìngjiā hanno mantenuto, e il contrario di ciò che imposterebbe chiunque ragioni da Rahu e Ketu. 紫氣 zǐqì è assente: una regola per esso sopravvive, ma non c\'è nulla in cielo contro cui verificarla, quindi è lasciato fuori anziché indovinato. Non fornirlo. Tutti e tre quelli stampati sono elementi medi e sono 隱曜 yǐnyào, corpi in ombra — un moto medio è ciò che descriveva ogni testo che li nomina.',
+  'prompt.qizheng.noScore':
+    'Non contare i corpi benefici contro quelli malefici e non chiamare il risultato un punteggio per la vita. Non ordinare i palazzi e non ordinare i corpi. 順 shùn e 逆 nì sono la direzione in cui un corpo si muove, che è un fatto sul cielo e non un segno a favore o contro alcunché.',
+  'prompt.qizheng.direction':
+    'Il modo in cui i dodici seggi sono numerati poggia su un terreno più debole di qualunque altra cosa qui, e dovresti dirlo se li usi. Nessuna fonte consultata enuncia in che direzione corra il conteggio in termini che un\'altra possa reggere. È portato da una fonte e tre derivazioni: che i dodici sono le case ellenistiche nell\'ordine ellenistico, che non sono i dodici dello 紫微斗數 zǐwēidǒushù, che una sola direzione mette 田宅 tiánzhái dove il cielo è più profondo e 官祿 guānlù dove è più alto, e che i separatamente trasmessi 運限 yùnxiàn camminano nell\'altro verso. È un argomento, non un\'implementazione di riferimento.',
+  'prompt.qizheng.frame':
+    'In quale 宿 xiù si trovi un corpo, e a quale grado, è misurato dalle stelle determinative 距星 jùxīng stesse, collocate all\'istante di questo quadro. Non si copia la tavola di alcun 曆 lì e non si assume alcuna epoca, il che è ciò che rende la cornice giusta nell\'undicesimo secolo come nel ventitreesimo — e significa anche che non c\'è nulla di pubblicato contro cui verificarla. Sta su una sovradeterminazione: ventotto ampiezze ciascuna con una forma trasmessa, un anello che deve chiudersi su 360°, e 觜 zī come un ago di un grado che solo la coppia giusta di stelle infila. Pesala per questo, e non come una tavola che qualcuno ha stampato.',
+  'prompt.qizheng.board': 'Il quadro',
+  'prompt.qizheng.read':
+    'Nessuna domanda è stata posta, e questo non è un quadro a cui si pongono domande: è steso su una nascita e sta come sta. Descrivi come sta — dove sono caduti gli undici corpi, in quale 宿 xiù e a quale grado, quale palazzo ha preso ciascun 人事宮 rénshìgōng, e dov\'è il 命宮 mìnggōng — e fermati lì. Non scegliere un seggio da cui leggere una vita, non datare nulla e non consigliare. Se poi la persona dice che cosa vuole guardare, è allora che si sceglie un seggio: sceglilo con lei, di\' quale, e di\' che la scelta è stata tua e sua e non del quadro.',
+  'prompt.bazi.heading': 'Leggere una carta Ba Zi',
+  'prompt.bazi.role':
+    'Qui sotto sono disposti i quattro pilastri di una nascita, con ciò che se ne legge: il padrone del giorno, i rami vuoti, il dio di ogni pilastro, gli steli nascosti in ogni ramo e lo stadio a cui ogni pilastro sta. Sono stati calcolati da un\'effemeride e da un calendario, non da te: leggili esattamente come stanno e non aggiungere nulla. Nessun pilastro, nessun dio, nessuno stelo nascosto, nessun ciclo che non sia scritto lì. Se manca qualcosa che ti serve, di\' che manca.',
+  'prompt.bazi.yongshen':
+    'Ciò che **non** è qui sotto è l\'elemento favorevole — 用神 yòngshén, 喜用神 xǐyòngshén — e nessuna struttura 格局 géjú è nominata. È deliberato, ed è la cosa più grande che questa trascrizione trattiene: quale elemento una carta voglia *è* la lettura, le scuole si dividono su come lo si sceglie, e questo motore non sceglie. Se la tua lettura poggia su uno, di\' quale prendi, perché, e con il metodo di chi — e dallo come un tuo passo, non come qualcosa che la carta ti ha consegnato.',
+  'prompt.bazi.gods':
+    'I dieci dèi 十神 shíshén stampati accanto a ogni pilastro nominano una **relazione con il padrone del giorno** e nient\'altro: 正官 zhèngguān è lo stelo che lo controlla in polarità opposta, 食神 shíshén quello che esso produce nella stessa. Sono relazioni, non ruoli in una vita e non verdetti — 七殺 qīshā non è una sventura e 正財 zhèngcái non è denaro che arriva. Dove la trascrizione dà un nome, riportalo come nome.',
+  'prompt.bazi.stages':
+    'Lo stadio 十二長生 shí\'èrchángshēng accanto a ogni pilastro — 長生 chángshēng, 帝旺 dìwàng, 死 sǐ, 墓 mù e gli altri — è una posizione in un ciclo di dodici, chiamata con le fasi di una vita perché è la metafora su cui il ciclo è stato costruito. Non è un\'affermazione sulla vita della persona, sulla sua salute o sulla sua durata. 旺 wàng non è una buona notizia e 死 sǐ non è una cattiva notizia.',
+  'prompt.bazi.luck':
+    'I cicli decennali 大運 dàyùn sono la sequenza di pilastri in cui la vita entra e l\'età a cui ciascuno comincia, calcolati dal pilastro del mese e dalla direzione in cui corre il conteggio. Sono una linea del tempo **di pilastri** e non una linea del tempo di eventi. Non datarvi nulla — non una malattia, non un matrimonio, non una fortuna, non una perdita — e non dire a nessuno quale dei suoi decenni sia quello buono. Che la tradizione li legga non è in discussione; che cosa contenga un decennio richiede che sia stata posta una domanda, e non ne è stata posta alcuna.',
+  'prompt.bazi.noScore':
+    'Non contare gli elementi attraverso i quattro pilastri e non chiamare il risultato un equilibrio, una forza o un punteggio. Non ordinare i pilastri e non ordinare i decenni. Contare i cinque elementi e dichiarare il padrone del giorno forte o debole è un passo di diversi metodi, e i metodi non concordano — se lo compi, di\' che lo stai compiendo e di chi è il metodo.',
+  'prompt.bazi.board': 'I quattro pilastri',
+  'prompt.bazi.read':
+    'Nessuna domanda è stata posta, e questa non è una carta a cui si pongono domande: è stesa su una nascita e sta come sta. Descrivi come sta — i quattro pilastri, il padrone del giorno e ciò che sta in relazione con esso, ciò che è nascosto nei rami, quali rami sono vuoti, e i decenni dove sono dati — e fermati lì. Non scegliere un elemento favorevole, non datare nulla e non consigliare. Se poi la persona dice che cosa vuole guardare, è lì che comincia una lettura: di\' ad alta voce ogni scelta su cui poggia, mentre la compi.',
   'prompt.source': 'Il quadro è all\'indirizzo {url}',
   'prompt.chart': 'La carta',
   'prompt.asked': 'La domanda posta è:',

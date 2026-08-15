@@ -4,6 +4,17 @@ The contract for a model using this project, whether through the MCP server or
 through the REST API. It is the document to read before writing a prompt that
 calls any of it.
 
+**There are two ways a board reaches a model, and this document is the contract
+for one of them.** You are on the path where a board arrives as *data*: you
+called a tool or an endpoint, you are holding a chart, and nothing came with it
+to say what may be done with it. That is what this is for. The other path is a
+prompt built by the engine — `prompt.ts` puts the board in a fence and the
+rules around it, and the interface copies the result for somebody to paste
+into a model that has no connection to any of this. **A model on that path has
+already been told everything it needs and does not read this.** Which is also
+why nothing here should be duplicated into a prompt, and why a rule that
+belongs in both has to be worth its length twice.
+
 ## The one rule
 
 **The engine reports arrangements, and the names and fortunes the tradition
@@ -105,10 +116,10 @@ A chart and a 六壬 board both come back with the day's officer beside them —
 建 jiàn, 除 chú, 滿 mǎn and the rest; the lodge of the day with its 七政 —
 胃土 wèi, 鬼金 guǐ; and the god of the day with a 吉 or a 凶 — in a tool's
 answer and over the REST
-API. It is deliberately **absent from `readingPrompt`**, the fenced transcript
-a consultation hands you: the officer is derived from two of the pillars
-printed beside it, and one datum under two names inside a fence is read as two.
-Three things to know before quoting it.
+API. It is deliberately **absent from every prompt the engine builds**, and
+from all four transcripts inside them: the officer is derived from two of the
+pillars printed beside it, and one datum under two names inside a fence is read
+as two. Three things to know before quoting it.
 
 It is **not part of the board**. It is the page the tradition read a chart
 *against*, and it is reported beside one for that reason. Merging the two into
@@ -214,6 +225,11 @@ rather than advises. Do not supply it from memory.
   **A 七政四餘 board is under the same rule and for a sharper reason**: its
   twelve 宮 are the ring the 月將 of a 六壬 board is seated on, so the Sun's
   palace on one is the general of the other. That is not two witnesses.
+  **And a 八字 is under it most of all**, which is easy to miss because it
+  looks like the mildest of the four: it *is* the four pillars, and the other
+  three are laid from them. Beside any of the others it is not a second
+  reading of one instant, it is the same instant's pillars printed again with
+  the ten gods read off them. Four boards, one to a reading.
 
 ## How sure the numbers are
 
@@ -275,6 +291,18 @@ Not uniformly, and the difference matters when you are asked to justify one.
 If you are asked how the software knows something, say which of these three it
 is. Do not describe the third as though it were the first.
 
+**Two of these lines are not only here**, and the exception says where the
+boundary runs. The direction the twelve 人事宮 are numbered in, and the frame
+the 宿 are cut by, travel *inside* the 七政四餘 prompt as well — because that
+prompt already spends a paragraph telling a model that the twelve seats are
+names and not assignments, and a bound on a quantity that arrives with the
+instruction governing it is part of that instruction. Everything else on this
+page stays on this page. The test is whether striking the line would leave an
+instruction somebody could follow confidently and wrongly: a caution attached
+to a rule passes it, a general account of how this engine knows things does
+not. You are reading the general account, which is why it is here and not in a
+prompt — it was in one once, and what a model did with it was recite it.
+
 ## The tools, in the order they are usually needed
 
 | | |
@@ -323,11 +351,19 @@ GET /api/chart?date=2024-06-15&time=14:00&locationId=1816670&born=1968-03-12&gen
 ```
 
 `chart/text` and `chart/prompt` answer `text/plain` rather than JSON. `text`
-is the chart said in words, exactly as the CLI prints it. `prompt` is that chart wrapped in this
-document, condensed and addressed to a model with no connection to any of
-this — what the interface copies to a clipboard for somebody to paste
-elsewhere. **You do not need either of them**: you are holding the data, and
-you have read this. They exist for the model that is not.
+is the chart said in words, exactly as the CLI prints it. `prompt` is that
+chart in a fence with its own rules around it, addressed to a model with no
+connection to any of this — what the interface copies to a clipboard for
+somebody to paste elsewhere.
+
+It is **not this document condensed**, and that distinction is worth keeping
+straight now that there is a prompt for each board. Each is written for the
+board it carries and says what that board in particular invites a reader to
+get wrong: a chart withholds the 用神, a 六壬 board hands over transmissions
+that were drawn by procedure, a 七政四餘 board arrives with its twelve seats
+already named, a 八字 withholds the favourable element. **You do not need any
+of them**: you are holding the data, and you have read this. They exist for
+the model that is not.
 
 `asked` is a yes or a no and never the question itself. With it the answer
 ends on the line that introduces a question, for the caller to append; without

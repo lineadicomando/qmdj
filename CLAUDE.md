@@ -116,43 +116,78 @@ the engine falls back to Moshier, which needs no files.
   translates; nobody parses prose. See `lib/server/errors.ts`.
 - **A chart handed to a model travels computed, and never as a date.** A model
   given a date and a place casts the chart from memory and gets it wrong, and
-  a wrong chart read well is unfalsifiable. `readingPrompt` in
-  `core/src/prompt.ts` puts the chart inside a fence and `docs/agent-prompt.md`
+  a wrong chart read well is unfalsifiable. The prompt builders in
+  `core/src/prompt.ts` put the board inside a fence and `docs/agent-prompt.md`
   around it — the 用神 is the reader's, the fortunes are not a score, a 凶 is
   not advice, and the reading says what it is for. Handing over the chart
   without that would be this project outsourcing in a paragraph what it
   declines to do in code. How sure each number is stays in
   `docs/agent-prompt.md`, for an agent that can look it up: in the pasted
   prompt it was a paragraph the model recited unasked, beside a disclaimer
-  that already says this is entertainment.
+  that already says this is entertainment. **The exception is a bound on a
+  quantity the prompt is already telling a model how to read.** The direction
+  the twelve 人事宮 are numbered in travels inside the 七政四餘 prompt, and so
+  does the frame the 宿 are cut by, because that prompt spends a paragraph
+  saying those seats are names and not assignments — and a caution about a
+  quantity, arriving with the instruction that governs it, is part of the
+  instruction rather than a recital beside it. The test is whether removing
+  the line would leave an instruction a model could follow confidently and
+  wrongly. A general account of how this engine knows things fails that test
+  and stays where it was.
 - **One board goes into a prompt, never two of one instant.** A consultation
-  is an act and takes one instrument, chosen before the press and at no point
-  after it — a control that switched boards over a standing answer would
-  either cast again, at an instant nobody asked at, or show one laid for a
-  moment nobody asked at. The reason is not tidiness: a Qi Men chart and a
-  六壬 board share the day pillar, the 旬, the 空亡, the 遁干 and seven of the
-  eight 八神, so **where they agree it is frequently one fact printed twice**,
-  and a model reading that as corroboration counts one datum as two with
-  complete confidence. No transmitted rule combines the 三式 — they were read
-  separately and compared. That comparison is still available, in the sections
-  that are addresses, where nothing is being asked. See `PLAN.md` § 4 phase 14.
-- **The question never reaches the server.** `/api/chart/prompt` is told
+  takes one instrument, chosen before the press and at no point after it — a
+  control that switched boards over a standing answer would either cast again,
+  at an instant nobody asked at, or show one laid for a moment nobody asked
+  at. The reason is not tidiness, and **it does more work now that there are
+  four boards rather than less**: a Qi Men chart and a 六壬 board share the day
+  pillar, the 旬, the 空亡, the 遁干 and seven of the eight 八神; the twelve 宮
+  of a 七政四餘 board *are* the ring a 六壬 board's 月將 is seated on; and a
+  八字 is the substrate the other three are built from, so beside any of them
+  it is the same four pillars a second time. **Where two boards agree it is
+  frequently one fact printed twice**, and a model reading that as
+  corroboration counts one datum as two with complete confidence. No
+  transmitted rule combines the 三式 — they were read separately and compared.
+  That comparison is still available, in the sections that are addresses,
+  where nothing is being asked. See `PLAN.md` § 4 phases 14 and 18.
+- **The question never reaches the server.** A prompt endpoint is told
   `asked=true` and nothing more, and the prompt ends on the line that
   introduces a question for the browser to append. What somebody asks a chart
-  is theirs, and a query string is written into every log along the way.
-- **A consultation is an act, not an address.** `/[lang]` — the root of a
-  language, and the section the nav lists first — is the one place where the
-  answer is not in the URL: the chart is cast by `fetch` at the instant it is
-  asked for and held in the component, because **the instant of asking is the
-  instant that is cast** — the question comes before the casting or it is a
-  caption on a chart that was already there. Which is why the page asks two
-  things in the open, the question and the place: the date and the time are
-  under the options and empty, and empty is the press. A reader who means
-  another instant fills them, and that is a choice they made rather than a
-  field they had to get past. Only the setup travels in the address.
-  Everywhere else, asking is navigating — the chart is `/[lang]/chart`, which
-  is where it moved from the root when the consultation took the lead. See
-  `navigation.ts` for what that cost and what it bought.
+  is theirs, and a query string is written into every log along the way. Under
+  an instrument of 命 there is no question to withhold — nothing is asked of
+  that board — and the line the prompt ends on is not there either.
+- **A consultation is where a board is handed over, and it is the only surface
+  that builds a prompt.** `/[lang]` — the root of a language, and the section
+  the nav lists first — is the one place where the answer is not in the URL:
+  the board is cast by `fetch` and held in the component, and only the setup
+  travels in the address. It carries every instrument, in two kinds, and
+  **the kind decides what the reader is asked for**. Under an instrument of 卜
+  — a Qi Men chart, a 六壬 board — the reader is asked a question, and the
+  instant of asking is the instant that is cast: the question comes before the
+  casting or it is a caption on a board that was already there, which is why
+  the date and the time sit under the options and empty, and empty is the
+  press. Under an instrument of 命 — 八字, 七政四餘 — there is no question and
+  the instant is not now: the board is laid on a birth, and the fields ask for
+  that instead. What does not turn with the kind is the rest of the rule — one
+  instrument to a consultation, chosen before the press, and the prompt built
+  here and nowhere else. The sections that are addresses show boards and their
+  transcripts, and asking there is navigating: the chart is `/[lang]/chart`,
+  which is where it moved from the root when the consultation took the lead.
+  A prompt is an asking and belongs where the asking is. See `navigation.ts`
+  for what that cost and bought, and `PLAN.md` § 4 phase 18 for the widening.
+- **A 命 board arrives with its palaces already named, and the prompt says a
+  name is not a verdict.** On a board of 卜 the refusal is a withholding: the
+  用神 is the reader's, and without one the board is a map with no pin. That
+  lever does not exist here. 七政四餘 ships 財帛, 官祿, 疾厄 and nine more,
+  each seated on a palace, because those are the transmitted names of the
+  seats — and a model handed a palace already called wealth has nothing left
+  to refuse, the label having done the reading for it. So the fence carries
+  what the label cannot: that the twelve are **named and not assigned**, that
+  which of them answers what was asked is the reader's exactly as the 用神 is,
+  and that the direction they are numbered in stands on one source and three
+  derivations rather than on two agreeing statements of a rule. A prompt that
+  omits this is the project outsourcing in a fence what it declines in code —
+  `purposes.ts` and the 年命 rule below decline the same doctrine, and a board
+  changing the subject does not change the standard.
 - **A chart prints, and paper is the fourth appearance.** Not light: light is
   a paper-*coloured* screen, set against a lit surface. `@media print` in
   `app.css` resets the properties for white, at the specificity of
@@ -178,7 +213,9 @@ the engine falls back to Moshier, which needs no files.
   unusable, and it is where a model invents most confidently. The natal frame
   that used to say so instead of saying anything is gone; see `PLAN.md` § 4
   and the 年命 section of `docs/sources.md`. **This rule is about the dunjia
-  board and is not loosened by the one below it.**
+  board.** It is not loosened by the one below it, and not by the consultation
+  carrying both kinds of instrument: a 命 board standing beside dunjia in one
+  select lends dunjia nothing.
 - **An art that is natively about a life gets a board of its own, never
   dunjia's.** The engine computes 命 (mìng), the fate arts, as well as 卜
   (bǔ), the divinatory boards — 八字 was always here, as the substrate a chart

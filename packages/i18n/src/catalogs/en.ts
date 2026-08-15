@@ -941,6 +941,57 @@ export const en = {
   'prompt.liuren.board': 'The board',
   'prompt.liuren.noQuestion':
     'No question was asked. Describe how the board stands — what the plate turned, what the four courses hold, which rule drew the transmissions and what they are — and stop there. Do not choose a course, do not read a fortune for anybody, and do not advise.',
+  // The boards of 命, and what parts sideways from the two above. A board of
+  // 卜 is cast for a question and ends on the line that introduces one; these
+  // are laid on a birth, nothing is asked of them, and the prompt ends on what
+  // there is to do without a question. The refusal also changes shape: where a
+  // chart withholds the 用神 and forces a choice, these arrive with their parts
+  // already named, so what a model has to be told is that a name is not a
+  // verdict. See `PLAN.md` § 4 phase 18.
+  'prompt.ming.time':
+    'Everything below was computed from the birth exactly as it was given, and the time of day is load-bearing: the tradition divides the day into twelve 時辰 shíchén of two hours each, and a birth on the far side of a boundary produces a different board. Near midnight the day itself can move. If the time was approximate, reconstructed, or rounded to the hour, say so before you read and say which parts of the reading it unsettles — do not read past it, and do not treat a stated time as certain because it is printed.',
+  'prompt.ming.noAdvice':
+    'Nothing below is a verdict on the person. A name the tradition gives a phase — 死 sǐ, 囚 qiú, 絕 jué — is its word for a stage in a cycle, in the way winter is a word for a stage in a year, and not a sentence passed on a life. Do not tell anybody what they are, what will happen to them, or what to do about it. Where a source\'s own verdict is printed, report it as that source\'s and say whose it is.',
+  'prompt.qizheng.heading': 'Reading a Qi Zheng Si Yu board',
+  'prompt.qizheng.role':
+    'A Qi Zheng Si Yu board is set out below: the seven governors, the remainders, and the twelve palaces of the ecliptic with the lodges the bodies fell in. It was computed from an ephemeris, not by you: read it exactly as it stands, and add nothing to it. No body, no lodge, no degree, no palace that is not written there. **It is not a Western horoscope and its parts are not the parts of one** — do not import aspects, orbs, rulerships, or a house system, and do not translate it into one to read it. If something you need is missing, say it is missing.',
+  // The rule this board exists to carry. On a chart the refusal is a
+  // withholding; here the seats arrive named, so it has to be said outright.
+  'prompt.qizheng.houses':
+    'The twelve 人事宮 rénshìgōng — 命宮 mìnggōng, 財帛宮 cáibógōng, 官祿宮 guānlùgōng and the rest — are printed against the palaces they fell on. They are the transmitted **names of the seats**, not an assignment of a life to them: the board says where each name lands and says nothing whatever about what is happening in that part of anybody\'s life. Which seat bears on what is being read is the reader\'s choice, exactly as the 用神 yòngshén of a Qi Men chart is, and the software that produced this chose nothing. Say which seat you are reading and why that one. A body standing in 財帛宮 cáibógōng is a body standing in a palace that has a name; it is not a statement about money.',
+  'prompt.qizheng.remainders':
+    'The 四餘 sìyú are four and three are printed. 羅睺 luóhóu stands at the descending node, 計都 jìdū at the ascending and 月孛 yuèbèi at the lunar apogee — the law the 星命家 xīngmìngjiā kept, and the reverse of what anyone reasoning from Rahu and Ketu would set. 紫氣 zǐqì is absent: a rule for it survives, but there is nothing in the sky to check that rule against, so it is left out rather than guessed at. Do not supply it. All three that are printed are mean elements and are 隱曜 yǐnyào, shadow bodies — a mean motion is what every text naming them was describing.',
+  'prompt.qizheng.noScore':
+    'Do not count benefic bodies against malefic ones and call the result a score for the life. Do not rank the palaces and do not rank the bodies. 順 shùn and 逆 nì are the direction a body is moving, which is a fact about the sky and not a mark for or against anything.',
+  // The two "how sure" lines, said among the rules rather than left in a
+  // document: this board's weakest quantity and its unverifiable frame are
+  // both things a model will otherwise recite as fact.
+  'prompt.qizheng.direction':
+    'How the twelve seats are numbered rests on weaker ground than anything else here, and you should say so if you use them. No consulted source states which direction the counting runs in terms another could be held against. It is carried on one source and three derivations: that the twelve are the Hellenistic houses in the Hellenistic order, that they are not 紫微斗數 zǐwēidǒushù\'s twelve, that only one direction puts 田宅 tiánzhái where the sky is deepest and 官祿 guānlù where it is highest, and that the separately transmitted 運限 yùnxiàn walk the other way. That is an argument, not a reference implementation.',
+  'prompt.qizheng.frame':
+    'Which 宿 xiù a body is in, and at what degree, is measured from the determinative stars 距星 jùxīng themselves, placed at the instant of this board. No 曆 lì\'s table is copied and no epoch is assumed, which is what makes the frame right in the eleventh century and the twenty-third alike — and it also means there is nothing published to check it against. It stands on over-determination: twenty-eight widths each with a transmitted shape, a ring that must close on 360°, and 觜 zī as a one-degree needle only the right pair of stars threads. Weigh it as that, and not as a table somebody printed.',
+  'prompt.qizheng.board': 'The board',
+  'prompt.qizheng.read':
+    'No question was asked, and this is not a board that is asked questions: it is laid on a birth and it stands as it stands. Describe how it stands — where the eleven bodies fell, in which 宿 xiù and at what degree, which palace each 人事宮 rénshìgōng took, and where the 命宮 mìnggōng is — and stop there. Do not choose a seat to read a life from, do not date anything, and do not advise. If the person then says what they want to look at, that is when a seat is chosen: choose it with them, say which one, and say that the choice was yours and theirs rather than the board\'s.',
+  'prompt.bazi.heading': 'Reading a Ba Zi chart',
+  'prompt.bazi.role':
+    'The four pillars of a birth are set out below, with what is read off them: the day master, the void branches, the god of each pillar, the stems concealed in each branch, and the stage each pillar stands at. They were computed from an ephemeris and a calendar, not by you: read them exactly as they stand and add nothing. No pillar, no god, no hidden stem, no cycle that is not written there. If something you need is missing, say it is missing.',
+  // The counterpart of the 用神 rule, and the reason this board needs one: what
+  // is missing is not a palace but the favourable element, and a model will
+  // supply it unasked because every manual it has read opens by doing so.
+  'prompt.bazi.yongshen':
+    'What is **not** below is the favourable element — 用神 yòngshén, 喜用神 xǐyòngshén — and no structure 格局 géjú is named either. That is deliberate, and it is the largest thing this transcript withholds: which element a chart wants *is* the reading, the schools divide on how it is chosen, and this engine does not choose. If your reading turns on one, say which you are taking, why, and by whose method — and give it as your step, not as something the chart handed you.',
+  'prompt.bazi.gods':
+    'The ten gods 十神 shíshén printed against each pillar name a **relation to the day master** and nothing else: 正官 zhèngguān is the stem that controls it in the opposite polarity, 食神 shíshén the one it produces in the same. They are relations, not roles in a life and not verdicts — 七殺 qīshā is not a misfortune and 正財 zhèngcái is not money arriving. Where the transcript gives a name, report it as a name.',
+  'prompt.bazi.stages':
+    'The stage 十二長生 shí\'èrchángshēng against each pillar — 長生 chángshēng, 帝旺 dìwàng, 死 sǐ, 墓 mù and the rest — is a position in a twelve-part cycle, named after the phases of a life because that is the metaphor the cycle was built on. It is not a statement about the person\'s life, their health, or its length. 旺 wàng is not good news and 死 sǐ is not bad news.',
+  'prompt.bazi.luck':
+    'The decade cycles 大運 dàyùn are the sequence of pillars the life walks into and the age each begins at, computed from the month pillar and the direction the count runs. They are a timeline **of pillars** and not a timeline of events. Do not date anything to them — not an illness, not a marriage, not a windfall, not a loss — and do not tell anybody which of their decades is the good one. That the tradition reads them is not in question; what a decade holds needs a question to have been asked, and none was.',
+  'prompt.bazi.noScore':
+    'Do not count the elements across the four pillars and call the result a balance, a strength or a score. Do not rank the pillars and do not rank the decades. Counting the five elements and declaring the day master strong or weak is a step in several methods, and the methods disagree — if you take it, say that you are taking it and whose method it is.',
+  'prompt.bazi.board': 'The four pillars',
+  'prompt.bazi.read':
+    'No question was asked, and this is not a chart that is asked questions: it is laid on a birth and it stands as it stands. Describe how it stands — the four pillars, the day master and what stands in relation to it, what is concealed in the branches, which branches are void, and the decades where they are given — and stop there. Do not choose a favourable element, do not date anything, and do not advise. If the person then says what they want to look at, that is where a reading begins: say every choice it rests on aloud as you make it.',
   'prompt.source': 'The board is at {url}',
   'prompt.chart': 'The chart',
   'prompt.asked': 'The question asked is:',

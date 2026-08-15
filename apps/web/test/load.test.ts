@@ -141,6 +141,26 @@ describe('the consult page', () => {
     expect(data.failure).toMatchObject({ code: 'UNKNOWN_LOCATION' });
     expect((data.moment as { place?: unknown }).place).toBeUndefined();
   });
+
+  it('takes the instrument from the address, and refuses one that is not', async () => {
+    // Which board the question is put to is setup and travels, so an address
+    // that names one reopens on it. A query string is anybody's to write,
+    // though, and a name that is not an instrument has to land somewhere the
+    // page can cast from: the default, rather than a lookup that misses and
+    // leaves the form pointing at nothing. See `instruments.ts`.
+    const { data: chosen } = await open(consult, '/en?instrument=liuren');
+    expect(chosen.instrument).toBe('liuren');
+
+    const { data: absent } = await open(consult, '/en');
+    expect(absent.instrument).toBe('qimen');
+
+    // `qizheng` rather than a nonsense word on purpose: it is a board this
+    // engine computes and not an instrument this section offers, which is the
+    // boundary actually worth guarding. Phase 18 moves it across, and this
+    // line is meant to fail on the day it does.
+    const { data: outside } = await open(consult, '/en?instrument=qizheng');
+    expect(outside.instrument).toBe('qimen');
+  });
 });
 
 /**

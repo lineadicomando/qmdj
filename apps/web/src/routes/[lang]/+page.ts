@@ -1,3 +1,4 @@
+import { readInstrument } from '$lib/instruments';
 import { lookupPlace, readMoment, type Failure } from '$lib/moment';
 import type { PageLoad } from './$types';
 
@@ -23,9 +24,6 @@ export const load: PageLoad = async ({ url, fetch, parent }) => {
   const { place, failure } = await lookupPlace(fetch, locationId, locale);
 
   const gender = url.searchParams.get('gender');
-  // Which board the question is put to. Setup exactly as `trueSolarTime` is:
-  // chosen before the press, and nothing is laid until then.
-  const instrument = url.searchParams.get('instrument');
 
   return {
     moment: { ...input, place },
@@ -34,7 +32,11 @@ export const load: PageLoad = async ({ url, fetch, parent }) => {
     // still cast for the instant of the press.
     born: url.searchParams.get('born') ?? '',
     gender: gender === 'male' || gender === 'female' ? gender : '',
-    instrument: instrument === 'liuren' ? 'liuren' : 'qimen',
+    // Which board the question is put to. Setup exactly as `trueSolarTime` is:
+    // chosen before the press, and nothing is laid until then. An address
+    // naming no instrument, or one that is not an instrument, opens on the
+    // default rather than on a lookup that would miss.
+    instrument: readInstrument(url.searchParams.get('instrument')),
     failure: failure as Failure | undefined,
   };
 };

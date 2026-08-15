@@ -27,13 +27,17 @@ import type { Element } from './types.js';
  * instant asked for. The 曆 remain as declared values of `xiudu`, for
  * whenever one of their tables arrives with an epoch that can be cited.
  *
- * **What it declines.** The twelve 人事宮 — 命宮, 財帛, 兄弟 and the rest —
- * are not here, and their absence is a source problem and not a scruple: they
- * follow from the 命宮 by counting, and no two sources consulted agreed on
- * which way the counting runs. The engine has the 命宮 and the twelve 次 the
- * bodies sit in, which is the geometry; the doctrine that reads a life off
- * them is the reader's, as it is everywhere else here. See `PLAN.md` § 4
- * phase 16 and the 七政四餘 section of `docs/sources.md`.
+ * **What it carries, and what it declines.** The twelve 人事宮 — 命宮, 財帛,
+ * 兄弟 and the rest — are laid, and they nearly were not: they follow from the
+ * 命宮 by counting, and no source consulted states which way the counting runs
+ * in terms another could be held against. They are here on over-determination
+ * rather than on two agreeing sources, which is the weakest ground anything on
+ * this board stands on, and the check is written out at `HOUSES` for a reader
+ * to run. What is declined is the step after. A palace is labelled here and
+ * never read: the geometry is the 命宮, the twelve 次 the bodies sit in and the
+ * name each palace takes, and the doctrine that reads a life off them is the
+ * reader's, as it is everywhere else here. See `PLAN.md` § 4 phase 16 and the
+ * 七政四餘 section of `docs/sources.md`.
  */
 
 /** The divergences of this board. See `PLAN.md` § 3. */

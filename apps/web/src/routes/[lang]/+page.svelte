@@ -49,6 +49,7 @@
   import { replaceState } from '$app/navigation';
   import { page } from '$app/state';
   import { appearance } from '$lib/appearance.svelte';
+  import { INSTRUMENTS, instrumentOf, type InstrumentId } from '$lib/instruments';
   import { momentQuery, sayFailure, type Failure, type MomentInput } from '$lib/moment';
   import ChartReading from '$lib/components/ChartReading.svelte';
   import Takeaway from '$lib/components/Takeaway.svelte';
@@ -88,10 +89,14 @@
    * moves, and what is on screen is put away until the next press.
    *
    * See `PLAN.md` § 4 phase 14 for why it is one board at a time and not two.
+   *
+   * The identifier is what travels and what the field binds to; everything
+   * that turns with it is read off the descriptor, in `instruments.ts`, so
+   * that a board is a row rather than a branch. See `PLAN.md` § 4 phase 18.
    */
   // svelte-ignore state_referenced_locally
-  let instrument = $state<string>(data.instrument);
-  const liuren = $derived(instrument === 'liuren');
+  let instrumentId = $state<InstrumentId>(data.instrument);
+  const instrument = $derived(instrumentOf(instrumentId));
 
   let busy = $state(false);
   let needed = $state<MessageKey | undefined>();
@@ -167,7 +172,7 @@
    * button to copy is simply not there, and the button to cast is.
    */
   const fields = $derived(
-    `${momentQuery(asked)}|${instrument}|${born}|${gender}|${question.trim()}`,
+    `${momentQuery(asked)}|${instrumentId}|${born}|${gender}|${question.trim()}`,
   );
   let castFrom = $state('');
   const spent = $derived(chart !== undefined && castFrom !== fields);
@@ -190,9 +195,9 @@
       // rest of it. The question never does, and that is the line: what was
       // typed to get here comes back, what was asked does not.
       {
-        instrument,
-        born: (!liuren && born) || undefined,
-        gender: (!liuren && born && gender) || undefined,
+        instrument: instrumentId,
+        born: (instrument.takesBirth && born) || undefined,
+        gender: (instrument.takesBirth && born && gender) || undefined,
       },
     );
     replaceState(next, page.state);
@@ -223,13 +228,14 @@
         {
           lang: t.locale,
           // No birth reaches a Liu Ren board, and not by oversight: the person
-          // asking is already in it, standing on the day stem. See the page's
-          // own note, and `PLAN.md` § 4 phase 14.
-          born: (!liuren && born) || undefined,
-          gender: (!liuren && born && gender) || undefined,
+          // asking is already in it, standing on the day stem. Which boards
+          // take one is `takesBirth`, where the reason is written down. See
+          // the page's own note, and `PLAN.md` § 4 phase 14.
+          born: (instrument.takesBirth && born) || undefined,
+          gender: (instrument.takesBirth && born && gender) || undefined,
         },
       );
-      const response = await fetch(`/api/${liuren ? 'liuren' : 'chart'}?${query}`);
+      const response = await fetch(`/api/${instrument.api}?${query}`);
       const body = await response.json();
 
       if (!response.ok) {
@@ -240,7 +246,9 @@
         return;
       }
 
-      chart = liuren ? body.liuren : body.chart;
+      // An endpoint returns its board named after itself, which is the
+      // convention `api` stands on — see `instruments.ts`.
+      chart = body[instrument.api];
       castMoment = body.moment ?? null;
       // Pinned to what the engine actually cast for. Under a question that is
       // the instant of the press, and it is the whole point of the mode: the
@@ -250,8 +258,8 @@
         { ...asked, ...cast },
         {
           lang: t.locale,
-          born: (!liuren && born) || undefined,
-          gender: (!liuren && born && gender) || undefined,
+          born: (instrument.takesBirth && born) || undefined,
+          gender: (instrument.takesBirth && born && gender) || undefined,
         },
       );
       castFrom = fields;
@@ -276,8 +284,7 @@
     if (chart && !failure) await panel?.close();
   }
 
-  const route = $derived(liuren ? 'liuren' : 'chart');
-  const plate = $derived(`/api/${route}/plate?${address}&scheme=${appearance.current}`);
+  const plate = $derived(`/api/${instrument.api}/plate?${address}&scheme=${appearance.current}`);
 
   /**
    * The same board, drawn for paper.
@@ -292,7 +299,7 @@
    * then the board on screen is the board for paper.
    */
   const onPaper = $derived(appearance.current !== 'light');
-  const paper = $derived(`/api/${route}/plate?${address}&scheme=light`);
+  const paper = $derived(`/api/${instrument.api}/plate?${address}&scheme=light`);
 
   /**
    * Fetched as soon as there is a chart, not when the printer is asked for.
@@ -319,7 +326,7 @@
    * the line itself. The birth travels — it is what the 年命 is computed
    * from — and the question does not.
    */
-  const promptUrl = $derived(`/api/${route}/prompt?${address}&asked=true`);
+  const promptUrl = $derived(`/api/${instrument.api}/prompt?${address}&asked=true`);
 
   /** The instant the board was actually laid for, for the line that says so. */
   let at = $state('');
@@ -407,9 +414,10 @@
       -->
       <label class="instrument">
         {t('form.instrument')}
-        <select bind:value={instrument}>
-          <option value="qimen">{t('form.instrument.qimen')}</option>
-          <option value="liuren">{t('form.instrument.liuren')}</option>
+        <select bind:value={instrumentId}>
+          {#each INSTRUMENTS as choice (choice.id)}
+            <option value={choice.id}>{t(choice.option)}</option>
+          {/each}
         </select>
       </label>
 
@@ -434,8 +442,8 @@
         bind:dayBoundary={asked.dayBoundary}
         bind:method={asked.method}
         bind:yuan={asked.yuan}
-        extraLegend={liuren ? undefined : 'consult.birth'}
-        extraSet={!liuren && born ? 1 : 0}
+        extraLegend={instrument.takesBirth ? 'consult.birth' : undefined}
+        extraSet={instrument.takesBirth && born ? 1 : 0}
       >
         <!-- The birth, under the same disclosure as the options and above the
              way the moment is read: it is an addition to a consultation and
@@ -452,7 +460,7 @@
             name for one person. Two names for one person is how a reading
             acquires a relation that was never there.
           -->
-          {#if !liuren}
+          {#if instrument.takesBirth}
           <label class="birthField date">
             {t('consult.birthDate')}
             <!-- What the browser knows to fill in, if it is this reader's own
@@ -540,12 +548,12 @@
       <!-- The board, and under it the key to its marks where it has any: the
            ramp of strengths belongs to the nine palaces and there is nothing
            for it to explain on a ring of twelve. -->
-      <div class="board" class:swapped={onPaper} class:ring={liuren}>
+      <div class="board" class:swapped={onPaper} class:ring={instrument.plate.ring}>
         <img
           src={plate}
           alt=""
-          width={liuren ? 900 : 900}
-          height={liuren ? 1379 : 1280}
+          width={instrument.plate.width}
+          height={instrument.plate.height}
           class="screen"
         />
         <!-- The same board in the light scheme, for paper and nothing else.
@@ -554,18 +562,28 @@
           <img
             src={paper}
             alt=""
-            width={liuren ? 900 : 900}
-            height={liuren ? 1379 : 1280}
+            width={instrument.plate.width}
+            height={instrument.plate.height}
             class="paper"
           />
         {/if}
-        {#if !liuren}<StrengthLegend {t} />{/if}
+        {#if instrument.strengths}<StrengthLegend {t} />{/if}
       </div>
       <!-- `wide`: the board above has the page to itself, so what it was cast
            from is set as its caption — at the drawing's own measure, centred
            on it. See `ChartReading`. -->
+      <!--
+        The one branch the descriptor does not take, and deliberately.
+
+        What reads a board is a component, and these two do not share a shape:
+        one is handed the board and the moment beside it, the other a chart
+        that carries its own. A registry entry naming a component would have
+        to name the props with it, and a table of prop shapes is a conditional
+        written sideways. It is keyed on the identifier rather than on a
+        boolean, so a third board adds an arm here and changes nothing else.
+      -->
       <div>
-        {#if liuren}
+        {#if instrument.id === 'liuren'}
           <LiurenReading board={chart} {t} moment={castMoment} />
         {:else}
           <ChartReading {chart} {t} wide />
