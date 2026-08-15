@@ -16,6 +16,7 @@
     method = $bindable<string | undefined>(undefined),
     yuan = $bindable<string | undefined>(undefined),
     guiren = $bindable<string | undefined>(undefined),
+    luohou = $bindable<string | undefined>(undefined),
     when = 'fields',
     openLegend,
     extra,
@@ -41,6 +42,7 @@
      * these and is asked in the open — see the consultation.
      */
     guiren?: string | undefined;
+    luohou?: string | undefined;
     /**
      * A name for the fields this asks in the open, where they need one.
      *
@@ -105,6 +107,7 @@
     if (method !== undefined && method !== 'chaibu') count += 1;
     if (yuan !== undefined && yuan !== 'term') count += 1;
     if (guiren !== undefined && guiren !== 'chou') count += 1;
+    if (luohou !== undefined && luohou !== 'descending') count += 1;
     return count;
   }
 
@@ -194,6 +197,22 @@
       </select>
     </label>
     <p class="note">{t('form.guiren.note')}</p>
+  {/if}
+
+  <!-- The one 七政四餘 divergence a reader might move. The options lead in
+       their own language and the hanzi stand beside what is named, because
+       what is named here is Chinese: 羅睺 is the name of the thing, and a
+       reader who has met it in an Indian source has met it the other way
+       round. See `form.luohou.note`. -->
+  {#if luohou !== undefined}
+    <label>
+      {t('form.luohou')}
+      <select bind:value={luohou}>
+        <option value="descending">{t('form.luohou.descending')}</option>
+        <option value="ascending">{t('form.luohou.ascending')}</option>
+      </select>
+    </label>
+    <p class="note">{t('form.luohou.note')}</p>
   {/if}
 {/snippet}
 

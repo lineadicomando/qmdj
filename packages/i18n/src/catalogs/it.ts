@@ -351,6 +351,64 @@ export const it: Record<MessageKey, string> = {
   'label.lodge.yi': 'le ali',
   'label.lodge.zhen': 'la traversa del carro',
 
+  // 七政四餘 — i sette governatori e i quattro residui. I cinque pianeti sono
+  // le cinque fasi e ne portano il nome; il Sole e la Luna stanno fuori da
+  // quel conto. I quattro sono 隱曜, posizioni calcolate e non corpi, e 紫氣
+  // è nominato qui e collocato in nessun luogo: la sua epoca non è citabile,
+  // quindi nessuna tavola lo porta. Vedi docs/sources.md.
+  'label.qizheng.taiyang': 'il sole',
+  'label.qizheng.taiyin': 'la luna',
+  'label.qizheng.shuixing': 'Mercurio',
+  'label.qizheng.jinxing': 'Venere',
+  'label.qizheng.huoxing': 'Marte',
+  'label.qizheng.muxing': 'Giove',
+  'label.qizheng.tuxing': 'Saturno',
+  'label.qizheng.luohou': 'la testa dell\'eclissi',
+  'label.qizheng.jidu': 'la coda dell\'eclissi',
+  'label.qizheng.yuebei': 'l\'apogeo lunare',
+  'label.qizheng.ziqi': 'il vapore purpureo',
+
+  // 十二次 — i dodici tratti di cielo, che è come si chiama un palazzo di
+  // questa tavola. Corrono all\'indietro contro i rami perché prendono il
+  // nome da dove sta il Sole, e il Sole li attraversa come fanno le stagioni:
+  // 春分 apre 降婁 a 戌.
+  'label.ci.xuanxiao': 'il vuoto oscuro',
+  'label.ci.xingji': 'l\'annale delle stelle',
+  'label.ci.ximu': 'il legno spaccato',
+  'label.ci.dahuo': 'il grande fuoco',
+  'label.ci.shouxing': 'la stella della lunga vita',
+  'label.ci.chunwei': 'la coda della quaglia',
+  'label.ci.chunhuo': 'il fuoco della quaglia',
+  'label.ci.chunshou': 'la testa della quaglia',
+  'label.ci.shichen': 'la verità profonda',
+  'label.ci.daliang': 'la grande trave',
+  'label.ci.jianglou': 'il legame discendente',
+  'label.ci.juzi': 'il raduno',
+
+  // 順 e 逆 — da che parte corre un corpo, letto dal segno del suo moto
+  // giornaliero e da nient\'altro. 留, la stazione, richiederebbe una soglia
+  // su quel numero e nessuna fonte consultata ne enuncia una.
+  'label.motion.shun': 'diretto',
+  'label.motion.ni': 'retrogrado',
+
+  // 人事十二宮 — i dodici palazzi sotto ciò di cui ciascuno è interrogato.
+  // Sono numerati dal 命宮 e salgono contro i rami, che è in avanti nel
+  // cielo; il verso poggia sui nomi stessi e la verifica sta in
+  // docs/sources.md. Le glosse traducono il *nome* e nient'altro: che cosa si
+  // chieda a un palazzo è di chi legge, come ovunque qui.
+  'label.house.ming': 'la vita',
+  'label.house.caibo': 'la ricchezza',
+  'label.house.xiongdi': 'i fratelli',
+  'label.house.tianzhai': 'terra e casa',
+  'label.house.nannv': 'i figli',
+  'label.house.nupu': 'i servitori',
+  'label.house.fuqi': 'marito e moglie',
+  'label.house.jie': 'malattia e travaglio',
+  'label.house.qianyi': 'lo spostamento',
+  'label.house.guanlu': 'carica e stipendio',
+  'label.house.fude': 'fortuna e virtù',
+  'label.house.xiangmao': 'l\'aspetto',
+
   // 十二神 — il dio sotto cui sta il giorno. 《協紀辨方書》卷七 li deriva per
   // 天罡加建 dopo aver respinto le due spiegazioni ricevute. Sei portano 吉 e
   // sei 凶, che è tutto ciò che 黃道/黑道 ha mai significato secondo lo stesso
@@ -493,6 +551,7 @@ export const it: Record<MessageKey, string> = {
   'nav.chart': 'Qi Men',
   'nav.bazi': 'Ba Zi',
   'nav.liuren': 'Liu Ren',
+  'nav.qizheng': 'Qi Zheng Si Yu',
   'nav.moments': 'Scegliere il momento',
   'nav.consult': 'Consultazione',
   'nav.sections': 'Sezioni',
@@ -749,6 +808,15 @@ export const it: Record<MessageKey, string> = {
   'form.guiren.wei': '甲 da solo, a 未 e 丑',
   'form.guiren.note': 'Muove i dodici generali e lascia stare le tre trasmissioni.',
   'cli.column.general': 'generale',
+  // 七政四餘. `lodge` e `ci` intestano dei gradi, quindi entrambi dicono da
+  // che cosa i gradi sono misurati: uno da una stella, l'altro dal bordo di
+  // un palazzo.
+  'cli.column.body': 'corpo',
+  'cli.column.inLodge': 'dimora, e gradi oltre la sua stella',
+  'cli.column.inPalace': 'palazzo, e gradi dentro',
+  'cli.column.motion': 'corre',
+  'cli.column.house': 'palazzo di',
+  'cli.column.standing': 'vi sta',
   'cli.heading.liuren': 'Il quadro del Liu Ren',
   'cli.field.yuejiang': 'generale del mese',
   'cli.field.plate': 'cielo sopra terra',
@@ -762,6 +830,26 @@ export const it: Record<MessageKey, string> = {
   'cli.value.emptyBranch': 'vuoto',
   'cli.value.liurenUnverified':
     'nessuna implementazione di riferimento copre questa regola; il testo classico enumera ogni quadro che essa può trarre, e questo motore li restituisce tutti',
+  'cli.heading.qizheng': 'I sette governatori e i quattro residui',
+  'cli.field.governors': 'i sette',
+  'cli.field.remainders': 'i residui',
+  'cli.field.minggong': 'palazzo della vita',
+  'cli.field.houses': 'i dodici palazzi',
+  'form.luohou': 'Quale nodo è 羅睺',
+  'form.luohou.descending': 'il nodo discendente — la legge degli astrologi',
+  'form.luohou.ascending': 'il nodo ascendente — 湯若望 e il 時憲曆',
+  'form.copyStars': 'Copia la tavola',
+  'form.luohou.note':
+    'Scambia i due nomi e non muove altro: i due nodi sono i capi di una sola linea, a mezzo giro l\'uno dall\'altro. Il default è quello che gli astrologi hanno tenuto, che è il rovescio della convenzione indiana.',
+  // Stampato sotto ogni tavola, perché a chi conta quattro nomi e ne trova
+  // tre la ragione è dovuta sulla pagina, non in un documento.
+  'cli.value.threeRemainders':
+    'tre, non quattro: 紫氣 è trasmesso come regola senza epoca, e gli almanacchi non concordano su dove cominci',
+  // Detto una volta sotto una tavola il cui quadro non ha nulla di pubblicato
+  // contro cui essere verificato. Vedi PLAN.md § 4 fase 16.
+  'cli.value.qizhengFrame':
+    'le dimore cominciano alle loro stelle di riferimento, collocate a questo istante; nessuna tavola di 宿度 e nessuna epoca vi entra',
+
   'cli.heading.scan': 'Carte dal {from} al {to}',
   'cli.heading.criteria': 'Richiesto',
   'cli.heading.warnings': 'Avvertenze',

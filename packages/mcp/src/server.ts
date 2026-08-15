@@ -13,6 +13,7 @@ import {
   registerComputeBazi,
   registerComputeLiuren,
   registerComputeQimenChart,
+  registerComputeQizheng,
   registerDrawLiuren,
   registerDrawQimenChart,
   registerLunarDate,
@@ -66,6 +67,7 @@ export function createServer(context: ToolContext = {}): McpServer {
   registerComputeQimenChart(server, context);
   registerComputeBazi(server, context);
   registerComputeLiuren(server, context);
+  registerComputeQizheng(server, context);
   registerDrawQimenChart(server, context);
   registerDrawLiuren(server, context);
   registerSolarTerms(server, context);

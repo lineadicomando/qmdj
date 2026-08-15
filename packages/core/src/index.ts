@@ -14,12 +14,16 @@
  */
 
 export {
+  bodyPosition,
   initEphemeris,
   resetEphemerisCache,
   moonLongitude,
   normalize360,
+  starLongitude,
   sunCrossing,
   sunLongitude,
+  type BodyPosition,
+  type EphemerisBody,
   type EphemerisContext,
   type EphemerisMode,
 } from './ephemeris.js';
@@ -161,12 +165,39 @@ export {
 } from './liuren.js';
 
 export {
+  CI,
+  DEFAULT_QIZHENG_OPTIONS,
+  HOUSES,
+  MOTIONS,
+  QIZHENG_BODIES,
+  lodgeBoundaries,
+  qizhengBoard,
+  standingOf,
+  type Ci,
+  type CiId,
+  type GovernorId,
+  type House,
+  type HouseId,
+  type HouseSeat,
+  type MotionId,
+  type Placement as QizhengPlacement,
+  type QizhengBoard,
+  type QizhengBody,
+  type QizhengBodyId,
+  type QizhengOptions,
+  type RemainderId,
+  type Standing,
+} from './qizheng.js';
+
+export {
   chartLabels,
   liurenLabels,
+  qizhengLabels,
   sayBranch,
   sayGanzhi,
   type ChartLabels,
   type LiurenLabels,
+  type QizhengLabels,
 } from './labels.js';
 
 export {
@@ -176,6 +207,7 @@ export {
   formatMoment,
   formatNianming,
   formatQimenChart,
+  formatQizheng,
   formatScan,
   formatSolarTerms,
   formatWarnings,

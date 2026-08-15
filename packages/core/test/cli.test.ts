@@ -130,6 +130,59 @@ describe('chart', () => {
   });
 });
 
+describe('qizheng', () => {
+  it('prints the eleven names and places the seven', async () => {
+    expect(await run(['qizheng', ...MOMENT, '--lang', 'en'])).toBe(0);
+
+    for (const name of ['太陽', '太陰', '水星', '金星', '火星', '木星', '土星']) {
+      expect(out).toContain(name);
+    }
+    for (const gloss of ['the sun', 'Mercury', 'Saturn']) expect(out).toContain(gloss);
+    expect(out).toContain('palace of the life');
+    // Degrees in both frames, which is what a row of this board says twice.
+    expect(out).toMatch(/\d+\.\d\d°/);
+  });
+
+  it('carries three remainders and says on the page why not four', async () => {
+    expect(await run(['qizheng', ...MOMENT, '--lang', 'en'])).toBe(0);
+
+    expect(out).toContain('羅睺');
+    expect(out).toContain('計都');
+    expect(out).toContain('月孛');
+    // 紫氣 is on the page, in the line that says why it is not on the board.
+    // What must be absent is a row for it.
+    expect(out).not.toContain('the purple vapour');
+    expect(out).toContain('three, not four');
+  });
+
+  it('swaps the two nodes when told which law to follow', async () => {
+    expect(await run(['qizheng', ...MOMENT, '--lang', 'en'])).toBe(0);
+    const astrologers = out;
+    out = '';
+    expect(await run(['qizheng', ...MOMENT, '--lang', 'en', '--luohou', 'ascending'])).toBe(0);
+
+    // The same two seats under the other two names, and nothing else moved.
+    expect(out).not.toBe(astrologers);
+    const seatOf = (text: string, name: string) =>
+      (text.split('\n').find((line) => line.includes(name)) as string)
+        .match(/\S+\s+\d+\.\d\d°\s+\S+\s+\d+\.\d\d°/)?.[0];
+    expect(seatOf(out, '羅睺')).toBe(seatOf(astrologers, '計都'));
+    expect(seatOf(out, '計都')).toBe(seatOf(astrologers, '羅睺'));
+    expect(seatOf(out, '月孛')).toBe(seatOf(astrologers, '月孛'));
+  });
+
+  it('refuses a node convention it has never heard of', async () => {
+    expect(await run(['qizheng', ...MOMENT, '--luohou', 'north', '--lang', 'en'])).toBe(2);
+    expect(err).toContain('--luohou');
+  });
+
+  it('says the frame is the stars and not a table', async () => {
+    expect(await run(['qizheng', ...MOMENT, '--lang', 'en'])).toBe(0);
+    expect(out).toContain('determinative stars');
+    expect(out).toContain('宿度');
+  });
+});
+
 describe('bazi', () => {
   it('prints the pillars read out', async () => {
     expect(await run(['bazi', ...MOMENT, '--gender', 'male', '--lang', 'en'])).toBe(0);

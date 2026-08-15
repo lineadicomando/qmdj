@@ -59,6 +59,7 @@ compatible with it. The GeoNames data is CC BY 4.0.
 | Four pillars | 四柱 with 藏干, 十神, 納音, 十二長生, 空亡, 大運 |
 | Qi Men charts | 時家 by the 拆補 or 置閏 method: four plates, configurations, seasonal states, 門宮 and 星宮 relations, the post horse of the day and of the hour |
 | Liu Ren boards | 大六壬: the 天地盤 by 月將加時, the 四課, the 三傳 by the 九宗門, the 十二天將, the 遁干 and the 空亡 |
+| 七政四餘 boards | the seven governors and three of the four remainders, placed by ephemeris: the 宿 and the 入宿度 with the boundaries taken from the 距星 themselves, the twelve 次 and the 宮度, 順 and 逆, the 命宮 by 加時 and the 人事十二宮 numbered from it |
 | Almanac | 曆注: 建除十二神, 二十八宿值日, the 十二神, twenty-six 年神, the four 德 of the month and twenty-eight 神煞 — the officer, the lodge and the god of the day, and the bearings the year holds, reckoned on 120°E beside the chart rather than inside it |
 | Choosing a time | 擇時擇方: every chart over an interval, narrowed to the palaces answering stated criteria |
 
@@ -154,9 +155,9 @@ longer there.
 | `packages/i18n` | message catalogs and locale negotiation. A leaf: depends on nothing |
 | `packages/geo` | location lookup over a local GeoNames dataset (SQLite) |
 | `packages/core` | the engine, and the `qimen` command |
-| `packages/plate` | the drawings: the nine palaces framed by the compass with the configurations under them, and the ring of twelve of a 六壬 board, SVG and PNG |
-| `packages/mcp` | MCP server, nine tools, stdio |
-| `apps/web` | SvelteKit: five sections at `/en` and `/it`, twelve endpoints under `/api` |
+| `packages/plate` | the drawings: the nine palaces framed by the compass with the configurations under them, and the ring of twelve a 六壬 board and a 七政四餘 board share, SVG and PNG |
+| `packages/mcp` | MCP server, ten tools, stdio |
+| `apps/web` | SvelteKit: six sections at `/en` and `/it`, sixteen endpoints under `/api` |
 
 npm workspaces, Node ≥ 22, ESM, TypeScript.
 
@@ -185,6 +186,7 @@ a pillar turns on.
 qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lang en
 qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --method zhirun
 qimen liuren --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lang en
+qimen qizheng --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lang en
 qimen bazi  --date 1968-03-12 --time 14:30 --tz Europe/Rome --gender male
 qimen terms --year 2024 --tz Asia/Shanghai
 qimen calendar --date 2023-04-01

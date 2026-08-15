@@ -15,6 +15,17 @@ import type { MessageKey } from '@qimendunjia/i18n';
  * stopped being true when the 六壬 board made them four, one of which was an
  * act. The order now says what the sentence always meant.
  *
+ * **The division governs the labels too, and that is easy to get wrong.** An
+ * act is *described*, in the reader's own language, so `nav.consult` and
+ * `nav.moments` differ between the catalogs. An instrument is *named*, and a
+ * name does not translate: `Qi Men`, `Liu Ren`, `Qi Zheng Si Yu` and `Ba Zi`
+ * are identical in both. The 七政四餘 section arrived as «Seven Governors»
+ * and «Sette governatori» — a gloss where the other three had names, and the
+ * only instrument label in the two catalogs that was not the same string,
+ * which is what gave it away. The heading is where the gloss belongs: a
+ * reader who clicks a name they do not know lands on a page that says what it
+ * is, and a nav item has no room to.
+ *
  * **What the grouping does not say is which art a section uses.** Choosing a
  * time walks Qi Men charts and only those, and no arrangement of a flat list
  * can carry that: a nav says where things are, not what they are made of. It
@@ -36,6 +47,7 @@ export const SECTIONS: readonly {
   { slug: 'moments', label: 'nav.moments', group: 'act' },
   { slug: 'chart', label: 'nav.chart', group: 'instrument' },
   { slug: 'liuren', label: 'nav.liuren', group: 'instrument' },
+  { slug: 'qizheng', label: 'nav.qizheng', group: 'instrument' },
   { slug: 'bazi', label: 'nav.bazi', group: 'instrument' },
 ];
 

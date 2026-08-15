@@ -11,6 +11,26 @@ import { julianDayToMillis } from './time.js';
  */
 const REQUIRED_FILES = ['sepl_18.se1', 'semo_18.se1'];
 
+/**
+ * The directory holding the 距星 catalogue, which is versioned and never
+ * downloaded.
+ *
+ * It goes on the ephemeris path in front of the downloadable directory, and
+ * in either mode: the twenty-eight lines of `data/sefstars.txt` are the whole
+ * of the 宿度 frame, so a chart that could not find them would have to refuse
+ * rather than fall back, and a reader who downloaded the full Swiss Ephemeris
+ * star file must not silently get a different frame from one who did not.
+ */
+const STAR_DATA_DIR = fileURLToPath(new URL('../data', import.meta.url));
+
+/**
+ * Separates directories in the ephemeris path.
+ *
+ * Swiss Ephemeris accepts a semicolon everywhere and a colon only on Unix,
+ * where a colon would also cut a Windows drive letter in half.
+ */
+const PATH_SEPARATOR = ';';
+
 export type EphemerisMode = 'swisseph' | 'moshier';
 
 export interface EphemerisContext {
@@ -91,7 +111,9 @@ export function initEphemeris(explicitPath?: string): EphemerisContext {
         warnings: [warning('MOSHIER_FALLBACK', { path })],
       };
 
-  if (hasRequired) sweph.set_ephe_path(path);
+  sweph.set_ephe_path(
+    hasRequired ? `${STAR_DATA_DIR}${PATH_SEPARATOR}${path}` : STAR_DATA_DIR,
+  );
 
   cache = { key: path, context };
   return context;
@@ -135,6 +157,94 @@ function bodyLongitude(julianDayUT: number, body: number, context: EphemerisCont
     });
   }
   return normalize360(longitude);
+}
+
+/**
+ * The bodies the engine asks for by name, sweph's numbers kept on this side.
+ *
+ * The two beyond the seven are elements rather than bodies, and they are the
+ * *mean* ones deliberately. 羅睺, 計都 and 月孛 are 隱曜 — computed positions,
+ * never observed ones — and what the tradition transmits for them is a mean
+ * motion: eighteen years and some for the nodes, a little under nine for the
+ * apogee. The osculating node wobbles a degree and a half either side of the
+ * mean in a fortnight, which is a quantity no text that names these ever
+ * meant. See the 七政四餘 section of `docs/sources.md`.
+ */
+const BODY_NUMBERS = {
+  sun: sweph.constants.SE_SUN,
+  moon: sweph.constants.SE_MOON,
+  mercury: sweph.constants.SE_MERCURY,
+  venus: sweph.constants.SE_VENUS,
+  mars: sweph.constants.SE_MARS,
+  jupiter: sweph.constants.SE_JUPITER,
+  saturn: sweph.constants.SE_SATURN,
+  /** 月之交點, ascending. The descending one is this plus 180°. */
+  meanNode: sweph.constants.SE_MEAN_NODE,
+  /** 月之遠地點, which 月孛 is. */
+  meanApogee: sweph.constants.SE_MEAN_APOG,
+} as const;
+
+export type EphemerisBody = keyof typeof BODY_NUMBERS;
+
+/** Where a body stands and how fast, both in degrees of ecliptic longitude. */
+export interface BodyPosition {
+  longitude: number;
+  /** Degrees a day. Negative is retrograde, which the seven do and the two cannot. */
+  speed: number;
+}
+
+/**
+ * Apparent geocentric ecliptic longitude of a body, with its daily motion.
+ *
+ * The speed comes back because whether a planet goes forward or backward is
+ * part of where it is, not a reading of it: 順 and 逆 are named in every text
+ * that names the 七政. 留 is not derived from it, because a station is a
+ * threshold on this number and no source consulted here states one.
+ */
+export function bodyPosition(
+  body: EphemerisBody,
+  julianDayUT: number,
+  context: EphemerisContext,
+): BodyPosition {
+  assertEphemerisRange(julianDayUT);
+  const result = sweph.calc_ut(julianDayUT, BODY_NUMBERS[body], context.flags);
+  if (result.flag < 0) {
+    throw new ChartError('EPHEMERIS_FAILURE', {
+      reason: result.error || 'calc_ut failed without a message',
+      julianDay: julianDayUT,
+    });
+  }
+  const [longitude, , , speed] = result.data;
+  if (!Number.isFinite(longitude) || !Number.isFinite(speed)) {
+    throw new ChartError('EPHEMERIS_FAILURE', {
+      reason: `calc_ut returned no position for ${body}`,
+      julianDay: julianDayUT,
+    });
+  }
+  return { longitude: normalize360(longitude as number), speed: speed as number };
+}
+
+/**
+ * Apparent ecliptic longitude of a fixed star, by its nomenclature name.
+ *
+ * The leading comma is Swiss Ephemeris' own syntax for looking a star up by
+ * `alVir` rather than by `Spica`: the traditional names are several per star
+ * and the nomenclature is one, which is what a boundary has to be.
+ */
+export function starLongitude(
+  nomenclature: string,
+  julianDayUT: number,
+  context: EphemerisContext,
+): number {
+  assertEphemerisRange(julianDayUT);
+  const result = sweph.fixstar2_ut(`,${nomenclature}`, julianDayUT, context.flags);
+  if (result.flag < 0 || !Number.isFinite(result.data[0])) {
+    throw new ChartError('EPHEMERIS_FAILURE', {
+      reason: result.error || `no position for the star ${nomenclature}`,
+      julianDay: julianDayUT,
+    });
+  }
+  return normalize360(result.data[0] as number);
 }
 
 /**

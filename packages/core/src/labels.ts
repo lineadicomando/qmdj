@@ -1,6 +1,7 @@
 import type { MessageKey, Translator } from '@qimendunjia/i18n';
 import { BRANCHES, STEMS, type Ganzhi } from './ganzhi.js';
 import { GENERALS, KETI, LIUREN_RULES } from './liuren.js';
+import { CI, HOUSES, MOTIONS, QIZHENG_BODIES } from './qizheng.js';
 import {
   DIRECTIONS,
   GATES,
@@ -113,6 +114,50 @@ export function liurenLabels(t: Translator): LiurenLabels {
     ),
     empty: t('cli.value.emptyBranch'),
     unverified: t('cli.value.liurenUnverified'),
+  };
+}
+
+/**
+ * The words a 七政四餘 drawing needs, in the reader's language.
+ *
+ * The eleven bodies and the twelve 人事宮 are the load-bearing pair: the ring
+ * writes both in glyphs and neither is guessable from the shape. The twelve
+ * 次 are here for the band of readings rather than for the ring, which has no
+ * room for a word beside a name that is already two characters.
+ *
+ * The two lines under the board are labels and not captions: they say how
+ * many remainders the board carries and where the 宿 begin, and both are true
+ * of every board this engine draws. A picture travels further than the page
+ * it was made on, so they travel on its face.
+ */
+export interface QizhengLabels {
+  /** The eleven — the seven governors and the four remainders. */
+  body: Record<string, string>;
+  /** The twelve 人事宮, written under the palace each fell on. */
+  house: Record<string, string>;
+  /** The twelve 次, for the band of readings. */
+  ci: Record<string, string>;
+  motion: Record<string, string>;
+  minggong: string;
+  remainders: string;
+  frame: string;
+}
+
+export function qizhengLabels(t: Translator): QizhengLabels {
+  return {
+    body: Object.fromEntries(
+      QIZHENG_BODIES.map((one) => [one.id, t(`label.qizheng.${one.id}` as MessageKey)]),
+    ),
+    house: Object.fromEntries(
+      HOUSES.map((house) => [house.id, t(`label.house.${house.id}` as MessageKey)]),
+    ),
+    ci: Object.fromEntries(CI.map((ci) => [ci.id, t(`label.ci.${ci.id}` as MessageKey)])),
+    motion: Object.fromEntries(
+      Object.keys(MOTIONS).map((id) => [id, t(`label.motion.${id}` as MessageKey)]),
+    ),
+    minggong: t('cli.field.minggong'),
+    remainders: t('cli.value.threeRemainders'),
+    frame: t('cli.value.qizhengFrame'),
   };
 }
 

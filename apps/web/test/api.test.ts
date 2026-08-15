@@ -4,6 +4,8 @@ import { GET as plate } from '../src/routes/api/chart/plate/+server';
 import { GET as prompt } from '../src/routes/api/chart/prompt/+server';
 import { GET as text_ } from '../src/routes/api/chart/text/+server';
 import { GET as bazi } from '../src/routes/api/bazi/+server';
+import { GET as qizheng } from '../src/routes/api/qizheng/+server';
+import { GET as qizhengText } from '../src/routes/api/qizheng/text/+server';
 import { GET as terms } from '../src/routes/api/terms/+server';
 import { GET as locations } from '../src/routes/api/locations/+server';
 import { GET as moments } from '../src/routes/api/moments/+server';
@@ -48,6 +50,85 @@ async function call(handler: Handler, query: string, accept = 'en'): Promise<Cal
 }
 
 const MOMENT = 'date=2024-06-15&time=14:00&timezone=Asia/Shanghai&trueSolarTime=false&dayBoundary=midnight';
+
+describe('GET /api/qizheng', () => {
+  it('places the eleven and numbers the twelve', async () => {
+    const { status, body } = await call(qizheng, MOMENT);
+    const answer = body as {
+      qizheng: {
+        governors: { body: { hanzi: string }; lodge: { hanzi: string }; lodgeDegree: number }[];
+        remainders: unknown[];
+        houses: unknown[];
+        minggong: { palace: { hanzi: string } };
+      };
+    };
+
+    expect(status).toBe(200);
+    expect(answer.qizheng.governors).toHaveLength(7);
+    expect(answer.qizheng.governors[0]?.body.hanzi).toBe('太陽');
+    // Both frames on every row: the 宿 and the degrees past its 距星.
+    expect(answer.qizheng.governors[0]?.lodge.hanzi).toBeTruthy();
+    expect(answer.qizheng.governors[0]?.lodgeDegree).toBeGreaterThanOrEqual(0);
+    expect(answer.qizheng.houses).toHaveLength(12);
+    expect(answer.qizheng.minggong.palace.hanzi).toBeTruthy();
+  });
+
+  it('carries three remainders, because 紫氣 has no epoch to be placed by', async () => {
+    const { body } = await call(qizheng, MOMENT);
+    const answer = body as { qizheng: { remainders: { body: { hanzi: string } }[] } };
+
+    expect(answer.qizheng.remainders.map((one) => one.body.hanzi)).toEqual([
+      '羅睺',
+      '計都',
+      '月孛',
+    ]);
+  });
+
+  it('swaps the two nodes when the address says which law', async () => {
+    const kept = (await call(qizheng, MOMENT)).body as {
+      qizheng: { remainders: { longitude: number }[] };
+    };
+    const flipped = (await call(qizheng, `${MOMENT}&luohou=ascending`)).body as {
+      qizheng: { remainders: { longitude: number }[] };
+    };
+
+    expect(flipped.qizheng.remainders[0]?.longitude).toBeCloseTo(
+      kept.qizheng.remainders[1]?.longitude as number,
+      9,
+    );
+  });
+
+  it('is cacheable by the browser that asked, and by nothing else', async () => {
+    // More so than the others, if anything: a 命 art is asked with a birth.
+    expect((await call(qizheng, MOMENT)).headers['cache-control']).toBe('private, max-age=86400');
+    expect((await call(qizheng, 'timezone=Asia/Shanghai')).headers['cache-control']).toBe(
+      'no-store',
+    );
+  });
+
+  it('carries the options that produced it', async () => {
+    const { body } = await call(qizheng, MOMENT);
+
+    expect((body as { qizheng: { options: unknown } }).qizheng.options).toMatchObject({
+      xiudu: 'juxing',
+      ziqi: 'off',
+      luohou: 'descending',
+      minggong: 'yuejiang',
+    });
+  });
+
+  it('says it in words at /text, in the form the terminal prints', async () => {
+    const { status, text, headers } = await call(qizhengText, MOMENT);
+
+    expect(status).toBe(200);
+    expect(headers['content-type']).toContain('text/plain');
+    expect(text).toContain('太陽');
+    expect(text).toContain('命宮');
+    // The two things the page owes a reader who counts.
+    expect(text).toMatch(/three, not four/i);
+    expect(text).toMatch(/determinative stars/i);
+  });
+});
 
 describe('GET /api/chart', () => {
   it('casts a chart from the query string alone', async () => {

@@ -12,9 +12,9 @@ anything.
 | `packages/i18n` | message catalogs and locale negotiation. A leaf: depends on nothing |
 | `packages/geo` | location lookup over a local GeoNames dataset (SQLite) |
 | `packages/core` | calculation engine and the `qimen` CLI: solar terms, lunar calendar, sexagenary cycles, Four Pillars, Qi Men charts, Liu Ren boards, scanning an interval |
-| `packages/plate` | the drawings: the nine palaces of a chart, the ring of twelve of a 六壬 board, glyphs, SVG and PNG |
-| `packages/mcp` | MCP server: nine tools, four resources, stdio transport |
-| `apps/web` | SvelteKit: five sections at `/en` and `/it`, plus twelve GET endpoints under `/api` |
+| `packages/plate` | the drawings: the nine palaces of a chart, the ring of twelve a 六壬 board and a 七政四餘 board share, glyphs, SVG and PNG |
+| `packages/mcp` | MCP server: ten tools, four resources, stdio transport |
+| `apps/web` | SvelteKit: six sections at `/en` and `/it`, plus sixteen GET endpoints under `/api` |
 
 npm workspaces monorepo, Node ≥ 22, ESM, TypeScript.
 

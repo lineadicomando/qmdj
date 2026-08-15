@@ -2,13 +2,15 @@ import {
   computeQimenChart,
   initEphemeris,
   liurenBoard,
+  qizhengBoard,
   resolveMoment,
   DEFAULT_LIUREN_OPTIONS,
   DEFAULT_OPTIONS,
+  DEFAULT_QIZHENG_OPTIONS,
 } from '@qimendunjia/core';
-import type { LiurenBoard, QimenChart } from '@qimendunjia/core';
+import type { LiurenBoard, QimenChart, QizhengBoard } from '@qimendunjia/core';
 import { describe, expect, it } from 'vitest';
-import type { PlateChart, PlateLiuren } from '../src/types.js';
+import type { PlateChart, PlateLiuren, PlateQizheng } from '../src/types.js';
 
 /**
  * The guard on the one rule this package exists to keep.
@@ -151,5 +153,49 @@ describe('the redeclared board', () => {
       // reads that absence rather than a flag.
       expect(transmission.hiddenStem === undefined).toBe(transmission.empty);
     }
+  });
+});
+
+const qizheng: QizhengBoard = qizhengBoard(
+  { julianDay: chart.moment.julianDayUT, hour: chart.moment.hourBranch },
+  DEFAULT_QIZHENG_OPTIONS,
+  initEphemeris(),
+);
+
+describe('the redeclared 七政四餘 board', () => {
+  it('accepts a real board without a cast', () => {
+    const asPlate: PlateQizheng = qizheng;
+
+    expect(asPlate.governors).toHaveLength(7);
+    expect(asPlate.houses).toHaveLength(12);
+  });
+
+  it('finds every field the drawing reads', () => {
+    const plate: PlateQizheng = qizheng;
+
+    expect(typeof plate.minggong.palace.index).toBe('number');
+    expect(plate.minggong.palace.hanzi).toMatch(/^.$/);
+    expect(plate.minggong.ci.hanzi).toMatch(/^.{2}$/);
+
+    for (const seat of plate.houses) {
+      expect(typeof seat.palace.index).toBe('number');
+      expect(seat.house.pinyin).toMatch(/\S/);
+      expect(seat.ci.pinyin).toMatch(/\S/);
+    }
+
+    for (const one of [...plate.governors, ...plate.remainders]) {
+      expect(typeof one.body.hanzi).toBe('string');
+      expect(one.body.pinyin).toMatch(/\S/);
+      expect(one.lodge.pinyin).toMatch(/\S/);
+      expect(typeof one.lodgeDegree).toBe('number');
+      expect(typeof one.palace.index).toBe('number');
+      expect(typeof one.motion).toBe('string');
+    }
+
+    // The one place the redeclared shape is looser than the engine's on
+    // purpose: 太陽 and 太陰 carry no phase, and the drawing inks them plain
+    // rather than inventing one.
+    expect(plate.governors[0]?.body.element).toBeUndefined();
+    expect(plate.governors[2]?.body.element).toBe('shui');
   });
 });

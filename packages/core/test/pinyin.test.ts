@@ -9,6 +9,7 @@ import { GATES, SPIRITS_YANG, SPIRITS_YIN, STARS } from '../src/dunjia/plates.js
 import { RELATION_IDS, relationOf } from '../src/dunjia/relation.js';
 import { strengthOf } from '../src/dunjia/strength.js';
 import { BRANCHES, STEMS, ganzhiOf } from '../src/ganzhi.js';
+import { CI, HOUSES, MOTIONS, QIZHENG_BODIES } from '../src/qizheng.js';
 import { SOLAR_TERMS } from '../src/solar-terms.js';
 import type { Element } from '../src/types.js';
 
@@ -46,6 +47,10 @@ function everything(): { hanzi: string; pinyin: string }[] {
     ...SPIRITS_YIN,
     ...PATTERN_IDS.map(patternName),
     ...PATTERN_IDS.map(valenceOf),
+    ...QIZHENG_BODIES,
+    ...CI,
+    ...HOUSES,
+    ...Object.values(MOTIONS),
   ];
 
   for (const yuan of ['shang', 'zhong', 'xia'] as Yuan[]) {

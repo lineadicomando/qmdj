@@ -41,6 +41,7 @@ import {
   formatAlmanac,
   formatMoment,
   formatLiuren,
+  formatQizheng,
   formatNianming,
   formatScan,
   formatSolarTerms,
@@ -52,6 +53,11 @@ import {
   liurenBoard,
   type LiurenOptions,
 } from './liuren.js';
+import {
+  DEFAULT_QIZHENG_OPTIONS,
+  qizhengBoard,
+  type QizhengOptions,
+} from './qizheng.js';
 import { nianmingOf, yearsLived, type Nianming, type NianmingOptions } from './nianming.js';
 import { resolveMoment, type Moment } from './pillars.js';
 import { chartTranscript, liurenReadingPrompt, readingPrompt } from './prompt.js';
@@ -89,7 +95,7 @@ class UsageError extends Error {
   }
 }
 
-const COMMANDS = ['chart', 'liuren', 'bazi', 'terms', 'calendar', 'scan'] as const;
+const COMMANDS = ['chart', 'liuren', 'qizheng', 'bazi', 'terms', 'calendar', 'scan'] as const;
 type Command = (typeof COMMANDS)[number];
 
 interface Options {
@@ -124,6 +130,7 @@ interface Options {
   bornTz?: string;
   years?: string;
   guiren?: string;
+  luohou?: string;
 }
 
 const HELP = `qimen — Qi Men Dun Jia charts and Four Pillars
@@ -131,6 +138,7 @@ const HELP = `qimen — Qi Men Dun Jia charts and Four Pillars
 Usage
   qimen chart     [options]     the nine palaces for a moment
   qimen liuren    [options]     the 大六壬 board for a moment
+  qimen qizheng   [options]     the 七政四餘 board for a moment
   qimen bazi      [options]     the four pillars, read out
   qimen terms     [options]     the twenty-four solar terms of a year
   qimen calendar  [options]     the lunar date of a moment
@@ -167,6 +175,10 @@ Narrowing a scan
   --guiren chou|wei               for \`liuren\`: which verse seats the 貴人.
                                   It moves the twelve generals and never the
                                   three transmissions; default: chou
+  --luohou descending|ascending   for \`qizheng\`: which node bears the name
+                                  羅睺, the other taking 計都. The default is
+                                  the astrologers' law and not the 時憲曆's,
+                                  which is the reverse of the Indian one
   --lang en|it           default: the environment, then English
   --json                 the data, unformatted and untranslated
   --help
@@ -378,6 +390,22 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
     }
 
     const parts = [formatMoment(moment, t), '', formatLiuren(board, t)];
+    const warnings = warningsOf(moment, t);
+    if (warnings !== '') parts.push(warnings);
+    return parts.join('\n');
+  }
+
+  if (command === 'qizheng') {
+    // The one board here that asks the sky rather than a cycle, so the
+    // ephemeris goes in where the other two take pillars.
+    const board = qizhengBoard(
+      { julianDay: moment.julianDayUT, hour: moment.hourBranch },
+      qizhengOptionsFrom(options),
+      context,
+    );
+    if (options.json) return JSON.stringify({ moment, qizheng: board }, null, 2);
+
+    const parts = [formatMoment(moment, t), '', formatQizheng(board, t)];
     const warnings = warningsOf(moment, t);
     if (warnings !== '') parts.push(warnings);
     return parts.join('\n');
@@ -669,6 +697,29 @@ function liurenOptionsFrom(options: Options): LiurenOptions {
   return liuren;
 }
 
+/**
+ * The 七政四餘 options, of which one is settable and four are not yet.
+ *
+ * `--luohou` is exposed because both values are implemented and because a
+ * reader who has the name the other way round has no way to discover that
+ * from the output: the board would simply be labelled wrong. The rest —
+ * `xiudu`, `ziqi`, `minggong`, `gong` — have one implemented value each, so a
+ * flag for them could only offer a refusal.
+ */
+function qizhengOptionsFrom(options: Options): QizhengOptions {
+  const qizheng: QizhengOptions = { ...DEFAULT_QIZHENG_OPTIONS };
+  if (options.luohou !== undefined) {
+    if (options.luohou !== 'descending' && options.luohou !== 'ascending') {
+      throw new UsageError('cli.error.unknownValue', {
+        option: '--luohou',
+        value: options.luohou,
+      });
+    }
+    qizheng.luohou = options.luohou;
+  }
+  return qizheng;
+}
+
 const FLAGS: Record<string, keyof Options> = {
   '--date': 'date',
   '--time': 'time',
@@ -698,6 +749,7 @@ const FLAGS: Record<string, keyof Options> = {
   '--born-tz': 'bornTz',
   '--years': 'years',
   '--guiren': 'guiren',
+  '--luohou': 'luohou',
 };
 
 function parse(argv: string[]): { command?: Command; options: Options } {

@@ -56,6 +56,7 @@ describe('what the server offers', () => {
       'compute_bazi',
       'compute_liuren',
       'compute_qimen_chart',
+      'compute_qizheng',
       'draw_liuren',
       'draw_qimen_chart',
       'lunar_date',
@@ -80,6 +81,12 @@ describe('what the server offers', () => {
     // worth heading off is laying it for a birth as if it were a natal chart.
     expect(byName.get('compute_liuren')).toMatch(/not for a birth/i);
     expect(byName.get('compute_liuren')).toMatch(/does not choose the 用神/i);
+    // The three things a model reading a 七政四餘 board gets confidently
+    // wrong: counting four remainders, reading 羅睺 as Rahu, and taking the
+    // lodge boundaries for a published table.
+    expect(byName.get('compute_qizheng')).toMatch(/three remainders, not\s+\*\*four\*\*|three remainders, not/i);
+    expect(byName.get('compute_qizheng')).toMatch(/descending node here/i);
+    expect(byName.get('compute_qizheng')).toMatch(/no epoch\s+enters|no epoch enters/i);
     // The two ways an agent turns a scan into something it is not: dropping
     // the direction, and answering a question that was not asked.
     expect(byName.get('scan_moments')).toMatch(/never the hour alone/i);

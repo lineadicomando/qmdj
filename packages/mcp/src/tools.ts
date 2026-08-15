@@ -1,6 +1,7 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import {
   DEFAULT_LIUREN_OPTIONS,
+  DEFAULT_QIZHENG_OPTIONS,
   GATES,
   PATTERN_IDS,
   SPIRIT_IDS,
@@ -14,6 +15,7 @@ import {
   formatMoment,
   formatNianming,
   formatQimenChart,
+  formatQizheng,
   formatScan,
   formatSolarTerms,
   formatWarnings,
@@ -21,11 +23,13 @@ import {
   liurenLabels,
   lunarDate,
   matchRuns,
+  qizhengBoard,
   sayGanzhi,
   scanCharts,
   solarTermsOfYear,
   systemTimezone,
   type LiurenOptions,
+  type QizhengOptions,
   type ScanCriteria,
 } from '@qimendunjia/core';
 import { searchLocations } from '@qimendunjia/geo';
@@ -296,6 +300,78 @@ export function registerComputeLiuren(server: McpServer, context: ToolContext): 
             formatMoment(moment, t),
             '',
             formatLiuren(board, t),
+            formatWarnings(moment, t),
+          ]
+            .filter((part) => part !== '')
+            .join('\n'),
+        );
+      } catch (error) {
+        return fail(describeError(error, t));
+      }
+    },
+  );
+}
+
+export function registerComputeQizheng(server: McpServer, context: ToolContext): void {
+  server.registerTool(
+    'compute_qizheng',
+    {
+      title: 'Lay the 七政四餘 board',
+      description:
+        'Places the seven governors (七政: 太陽 太陰 水星 金星 火星 木星 土星) and the ' +
+        'remainders (四餘) for an instant, from the ephemeris rather than from any cycle. ' +
+        'Each is reported twice over, in the two frames the board holds at once: the lodge ' +
+        '(宿) it falls in with the degrees past that lodge’s determinative star (入宿度), and ' +
+        'the palace of the twelve (次) with the degrees into it (宮度). It also reports 順 or ' +
+        '逆 from the daily motion, the 命宮 by 立命加時, and the twelve 人事宮 numbered from ' +
+        'it. ' +
+        'Unlike Qi Men and Liu Ren this is a 命 art, so it is laid for a birth as readily as ' +
+        'for a question — but it is its own board and borrows nothing from theirs. ' +
+        'Three things to state when reporting it. **The board carries three remainders, not ' +
+        'four**: 紫氣 is transmitted as a rule without an epoch, so it is omitted rather than ' +
+        'invented. **羅睺 is the descending node here, not the ascending one** — the ' +
+        'astrologers’ law, which is the reverse of the Indian convention and of the 時憲曆’s; ' +
+        '計都 takes the other. **The lodge boundaries are the determinative stars themselves**, ' +
+        'placed at this instant with precession in them, so no table of 宿度 and no epoch ' +
+        'enters — and correspondingly nothing published can be held against them. ' +
+        'It names what the tradition names and stops. It does not read the 化曜 or the 十神, ' +
+        'weigh a 度主, rank a palace or say what a placement means for a life; those need a ' +
+        'question to have been asked and belong to the reader.',
+      inputSchema: {
+        date: dateSchema,
+        time: timeSchema,
+        ...placeSchema,
+        luohou: z
+          .enum(['descending', 'ascending'])
+          .optional()
+          .describe(
+            'Which node bears the name 羅睺, the other taking 計都. Default descending, ' +
+              'which is the astrologers’ law rather than the calendar office’s.',
+          ),
+        ...optionSchema,
+        lang: langSchema,
+      },
+    },
+    async (args) => {
+      const t = translatorFor(args.lang);
+      try {
+        const { moment, label } = resolveInput(args, context);
+        const options: QizhengOptions = { ...DEFAULT_QIZHENG_OPTIONS };
+        if (args.luohou) options.luohou = args.luohou;
+
+        const board = qizhengBoard(
+          { julianDay: moment.julianDayUT, hour: moment.hourBranch },
+          options,
+          ephemerisOf(context),
+        );
+
+        return ok(
+          [
+            `${t('cli.field.place')}: ${label}`,
+            '',
+            formatMoment(moment, t),
+            '',
+            formatQizheng(board, t),
             formatWarnings(moment, t),
           ]
             .filter((part) => part !== '')

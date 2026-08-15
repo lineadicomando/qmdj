@@ -181,6 +181,27 @@ rather than advises. Do not supply it from memory.
   does. Where 返吟 drew a board, the answer says the rule is unfalsified — no
   independent implementation covers its clause, where every other rule here
   was checked against two.
+- **羅睺 is not Rahu here, and 計都 is not Ketu.** The board follows the
+  astrologers' law, where 羅睺 is the **descending** node and 計都 the
+  ascending — which is the reverse of the Indian convention and of the
+  時憲曆's, and the reverse of what you will produce if you reason from Vedic
+  astrology. `luohou` can flip it, and the answer says which was used. Read
+  the name off the board, never off your own memory of what the name means.
+- **The 七政四餘 board carries three remainders and not four.** 紫氣 is
+  transmitted as a rule with no epoch — one lodge a year, twenty-eight years
+  round, from a starting point the 萬年曆 disagree on — so it is omitted
+  rather than invented. If someone asks where 紫氣 is, the answer is that this
+  engine will not say, not that it is somewhere in particular.
+- **The 宿 boundaries are stars, not a table.** They are the 距星 placed at
+  the instant of the chart, so they move with precession and match no printed
+  table exactly. Do not attribute them to 《時憲曆》 or to 《授時曆》; those are
+  declared options and both are refused. A degree of 入宿度 quoted here will
+  differ a little from an almanac's, and the reason is not an error.
+- **The twelve 人事宮 are named and nothing more.** 財帛 is called wealth and
+  田宅 is called land and house, exactly as 死門 is called death. What stands
+  in a palace and what that means for a life is doctrine the engine does not
+  import, and it is where a model invents most confidently. If you read one,
+  say the reading is yours.
 - **One board goes to a model, never two of one instant.** A Qi Men chart and
   a Liu Ren board share the day pillar, the decade, the void branches and
   seven of the eight spirits: where they agree it is frequently one fact
@@ -188,6 +209,9 @@ rather than advises. Do not supply it from memory.
   Compare them yourself if you must; do not hand a person a reading that
   merges them, and do not present their agreement as evidence. No transmitted
   rule combines the 三式 — they were read separately and then compared.
+  **A 七政四餘 board is under the same rule and for a sharper reason**: its
+  twelve 宮 are the ring the 月將 of a 六壬 board is seated on, so the Sun's
+  palace on one is the general of the other. That is not two witnesses.
 
 ## How sure the numbers are
 
@@ -218,6 +242,19 @@ Not uniformly, and the difference matters when you are asked to justify one.
   covers — which now means *checked against a text and not against something
   that runs*: 《六壬大全》 names every day that rule can draw a board on, and
   this engine returns those and no others.
+- **The 七政四餘 board** — a different kind of evidence from everything above
+  it, and the difference is the point. The **positions** are the strongest
+  numbers this project holds: Swiss Ephemeris, the same library the solar
+  terms rest on, asked directly for the seven, for the mean node and for the
+  mean lunar apogee. The **frame** — where each 宿 begins — has *no reference
+  of any kind*, because nothing is being copied: the boundaries are the
+  twenty-eight 距星 themselves, placed at the instant of the chart. What
+  stands in for a reference is over-determination: all twenty-eight widths
+  have a transmitted shape, the ring has to close on 360°, and 觜 is a
+  one-degree needle that only the right pair of stars threads. The **twelve
+  人事宮** are weaker still — one source and three derivations, set out in
+  `docs/sources.md`. If you are asked where the lodge boundaries come from,
+  the honest answer is "the stars, computed", not "the 時憲曆".
 - **The almanac's page** (建除十二神 and 二十八宿值日) — both agreeing with an
   independent implementation on **all 14 600 days of 2000 to 2039**. The
   officer's one awkward clause, the doubling at a 節, is stated outright by
@@ -244,6 +281,7 @@ is. Do not describe the third as though it were the first.
 | `compute_qimen_chart` | the nine palaces, the plates, the configurations, how each star and gate stands to its palace, and both post horses — 日馬 and 時馬, never one of the two. With `born`, also a 年命: the birth placed *inside* this chart |
 | `compute_bazi` | the four pillars, read out. `gender` only affects the luck cycles |
 | `compute_liuren` | the 大六壬 board — the other 式, laid on the same instant and answering the same shape of question. Lay it for the moment of the asking, never for a birth |
+| `compute_qizheng` | the 七政四餘 board — the seven governors and three remainders on the sky, each said twice over: the 宿 with its 入宿度 and the 宮 with its 宮度. A 命 art, so it is laid for a birth as readily as for a question, and it borrows nothing from the other two boards |
 | `draw_qimen_chart` | the picture, framed by the eight directions, with the configurations and their fortunes listed under the grid. After the calculation, never instead of it |
 | `draw_liuren` | the Liu Ren board as a picture: a ring of twelve, the lessons written right to left, the transmissions read downwards. After the calculation, never instead of it |
 | `solar_terms` | the twenty-four terms of a year, with exact instants |
@@ -272,6 +310,8 @@ GET /api/liuren?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/liuren/plate?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/liuren/text?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/liuren/prompt?date=2024-06-15&time=14:00&locationId=1816670&asked=true
+GET /api/qizheng?date=1968-03-12&time=14:30&locationId=3169070
+GET /api/qizheng/text?date=1968-03-12&time=14:30&locationId=3169070
 GET /api/terms?year=2024&timezone=Asia/Shanghai
 GET /api/chart/plate?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/moments?from=2026-09-01&to=2026-09-08&locationId=3169070&gate=kaimen&towards=se,s

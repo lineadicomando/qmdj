@@ -1278,6 +1278,208 @@ above is that one quantity.
 
 ---
 
+## 七政四餘 — the board whose numbers come from the sky
+
+The first board here that computes nothing by cycle. Where dunjia turns nine
+palaces by rule and 六壬 twelve, this one asks an ephemeris where eleven
+things are and says which 宿 and which 宮 that falls in. So the tiers work out
+differently from everywhere else in this file: the *positions* are tier 1 and
+not by a small margin — Swiss Ephemeris, the same library the solar terms
+already stand on — and every difficulty has moved into the **frame**, which is
+the question of where the twenty-eight begin.
+
+### The frame, which is twenty-eight stars and not a table
+
+A 宿 begins at its 距星. That is not this project's reading of anything; it is
+what a 宿 is, and the 曆 tabulated widths *because* they had measured those
+stars. The tables then disagree with each other because they were measured
+centuries apart and precession moved everything between: the 黃道宿度 of
+《授時曆》 and of 《時憲曆》 are the same sky read twice, a little under four
+degrees apart.
+
+So the boundaries here are not tabulated. `packages/core/data/sefstars.txt`
+holds the twenty-eight 距星 and sweph places them at the instant of the chart,
+proper motion and precession included. **No epoch is chosen, because none has
+to be**, and the frame is correct in the eleventh century and the twenty-third
+alike. `xiudu` keeps `shixian` and `shoushi` as declared values, refused with
+`OPTION_NOT_IMPLEMENTED`, for whenever one of those tables arrives with an
+epoch that can be cited.
+
+Twenty-six of the twenty-eight lines are copied **verbatim** from the
+`sefstars.txt` distributed with Swiss Ephemeris, which is AGPL as this project
+is. Two are below its magnitude 5 cut — 胃宿一 (35 Ari, V 4.67) and 鬼宿一
+(θ Cnc, V 5.34) — and carry SIMBAD's ICRS astrometry in the same columns,
+marked as such in the file. The identification of all twenty-eight is the
+standard one and is the list the Chinese Wikipedia article on the 二十八宿
+gives; three of them are corroborated from inside the Swiss Ephemeris file
+itself, which happens to carry 亢, 房 and 張 under their Chinese names against
+κ Vir, π Sco and υ¹ Hya.
+
+### 觜 and 參, which is the finding
+
+The one place the list is a choice, and it is a large one.
+
+Precession does not move the 距星 together. It drove the width of 觜 down
+through zero, so that after the thirteenth century φ¹ Ori stood **east** of
+δ Ori and the two 宿 came out in the wrong order — with 觜, the needle of the
+twenty-eight, holding 參's width and 參 reduced to a sliver. The Jesuits at the
+end of the Ming met this by printing 參 before 觜, which was resisted. In
+乾隆十七年 (1752) 《儀象考成》 settled it the other way: it **moved the two
+distances**, to λ Ori for 觜 and ζ Ori for 參, and the transmitted order came
+back.
+
+This engine takes the Qing assignment, and the measurement is what argues for
+it rather than the authority:
+
+| laid with | ring closes | out of order | width of 觜 |
+|---|---|---|---|
+| φ¹ Ori and δ Ori | yes | **1 of 28** | **−1.24°** |
+| λ Ori and ζ Ori | yes | 0 of 28 | 0.97° |
+
+**And that is the whole verification of the frame, which is worth being
+explicit about.** Nothing here is checked against a published table of 宿度,
+because no table is being copied — there is no reference implementation of
+"the boundaries are where the stars are". What stands in its place is
+over-determination, the same argument the 值日宿 epoch stands on: twenty-eight
+widths, each with a transmitted shape, and the ring has to close on 360°. A
+single wrong 距星 either reverses a pair or doubles a width. 觜 is the tightest
+of the twenty-eight constraints, about a degree wide, and only one pair of
+stars threads it. The test walks the ring at five epochs from 1700 to 2200.
+
+Against the transmitted 赤道距度 in 365¼ 度 — which is a *different quantity*,
+equatorial where these are ecliptic, and so a check on shape and never on
+value — the twenty-eight come out ordered alike and sized alike: 井 widest at
+both (30.4° against 33), 鬼 narrow at both (4.6 against 4), 房 4.9 against 5,
+室 15.7 against 16, 張 18.0 against 18. Read that as the shape agreeing, not
+as the numbers agreeing; where they differ by three or four degrees, the
+obliquity is the reason and neither is wrong.
+
+### 四餘 — three of them, and why the fourth is missing
+
+**羅睺 is not Rahu, and this is the parameter most likely to be set wrong by
+someone reasoning from India.** The name moved twice. 羅睺 began as the
+ascending node; from the late Tang and early Song it was the **descending**
+node (交初), and 計都, which had begun as the lunar apogee, took the ascending
+one (交中). 湯若望's reform for the 時憲曆 put them back the Indian way round.
+The 星命家 did not follow: the astrological tradition keeps the old law, 羅睺
+at the descending node as 火餘 and 計都 at the ascending as 土餘. So `luohou`
+defaults to `descending` — the art's convention, not the calendar office's —
+and `ascending` is implemented, since it is one call either way and a reader
+working from a Qing 曆 needs it.
+
+月孛 is the lunar apogee, which is 計都's original definition inherited, and it
+is 水餘.
+
+**The three that are computed are computed as mean elements, deliberately.**
+They are 隱曜 — positions rather than bodies, none of them ever observed — and
+what the tradition transmits for them is a mean motion: eighteen years and
+some for the nodes, a little under nine for the apogee. The osculating node
+swings a degree and a half either side of the mean inside a fortnight, which
+is a quantity no text that names 羅睺 was ever describing. `SE_MEAN_NODE` and
+`SE_MEAN_APOG`, and the choice is stated here because nothing in the output
+would reveal it.
+
+**紫氣 is off, and the output says 三餘.** Its rule is transmitted and clear —
+一年一宿, one lodge a year, twenty-eight years for the round, said to derive
+from the 閏法 since nineteen years take seven intercalations and twenty-eight
+take about ten — and its **epoch is not**. The 萬年曆 disagree, and the rule
+without the epoch computes nothing. `ziqi` therefore has `off` as its default
+and `yinianyisu` as a named, refused value; shipping it would need an epoch
+cited to a source, which is a kind of entry this file has never had to make.
+The board reports three remainders rather than quietly printing four.
+
+### 命宮 and the twelve 宮
+
+The palaces are cut at the 中氣, which is to say at every thirtieth degree of
+the Sun's own longitude: 春分 opens 降婁 at 戌, and the twelve run backwards
+against the branches down to 娵訾 at 亥. **This is the same ring that seats
+the 月將 of a 六壬 board**, and where the two boards are laid on one instant it
+is one fact printed twice — which is the reason a prompt takes one board and
+never two. The older definition, where a 次 is a stretch of 宿度 (星紀 from
+斗十二度 to 女七度) and so rides the stars instead of the seasons, is the
+declared and refused value `gong: 'ci'`; the two were one thing once and
+precession has parted them by weeks.
+
+命宮 is 立命 by 加時, which the texts state in one line: 「以生時加在太陽所在
+之宮，順數至卯，即是命宮」. The hour of the birth is laid on the palace the
+Sun stands in, and the palaces are counted forward to 卯. **It yields a palace
+and no degree**, which is what the rule has to give; `minggong: 'ascendant'`,
+the degree actually rising, is declared and refused because it is a second
+method and not a sharper reading of the first.
+
+The rule is checked against the sky rather than against a worked example,
+which is stronger than either: at 卯時 it returns the Sun's own palace, which
+is what sunrise means; at 酉時 the opposite palace, which is sunset; and at
+午時 the palace ninety degrees along, which is where the ascendant stands when
+the Sun culminates. A rule laid the other way round fails all three.
+
+### 人事十二宮 — carried on over-determination, and the check written out
+
+命宮, 財帛, 兄弟, 田宅, 男女, 奴僕, 夫妻, 疾厄, 遷移, 官祿, 福德, 相貌. They
+follow from the 命宮 by counting, and **the counting has a direction that no
+source consulted states in terms another could be held against.** Two agreeing
+sources was not available. What is here instead is the argument the 值日宿
+epoch is here on: a structure with more constraints than it has freedom, so a
+wrong answer breaks many things at once and the right one breaks none.
+
+**First, these are the Hellenistic houses in the Hellenistic order.** Wealth
+second, siblings third, home fourth, children fifth, servants sixth, spouse
+seventh, illness eighth, travel ninth, office tenth, fortune eleventh. Twelve
+for twelve, and that is not surprising — 七政四餘 reached China through the
+Persian and Indian transmission that carries the same twelve.
+
+**Second, they are not 紫微斗數's twelve**, which is the list one would fear a
+Chinese ring of branches had been contaminated by, since that system shares
+the ring and counts 逆 around it. Its order is 命, 兄弟, 夫妻, 子女, 財帛,
+疾厄, 遷移, 奴僕, 官祿, 田宅, 福德, 父母 — a different list in a different
+order, so its convention has nothing to lend.
+
+**Third, and this is what settles it: only one direction fits the names.** Lay
+the twelve zodiacally, ascending against the branches, and 田宅 — land and
+house — falls a quarter turn along where the sky is deepest, and 官祿 — office
+— three quarters along where it is highest. Lay them the other way and those
+two swap: the home lands on the tenth place and the office on the fourth. Ten
+of the twelve come out wrong. Only 命 and 夫妻 survive a reversal, because
+those two are the axis it turns about, which is exactly why the axis proves
+nothing on its own. `test/qizheng.test.ts` asserts the ten.
+
+**Fourth, an independent quantity agrees.** The 運限 — how many years each
+palace holds, and the order they are walked in — is transmitted separately:
+命宮十五, 貌宮十, 福德妻宮十一, 官祿十五, 遷移八, 疾厄七, 財帛兄弟五,
+田宅子孫奴僕四年半, walked from 命宮 「順行」 and glossed by the source that
+carries it as 「西洋占星逆行」. The limits therefore run 命 → 相貌 → 福德 →
+官祿, which is the numbering *descending*; so the numbering climbs the other
+way, which is zodiacally, which is this. The allotments themselves are not
+implemented — that is a 運限 layer and this phase has none.
+
+**Weigh this as what it is.** It is one web source for the 運限 gloss and
+three derivations, not two independent statements of the rule. It is the same
+class of evidence as the 值日宿 epoch and a weaker class than a runnable
+reference, and it is recorded here so that whoever finds 《果老星宗》 stating
+the direction outright can confirm it or overturn it in one commit — nothing
+else on the board moves with it.
+
+**One identifier is not bare toneless pinyin, for a new reason.** 疾厄 is
+jí-è, and toneless that is `jie`, which reads as one syllable and is not. The
+reading carries it back — and carries it back **without the apostrophe**
+standard pinyin would write (jí'è), because the convention this project
+already keeps does the same work: one tone mark to a syllable, so `jíè` is
+plainly two where `jié` would be one. The apostrophe is only load-bearing in
+toneless pinyin, and nothing here is toneless.
+
+### What is not here
+
+**留.** 順 and 逆 are read off the sign of the daily motion, which is a fact
+about the sky. A station is a *threshold* on that number — how slow is
+stationary — and no source consulted states one. The speed travels in the
+output, so a surface that has a threshold can apply its own.
+
+**化曜, 十神, 度主 and the 生剋恩難 relations.** Doctrine, and the layer
+《果老星宗》 and 《星學大成》 are made of. The engine computes the geometry and
+names what the tradition names, exactly as it does for the gates.
+
+---
+
 ## What is refused, and why
 
 | | Reason |
@@ -1297,6 +1499,11 @@ above is that one quantity.
 | 二十八宿值日's 宜忌 | 《協紀辨方書》卷三十六 辨訛 rejects the lodge-day selection outright as an import: 來自西域, 並不可從. The count may still travel; the doctrine attached to it may not, and the epoch takes its warrant elsewhere |
 | the 宜忌 of the twelve officers | the largest thing in the 協紀 and the clearest refusal here: 宜 and 忌 are advice — ordering days, dating an act — which is `purposes.ts`'s line in a second place |
 | the verse's clause order in 涉害 | 「孟深仲淺季當休」 read as evaluation order scores 98.19 % where the grouping this engine uses scores 99.58 %. Both references take the deeper 季; the divergence is recorded rather than resolved by preference |
+| 紫氣 | the rule is transmitted — 一年一宿, twenty-eight years round — and the epoch is not, and the rule without the epoch computes nothing. `ziqi: 'off'` is the default and the board reports 三餘 rather than printing a fourth |
+| 七政四餘 `xiudu` `shixian` · `shoushi` | the boundaries are taken from the 距星 themselves, so no epoch is chosen. The two 曆 tables are declared and refused until one arrives with an epoch that can be cited |
+| 七政四餘 `minggong` `ascendant` | 立命 by 加時 is what the texts state and gives a palace. The rising degree is a second method, not a sharper reading of the first. `OPTION_NOT_IMPLEMENTED` |
+| 七政四餘 `gong` `ci` | the 次 as stretches of 宿度 needs the same table `xiudu` is waiting for |
+| 留 | a station is a threshold on the daily motion and no source consulted states one. The speed travels in the output instead |
 
 `bigfishmarquis-qimen` implements 茅山, 置閏 and all four systems, and is
 therefore a candidate reference for several of these. It is five months old

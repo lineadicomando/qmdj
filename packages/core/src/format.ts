@@ -15,6 +15,11 @@ import {
 } from './liuren.js';
 import { NIANMING_NAMES, type Nianming, type Placement, type Seat } from './nianming.js';
 import type { Moment } from './pillars.js';
+import {
+  MOTIONS,
+  type Placement as QizhengPlacement,
+  type QizhengBoard,
+} from './qizheng.js';
 import type { ScanMatch } from './scan.js';
 import type { SolarTerm } from './solar-terms.js';
 import { sayGanzhi } from './labels.js';
@@ -571,6 +576,85 @@ export function formatLiuren(board: LiurenBoard, t: Translator): string {
   if (board.unverified) lines.push('', `  ${t('cli.value.liurenUnverified')}`);
 
   return lines.join('\n');
+}
+
+/**
+ * The board of the seven and the four, as two tables and a line.
+ *
+ * A row says the same position twice, because the board holds two frames at
+ * once and neither is the other's approximation: the 宿 with the degrees past
+ * its 距星, and the 宮 with the degrees into it. The tropical longitude they
+ * are both derived from is not printed — it is the engine's working, not the
+ * board's reading, and a third number would only invite arithmetic.
+ */
+export function formatQizheng(board: QizhengBoard, t: Translator): string {
+  const lines = [t('cli.heading.qizheng')];
+
+  lines.push(
+    '',
+    `  ${t('cli.field.governors')}`,
+    ...table(board.governors.map((placement) => placementRow(placement, t)), 2).map(
+      (line) => `  ${line}`,
+    ),
+  );
+
+  lines.push(
+    '',
+    `  ${t('cli.field.remainders')}`,
+    ...table(board.remainders.map((placement) => placementRow(placement, t)), 2).map(
+      (line) => `  ${line}`,
+    ),
+  );
+
+  lines.push(
+    '',
+    ...table(
+      [
+        [
+          t('cli.field.minggong'),
+          `${glyph(board.minggong.palace)} · ` +
+            named(board.minggong.ci, `label.ci.${board.minggong.ci.id}` as MessageKey, t),
+        ],
+      ],
+      4,
+    ),
+  );
+
+  // The twelve are a labelling of the twelve palaces and are printed as one:
+  // the palace first, since that is what a body was already placed in, and
+  // the name of the house after it.
+  lines.push(
+    '',
+    `  ${t('cli.field.houses')}`,
+    ...table(
+      board.houses.map((seat) => [
+        glyph(seat.palace),
+        named(seat.house, `label.house.${seat.house.id}` as MessageKey, t),
+      ]),
+      2,
+    ).map((line) => `  ${line}`),
+  );
+
+  // Both said on the page and not in a document: a reader counting four
+  // remainders and finding three is owed the reason where they are counting,
+  // and the frame is the one thing here nothing published can be held against.
+  lines.push('', `  ${t('cli.value.threeRemainders')}`, `  ${t('cli.value.qizhengFrame')}`);
+
+  return lines.join('\n');
+}
+
+function placementRow(placement: QizhengPlacement, t: Translator): string[] {
+  return [
+    named(placement.body, `label.qizheng.${placement.body.id}` as MessageKey, t),
+    `${glyph(placement.lodge)} ${degrees(placement.lodgeDegree)}`,
+    `${glyph(placement.palace)} ${degrees(placement.palaceDegree)}`,
+    named(MOTIONS[placement.motion], `label.motion.${placement.motion}` as MessageKey, t),
+  ];
+}
+
+/** `12.34°`, which is as fine as any of this is ever read. */
+function degrees(value: number): string {
+  return `${value.toFixed(2)}°`;
 }
 
 function courseRow(course: Course, t: Translator): string[] {

@@ -371,6 +371,64 @@ export const en = {
   'label.lodge.yi': 'the wings',
   'label.lodge.zhen': 'the chariot crossbar',
 
+  // 七政四餘 — the seven governors and the four remainders. The five planets
+  // are the five phases and are named for them; the Sun and the Moon stand
+  // outside that count. The four are 隱曜, computed positions rather than
+  // bodies, and 紫氣 is named here and placed nowhere: its epoch cannot be
+  // cited, so no board carries it. See docs/sources.md.
+  'label.qizheng.taiyang': 'the sun',
+  'label.qizheng.taiyin': 'the moon',
+  'label.qizheng.shuixing': 'Mercury',
+  'label.qizheng.jinxing': 'Venus',
+  'label.qizheng.huoxing': 'Mars',
+  'label.qizheng.muxing': 'Jupiter',
+  'label.qizheng.tuxing': 'Saturn',
+  'label.qizheng.luohou': 'the eclipse head',
+  'label.qizheng.jidu': 'the eclipse tail',
+  'label.qizheng.yuebei': 'the lunar apogee',
+  'label.qizheng.ziqi': 'the purple vapour',
+
+  // 十二次 — the twelve stretches of sky, which is what a palace of this
+  // board is called. They run backwards against the branches because they
+  // are named for where the Sun is, and the Sun crosses them as the seasons
+  // do: 春分 opens 降婁 at 戌.
+  'label.ci.xuanxiao': 'the dark emptiness',
+  'label.ci.xingji': 'the star record',
+  'label.ci.ximu': 'the split wood',
+  'label.ci.dahuo': 'the great fire',
+  'label.ci.shouxing': 'the star of long life',
+  'label.ci.chunwei': 'the quail tail',
+  'label.ci.chunhuo': 'the quail fire',
+  'label.ci.chunshou': 'the quail head',
+  'label.ci.shichen': 'the deep truth',
+  'label.ci.daliang': 'the great beam',
+  'label.ci.jianglou': 'the descending bond',
+  'label.ci.juzi': 'the gathering',
+
+  // 順 and 逆 — which way a body runs, read off the sign of its daily motion
+  // and nothing else. 留, a station, would need a threshold on that number
+  // and no source consulted states one.
+  'label.motion.shun': 'direct',
+  'label.motion.ni': 'retrograde',
+
+  // 人事十二宮 — the twelve palaces under what each is asked about. They are
+  // numbered from the 命宮 and climb against the branches, which is forwards
+  // through the sky; the direction rests on the names themselves and the
+  // check is in docs/sources.md. Glosses translate the *name* and nothing
+  // else: what a palace is asked is the reader's, as everywhere here.
+  'label.house.ming': 'the life',
+  'label.house.caibo': 'wealth',
+  'label.house.xiongdi': 'siblings',
+  'label.house.tianzhai': 'land and house',
+  'label.house.nannv': 'children',
+  'label.house.nupu': 'servants',
+  'label.house.fuqi': 'husband and wife',
+  'label.house.jie': 'illness and hardship',
+  'label.house.qianyi': 'removal',
+  'label.house.guanlu': 'office and salary',
+  'label.house.fude': 'fortune and virtue',
+  'label.house.xiangmao': 'countenance',
+
   // 十二神 — the god a day stands under. 《協紀辨方書》卷七 derives them by
   // 天罡加建 after rejecting the two accounts it inherited. Six carry 吉 and
   // six 凶, which the same passage says is all 黃道/黑道 ever meant; what the
@@ -517,6 +575,7 @@ export const en = {
   'nav.chart': 'Qi Men',
   'nav.bazi': 'Ba Zi',
   'nav.liuren': 'Liu Ren',
+  'nav.qizheng': 'Qi Zheng Si Yu',
   'nav.moments': 'Choosing a time',
   // Named by the act, which is the one this section is built around: a
   // question put at an instant, and the chart cast for that instant. It was
@@ -943,6 +1002,14 @@ export const en = {
   'form.guiren.wei': '甲 apart, at 未 and 丑',
   'form.guiren.note': 'It moves the twelve generals and leaves the three transmissions alone.',
   'cli.column.general': 'general',
+  // 七政四餘. `lodge` and `ci` head degrees, so both say what the degrees are
+  // measured from: one from a star, the other from the edge of a palace.
+  'cli.column.body': 'body',
+  'cli.column.inLodge': 'lodge, and degrees past its star',
+  'cli.column.inPalace': 'palace, and degrees into it',
+  'cli.column.motion': 'running',
+  'cli.column.house': 'palace of',
+  'cli.column.standing': 'standing there',
   'cli.heading.liuren': 'The Liu Ren board',
   'cli.field.yuejiang': 'general of the month',
   'cli.field.plate': 'heaven over earth',
@@ -959,6 +1026,26 @@ export const en = {
   // settles. See PLAN.md § 4 phase 13.
   'cli.value.liurenUnverified':
     'no reference implementation covers this rule; the classical text enumerates every board it can draw, and this engine matches them',
+  'cli.heading.qizheng': 'The seven governors and the four remainders',
+  'cli.field.governors': 'the seven',
+  'cli.field.remainders': 'the remainders',
+  'cli.field.minggong': 'palace of the life',
+  'cli.field.houses': 'the twelve palaces',
+  'form.luohou': 'Which node is 羅睺',
+  'form.luohou.descending': 'the descending node — the astrologers\u2019 law',
+  'form.luohou.ascending': 'the ascending node — 湯若望 and the 時憲曆',
+  'form.copyStars': 'Copy the board',
+  'form.luohou.note':
+    'It swaps the two names and moves nothing else: the two nodes are the ends of one line, half a turn apart. The default is what the astrologers kept, which is the reverse of the Indian convention.',
+  // Printed under every board, because a reader counting four names and
+  // finding three is owed the reason on the page rather than in a document.
+  'cli.value.threeRemainders':
+    'three, not four: 紫氣 is transmitted as a rule without an epoch, and the almanacs disagree on where it starts',
+  // Said once under a board whose frame nothing published can be held
+  // against. See PLAN.md § 4 phase 16.
+  'cli.value.qizhengFrame':
+    'the lodges begin at their determinative stars, placed at this instant; no table of 宿度 and no epoch enters',
+
   'cli.heading.scan': 'Charts from {from} to {to}',
   'cli.heading.criteria': 'Asked for',
   'cli.heading.warnings': 'Warnings',

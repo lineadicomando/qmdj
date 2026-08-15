@@ -327,3 +327,75 @@ export interface PlateOptions {
    */
   labels?: PlateLabels;
 }
+
+/**
+ * A 七政四餘 board, as much of one as a drawing needs.
+ *
+ * Looser than the engine's in the usual way, and in one place deliberately
+ * looser than it looks: `element` is optional on a body because 太陽 and 太陰
+ * have none — the five planets *are* the five phases and are inked as them,
+ * where the Sun and the Moon stand outside that count and take the plain ink.
+ * A drawing that required one would have had to invent two.
+ */
+export interface PlateQizheng {
+  /** The seven, in the transmitted order 日月水金火木土. */
+  governors: readonly PlatePlacement[];
+  /** Three of the four, on every board this engine draws. See `remainders` in the labels. */
+  remainders: readonly PlatePlacement[];
+  minggong: {
+    palace: { hanzi: string; index: number };
+    ci: { hanzi: string; id: string; pinyin?: string | undefined };
+  };
+  /** The twelve 人事宮, each with the palace of the ring it fell on. */
+  houses: readonly {
+    house: { hanzi: string; id: string; pinyin?: string | undefined };
+    palace: { index: number };
+    ci: { hanzi: string; id: string; pinyin?: string | undefined };
+  }[];
+}
+
+export interface PlatePlacement {
+  body: { hanzi: string; id: string; element?: string | undefined; pinyin?: string | undefined };
+  /** The 宿 it fell in, and how far past that 宿's 距星 it stands. */
+  lodge: { hanzi: string; id: string; pinyin?: string | undefined };
+  lodgeDegree: number;
+  /** The palace of the ring. `index` seats it; the drawing writes its own branch. */
+  palace: { hanzi: string; index: number };
+  /** 順 or 逆, as an identifier the caller has a word for. */
+  motion: string;
+}
+
+export interface PlateQizhengLabels {
+  /** The eleven, which the ring writes in glyphs and the block above glosses. */
+  body?: Record<string, string>;
+  /** The twelve 人事宮, written under the palace each fell on. */
+  house?: Record<string, string>;
+  /** The twelve 次. In the band of readings only: the ring has no room for a word. */
+  ci?: Record<string, string>;
+  /** 順 and 逆. */
+  motion?: Record<string, string>;
+  /** A word for what the middle of the ring holds, e.g. «palace of the life». */
+  minggong?: string;
+  /** The line saying the board carries three remainders and why not four. */
+  remainders?: string;
+  /** The line saying the 宿 begin at their determinative stars and not at a table. */
+  frame?: string;
+}
+
+export interface PlateQizhengOptions {
+  size?: number;
+  scheme?: 'light' | 'dark' | 'auto';
+  labels?: PlateQizhengLabels;
+  /** A line over the board — the moment it was laid for, usually. */
+  heading?: string;
+  /**
+   * The word for the band of readings under the ring, e.g. «Said aloud».
+   *
+   * Worth more here than on either other board. The 宿 are single characters
+   * that turn up nowhere else a reader is likely to have met them, and the
+   * twelve 次 are two-character names — 娵訾, 鶉尾 — that even a reader of
+   * Chinese may never have had to say. Without the band the ring is a field
+   * of shapes.
+   */
+  readings?: string;
+}

@@ -1,0 +1,58 @@
+# The 距星 of the twenty-eight 宿, in Swiss Ephemeris' own star-file format.
+#
+# The boundary of a 宿 is not a number this project chose: it is where its
+# determinative star stands, and sweph is asked where that is at the instant
+# of the chart, precession and proper motion included. So this file is the
+# whole of the 宿度 frame, and it is twenty-eight lines rather than a table
+# with an epoch nobody could defend. See the 七政四餘 section of
+# docs/sources.md.
+#
+# Twenty-six lines are copied **verbatim** from the sefstars.txt distributed
+# with Swiss Ephemeris (AGPL, as this project is), which is where the format
+# is documented. Two are not in it, both fainter than its magnitude 5 cut:
+# 胃宿一 (35 Ari, V 4.67) and 鬼宿一 (θ Cnc, V 5.34). Those two carry SIMBAD's
+# ICRS astrometry in the same columns, and are marked below.
+#
+# **觜 and 參 are the Qing assignment and not the older one.** Precession drove
+# the width of 觜 to zero and then past it: after the thirteenth century
+# φ¹ Ori stood east of δ Ori, so the two 宿 came out in the wrong order and
+# 觜 — the needle of the twenty-eight — took 參's width. 《儀象考成》 (乾隆
+# 十七年, 1752) restored the transmitted order by moving the two distances to
+# λ Ori and ζ Ori, which is what stands here. Laid with φ¹ and δ the ring
+# fails; laid with λ and ζ all twenty-eight widths come out positive and 觜
+# comes out at 0°58', which is the shape the tables describe. That is the
+# check, and it is over-determined the way the 值日宿 epoch is.
+#
+# The order below is the transmitted order of the 宿, which is also the order
+# of increasing longitude. Nothing reads it: the engine looks each star up by
+# its nomenclature name. It is here so the file can be read.
+Spica      ,alVir,ICRS,13,25,11.57937,-11,09,40.7501,-42.35,-30.67,1,13.06,0.97,-10, 3672
+Kang         ,kaVir,ICRS,14,12,53.74538,-10,16,25.3340,7.25,139.88,-4.38,12.8,4.21,-09, 3878
+Zubenelgenubi,al-2Lib,ICRS,14,50,52.71309,-16,02,30.3955,-105.68,-68.4,-10,43.03,2.75, -15, 3966
+Fang         ,piSco,ICRS,15,58,51.11324,-26,06,50.7886,-11.42,-26.83,-7.4,5.57,2.91,-25,11228
+Alniyat      ,siSco,ICRS,16,21,11.31571,-25,35,34.0515,-10.6,-16.28,-0.4,4.68,2.89,-25,11485
+Xamidimura   ,mu-1Sco,ICRS,16,51,52.23111,-38,02,50.5694,-10.58,-22.06,-7.6,6.51,2.98,-37,11033
+Alnasl     ,gaSgr,ICRS,18,05,48.48810,-30,25,26.7235,-53.92,-180.9,22,33.67,2.99,-30,15215
+Nanto        ,phSgr,ICRS,18,45,39.38610,-26,59,26.7944,50.61,1.22,21.5,13.63,3.14,-27,13170
+Dabih        ,beCap,ICRS,20,21,00.67326,-14,46,52.9791,44.92,7.38,-19,9.98,3.08,-15, 5629
+Albali       ,epAqr,ICRS,20,47,40.55260,-09,29,44.7877,33.98,-34.77,-15.3,15.7,3.77,-10, 5506
+Sadalsuud    ,beAqr,ICRS,21,31,33.53171,-05,34,16.2320,18.77,-8.21,6.28,6.07,2.89,-06, 5770
+Sadalmelek   ,alAqr,ICRS,22,05,47.036,-00,19,11.46,18.25,-9.39,6.85,6.23,2.94,-01, 4246
+Markab       ,alPeg,ICRS,23,04,45.65345,+15,12,18.9617,60.4,-41.3,-2.7,24.46,2.48, 14, 4926
+Algenib      ,gaPeg,ICRS,00,13,14.15123,+15,11,00.9368,1.98,-9.28,3.2,8.33,2.84, 14,   14
+             ,zeAnd,ICRS,00,47,20.32547,+24,16,01.8408,-101.17,-81.77,-24.43,17.24,4.06, 23,  106
+Sheratan     ,beAri,ICRS,01,54,38.41099,+20,48,28.9133,98.74,-110.41,-3.1,55.6,2.65, 20,  306
+# 胃宿 — SIMBAD, not in the Swiss Ephemeris file
+Weisu1,35Ari,ICRS,02,43,27.11428,+27,42,25.7379,8.502,-11.433,13,5.2876,4.67
+Electra      ,17Tau,ICRS,03,44,52.53688,+24,06,48.0112,20.84,-46.06,6.7,8.06,3.7, 23,  507
+Ain          ,epTau,ICRS,04,28,36.99882,+19,10,49.5446,106.19,-37.84,38.5,22.24,3.53, 18,  640
+Meissa       ,laOri,ICRS,05,35,08.27761,+09,56,02.9611,-0.34,-2.94,30.1,2.97,3.66, 09,  879
+Alnitak      ,zeOri,ICRS,05,40,45.52666,-01,56,33.2649,3.19,2.03,18.5,4.43,1.79,-02, 1338
+Tejat        ,muGem,ICRS,06,22,57.62686,+22,30,48.8979,56.39,-110.03,54.38,14.08,2.87, 22, 1304
+# 鬼宿 — SIMBAD, not in the Swiss Ephemeris file
+Guisu1,thCnc,ICRS,08,31,35.72996,+18,05,39.9054,-59.639,-56.615,44.6,7.5577,5.337
+Mautinah     ,deHya,ICRS,08,37,39.36627,+05,42,13.6057,-70.19,-7.9,11.3,20.34,4.131, 06, 2001
+Alphard      ,alHya,ICRS,09,27,35.24270,-08,39,30.9583,-15.23,34.37,-4.27,18.09,1.97,-08, 2680
+Zhang      ,up-1Hya,ICRS,09,51,28.69384,-14,50,47.7710,18.88,-21.85,-14.34,12.36,4.11,0, 0
+Alkes        ,alCrt,ICRS,10,59,46.46486,-18,17,55.6172,-462.26,129.49,47.54,20.49,4.07,-17, 3273
+Gienah       ,gaCrv,ICRS,12,15,48.37081,-17,32,30.9496,-158.61,21.86,-4.2,21.23,2.58,-16, 3424
