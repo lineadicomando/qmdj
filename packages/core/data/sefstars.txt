@@ -27,9 +27,12 @@
 # the width: 「以參宿中三星之東一星作距星，則觜宿黃道度恆在參前一度弱」 —
 # 觜 a little under one 度 ahead of 參, in a work that counts 360 to the
 # circle. The 0°58' above is that sentence, measured from the stars instead of
-# read. 斗宿一's place in the same work's 1744 table agrees with this file's
-# to 0.5" in ecliptic longitude. Both checks are written out in the 七政四餘
-# section of docs/sources.md.
+# read. 卷七's own table computes it too, putting 觜宿一 at 申 20°07'18" and
+# 參宿一 at 申 21°06'45" for 1744, a width of 0°59'27" — 58" from what these
+# two lines give through sweph. Three 距星 have been read off the 1744 tables
+# and their residuals in ecliptic longitude are 0.5", 7.6" and 50.5", so read
+# that table as good to about a minute of arc and no better. It is written out
+# in the 七政四餘 section of docs/sources.md.
 #
 # The order below is the transmitted order of the 宿, which is also the order
 # of increasing longitude. Nothing reads it: the engine looks each star up by

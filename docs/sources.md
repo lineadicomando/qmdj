@@ -1398,14 +1398,31 @@ authority rather than standing in for it:
 | φ¹ Ori and δ Ori | yes | **1 of 28** | **−1.24°** |
 | λ Ori and ζ Ori | yes | 0 of 28 | 0.97° |
 
-**0.97° is the text's own 一度弱.** 儀象考成 counts 360 to the circle, as its
-own 宮度分秒 columns do, so 「觜宿黃道度恆在參前一度弱」 — a little under one
-度 — is the same quantity this engine measures from the stars, arrived at
-without the sentence. That is the closest thing the frame has to a published
-value to check against, and it was found after the frame was built.
+**0.97° is the text's own 一度弱, and the text's own table says so twice
+over.** 儀象考成 counts 360 to the circle, as its 宮度分秒 columns do, so
+「觜宿黃道度恆在參前一度弱」 is the quantity this engine measures from the
+stars. It is also a quantity the work computes, in 卷七 恆星黃道經緯度表六
+黃道實沈宮, where the two 距星 stand at 觜宿一 申 20° 07′ 18″ and 參宿一 申
+21° 06′ 45″:
+
+| 觜's width, 參宿一 less 觜宿一 | |
+|---|---|
+| the table's own two numbers | 0° 59′ 27″ = **0.9908°** |
+| the stars, through sweph | 0° 58′ 29″ = **0.9747°** |
+
+Fifty-eight arcseconds apart, both of them 一度弱, and neither derived from
+the other. **The 距星 the engine reads and the 距星 the source tabulates are
+the same two stars in the same place to within a minute of arc**, which is the
+comparison this section could not make while the work was only cited.
+
+The same page carries the prose's other number. 卷一 says the 中上星 stands
+「僅六分餘」 ahead of the 西南星; the table puts 觜宿二, the 西南星, at
+申 20° 00′ 51″, which is **6′ 27″** behind 觜宿一. The argument and the
+ephemeris agree with each other, which is not something either could establish
+alone.
 
 **The verification of the frame is over-determination, and it is now joined by
-one star checked against a printed place.** Nothing here copies a table of
+three stars checked against printed places.** Nothing here copies a table of
 宿度 — there is no reference implementation of "the boundaries are where the
 stars are" — so what carries the frame is the same argument the 值日宿 epoch
 stands on: twenty-eight widths, each with a transmitted shape, and the ring
@@ -1414,12 +1431,12 @@ width. 觜 is the tightest of the twenty-eight constraints, about a degree wide,
 and only one pair of stars threads it. The test walks the ring at five epochs
 from 1700 to 2200.
 
-**What the 儀象考成 scan adds is a place, for one 距星, at a stated epoch.**
-卷二 declares it — 「今以乾隆九年甲子恆星黃赤經緯度…各將赤道歲差列於其下」,
-so **1744, with per-star precession** — and the 黃道星紀宮 table on the shelf
-reaches 斗 and 牛 and no further. 斗宿一 is on PDF p. 154, and 牛宿一 falls
-half a degree into 玄枵宮, which opens on the scan's last page. So the check
-is one star of twenty-eight:
+**What the 儀象考成 scan adds is printed places at a stated epoch.** 卷二
+declares it — 「今以乾隆九年甲子恆星黃赤經緯度…各將赤道歲差列於其下」, so
+**1744, with per-star precession** — and 卷二 to 卷十三 carry one 宮 apiece,
+which is where the twenty-eight are. Three have been read off so far, the two
+of the 觜/參 finding above and 斗宿一, which is the one whose row can be given
+in full because its page carries every column:
 
 | 斗宿一 φ Sgr | 儀象考成, 1744 | this engine, 1744-01-01 | Δ |
 |---|---|---|---|
@@ -1438,15 +1455,24 @@ latitude is 32″ off the other way. So the 黃道 columns are computed from the
 赤道 ones rather than measured twice — they are not two witnesses — and the
 latitude column is the weak one in the source, not here.
 
-**One star is one star, and the sub-arcsecond agreements are luckier than the
-catalogue is good.** The declination residual, near 10″, is the honest scale
-of an eighteenth-century place; two coordinates landing inside a second is
-partly chance. What the check does establish is that this frame and a printed
-Qing frame describe the same star to something like ten arcseconds at an epoch
-282 years back — some three hundred times finer than 觜 is wide, and 觜 is the
-narrowest of the twenty-eight. It is a comparison the section could not make
-before the scan arrived.
-Twenty-six of the twenty-eight remain unchecked, in 卷四 onward.
+**斗宿一's sub-arcsecond agreement is luckier than the catalogue is good, and
+觜宿一 is the proof.** Three stars now have residuals in ecliptic longitude:
+0.5″ for 斗宿一, 7.6″ for 參宿一, and **50.5″ for 觜宿一**. Tens of
+arcseconds is the honest scale of an eighteenth-century place — the
+declination residual said so before there was a second star to confirm it —
+and a coordinate landing inside a second is chance. Read the table as good to
+about a minute of arc per star and no better.
+
+A minute of arc is still far finer than anything this frame is asked for. A 宿
+boundary decides which lodge a planet is in; the narrowest of the twenty-eight,
+觜, is a degree wide, so the worst residual here is a seventieth of the
+tightest question the frame ever answers, and against an average 宿 of some
+thirteen degrees it is under a thousandth. **What the check establishes is
+that this frame and a printed
+Qing frame describe the same stars, at an epoch 282 years back, well inside
+the tolerance the board reads them at.** Twenty-five of the twenty-eight
+remain unread; 卷二 to 卷十三 are on the shelf, so it is work rather than a
+gap.
 
 Against the transmitted 赤道距度 in 365¼ 度 — which is a *different quantity*,
 equatorial where these are ecliptic, and so a check on shape and never on

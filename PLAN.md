@@ -2328,14 +2328,20 @@ right pair threads. It is the argument the 值日宿 epoch stands on, and it is
 weaker evidence than a runnable reference. Say so at the surface.
 
 **That last paragraph was true when the phase closed and is no longer the
-whole of it.** A scan of 《儀象考成》 卷一~卷三 reached the shelf afterwards,
-and it carries two things the phase had to do without: the 觜/參 assignment
-argued in the compilers' own words, ending on 「觜宿黃道度恆在參前一度弱」 —
-which is the 0.97° above, stated by the source — and a star table for
-乾隆九年甲子 (1744) whose 斗宿一 agrees with this engine's place to 0.5″ in
-ecliptic longitude. One 距星 of twenty-eight, the other twenty-six being in
-卷四 onward. The frame still copies no table and still stands on
-over-determination; what changed is that it is no longer the only thing said
+whole of it.** 《儀象考成》 reached the shelf afterwards — 卷一~卷十六, from
+the CADAL scans on archive.org — and it carries two things the phase had to do
+without. The 觜/參 assignment is argued there in the compilers' own words,
+three earlier assignments named and refused, ending on 「觜宿黃道度恆在參前
+一度弱」, which is the 0.97° above stated by the source. And 卷二~卷十三 are a
+star table for 乾隆九年甲子 (1744), one 宮 to a 卷, in which the same two 距星
+give a width of 0°59′27″ against this engine's 0°58′29″.
+
+**The residuals are the part worth carrying forward.** Three 距星 have been
+read off: 0.5″, 7.6″ and 50.5″ in ecliptic longitude. The first invited a
+conclusion the third refuses — the table is good to about a minute of arc, not
+to a second — which is still a seventieth of 觜, the narrowest question the
+frame answers. The frame still copies no table and still stands on
+over-determination; what changed is that this is no longer the only thing said
 for it. See the 七政四餘 section of `docs/sources.md`.
 
 **命宮 is 立命 by 加時**, which the texts state in a line: the hour laid on the
