@@ -132,17 +132,39 @@
 {/if}
 
 <style>
-  .result { transition: opacity 0.15s ease-out; display: grid; gap: 2rem; }
+  /*
+   * One column, and what matters about it is that its floor is zero.
+   *
+   * The tables under the board ask for `min-width: max-content`: every cell
+   * holds one short thing, and squashing them is worse than scrolling them,
+   * which is why each of them sits in a frame of its own that scrolls. But an
+   * `auto` track is at least as wide as what stands in it asks to be, and a
+   * scrolling frame around a table asking for 44rem asks for 44rem all the
+   * same — so on a narrow screen the column grew past the page and the *page*
+   * scrolled sideways, which is the one thing the frames were there to
+   * prevent. This board showed it first because its tables are the widest on
+   * the site, but nothing about it was this board's.
+   *
+   * `minmax(0, 1fr)` is leave for the track to be narrower than its contents,
+   * and it is what makes the frames work at all. The consultation has said it
+   * since it was written.
+   */
+  .result {
+    transition: opacity 0.15s ease-out;
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
   .stale { opacity: 0.5; }
 
-  /* Centred as both other boards are, and wider than either.
-     34rem is the width the other two settled on, and this drawing does not
-     fit in it: it carries a listing of eleven and a band of readings on top
-     of the ring, so at that width the cells come out a third of the size and
-     the listing is smaller than the page's own smallest type. It is given the
-     width of the words under it instead, which is the widest thing on the
-     page and therefore the widest a picture can be without leading. */
-  .board img { width: 100%; max-width: 44rem; height: auto; display: block; margin-inline: auto; }
+  /* Centred, at the measure every board on this site is drawn at: see
+     `--board` in `app.css`. This one had 44rem of its own — wider than the
+     other three because it carries a listing of eleven and a band of readings
+     on top of the ring, and at their width the cells came out a third of the
+     size and the listing smaller than the page's own smallest type. That
+     argument was for a floor and it is answered by any measure above it; what
+     it never argued for was a width no other board shares. */
+  .board img { width: 100%; inline-size: var(--board); height: auto; display: block; margin-inline: auto; }
   .board .paper { display: none; }
   .screen { transition: opacity 0.2s ease-out; }
   .settling { opacity: 0.6; }

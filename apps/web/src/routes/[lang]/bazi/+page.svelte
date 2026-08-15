@@ -112,8 +112,17 @@
       exception to it — see `CalendarAndAlmanac`. 曆注 weighs a day as the
       occasion of an undertaking; a birth is not one, and beside pillars read
       as a person the page would be read as a remark about the person.
+
+      On the axis the reading is on, and that is why it is wrapped rather than
+      set here as a sibling: it is the last thing under the plate, and one
+      block of the three left at the margin is the one the eye reads as
+      dropped. The component carries no measure of its own — it is laid out by
+      whatever holds it, on the chart at the full width of the page — so the
+      measure is the caller's to give.
     -->
-    <CalendarAndAlmanac moment={result.moment} {t} almanac={false} />
+    <div class="words">
+      <CalendarAndAlmanac moment={result.moment} {t} almanac={false} />
+    </div>
   </div>
 {/if}
 
@@ -125,6 +134,10 @@
      of three words does not become clearer for being a panel wide. */
   label { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 26rem; }
   label :global(select) { color: var(--ink); }
+  /* The reading's own measure, named again here because the calendar under it
+     is a component and takes the width it is handed. `BaziReading` holds the
+     other copy; they are one axis and have to move together. */
+  .words { max-width: 46rem; margin-inline: auto; }
   .result { transition: opacity 0.15s ease-out; }
   .stale { opacity: 0.5; }
   .failure { color: var(--alarm); }

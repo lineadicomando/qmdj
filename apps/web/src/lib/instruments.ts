@@ -108,11 +108,6 @@ export interface Instrument {
   readonly plate?: {
     readonly width: number;
     readonly height: number;
-    /**
-     * A ring of twelve rather than a grid of nine, which is drawn narrower and
-     * set to the margin instead of centred.
-     */
-    readonly ring: boolean;
   };
   /**
    * What the option says it is **for**, never what it is called.
@@ -133,7 +128,7 @@ export const INSTRUMENTS: readonly Instrument[] = [
     takesBirth: true,
     takesGender: true,
     strengths: true,
-    plate: { width: 900, height: 1280, ring: false },
+    plate: { width: 900, height: 1280 },
     option: 'form.instrument.qimen',
   },
   {
@@ -143,7 +138,7 @@ export const INSTRUMENTS: readonly Instrument[] = [
     takesBirth: false,
     takesGender: false,
     strengths: false,
-    plate: { width: 900, height: 1379, ring: true },
+    plate: { width: 900, height: 1379 },
     option: 'form.instrument.liuren',
   },
   {
@@ -153,7 +148,7 @@ export const INSTRUMENTS: readonly Instrument[] = [
     takesBirth: false,
     takesGender: false,
     strengths: false,
-    plate: { width: 900, height: 1450, ring: true },
+    plate: { width: 900, height: 1450 },
     option: 'form.instrument.qizheng',
   },
   {

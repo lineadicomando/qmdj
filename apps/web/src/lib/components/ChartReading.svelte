@@ -189,16 +189,18 @@
    */
   .ju { font-size: 1.1em; margin: 0 0 0.35rem; }
   /*
-   * The caption's measure, mirrored from the drawing's own rule.
+   * The caption's measure, which is the board's: `--board`, in `app.css`.
    *
-   * The board is `min(100%, 100svh * 8 / 7)` wide on both pages that draw it
-   * at full width, so this is the same figure and the two align edge to edge.
-   * Written twice on purpose and marked in both places: the alternative is a
-   * custom property set by two pages and read here, which hides the coupling
-   * instead of naming it.
+   * It used to be the expression written out a second time, marked as a
+   * mirror, on the argument that a custom property set by two pages and read
+   * here would hide the coupling instead of naming it. That held while it was
+   * two pages coupled to one caption. It is now four boards and their
+   * captions at one measure, and an expression copied into six rules is not a
+   * coupling anybody can see either — it is six places to miss. The token is
+   * defined once, for the site, and says what it is for where it is defined.
    */
   .wide {
-    inline-size: min(100%, calc(100svh * 8 / 7));
+    inline-size: var(--board);
     margin-inline: auto;
   }
   .wide .ju { text-align: center; }

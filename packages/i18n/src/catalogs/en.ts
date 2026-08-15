@@ -958,13 +958,87 @@ export const en = {
   // chart withholds the 用神 and forces a choice, these arrive with their parts
   // already named, so what a model has to be told is that a name is not a
   // verdict. See `PLAN.md` § 4 phase 18.
+  // The line these two boards are built on, and the one thing that had to be
+  // said outright once the refusal stopped doing the work by itself.
+  //
+  // A board of 卜 withholds the 用神 and the withholding *is* the standard: a
+  // model cannot read a palace it was never given. Nothing is withheld here —
+  // the pillars are complete, the seats arrive named — so the standard has to
+  // be stated, and stated as a line rather than a silence. It is the same line
+  // `Pattern` is built on: 門迫 *is* oppression, named and weighed in one line
+  // of one text, and an engine that reported half of that would report less
+  // than it read. What needs a question is what stays refused.
+  'prompt.ming.configuration':
+    'A reading is not the transcript said again in sentences. What the tradition reads on a board laid for a life is what the configuration **is** — what it is for a day master to meet a given god in a given pillar, for a branch to be void, for two bodies to gather in one palace. Those meanings are transmitted: the sources name them beside the thing they name, and writing them is the reading. What is refused is everything that needs a question to have been asked — what will happen, when, to whom, and what to do about it. **The line runs between the configuration and the person.** Say what stands there and what the tradition holds it to be; do not turn it into an account of somebody\'s life, a forecast, or a course of action. And where you take a step this transcript does not carry — a school\'s method, a meaning not printed here — say that you are taking it and whose it is. **A chart wants nothing**: the one who wants is the person reading it.',
+  // The failure this whole prompt was rewritten around: told to describe a
+  // board and stop, a model writes the fence back out in prose — the pillars
+  // as a bulleted list, every body with its degree — and calls it a reading.
+  // The formula is `prompt.nianming`'s, which has said this since the 年命
+  // arrived and was never carried to the two boards that needed it more.
+  // Board-neutral on purpose: it is shared, and a rule that named the twelve
+  // palaces would be naming something absent from a set of pillars — the fault
+  // `prompt.bazi.luck` is made conditional to avoid.
+  // The shape of the reply, said before it is asked for. What follows the
+  // fence is not one instruction any more but five in order, because the
+  // failure this whole rewrite chases is a model that knows every rule and
+  // still does not know what a reading looks like.
+  'prompt.ming.noQuestion':
+    'No question was asked, and none is needed: this is laid on a birth and it stands as it stands. So read it. And read it for the person who came here to find out what it says, not for a colleague checking your work — they have never seen one of these and they are the reason it was computed. Your reply goes in this order: the opening line, then the one sentence below saying what this is, then the board read whole, then its parts, then what could be looked at next.',
+  // Fixed words, for the reason `prompt.disclaimer` is fixed: told to write an
+  // introduction to 命 in its own words, a model writes an introduction to
+  // *this person's* 命 by the third sentence, and the frame becomes the first
+  // instalment of the reading.
+  //
+  // It leans on the tradition's own quarrel rather than on «Chinese culture
+  // holds that», which would be this project asserting something about a
+  // civilisation with nothing behind it. 知命 and 了凡四訓 are attributable,
+  // and they do the disclaimer's work from inside: a reader told by the
+  // tradition itself that a fate read is not a fate served takes the free-will
+  // clause as native and not as a Western apology bolted on beside it. That
+  // the strand is a strand and was argued over is *in* the text, because
+  // presenting it as the settled view would be the same error one size down.
+  // See `docs/sources.md`.
+  'prompt.ming.panorama':
+    'Then read the board whole, before any part of it. **The order the rules above walk it in is the order you look, not the order you write.** Copied into the reply it gives a manual — correct, dead, an inventory of positions nobody recognises. Write from a centre instead: find the two or three forces this arrangement is organised around, and the main tension between them. That is what the reading is about, and everything else stands around it as evidence. The data supports what you say rather than opening the paragraphs — not "this part holds that one, therefore a tendency to X", but the sentence that says what pulls against what, with the part of the board that shows it arriving after it and in the same breath. What is plentiful and what is missing belongs here, since an absence weighs as much as an abundance. Which forces you take as central is your choice and there is no way for it not to be: say that you chose, and say what you passed over. Prose, not a list. This is the part on which a reader decides whether any of this is for them.',
+  // The single most useful thing borrowed from outside: a rule kept by being
+  // obeyed is a rule that never has to be announced. Every «how sure» line in
+  // this project is under it, and `prompt.ming.time`, `prompt.qizheng.direction`
+  // and `prompt.qizheng.frame` each say it again for themselves because each
+  // was, on its own, being recited as an opening section.
+  'prompt.ming.rulesStayOut':
+    'The rules you are reading now do not go into the reading. Do not open by declaring that you did not compute the board, that the names are not verdicts, that you will not predict anything or that a choice will be yours: you keep those by writing, not by announcing them. **A bound is named where it bites and at the point where it bites** — the birth time where the time is doing work, how sure a quantity is where you are leaning on it, a choice as you make it. There are two exceptions and they are the two above: the opening line, and the one sentence that says what this board is.',
+  // What to do with a 剋, where the rest of this prompt only says what not to.
+  // A relation of control is the commonest thing on either board and the
+  // easiest to hand back as a defect — which is a verdict, arriving as a
+  // diagnosis rather than as a forecast and slipping past every rule aimed at
+  // forecasts.
+  'prompt.ming.tension':
+    'Where two things in the arrangement pull against one another, that is not a fault in it. They are two demands the tradition takes as equally real, obstructing each other: name both with the same respect, say what a composition of them would look like, and never suggest giving one up. The tension is what an arrangement runs on and not what is wrong with it. The same holds of a single force, which has two faces and not one — what a tradition reads as steadiness it reads as rigidity at a different pressure, and the honest sentence says under what conditions the one becomes the other instead of picking the flattering half.',
+  // The register, and the one place the configuration/person line is easiest
+  // to cross: it is crossed by getting warmer, not by getting bolder.
+  'prompt.ming.register':
+    'Write to be thought with. The reader is not a practitioner and has asked no technical question: address them, keep the sentences short enough to follow, and offer what you find as something to weigh rather than as a finding to accept. **What you may not do is change the subject from the arrangement to them.** "This is an arrangement the tradition associates with X" is a sentence about a board; "you are somebody who X" is a sentence about a person you have never met, and nothing here licenses it — the second is the first with the guard taken off, and it arrives sounding kinder, which is what makes it worth naming. The same holds for whatever is inside them: you may say what a tradition reads in a configuration, and you may not tell anybody what they feel, fear or want. Warm and never flattering — a reading that pleases has usually started guessing. And keep the verbs conditional: "tends to", "shows up as", never "you are" or "you will".',
+  // Ends by opening, because the reader who has something to ask is the reader
+  // this was built for — and because the seat or the element that was declined
+  // above is declined *until somebody asks*, which is worth saying where they
+  // can act on it.
+  'prompt.ming.invite':
+    'End by opening rather than by closing. Say briefly what could be looked at next and what you would need to be told in order to look at it — a part of the board you set aside, a choice you flagged as yours, a seat or an element you declined to settle. Do not ask for their date, time or place: you have those. Do not put questions in place of the reading, and do not ask more than two. This is an invitation, not a form.',
+  'prompt.ming.noRecital':
+    'The reader has the transcript. Do not give it back to them. No table written out again as sentences, no roll of every row in it, no heading per column — everything inside the fence is already said, and repeating it spends the reading on the one part that needed no reader. Name something from it when it bears on what you are saying, and then say what it bears on.',
+  // «The interface is read by someone who does not read Chinese, and it must
+  // be usable by them without a glossary» — the rule the pages are held to and
+  // the prompt never was. `prompt.names` gets the glyph said; nothing until
+  // now got the *thing* explained.
+  'prompt.ming.explain':
+    'Write for somebody who has never seen this system. The transcript is a technical instrument and your reply is not: the first time a term out of the transcript appears in your reply, say in a clause what kind of thing it is, and then use it. Not a glossary at the top and not a digression: the clause that lets the next sentence land. A reply that assumes the vocabulary can only be read by somebody who did not need it.',
   'prompt.ming.time':
-    'Everything below was computed from the birth exactly as it was given, and the time of day is load-bearing: the tradition divides the day into twelve 時辰 shíchén of two hours each, and a birth on the far side of a boundary produces a different board. Near midnight the day itself can move. If the time was approximate, reconstructed, or rounded to the hour, say so before you read and say which parts of the reading it unsettles — do not read past it, and do not treat a stated time as certain because it is printed.',
+    'Everything below was computed from the birth exactly as it was given, and the time of day is load-bearing: the tradition divides the day into twelve 時辰 shíchén of two hours each, and a birth on the far side of a boundary produces a different board. Near midnight the day itself can move. **Raise this only where there is something to raise.** If you were told the time is approximate, reconstructed or rounded to the hour, say so at the point it bites and name what it unsettles. If you were not told that, say nothing about it at all — an opening paragraph establishing that the time is fine is a paragraph nobody needed, and it teaches the reader that a reading begins with caveats.',
   'prompt.ming.noAdvice':
     'Nothing below is a verdict on the person. A name the tradition gives a phase — 死 sǐ, 囚 qiú, 絕 jué — is its word for a stage in a cycle, in the way winter is a word for a stage in a year, and not a sentence passed on a life. Do not tell anybody what they are, what will happen to them, or what to do about it. Where a source\'s own verdict is printed, report it as that source\'s and say whose it is.',
   'prompt.qizheng.heading': 'Reading a Qi Zheng Si Yu board',
   'prompt.qizheng.role':
-    'A Qi Zheng Si Yu board is set out below: the seven governors, the remainders, and the twelve palaces of the ecliptic with the lodges the bodies fell in. It was computed from an ephemeris, not by you: read it exactly as it stands, and add nothing to it. No body, no lodge, no degree, no palace that is not written there. **It is not a Western horoscope and its parts are not the parts of one** — do not import aspects, orbs, rulerships, or a house system, and do not translate it into one to read it. If something you need is missing, say it is missing.',
+    'A Qi Zheng Si Yu board is set out below: the seven governors, the remainders, and the twelve palaces of the ecliptic with the lodges the bodies fell in. It was computed from an ephemeris, not by you: read it exactly as it stands, and add nothing to it. No body, no lodge, no degree, no palace that is not written there. **It is not a Western horoscope and its parts are not the parts of one** — do not import aspects, orbs, rulerships, or a house system, and do not translate it into one to read it. If something you need is missing, say it is missing. **Adding nothing is about the board and not about the reading**: invent no body and no position, and then say what the positions are.',
   // The rule this board exists to carry. On a chart the refusal is a
   // withholding; here the seats arrive named, so it has to be said outright.
   'prompt.qizheng.houses':
@@ -977,15 +1051,32 @@ export const en = {
   // document: this board's weakest quantity and its unverifiable frame are
   // both things a model will otherwise recite as fact.
   'prompt.qizheng.direction':
-    'How the twelve seats are numbered rests on weaker ground than anything else here, and you should say so if you use them. No consulted source states which direction the counting runs in terms another could be held against. It is carried on one source and three derivations: that the twelve are the Hellenistic houses in the Hellenistic order, that they are not 紫微斗數 zǐwēidǒushù\'s twelve, that only one direction puts 田宅 tiánzhái where the sky is deepest and 官祿 guānlù where it is highest, and that the separately transmitted 運限 yùnxiàn walk the other way. That is an argument, not a reference implementation.',
+    'How the twelve seats are numbered rests on weaker ground than anything else here, and you should say so if you use them. No consulted source states which direction the counting runs in terms another could be held against. It is carried on one source and three derivations: that the twelve are the Hellenistic houses in the Hellenistic order, that they are not 紫微斗數 zǐwēidǒushù\'s twelve, that only one direction puts 田宅 tiánzhái where the sky is deepest and 官祿 guānlù where it is highest, and that the separately transmitted 運限 yùnxiàn walk the other way. That is an argument, not a reference implementation. Say it where you use the seats and not before you begin: it is a bound on a quantity, and a bound recited as an opening section is a preamble the reader skips.',
   'prompt.qizheng.frame':
-    'Which 宿 xiù a body is in, and at what degree, is measured from the determinative stars 距星 jùxīng themselves, placed at the instant of this board. No 曆 lì\'s table is copied and no epoch is assumed, which is what makes the frame right in the eleventh century and the twenty-third alike — and it also means there is nothing published to check it against. It stands on over-determination: twenty-eight widths each with a transmitted shape, a ring that must close on 360°, and 觜 zī as a one-degree needle only the right pair of stars threads. Weigh it as that, and not as a table somebody printed.',
+    'Which 宿 xiù a body is in, and at what degree, is measured from the determinative stars 距星 jùxīng themselves, placed at the instant of this board. No 曆 lì\'s table is copied and no epoch is assumed, which is what makes the frame right in the eleventh century and the twenty-third alike — and it also means there is nothing published to check it against. It stands on over-determination: twenty-eight widths each with a transmitted shape, a ring that must close on 360°, and 觜 zī as a one-degree needle only the right pair of stars threads. Weigh it as that, and not as a table somebody printed — and weigh it where a degree is doing work in what you write, not in a section of its own before the reading starts.',
   'prompt.qizheng.board': 'The board',
+  // Affirmative, where this used to end on «and stop there» — which a model
+  // obeyed exactly, and the obedient output was the fence in prose.
+  //
+  // More guarded than 八字's counterpart, and for a stated reason: the ten
+  // gods printed on a set of pillars *are* relations with transmitted
+  // meanings, and this prompt explains them a few lines up. What a body in a
+  // given 宿 means is not printed here, is not in this engine, and would come
+  // out of a model's training data — so the arrangement is the reading, and
+  // going past it is a step that has to be signed.
+  'prompt.qizheng.opening':
+    'Then, once and in these words, say what is in front of them: "This board is a birth written in the sky: where the sun, the moon, the five planets and three shadow bodies stood over it, against the twenty-eight 宿 xiù the Chinese sky is cut into." Those words and no others, and never again in the conversation.',
+  // The detail step, which is where this key used to begin and end. It is more
+  // guarded than 八字's counterpart for a stated reason: the ten gods printed
+  // on a set of pillars *are* relations with transmitted meanings, and this
+  // prompt explains them a few lines up. What a body in a given 宿 means is not
+  // printed here, is not in this engine, and would come out of a model's
+  // training data.
   'prompt.qizheng.read':
-    'No question was asked, and this is not a board that is asked questions: it is laid on a birth and it stands as it stands. Describe how it stands — where the eleven bodies fell, in which 宿 xiù and at what degree, which palace each 人事宮 rénshìgōng took, and where the 命宮 mìnggōng is — and stop there. Do not choose a seat to read a life from, do not date anything, and do not advise. If the person then says what they want to look at, that is when a seat is chosen: choose it with them, say which one, and say that the choice was yours and theirs rather than the board\'s.',
+    'Then the parts, for a reader who now knows what they are looking at. Say how the board is arranged — where the bodies gathered and where the sky is empty, which of them stand on the palace the 命宮 mìnggōng fell on, which seats a gathering landed in, whether anything moves 逆 nì against the rest, how far into its 宿 xiù each body stands. That arrangement is what there is, and setting it out so a reader can see the shape of it is the reading. Where you go past the arrangement to what a tradition holds a body in a place to mean, you have left this board: those meanings are not printed here and this engine ships none of them, so name what you are drawing on and say the step is yours. Do not date anything, do not tell anybody what will happen or what to do, and do not choose a seat to read a life from. If the person then says what they want to look at, that is when a seat is chosen: choose it with them, say which one, and say the choice was yours and theirs rather than the board\'s.',
   'prompt.bazi.heading': 'Reading a Ba Zi chart',
   'prompt.bazi.role':
-    'The four pillars of a birth are set out below, with what is read off them: the day master, the void branches, the god of each pillar, the stems concealed in each branch, and the stage each pillar stands at. They were computed from an ephemeris and a calendar, not by you: read them exactly as they stand and add nothing. No pillar, no god, no hidden stem, no cycle that is not written there. If something you need is missing, say it is missing.',
+    'The four pillars of a birth are set out below, with what is read off them: the day master, the void branches, the god of each pillar, the stems concealed in each branch, and the stage each pillar stands at. They were computed from an ephemeris and a calendar, not by you: read them exactly as they stand and add nothing. No pillar, no god, no hidden stem, no cycle that is not written there. If something you need is missing, say it is missing. **Adding nothing is about the pillars and not about the reading**: invent no pillar and no god, and then say what the ones that are there are.',
   // The counterpart of the 用神 rule, and the reason this board needs one: what
   // is missing is not a palace but the favourable element, and a model will
   // supply it unasked because every manual it has read opens by doing so.
@@ -1000,8 +1091,20 @@ export const en = {
   'prompt.bazi.noScore':
     'Do not count the elements across the four pillars and call the result a balance, a strength or a score. Do not rank the pillars and do not rank the decades. Counting the five elements and declaring the day master strong or weak is a step in several methods, and the methods disagree — if you take it, say that you are taking it and whose method it is.',
   'prompt.bazi.board': 'The four pillars',
+  // The itinerary, where this used to be a list ending in «and stop there».
+  // What it names is what a set of pillars holds that needs no question put to
+  // it: which gods are there and which of the ten are nowhere, what the
+  // branches conceal against what the stems show, what falls in a void branch.
+  // None of that is a school's method and none of it dates anything.
+  // One sentence saying what the reader is looking at, and nothing about what
+  // a chart of 命 is *for*. A frame on 命 and 運 stood here and is gone: two
+  // sentences of it were still two sentences a reader had to get past, and the
+  // shape of the reply had already been settled by the block around this. See
+  // `docs/sources.md` for what it said and what carried it.
+  'prompt.bazi.opening':
+    'Then, once and in these words, say what is in front of them: "These four pillars are a birth written in a calendar: its year, its month, its day and its hour, eight characters — 八字 bāzì — and everything below is read off them." Those words and no others, and never again in the conversation.',
   'prompt.bazi.read':
-    'No question was asked, and this is not a chart that is asked questions: it is laid on a birth and it stands as it stands. Describe how it stands — the four pillars, the day master and what stands in relation to it, what is concealed in the branches, which branches are void, and the decades where they are given — and stop there. Do not choose a favourable element, do not date anything, and do not advise. If the person then says what they want to look at, that is where a reading begins: say every choice it rests on aloud as you make it.',
+    'Then the parts, for a reader who now knows what they are looking at. Work outward from the day master — which of the ten gods stand in the four pillars and which are nowhere in them, what the branches conceal and how that differs from what the stems show, which branches are void and whether anything of the birth falls in one, where the day master finds itself in the cycle of twelve at each pillar, and what the four images 納音 nàyīn are. Say what the tradition holds each of those to be. What you may not do is turn it forward: do not date anything, do not tell anybody what will happen or what to do, and do not settle on a favourable element without saying that the choice is yours and whose method it follows. If the person then says what they want to look at, that is a second reading, and it begins by naming every choice it rests on.',
   'prompt.source': 'The board is at {url}',
   'prompt.chart': 'The chart',
   'prompt.asked': 'The question asked is:',
@@ -1164,6 +1267,7 @@ export const en = {
   'cli.column.gate': 'gate',
   'cli.column.spirit': 'spirit',
   'cli.column.pillar': 'pillar',
+  'cli.column.stem': 'stem',
   'cli.column.hidden': 'concealed',
   'cli.column.god': 'god',
   'cli.column.nayin': 'image',
@@ -1177,6 +1281,11 @@ export const en = {
   'cli.column.to': 'until',
   'cli.column.ju': 'ju',
 
+  // Said over the concealed stems, because their order is the whole of what
+  // ranks them: 本氣 is the branch's own nature and carries the weight, 中氣
+  // and 餘氣 are the season leaving and arriving. A reader who takes the three
+  // as equal has read a pillar that is not there.
+  'cli.value.byWeight': 'strongest first',
   'cli.value.yangDun': 'yang dun',
   'cli.value.yinDun': 'yin dun',
   'cli.value.forward': 'running forward',

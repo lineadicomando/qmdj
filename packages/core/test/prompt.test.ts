@@ -350,17 +350,147 @@ describe('the prompt for a board of 命', () => {
     expect(text).not.toContain('大運');
   });
 
-  it('ends on what to do without a question, and never on a question line', () => {
+  /**
+   * What these two end on, and it is an instruction to read rather than one to
+   * stop. The closing line used to be `prompt.noQuestion` in other words —
+   * describe the board and «stop there» — which is the *degenerate* branch of a
+   * board of 卜, where a palace genuinely cannot be chosen until somebody asks
+   * something. Nothing is missing here: the pillars are complete and the seats
+   * arrive named. Told to describe and stop, a model wrote the fence back out
+   * in prose and called it a reading.
+   */
+  it('ends by asking for a reading, and never on a question line', () => {
     const at = moment();
 
     for (const text of [qizhengReadingPrompt(at, board(), en), baziReadingPrompt(at, pillars(), en)]) {
-      expect(text).toContain('is not a');
-      expect(text).toContain('asked questions');
+      expect(text).toContain('none is needed');
+      expect(text).toMatch(/So read (it|them)\./);
+      expect(text).not.toContain('stop there');
       // The 卜 machinery, absent rather than empty: there is no question to
       // withhold and no line for a browser to append one to.
       expect(text).not.toContain('The question asked is');
       expect(text).not.toContain('No question was asked. Describe how the chart stands');
-      expect(text).toContain('do not advise');
+      // What stays refused is what needs a question to have been asked, and
+      // both boards still say so on the way out.
+      expect(text).toContain('Do not date anything');
+      expect(text).toContain('what to do');
+    }
+  });
+
+  /**
+   * The three rules that turn a transcript into something a reader can use,
+   * and the reason the two boards of 命 needed them where the two of 卜 did
+   * not: a board of 卜 ends on a question, which is by itself an instruction
+   * to write prose. These end on a birth, and without these they ended on a
+   * list.
+   */
+  /**
+   * The five steps after the fence, in the order the reply is to be written
+   * in. Asserted as an order and not as five substrings, because the order is
+   * the point: a panorama under the detail is a summary nobody needed, and an
+   * introduction under either is a frame arriving after the thing it framed.
+   */
+  it('lays out the reply after the fence, in order', () => {
+    const at = moment();
+
+    for (const [text, written] of [
+      [qizhengReadingPrompt(at, board(), en), 'the sky'],
+      [baziReadingPrompt(at, pillars(), en), 'a calendar'],
+    ] as const) {
+      const closing = text.slice(text.lastIndexOf('```') + 3);
+      const steps = [
+        'none is needed',
+        `a birth written in ${written}`,
+        'read the board whole',
+        'Then the parts',
+        'End by opening',
+      ].map((step) => closing.indexOf(step));
+
+      expect(steps).not.toContain(-1);
+      expect(steps).toStrictEqual([...steps].sort((a, b) => a - b));
+    }
+  });
+
+  /**
+   * The one fixed sentence, quoted rather than commissioned for the reason the
+   * disclaimer is: told to introduce a board in its own words, a model
+   * introduces *this person's* board by the third sentence and the frame
+   * becomes the first instalment of the reading.
+   *
+   * **It says what the reader is looking at and nothing about what a chart of
+   * 命 is for.** A frame on 命 and 運 stood in front of it, twice — five
+   * sentences, then two — and both went, because a paragraph about destiny
+   * before the reading starts is preamble however true it is. The length is
+   * measured here rather than described, so it cannot grow back by degrees.
+   */
+  it('fixes one sentence of orientation, and keeps it to one', () => {
+    for (const [text, written] of [
+      [baziReadingPrompt(moment(), pillars(), en), 'a calendar'],
+      [qizhengReadingPrompt(moment(), board(), en), 'the sky'],
+    ] as const) {
+      const quoted = /"([^"]*a birth written in[^"]*)"/.exec(text)?.[1] ?? '';
+
+      expect(quoted).toContain(`a birth written in ${written}`);
+      expect(text).toContain('Those words and no others');
+      expect(quoted.length).toBeLessThan(220);
+      // The frame that used to precede it, gone from both boards.
+      expect(text).not.toContain('運 yùn');
+      expect(text).not.toContain('了凡四訓');
+    }
+  });
+
+  /** Warmth is the direction the configuration/person line gets crossed in. */
+  it('lets the register soften without letting the subject move', () => {
+    for (const text of [
+      qizhengReadingPrompt(moment(), board(), en),
+      baziReadingPrompt(moment(), pillars(), en),
+    ]) {
+      expect(text).toContain('is a sentence about a board');
+      expect(text).toContain('you are somebody who X');
+      expect(text).toContain('what they feel, fear or want');
+      expect(text).toContain('never flattering');
+    }
+  });
+
+  /**
+   * The two rules that turn the panorama from a summary into a reading, both
+   * of them the answer to a reply that obeyed every bound and was unreadable.
+   * The first says an inspection order is not a writing order; the second says
+   * a bound kept by being obeyed never has to be announced — which is what a
+   * model does with `prompt.ming.time` and the two 七政四餘 bounds when nothing
+   * tells it otherwise, promoting each to a heading before the reading starts.
+   */
+  it('parts the order it is looked at in from the order it is written in', () => {
+    for (const text of [
+      qizhengReadingPrompt(moment(), board(), en),
+      baziReadingPrompt(moment(), pillars(), en),
+    ]) {
+      expect(text).toContain('the order you look, not the order you write');
+      expect(text).toContain('two or three forces');
+      expect(text).toContain('rather than opening the paragraphs');
+      expect(text).toContain('do not go into the reading');
+      expect(text).toContain('where it bites and at the point where it bites');
+      // A relation of control is a tension and not a defect, which is the one
+      // thing the bounds never said — a verdict arriving as a diagnosis slips
+      // past every rule aimed at a forecast.
+      expect(text).toContain('not a fault in it');
+      expect(text).toContain('A chart wants nothing');
+    }
+  });
+
+  it('asks for the configuration and refuses the recital', () => {
+    const at = moment();
+
+    for (const text of [qizhengReadingPrompt(at, board(), en), baziReadingPrompt(at, pillars(), en)]) {
+      // The line: what the configuration *is* may be written; what needs a
+      // question may not. It is the standard `Pattern` is built on, said to a
+      // model instead of encoded in a table.
+      expect(text).toContain('between the configuration and the person');
+      // Said since the 年命 arrived and never carried to these two.
+      expect(text).toContain('Do not give it back to them');
+      // «Usable without a glossary», which the pages are held to and the
+      // prompt was not.
+      expect(text).toContain('never seen this system');
     }
   });
 

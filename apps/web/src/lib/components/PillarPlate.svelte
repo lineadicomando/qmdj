@@ -129,12 +129,22 @@
 
 <style>
   .frame { container-type: inline-size; }
+  /*
+   * The four pillars in full are the 八字 board, and take a board's measure.
+   *
+   * `--board` is what the other three are drawn at — see `app.css` — and this
+   * one is the odd instrument of the four, being a grid of the page's own type
+   * rather than a picture at an address. That is a fact about how it is made
+   * and not about how wide it is: a reader who lays a chart and then a birth
+   * is looking at two boards, and 46rem against the chart's measure said they
+   * were two kinds of thing.
+   */
   .plate {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    max-width: 46rem;
+    inline-size: var(--board);
     border: 1px solid var(--rule);
-    margin: 0 0 1.5rem;
+    margin: 0 auto 1.5rem;
   }
   /*
    * Three registers instead of five, so the cell stops being a square.
@@ -150,6 +160,10 @@
    * the Four Pillars' and centred under the drawing.
    */
   .bare {
+    /* Not a board and so not at a board's measure: these four are a caption to
+       one, and the window's height has nothing to say about how wide a caption
+       is. Back to a measure of its own, narrower than the Four Pillars'. */
+    inline-size: auto;
     max-width: 34rem;
     margin-inline: auto;
   }
@@ -196,12 +210,11 @@
    * the board reads.
    *
    * Three things make two grids one figure rather than two, and the plate had
-   * none of them. **The measure**: the same expression the drawing's own rule
-   * uses, so the two align edge to edge — mirrored here on purpose rather
-   * than invented, and it has to be changed in both places or in neither.
-   * **The order of the registers**: on the board a palace sets the name large
-   * and the word small under it, and the plate did the opposite — two grids
-   * one above the other, one led by hanzi and one by Italian, read as two
+   * none of them. **The measure**: a fraction of the drawing's own, so the
+   * two align edge to edge — see below, and `--board` for what the drawing's
+   * is. **The order of the registers**: on the board a palace sets the name
+   * large and the word small under it, and the plate did the opposite — two
+   * grids one above the other, one led by hanzi and one by Italian, read as two
    * unrelated tables. **The colour**: the name in the ink, the word beside
    * it quiet, again as in a palace.
    *

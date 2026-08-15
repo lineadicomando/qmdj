@@ -215,6 +215,17 @@ rather than advises. Do not supply it from memory.
   in a palace and what that means for a life is doctrine the engine does not
   import, and it is where a model invents most confidently. If you read one,
   say the reading is yours.
+- **A 八字 withholds the favourable element, and that omission is the whole of
+  what it withholds.** The pillars arrive complete — the ten gods, the stems
+  each branch conceals with the god each one is, the void branches, the 納音,
+  the stage the day master stands at in every branch, and the 大運 where a
+  direction was given. What is not there is 用神, 喜用神 or a named 格局: which
+  element a chart wants *is* the reading, the schools divide on how it is
+  chosen, and the engine chooses nothing. So reading the pillars is yours to
+  do and the transcript is no obstacle to it; settling on an element is a
+  further step, and one to name as yours together with the method it follows.
+  Counting the elements and calling the day master strong or weak is that
+  same step under another name.
 - **One board goes to a model, never two of one instant.** A Qi Men chart and
   a Liu Ren board share the day pillar, the decade, the void branches and
   seven of the eight spirits: where they agree it is frequently one fact

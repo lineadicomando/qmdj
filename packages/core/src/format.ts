@@ -779,8 +779,8 @@ export function formatBazi(bazi: Bazi, t: Translator): string {
         '',
         t('cli.column.pillar'),
         t('cli.column.god'),
-        t('cli.column.hidden'),
         t('cli.column.stage'),
+        t('cli.column.nayin'),
       ],
       ...bazi.pillars.map((pillar) => [
         t(`cli.column.${pillar.position}` as MessageKey),
@@ -788,17 +788,42 @@ export function formatBazi(bazi: Bazi, t: Translator): string {
         pillar.stemGod
           ? named(pillar.stemGod, `label.god.${pillar.stemGod.id}` as MessageKey, t)
           : '—',
-        // The phase of each concealed stem, read off its identifier. It used
-        // to be read off the *translated* name of the stem by cutting away
-        // the first word — which is the polarity in English and the phase in
-        // Italian, so the Italian column reported `yin, yin` and never once
-        // said what was hidden there.
-        pillar.hidden
-          .map((hidden) => t(`label.element.${hidden.stem.stem.element}` as MessageKey))
-          .join(', '),
         named(pillar.stage, `label.stage.${pillar.stage.id}` as MessageKey, t),
+        // 納音, computed for every pillar since the day this table existed and
+        // printed by nobody but `formatNianming`. A pair carries its image
+        // wherever it appears, and a reader who meets it against 本命 and not
+        // against the four pillars meets it as a property of that lookup.
+        //
+        // With its phase, because an image has no gloss of its own in the
+        // catalog and 天上火 alone is a glyph nobody can weigh — the last
+        // character *is* the phase, which is exactly what the reader this is
+        // written for cannot see.
+        `${glyph(pillar.nayin)} · ${t(`label.element.${pillar.nayin.element}` as MessageKey)}`,
       ]),
     ]),
+    '',
+    // 藏干, with the god each concealed stem *is* — which is the larger half
+    // of what a set of pillars says and was the one thing the transcript
+    // dropped. The column this replaces stood inside the table above and
+    // printed the phase alone: `Earth, Fire, Wood`, three words that name
+    // neither the stem nor its relation to the day master, so the richest
+    // thing computed here reached no surface at all. It left that table
+    // because three rows to a pillar do not fit a cell, and it keeps the
+    // order the table is built in — strongest first, the first being the
+    // stem the branch itself is.
+    `  ${t('cli.column.hidden')} — ${t('cli.value.byWeight')}`,
+    ...table(
+      bazi.pillars.flatMap((pillar) =>
+        pillar.hidden.map((hidden, rank) => [
+          // Once to a pillar. Repeating it down the group would set three
+          // identical words beside three different stems and read as three
+          // pillars of one name.
+          rank === 0 ? t(`cli.column.${pillar.position}` as MessageKey) : '',
+          named(hidden.stem.stem, `label.stem.${hidden.stem.stem.id}` as MessageKey, t),
+          named(hidden.god, `label.god.${hidden.god.id}` as MessageKey, t),
+        ]),
+      ),
+    ).map((line) => `  ${line}`),
   ];
 
   if (bazi.luck) {

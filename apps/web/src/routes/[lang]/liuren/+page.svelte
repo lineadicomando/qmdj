@@ -131,15 +131,26 @@
 
 <style>
 
-  .result { transition: opacity 0.15s ease-out; display: grid; gap: 2rem; }
+  /* One column with a floor of zero, so that the table under the board
+     scrolls inside its own frame instead of widening the page. The same rule
+     the 七政四餘 board carries, and written out where that one is: this board
+     has the narrower tables and only broke at about 360px, which is a phone
+     rather than a corner case. */
+  .result {
+    transition: opacity 0.15s ease-out;
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
   .stale { opacity: 0.5; }
 
-  /* Centred, as the chart's board is. An earlier version pushed the picture
-     to the margin so that it shared a left edge with the reading; sharing an
-     **axis** is the same fix made on the right half — the words are centred
-     as a block under it and stay left-aligned inside themselves, because a
-     centred line of prose is a line nobody can come back to. */
-  .board img { width: 100%; max-width: 34rem; height: auto; display: block; margin-inline: auto; }
+  /* Centred, as the chart's board is, and now at the chart's measure as well:
+     `--board` in `app.css`. An earlier version pushed the picture to the
+     margin so that it shared a left edge with the reading; sharing an **axis**
+     is the same fix made on the right half — the words are centred as a block
+     under it and stay left-aligned inside themselves, because a centred line
+     of prose is a line nobody can come back to. */
+  .board img { width: 100%; inline-size: var(--board); height: auto; display: block; margin-inline: auto; }
   .board .paper { display: none; }
   /* Held in place while the next board is on its way, rather than blanking. */
   .screen { transition: opacity 0.2s ease-out; }

@@ -175,6 +175,14 @@
      with nothing in between to carry the eye. */
   .chuan li { display: grid; grid-template-columns: 6rem 5rem 13rem auto; gap: 0.5rem; align-items: baseline; }
   .ke li { display: grid; grid-template-columns: 6rem auto; gap: 0.5rem; align-items: baseline; }
+  /* Four measured columns come to 24rem before the general has said anything,
+     and a phone has less than that: the row could not shrink, so it pushed the
+     page out from under the board instead. Two columns under it — the seat and
+     its branch, then the general and the stem beneath them — which is the same
+     four things folded rather than four things cut off at the edge. */
+  @media (max-width: 34rem) {
+    .chuan li { grid-template-columns: 6rem auto; }
+  }
   .which { color: var(--faint); font-size: 0.85em; }
   .branch, .pair { font-size: 1.05em; }
   .stem em { font-style: normal; color: var(--faint); }

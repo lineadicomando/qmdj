@@ -105,6 +105,52 @@
   color-scheme: dark;
 }
 
+/*
+ * The measure of a board, and of whatever is set as its caption.
+ *
+ * Four instruments put a drawing at the head of a page — the nine palaces, the
+ * two rings of twelve, and the four pillars, which are a grid of the page's
+ * own type rather than a picture at an address. They are the same figure at
+ * four addresses, and each had a width of its own: 46rem, 44, 34, and the
+ * chart's, which is the one below. A reader who lays one board and then
+ * another watches the page resize under an answer that did not change, and
+ * two boards that are not the same width are two boards nobody can hold beside
+ * each other. One token, so the four are one measure and the measure is
+ * settled in one place.
+ *
+ * It is the chart's, because the chart's is the one that was reasoned: as wide
+ * as the column allows, bounded by the window's own height, since it is the
+ * *board* that has to be taken in at once rather than the whole paper — a
+ * chart whose two palaces cannot be seen together is a chart nobody can
+ * compare anything on, while the listing underneath is a listing and may
+ * perfectly well be scrolled to. From the top of the paper down to the foot of
+ * the board is seven eighths of the width — the caption's margin of an eighth,
+ * then three quarters of grid — so a window `h` tall can afford eight sevenths
+ * of it. Counting only the grid's three quarters leaves the caption above it
+ * unpaid for, and the board comes to rest that much below the fold. `svh` is
+ * the short viewport, so a phone whose toolbars are out does not make the
+ * board grow when they slide away.
+ *
+ * Less a tenth, and the tenth is the one figure here that is not derived.
+ * Both bounds above are ceilings — the widest the column allows, the widest
+ * the fold allows — and a drawing set at a ceiling touches the walls: at the
+ * full measure the board ran edge to edge with the text around it and the
+ * page had no air in it anywhere. A tenth back is a margin the eye reads as
+ * deliberate rather than as a picture that overflowed, and it is taken off
+ * both terms, so the board is a tenth smaller in the wide case and in the
+ * short one alike and the four stay one width. Nothing downstream has to know
+ * about it: the caption in `ChartReading` reads this token, and the plate of
+ * four pillars is a fraction of what that caption is.
+ *
+ * `100%` is resolved where the token is read, against whatever holds the
+ * drawing — which is why this is a measure and not a width.
+ *
+ * Paper is not in it. A printer knows nothing of `svh`, and the two rings are
+ * half again taller than they are wide where the palaces are under a half, so
+ * what fits a sheet is settled by each board where it prints.
+ */
+:root { --board: calc(0.9 * min(100%, 100svh * 8 / 7)); }
+
 * { box-sizing: border-box; }
 
 body {

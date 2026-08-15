@@ -686,7 +686,7 @@
         own rules give it.
       -->
       {#if shown.plate}
-        <div class="board" class:swapped={onPaper} class:ring={shown.plate.ring}>
+        <div class="board" class:swapped={onPaper}>
           <img
             src={plate}
             alt=""
@@ -777,11 +777,14 @@
   /* Full ink: the legend above them is the faint thing, and four options a
      reader is choosing between are not an aside. */
   .instrument span { color: var(--ink); }
-  /* The ring is drawn narrower than the grid of nine and does not want the
-     full measure the chart's board takes. Left rather than centred: the
-     reading under it starts at the margin, and a picture centred over a
-     caption that is not shares no edge with anything. */
-  .board.ring :global(img) { max-width: 34rem; margin-inline: 0; }
+  /* The ring used to be held to 34rem and pushed to the left margin, on the
+     grounds that it is drawn narrower than the grid of nine and that the
+     reading under it starts at the margin. This is the one page where the four
+     boards are laid one after another, in the same frame, from the same
+     controls — and there a board that changes width and edge with the
+     instrument reads as the page having moved rather than the answer having.
+     They share the measure and the axis; what is centred is the picture, and
+     the words under it stay left-aligned inside themselves. */
   /* The birth, rendered inside the options of `MomentForm`. A snippet is
      styled where it is written, so its two fields are dressed here to match
      the ones it stands among. What names the group is the `legend` over
@@ -825,13 +828,13 @@
   .board { min-inline-size: 0; }
   .result { transition: opacity 0.15s ease-out; }
   .stale { opacity: 0.5; }
-  /* As on the chart: the board has to fit a window, the words under it may
-     perfectly well be scrolled to. */
+  /* As on the chart, and at the same measure: the board has to fit a window,
+     the words under it may perfectly well be scrolled to. See `--board`. */
   img {
     display: block;
     margin-inline: auto;
     width: 100%;
-    inline-size: min(100%, calc(100svh * 8 / 7));
+    inline-size: var(--board);
     block-size: auto;
   }
   /* The copy drawn for paper, which is not part of the page. */
@@ -873,10 +876,32 @@
     .board { margin-bottom: 1.2rem; }
     .posed { margin-bottom: 0.8rem; }
     .asked { font-size: 1.05rem; }
-    /* A picture on a sheet of paper, not one fitted to a window: `svh` means
-       nothing to a printer, and left the board at the full measure of the
-       page. 17cm is what A4 has between its margins with a little to spare. */
-    img { inline-size: min(100%, 17cm); }
+    /*
+     * A picture on a sheet of paper, not one fitted to a window: `svh` means
+     * nothing to a printer, and left the board at the full measure of the
+     * page. 17cm is what A4 has between its margins with a little to spare.
+     *
+     * And a bound on the other side, which a width alone cannot give: this is
+     * the one page that prints four different boards, and they are not the
+     * same shape. The palaces are 900 by 1280 and come to 24cm tall at 17
+     * wide, which is what a sheet takes; a ring of twelve is half again taller
+     * than it is wide and would run off the bottom at the same measure. So the
+     * height is what is capped, a shade over what the palaces already print
+     * at, and a picture too tall for it narrows until it fits. The ring used
+     * to be held to 34rem on screen and inherited that on paper; on screen it
+     * no longer is, and this is where that job actually belonged.
+     *
+     * Both bounds are maxima and the size itself is `auto`, which is the whole
+     * trick: a replaced element keeps its ratio under a pair of maxima, and
+     * gives it up under a width it was *told*. `inline-size: 17cm` with a
+     * `max-block-size` under it prints the board squashed — 17 wide by 24.5
+     * tall out of a picture that is neither.
+     */
+    img {
+      inline-size: auto;
+      max-inline-size: min(100%, 17cm);
+      max-block-size: 24.5cm;
+    }
     .swapped .screen { display: none; }
     .paper { display: block; }
   }

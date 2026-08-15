@@ -219,7 +219,7 @@ describe('the prompts for a board of 命', () => {
 
       expect(plain.text).toBe(flagged.text);
       expect(plain.text).not.toContain('The question asked is');
-      expect(plain.text).toContain('asked questions');
+      expect(plain.text).toContain('none is needed');
     }
   });
 

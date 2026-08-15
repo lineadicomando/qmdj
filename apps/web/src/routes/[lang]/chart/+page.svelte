@@ -330,7 +330,8 @@
   .stale { opacity: 0.5; }
   .settling { opacity: 0.35; }
   /*
-   * As large as the page allows, and centred in it.
+   * As large as the page allows short of touching its walls, and centred in
+   * it.
    *
    * It stopped at 46rem inside a shell of 72 and hung off the left edge, which
    * left a third of the page empty beside the one thing anybody came here to
@@ -339,19 +340,9 @@
    * this is a picture and not a paragraph, and nothing about it wants the
    * width a line of prose wants.
    *
-   * The other bound is the window's own height, and it is the *board* that has
-   * to fit in it rather than the picture: a chart whose two palaces cannot be
-   * seen at once is a chart nobody can compare anything on, while the list of
-   * configurations underneath is a list and may perfectly well be scrolled to.
-   *
-   * From the top of the paper down to the foot of the board is seven eighths
-   * of the width — the caption's margin of an eighth, then three quarters of
-   * grid — so a window `h` tall can afford eight sevenths of it. Counting only
-   * the grid's own three quarters leaves the caption above it unpaid for, and
-   * the board comes to rest that much below the fold.
-   *
-   * `svh` is the short viewport, so a phone whose toolbars are out does not
-   * make the board grow when they slide away.
+   * `--board` is that measure, and what it is derived from is written where it
+   * is defined. It began here and is no longer this page's: three other boards
+   * are drawn at it.
    *
    * `width` first, so a browser that does not know `svh` still gets the
    * column's measure rather than the image's own 900 pixels.
@@ -360,7 +351,7 @@
     display: block;
     margin-inline: auto;
     width: 100%;
-    inline-size: min(100%, calc(100svh * 8 / 7));
+    inline-size: var(--board);
     block-size: auto;
   }
   @media (prefers-reduced-motion: reduce) {

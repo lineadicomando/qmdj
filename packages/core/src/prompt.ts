@@ -356,11 +356,26 @@ export function qizhengReadingPrompt(
     // the 用神 is absent and a model must choose one to say anything at all.
     // Here the seats arrive *named*, so there is nothing to withhold and the
     // rule has to be stated outright or the labels do the reading.
+    // The line first, because everything under it is a bound on something and
+    // a list of bounds with nothing above it reads as an instruction to say
+    // nothing. This is the one rule here that asks for a reading rather than
+    // fencing one.
+    `- ${t('prompt.ming.configuration')}`,
     `- ${t('prompt.qizheng.houses')}`,
     `- ${t('prompt.ming.time')}`,
     `- ${t('prompt.qizheng.remainders')}`,
     `- ${t('prompt.qizheng.noScore')}`,
     `- ${t('prompt.ming.noAdvice')}`,
+    `- ${t('prompt.ming.noRecital')}`,
+    `- ${t('prompt.ming.explain')}`,
+    `- ${t('prompt.ming.register')}`,
+    // What to do with a relation of control, where every other rule here
+    // only says what not to do with one.
+    `- ${t('prompt.ming.tension')}`,
+    // Last of the bounds and about all of them: a rule kept by being obeyed
+    // never has to be announced, and announcing them is how a reading turns
+    // into a page of preamble.
+    `- ${t('prompt.ming.rulesStayOut')}`,
     `- ${t('prompt.yours')}`,
     // How sure, said among the rules rather than in a document: the direction
     // the twelve are numbered in is the weakest quantity on this board, and
@@ -379,10 +394,48 @@ export function qizhengReadingPrompt(
     qizhengTranscript(moment, board, t, request.source ? { source: request.source } : {}),
     '```',
     '',
-    // Where a board of 卜 ends on the question, this ends on what there is to
-    // do without one.
-    t('prompt.qizheng.read'),
+    // Where a board of 卜 ends on the question, this ends on the shape of the
+    // answer.
+    ...mingClosing(t, 'qizheng'),
   ].join('\n');
+}
+
+/**
+ * How a reading of a board of 命 is laid out, said after the fence.
+ *
+ * Everything above this is a bound. A model that has read every one of them
+ * knows what it may not write and has been told nothing about what it should,
+ * and what follows from bounds alone is a technical description — correct,
+ * unreadable, and addressed to somebody who did not need it. These five are
+ * the other half: that no question was asked and none is needed, one fixed
+ * sentence saying what the reader is looking at, the board read whole, the
+ * board read in parts, and an opening for whatever they want to ask next.
+ *
+ * **That sentence is fixed for the reason `prompt.disclaimer` is fixed**, and
+ * it is per board because what the reader is looking at differs: a 八字 is a
+ * birth written in a calendar and a 七政四餘 board is a birth written in the
+ * sky. It says what is in front of them and stops.
+ *
+ * A frame stood in front of it once — 命 and 運, a chart as a starting
+ * arrangement rather than a script — and it is gone. The argument for it was
+ * good and is written down in `docs/sources.md` with what carried it. The
+ * argument against was the one this whole block exists to make: a reader who
+ * has to get past a paragraph about destiny before the reading starts is a
+ * reader being given preamble, and the shape of the reply is already settled
+ * by the four steps around this one.
+ */
+function mingClosing(t: Translator, board: 'bazi' | 'qizheng'): string[] {
+  return [
+    t('prompt.ming.noQuestion'),
+    '',
+    t(`prompt.${board}.opening` as const),
+    '',
+    t('prompt.ming.panorama'),
+    '',
+    t(`prompt.${board}.read` as const),
+    '',
+    t('prompt.ming.invite'),
+  ];
 }
 
 /**
@@ -428,6 +481,9 @@ export function baziReadingPrompt(
     // all: what is missing here is not a palace but the favourable element,
     // and a model will supply it unasked because every manual it has read
     // begins by doing so.
+    // First for the reason it is first on the 七政四餘 board: what follows are
+    // all bounds, and bounds alone are read as an instruction to withhold.
+    `- ${t('prompt.ming.configuration')}`,
     `- ${t('prompt.bazi.yongshen')}`,
     `- ${t('prompt.ming.time')}`,
     `- ${t('prompt.bazi.gods')}`,
@@ -437,6 +493,16 @@ export function baziReadingPrompt(
     ...(bazi.luck ? [`- ${t('prompt.bazi.luck')}`] : []),
     `- ${t('prompt.bazi.noScore')}`,
     `- ${t('prompt.ming.noAdvice')}`,
+    `- ${t('prompt.ming.noRecital')}`,
+    `- ${t('prompt.ming.explain')}`,
+    `- ${t('prompt.ming.register')}`,
+    // What to do with a relation of control, where every other rule here
+    // only says what not to do with one.
+    `- ${t('prompt.ming.tension')}`,
+    // Last of the bounds and about all of them: a rule kept by being obeyed
+    // never has to be announced, and announcing them is how a reading turns
+    // into a page of preamble.
+    `- ${t('prompt.ming.rulesStayOut')}`,
     `- ${t('prompt.yours')}`,
     '',
     t('prompt.names'),
@@ -449,6 +515,6 @@ export function baziReadingPrompt(
     baziTranscript(moment, bazi, t, request.source ? { source: request.source } : {}),
     '```',
     '',
-    t('prompt.bazi.read'),
+    ...mingClosing(t, 'bazi'),
   ].join('\n');
 }
