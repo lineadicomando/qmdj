@@ -11,7 +11,7 @@ import {
   type Stem,
 } from './ganzhi.js';
 import { PALACES, type Palace } from './dunjia/palaces.js';
-import { VALENCE, type Valence } from './dunjia/patterns.js';
+import { VALENCE, type Valence, type ValenceId } from './dunjia/patterns.js';
 import { calendarDayNumber, CALENDAR_ZONE } from './lunar.js';
 import { fromJulianDay } from './time.js';
 import { jieAt, SOLAR_TERMS, type SolarTermDefinition } from './solar-terms.js';
@@ -546,65 +546,101 @@ export function monthGodsOf(monthBranch: Branch, day: Ganzhi): readonly MonthGod
 }
 
 
-export type SeasonGodId = 'tianshe' | 'sixiang';
+export type ShenshaId =
+  | 'tianshe' | 'sixiang' | 'jieshen' | 'jiukong' | 'wuxu' | 'wuhe' | 'wuli';
 
-export interface SeasonGod {
-  id: SeasonGodId;
+export interface Shensha {
+  id: ShenshaId;
   hanzi: string;
   pinyin: string;
-  /** Whether this day is one. These are day qualities and have no bearing. */
+  /**
+   * 吉 or 凶, as the source's own opening words give it.
+   *
+   * Each entry in 卷五 names what kind of thing it is in its first clause —
+   * 解神「月中善神也」, 九空「月内殺神也」, 五合「月内良日也」 — which is the
+   * case `Pattern`'s valence was written for: named and weighed in one line,
+   * an attribute of the god and not of anybody's day. What follows in the same
+   * sentence is 宜忌 — 「其日忌修造倉庫出入貨財」 — and does not travel.
+   */
+  valence: Valence;
+  /** Whether this day is one. These are day qualities and hold no bearing. */
   onDay: boolean;
 }
 
 /**
- * The gods a **season** gives its days, rather than a month or a year.
+ * The 神煞 a day either carries or does not.
  *
- * Two of them, and both enumerated in 卷五 by season — which here means the
- * quarter the month's branch falls in, 寅卯辰 · 巳午未 · 申酉戌 · 亥子丑.
+ * Seven so far, each enumerated in 卷五 and each keyed to the month's branch,
+ * to the season, or to nothing at all:
  *
- * 天赦 is 「春戊寅，夏甲午，秋戊申，冬甲子」: a whole day pillar, so it falls at
- * most a few times a year and is the rarest thing this layer reports.
- *
- * 四相 is 「春丙丁，夏戊己，秋壬癸，冬甲乙」 — day stems, and 曹震圭 gives the
- * reason: 「春木王生丙丁，夏火王生戊己，秋金王生壬癸，冬水王生甲乙」, the phase
- * the season's own phase produces. He also says why the list has no 庚辛:
- * 「惟庚辛者金也，能殺萬物，故不用」.
- *
- * **母倉 is not here**, and its own entry says why it cannot be yet: 「春亥子，
- * 夏寅卯，秋辰戌丑未，冬申酉，**土王後巳午**」. The last clause needs the
- * 土旺用事 stretches, which this engine does not compute, and a 母倉 without
- * them would be right for most of the year and silently wrong for seventy-two
- * days of it.
+ * - **天赦** 「春戊寅，夏甲午，秋戊申，冬甲子是也」 — a whole day pillar, and
+ *   the rarest thing this layer reports.
+ * - **四相** 「春丙丁，夏戊己，秋壬癸，冬甲乙」, the phase the season's own
+ *   phase produces. It has no 庚辛 and the source says why:
+ *   「惟庚辛者金也，能殺萬物，故不用」.
+ * - **解神** 「正二月申，三四月戌，五六月子，七八月寅，九十月辰，十一月
+ *   十二月午也」 — one branch to each pair of months.
+ * - **九空** 「正月在辰，逆行四季」, and 曹震圭 gives it as a triad instead —
+ *   「寅午戌月火庫在戌，辰能衝散也」 — the branch that clashes with the 墓 of
+ *   the month's own triad. The two readings agree on all twelve.
+ * - **五虛** 「春巳酉丑，夏申子辰，秋亥卯未，冬寅午戌」, the triad the season's
+ *   phase is 絕 in: 「春木旺，巳酉丑金絶也」.
+ * - **五合 · 五離** 「五合者寅夘日也」, and 五離 its opposite pair, 申酉, which
+ *   the 按 settles: 「反此則為申酉」. Neither looks at the month at all.
  */
-const SEASON_GODS: readonly {
-  id: SeasonGodId;
+const SHENSHA: readonly {
+  id: ShenshaId;
   hanzi: string;
   pinyin: string;
-  /** By season: 春 · 夏 · 秋 · 冬. A day pillar's hanzi, or the stems. */
-  by: readonly string[];
+  valence: ValenceId;
+  /** Whether this day carries it, given the month branch and the day. */
+  holds: (monthBranch: Branch, day: Ganzhi) => boolean;
 }[] = [
-  { id: 'tianshe', hanzi: '天赦', pinyin: 'tiānshè', by: ['戊寅', '甲午', '戊申', '甲子'] },
-  { id: 'sixiang', hanzi: '四相', pinyin: 'sìxiàng', by: ['丙丁', '戊己', '壬癸', '甲乙'] },
+  {
+    id: 'tianshe', hanzi: '天赦', pinyin: 'tiānshè', valence: 'ji',
+    holds: (m, d) =>
+      `${d.stem.hanzi}${d.branch.hanzi}` ===
+      (['戊寅', '甲午', '戊申', '甲子'][seasonOf(m)] as string),
+  },
+  {
+    id: 'sixiang', hanzi: '四相', pinyin: 'sìxiàng', valence: 'ji',
+    holds: (m, d) => (['丙丁', '戊己', '壬癸', '甲乙'][seasonOf(m)] as string).includes(d.stem.hanzi),
+  },
+  {
+    id: 'jieshen', hanzi: '解神', pinyin: 'jiěshén', valence: 'ji',
+    // 寅卯→申, 辰巳→戌, 午未→子, 申酉→寅, 戌亥→辰, 子丑→午.
+    holds: (m, d) => d.branch.index === (8 + 2 * Math.floor(((m.index + 10) % 12) / 2)) % 12,
+  },
+  {
+    id: 'jiukong', hanzi: '九空', pinyin: 'jiǔkōng', valence: 'xiong',
+    // The branch clashing with the 墓 of the month's triad: 寅午戌→辰,
+    // 亥卯未→丑, 申子辰→戌, 巳酉丑→未.
+    holds: (m, d) => d.branch.index === ([10, 7, 4, 1][m.index % 4] as number),
+  },
+  {
+    id: 'wuxu', hanzi: '五虛', pinyin: 'wǔxū', valence: 'xiong',
+    // The triad the season's phase is 絕 in: 春巳酉丑, 夏申子辰, 秋亥卯未,
+    // 冬寅午戌 — each a triad, so a third of all days.
+    holds: (m, d) => d.branch.index % 4 === ([1, 0, 3, 2][seasonOf(m)] as number),
+  },
+  { id: 'wuhe', hanzi: '五合', pinyin: 'wǔhé', valence: 'ji', holds: (_m, d) => d.branch.index === 2 || d.branch.index === 3 },
+  { id: 'wuli', hanzi: '五離', pinyin: 'wǔlí', valence: 'xiong', holds: (_m, d) => d.branch.index === 8 || d.branch.index === 9 },
 ];
 
 /** Which quarter a month branch falls in: 0 春, 1 夏, 2 秋, 3 冬. */
-const seasonOf = (monthBranch: Branch): number => Math.floor(((monthBranch.index + 10) % 12) / 3);
+function seasonOf(monthBranch: Branch): number {
+  return Math.floor(((monthBranch.index + 10) % 12) / 3);
+}
 
-/** The seasonal gods, and whether this day is one of them. */
-export function seasonGodsOf(monthBranch: Branch, day: Ganzhi): readonly SeasonGod[] {
-  const season = seasonOf(monthBranch);
-  return SEASON_GODS.map(({ id, hanzi, pinyin, by }) => {
-    const wanted = by[season] as string;
-    return {
-      id,
-      hanzi,
-      pinyin,
-      onDay:
-        id === 'tianshe'
-          ? `${day.stem.hanzi}${day.branch.hanzi}` === wanted
-          : wanted.includes(day.stem.hanzi),
-    };
-  });
+/** The 神煞 this day carries and does not. */
+export function shenshaOf(monthBranch: Branch, day: Ganzhi): readonly Shensha[] {
+  return SHENSHA.map(({ id, hanzi, pinyin, valence, holds }) => ({
+    id,
+    hanzi,
+    pinyin,
+    valence: VALENCE[valence] as Valence,
+    onDay: holds(monthBranch, day),
+  }));
 }
 
 export interface Almanac {
@@ -632,8 +668,8 @@ export interface Almanac {
   yearGods: readonly YearGod[];
   /** The four virtues of the month, and whether this day carries each. */
   monthGods: readonly MonthGod[];
-  /** What the season gives the day: 天赦 and 四相. */
-  seasonGods: readonly SeasonGod[];
+  /** The 神煞 this day carries, and the ones it does not. */
+  shensha: readonly Shensha[];
   /**
    * True on the second of the two days a 交節 gives the same officer.
    *
@@ -683,7 +719,7 @@ export function almanacAt(julianDayUT: number, context: EphemerisContext): Alman
     year,
     yearGods: yearGodsOf(year),
     monthGods: monthGodsOf(monthBranch, day),
-    seasonGods: seasonGodsOf(monthBranch, day),
+    shensha: shenshaOf(monthBranch, day),
   };
 }
 

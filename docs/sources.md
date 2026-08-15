@@ -1082,25 +1082,52 @@ for the 丑 month. 天德合 fell to 98.4 % and 天德 to 98.0 % at once, and fi
 the one cell took 天德合 to 100 %. A table checked only against itself would
 have kept it.
 
-### 天赦 and 四相 — what a season gives a day
+### 神煞 — the seven a day carries or does not
 
-Two more from 卷五, and they are keyed to neither the month nor the year but to
-the **season**: the quarter the month's branch falls in.
+From 卷五, and they share a shape rather than a key: each is a quality a day
+either has or has not, and what decides it is the month's branch, the season, or
+nothing at all. They are the first entries under the `shensha` parameter of
+`PLAN.md` § 3.
 
-| | the source's words | |
+| | the source's words | keyed to |
 |---|---|---|
-| 天赦 | 歴例:「春戊寅，夏甲午，秋戊申，冬甲子是也」 | a whole day pillar, so it falls a few times a year |
-| 四相 | 歴例:「春丙丁，夏戊己，秋壬癸，冬甲乙」, with 曹震圭's 「春木王生丙丁」 | day stems: the phase the season's phase produces |
+| 天赦 | 「春戊寅，夏甲午，秋戊申，冬甲子是也」 | the season, and a whole pillar |
+| 四相 | 「春丙丁，夏戊己，秋壬癸，冬甲乙」, with 曹震圭's 「春木王生丙丁」 | the season, day stems |
+| 解神 | 「正二月申，三四月戌，五六月子，七八月寅，九十月辰，十一月十二月午也」 | the month, one branch to each pair |
+| 九空 | 「正月在辰，逆行四季」, and 曹震圭's 「寅午戌月火庫在戌，辰能衝散也」 | the month's triad |
+| 五虛 | 「春巳酉丑，夏申子辰，秋亥卯未，冬寅午戌」, 「春木旺，巳酉丑金絶也」 | the season's 絕 triad |
+| 五合 · 五離 | 「五合者寅夘日也」 and 「反此則為申酉」 | nothing — the day branch alone |
 
-Both agree with `lunar-javascript` on **3 650 / 3 650 days**, which is the
-cleanest result in this half of the layer and worth saying beside the 四德's
-99.3 %: nothing here is being tuned to reach a number, and where a table is
-right the comparison says so outright.
+**九空 is stated twice and the two agree.** 「逆行四季」 walks backward round
+辰丑戌未; 曹震圭 instead names the branch that clashes with the 墓 of the
+month's own triad. They give the same twelve answers, which is the check.
 
-四相 carries a refusal of its own inside the derivation, and the source states
-it: 「惟庚辛者金也，能殺萬物，故不用」 — no season gives 庚 or 辛, though the
-producing-phase rule would hand them 秋's. A test asserts the absence, because
-it is the kind of clause an implementation silently regularises.
+**四相 refuses two stems inside its own derivation**, and the source says so:
+「惟庚辛者金也，能殺萬物，故不用」. The producing-phase rule would hand autumn
+庚辛 and does not. A test asserts the absence, because that is exactly the
+clause an implementation regularises without noticing.
+
+**The valence travels here as it does for the 十二神.** Each entry opens by
+naming what kind of thing it is — 解神「月中善神也」, 九空「月内殺神也」,
+五合「月内良日也」 — which is `Pattern`'s case: named and weighed in one line,
+an attribute of the god rather than of anybody's day. What follows in the same
+sentence is 宜忌 — 「其日忌修造倉庫出入貨財」 — and does not travel.
+
+**Against `lunar-javascript`, over 3 650 days:**
+
+| | | |
+|---|---|---|
+| 天赦 · 四相 · 五離 | 3 650 / 3 650 | **100 %** |
+| 九空 · 五合 | 3 645 / 3 650 | 99.86 % |
+| 解神 | 3 637 / 3 650 | 99.64 % |
+| 五虛 | 3 635 / 3 650 | 99.59 % |
+
+The residuals were tested against the obvious explanation and it is not the
+right one: **one of the thirty-three disagreements falls on a term day**, so the
+month grain is not what parts them. They are unexplained, the quoted tables are
+what ships, and 五離 agreeing on every day while 五合 — its own mirror — misses
+five is the sharpest hint that what differs is in the reference rather than in
+the rule.
 
 **母倉 was read and is not here.** Its table is 「春亥子，夏寅卯，秋辰戌丑未，
 冬申酉，**土王後巳午**」, and the last clause needs the 土旺用事 stretches — the

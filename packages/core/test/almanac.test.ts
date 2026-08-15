@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { almanacAt, dayGodOf, lodgeOn, monthGodsOf, officerOf, seasonGodsOf, yearGodsOf, DAY_GOD_LIST, LODGES, OFFICERS } from '../src/almanac.js';
+import { almanacAt, dayGodOf, lodgeOn, monthGodsOf, officerOf, shenshaOf, yearGodsOf, DAY_GOD_LIST, LODGES, OFFICERS } from '../src/almanac.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
 import { BRANCHES, ganzhiOf, type Branch, type Ganzhi } from '../src/ganzhi.js';
 import { toJulianDay } from '../src/time.js';
@@ -384,7 +384,7 @@ describe('建除十二神', () => {
 
   it('gives the season its two days, and only on the pillars named', () => {
     const carries = (month: string, dayIndex: number, id: string): boolean =>
-      seasonGodsOf(branch(month), ganzhiOf(dayIndex)).find((g) => g.id === id)?.onDay ?? false;
+      shenshaOf(branch(month), ganzhiOf(dayIndex)).find((g) => g.id === id)?.onDay ?? false;
     const pillar = (hanzi: string): number =>
       Array.from({ length: 60 }, (_, i) => i).find(
         (i) => `${ganzhiOf(i).stem.hanzi}${ganzhiOf(i).branch.hanzi}` === hanzi,
@@ -416,6 +416,42 @@ describe('建除十二神', () => {
         ) as number;
         expect(carries(m, day, 'sixiang')).toBe(false);
       }
+    }
+  });
+
+  it('carries the 神煞 of 卷五 on the days their tables name', () => {
+    const carries = (month: string, dayBranch: string, id: string): boolean => {
+      const day = Array.from({ length: 60 }, (_, i) => ganzhiOf(i)).find(
+        (g) => g.branch.hanzi === dayBranch,
+      ) as Ganzhi;
+      return shenshaOf(branch(month), day).find((g) => g.id === id)?.onDay ?? false;
+    };
+
+    // 解神:「正二月申，三四月戌，五六月子，七八月寅，九十月辰，十一月十二月午」.
+    for (const [m, b] of [['寅', '申'], ['卯', '申'], ['辰', '戌'], ['午', '子'], ['申', '寅'], ['戌', '辰'], ['子', '午']] as const) {
+      expect(carries(m, b, 'jieshen')).toBe(true);
+    }
+    expect(carries('寅', '戌', 'jieshen')).toBe(false);
+
+    // 九空: 「正月在辰，逆行四季」, which 曹震圭 gives as the branch clashing
+    // with the 墓 of the month's triad — 「寅午戌月火庫在戌，辰能衝散也」.
+    for (const m of ['寅', '午', '戌']) expect(carries(m, '辰', 'jiukong')).toBe(true);
+    for (const m of ['亥', '卯', '未']) expect(carries(m, '丑', 'jiukong')).toBe(true);
+    for (const m of ['申', '子', '辰']) expect(carries(m, '戌', 'jiukong')).toBe(true);
+    for (const m of ['巳', '酉', '丑']) expect(carries(m, '未', 'jiukong')).toBe(true);
+
+    // 五虛:「春巳酉丑，夏申子辰，秋亥卯未，冬寅午戌」 — the season's 絕 triad.
+    for (const b of ['巳', '酉', '丑']) expect(carries('卯', b, 'wuxu')).toBe(true);
+    for (const b of ['申', '子', '辰']) expect(carries('午', b, 'wuxu')).toBe(true);
+    expect(carries('卯', '申', 'wuxu')).toBe(false);
+
+    // 五合「寅夘日也」 and 五離 「反此則為申酉」 — neither looks at the month.
+    for (const m of ['寅', '午', '戌', '子']) {
+      expect(carries(m, '寅', 'wuhe')).toBe(true);
+      expect(carries(m, '卯', 'wuhe')).toBe(true);
+      expect(carries(m, '申', 'wuli')).toBe(true);
+      expect(carries(m, '酉', 'wuli')).toBe(true);
+      expect(carries(m, '辰', 'wuhe')).toBe(false);
     }
   });
 

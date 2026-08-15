@@ -425,8 +425,14 @@ export const en = {
   'label.monthgod.yuede': 'the virtue of the month',
   'label.monthgod.yuedehe': 'the month\'s virtue joined',
 
-  'label.seasongod.tianshe': 'the pardon of heaven',
-  'label.seasongod.sixiang': 'the four ministers',
+
+  'label.shensha.tianshe': 'the pardon of heaven',
+  'label.shensha.sixiang': 'the four ministers',
+  'label.shensha.jieshen': 'the loosener',
+  'label.shensha.jiukong': 'the nine voids',
+  'label.shensha.wuxu': 'the five emptinesses',
+  'label.shensha.wuhe': 'the five unions',
+  'label.shensha.wuli': 'the five partings',
 
   'label.keti.yuanshou': 'the head',
   'label.keti.zhongshen': 'the second hearing',
@@ -941,7 +947,7 @@ export const en = {
   'cli.field.term': 'term',
   'cli.field.jie': 'month opened at',
   'cli.field.monthGods': 'Virtues of the month',
-  'cli.field.seasonGods': 'Given by the season',
+  'cli.field.shensha': 'The day carries',
   'cli.field.yearGods': 'Year gods',
   'cli.field.jianchu': 'Day officer',
   'cli.field.lunar': 'lunar',

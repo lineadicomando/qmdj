@@ -176,17 +176,20 @@ export function formatAlmanac(page: Almanac, t: Translator): string {
     })
     .join('   ');
 
-  // What the season gives the day, listed only where it gives it: these are
-  // rare — 天赦 falls a few times a year — and a line of «no» every other day
-  // would bury the one day it says «yes».
-  const seasonal = page.seasonGods
+  // The 神煞 the day carries, and only those: the list is mostly absences —
+  // 天赦 falls a few times a year — and printing every «no» would bury the one
+  // «yes». What each is *for* is 宜忌 and is not here.
+  const seasonal = page.shensha
     .filter((god) => god.onDay)
-    .map((god) => `${god.hanzi} ${god.pinyin} ${t(`label.seasongod.${god.id}` as MessageKey)}`)
+    .map(
+      (god) =>
+        `${god.hanzi} ${god.pinyin} ${t(`label.shensha.${god.id}` as MessageKey)} ${god.valence.hanzi}`,
+    )
     .join('   ');
 
   return [
     `  ${pad(t('cli.field.jianchu'), 20)}${officer(page, t)}`,
-    ...(seasonal ? [`  ${pad(t('cli.field.seasonGods'), 20)}  ${seasonal}`] : []),
+    ...(seasonal ? [`  ${pad(t('cli.field.shensha'), 20)}  ${seasonal}`] : []),
     `  ${pad(t('cli.field.monthGods'), 20)}  ${virtues}`,
     `  ${pad(t('cli.field.yearGods'), 20)}${page.year.hanzi} — ${gods}`,
   ].join('\n');
