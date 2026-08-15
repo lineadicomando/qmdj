@@ -1,0 +1,26 @@
+path	url	revision	retrieved	sha256	licence
+texts/qimen/dunjia-yanyi-wikisource.wikitext	https://zh.wikisource.org/wiki/遁甲演義	oldid 2082234	2026-08-15	5257dfa298597f647e418c5e8aff7bf500efb43a39ae42e8472a249ec1c25afe	public domain, CC BY-SA markup
+texts/qimen/yanbo-diaosou-ge-wikisource.wikitext	https://zh.wikisource.org/wiki/煙波釣叟歌	oldid 1336835	2026-08-15	702f6311b7b5f19812f4ccf73a5523e877617f807eb6d55cb03f851bd6812d55	public domain, CC BY-SA markup
+texts/qimen/huangdi-taiyi-bamen-wikisource.wikitext	https://zh.wikisource.org/wiki/黃帝太一八門逆順生死訣	oldid 2352262	2026-08-15	035f35ec91fbc0c6895b8f4aff7f1ee1c89f0a27a672890ba4480aab7c031d5a	public domain, CC BY-SA markup
+texts/qimen/qimen-dunjia-tongzong-juan01-ctext.html	https://ctext.org/wiki.pl?if=gb&chapter=666094	retrieved page	2026-08-15	8393af75642e334333c0a6d4a9f28b5159b896d2ed474c726c52dee400a7b4d0	ctext.org, see note
+texts/qimen/qimen-dunjia-tongzong-juan02-ctext.html	https://ctext.org/wiki.pl?if=gb&chapter=491157	retrieved page	2026-08-15	38b8f5f970e984b20b54f30c1b801950b1b8acb898f9e85091f1cefb3477dbe0	ctext.org, see note
+texts/qimen/qimen-dunjia-tongzong-juan10-ctext.html	https://ctext.org/wiki.pl?if=gb&chapter=548853	retrieved page	2026-08-15	c1c08b45f3bcbeb40b3120d0b5c6e3573dbef8fb354a70ea72096a6974bce92a	ctext.org, see note
+texts/qimen/qimen-dunjia-tongzong-juan12-ctext.html	https://ctext.org/wiki.pl?if=gb&chapter=730643	retrieved page	2026-08-15	53555b140221f0d516eff6690a9b4336aaeee3a739b310ab876c0b7aa21e8e45	ctext.org, see note
+texts/qimen/qimen-xiongge-ktonko.html	https://ktonko.com/html/syoi/32_kyo.html	retrieved page	2026-08-15	bdaa149d4e9807eb8828b6cf9ffdc355a0988e746e381b8392c9957f72c0ca28	unstated
+texts/qimen/shigan-keying-daoisms.html	https://www.daoisms.com.cn/2010/29/19/23446/	retrieved page	2026-08-15	1382de0a77df93ca5724908608d08317d833c4df8f52189c55a062b718b62fa0	unstated
+texts/qimen/shigan-keying-lnka.html	https://www.lnka.tw/html/topic/986_2.html	retrieved page	2026-08-15	295e202863cba6db36721f536959914b0d5bfc76b2f637c71fca3bd4476dac46	unstated
+texts/taiyi/taiyi-jinjing-shijing-juan02-wikisource.wikitext	https://zh.wikisource.org/wiki/太乙金鏡式經_(四庫全書本)/卷02	oldid 773930	2026-08-15	3c55547ebce9b8463bbb1e22665a78a2d03bef11c8955578a7a632cd65c88f24	public domain, CC BY-SA markup
+texts/liuren/liuren-daquan-skqs-juan01-wikisource.wikitext	https://zh.wikisource.org/wiki/六壬大全_(四庫全書本)/卷01	oldid 763659	2026-08-15	599e81da7496c7564dfbd10f99b9e759faf058b94ac0e2052e56d4b1c846924e	public domain, CC BY-SA markup
+texts/almanac/xieji-bianfang-skqs-juan04-wikisource.wikitext	https://zh.wikisource.org/wiki/欽定協紀辨方書_(四庫全書本)/卷04	oldid 787340	2026-08-15	8782423ab87161f9e60c8b2ee23609bbc1c05bd71f9e85804910d09d46bfb922	public domain, CC BY-SA markup
+texts/references/lunar-javascript-1.7.7.tgz	https://registry.npmjs.org/lunar-javascript	1.7.7	2026-08-15	d1359ab9ca4913d1db3978a42ddfc290eb8ea9de54ce043f5b1f718ff71eea36	MIT
+texts/references/qimen-dunjia-2.1.0.tgz	https://registry.npmjs.org/qimen-dunjia	2.1.0	2026-08-15	e53bd14010c314b9d141618e24c60cc25874691d73d1cb764435ed90c7849f69	see package
+texts/references/liuren-ts-lib-3.1.0.tgz	https://registry.npmjs.org/liuren-ts-lib	3.1.0	2026-08-15	107ec654c7fa27f5c8e052a949cd07f28dd6fbeb982b6e4da0e4f9e9370c735f	Apache-2.0
+texts/references/kinqimen-0.0.6.6.tar.gz	https://pypi.org/project/kinqimen/	0.0.6.6	2026-08-15	e6ff3329811f409ac5d496772dfb0287cf2f86d383ac4f6557ac8e86ea002c42	MIT
+texts/references/kinqimen-0.0.6.6-py3-none-any.whl	https://pypi.org/project/kinqimen/	0.0.6.6	2026-08-15	ac588c8f2921283c56da2d2bbad08763c5b8f479faf6b6eff1ba6fd6c8d4f59a	MIT
+texts/references/kinliuren-0.1.2.9.tar.gz	https://pypi.org/project/kinliuren/	0.1.2.9	2026-08-15	55924cc035c891bbd1d1ef457829f77c0993a188f66d1d2c175387732aad7ea2	MIT
+texts/references/kinliuren-0.1.2.9-py3-none-any.whl	https://pypi.org/project/kinliuren/	0.1.2.9	2026-08-15	6b099e0e8cc20a2e0081e69e2f5556aa6c54ecb7936e9fc27d7ae8526c2fa210	MIT
+texts/references/gh-perfhelf-bigfishmarquis-qimen-6112b3937d7f.tar.gz	https://github.com/perfhelf/bigfishmarquis-qimen	6112b3937d7f	2026-08-15	b8ecba9929963f878e265f0caae1f9ddd8ac6b39998e1bcd5b51cb9a2d642b01	MIT
+texts/references/gh-HeiGeAi-HeiGe-SuanMing-c06977620508.tar.gz	https://github.com/HeiGeAi/HeiGe-SuanMing	c06977620508	2026-08-15	08d9ce67c765782e8f4fc3b2af23c4cf489ff41fd51d146321ce38591fa3a0e8	PolyForm Noncommercial 1.0.0 — NOT AGPL-compatible
+texts/references/gh-dxbuyi-qimen.skill-2c42e65ccdf6.tar.gz	https://github.com/dxbuyi/qimen.skill	2c42e65ccdf6	2026-08-15	18b6c609de3cef4bcce5e2f01c434084a97821f57941c8e5b1a514fe4a61e68e	MIT, declared in README only, no LICENSE file
+texts/references/gh-3metaJun-3meta-9be1238cbb7b.tar.gz	https://github.com/3metaJun/3meta	9be1238cbb7b	2026-08-15	4db7e6381a896604a71308dd01e01beaf108496479aa2fbfbacc9d16027ca083	MIT
+texts/references/gh-oceanjustinlin-qimen-cb483ab06d48.tar.gz	https://github.com/oceanjustinlin/qimen	cb483ab06d48	2026-08-15	deec77ff3c70f76f7cd7af642ec20eca39bc44f54020484515a6ce39dab88af0	MIT
