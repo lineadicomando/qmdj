@@ -1892,8 +1892,24 @@ rather than code.
 
 ### Phase 15 — The almanac layer
 
-**Planned, and next.** The cheapest of the three and the one a reader of
-dunjia will notice missing, because dunjia already chooses hours and
+**Done**, and it delivered more than the three blocks it named. What it set out
+to add was 建除十二神, 二十八宿值日 and the 神煞 「but only some」; what
+`almanac.ts` holds is those three, the 十二神 of 卷七 and twenty-six 年神 — some
+seventy quantities, each with a citation, a comparison where one was possible,
+and an entry in `docs/sources.md` written the day it landed. It reaches the CLI,
+the REST answers, four MCP tools and both board pages, and deliberately not the
+prompt's fence or `packages/plate`.
+
+**What it does not hold is declared rather than missing**, and the phase's own
+「but only some」 is where that was allowed for: 往亡, 氣往亡, 反支, 上朔 and the
+four of 卷六's nine it does not enumerate are unread; 母倉 waits on the 土旺用事
+stretches this engine does not compute; 月忌日 waits on a lunar date, which is
+the one expensive thing a page would have to buy; 日遊神 has an empty body in
+the transcription consulted. None of them blocks anything, and each is in the
+register with its reason.
+
+It was the cheapest of the three and the one a reader of
+dunjia would notice missing, because dunjia already chooses hours and
 directions and the almanac is what that choice was always read beside:
 建除十二神, 二十八宿值日, and the 神煞 — but only some. It is also the one
 of the three that adds no board: nothing is laid and nothing is asked, and
