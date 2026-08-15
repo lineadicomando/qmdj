@@ -171,12 +171,12 @@ describe('every board endpoint yields the instant it was laid for', () => {
  *
  * What is asserted is the one thing that parts them from the two boards of 卜:
  * nothing is asked of them, so there is no question machinery to leave empty —
- * and each says outright what its own already-printed names are not.
+ * and each carries the instructions its own already-printed names are read by.
  */
 describe('the prompts for a board of 命', () => {
   const BIRTH = 'date=1968-03-12&time=14:30&timezone=Asia/Shanghai&trueSolarTime=false';
 
-  it('carries the 七政四餘 board and what its twelve names are not', async () => {
+  it('carries the 七政四餘 board and how its twelve seats are read', async () => {
     const { status, headers, text } = await call(qizhengPrompt, `${BIRTH}&lang=en`);
 
     expect(status).toBe(200);
@@ -184,7 +184,7 @@ describe('the prompts for a board of 命', () => {
     // The board itself, and not an instruction to compute one.
     expect(text).toContain('太陽');
     expect(text).toContain('命宮');
-    expect(text).toContain('names of the seats');
+    expect(text).toContain('what the tradition reads at that seat');
     // The two bounds that travel with the instruction they govern.
     expect(text).toContain('one source and three derivations');
     expect(text).toContain('over-determination');

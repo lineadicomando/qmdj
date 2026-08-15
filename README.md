@@ -56,7 +56,7 @@ compatible with it. The GeoNames data is CC BY 4.0.
 |---|---|
 | Solar terms | the twenty-four 節氣, to the second, from Swiss Ephemeris |
 | Lunar calendar | months, intercalary months, lunar dates, reckoned on 120°E |
-| Four pillars | 四柱 with 藏干, 十神, 納音, 十二長生, 空亡, 大運 |
+| Four pillars | 四柱 with 藏干, 十神, 納音, 十二長生, 空亡, 大運, and the five elements counted over the eight characters |
 | Qi Men charts | 時家 by the 拆補 or 置閏 method: four plates, configurations, seasonal states, 門宮 and 星宮 relations, the post horse of the day and of the hour |
 | Liu Ren boards | 大六壬: the 天地盤 by 月將加時, the 四課, the 三傳 by the 九宗門, the 十二天將, the 遁干 and the 空亡 |
 | 七政四餘 boards | the seven governors and three of the four remainders, placed by ephemeris: the 宿 and the 入宿度 with the boundaries taken from the 距星 themselves, the twelve 次 and the 宮度, 順 and 逆, the 命宮 by 加時 and the 人事十二宮 numbered from it |
@@ -103,23 +103,25 @@ it, that the fortunes do not add up to a score, that a 凶 is not advice. It is
 [`docs/agent-prompt.md`](docs/agent-prompt.md) said to a model that will never
 read it.
 
-**All four boards, and each refuses differently.** A chart withholds the 用神:
+**All four boards, and the two kinds part.** A chart withholds the 用神:
 which palace bears on the question is chosen by the reader for the question
 asked, and without one the board is a map with no pin. A 六壬 board hands its
 三傳 over already drawn, by procedure, and the prompt says not to re-derive
 them — while the choice of which of the four courses to read from is still the
-reader's. The two boards of 命 have no such lever, because their parts arrive
-already *named*: a 七政四餘 board prints 財帛宮 and 官祿宮 against the palaces
-they fell on, and a 八字 prints the ten gods against the pillars. There the
-prompt has to say outright that a name is not a verdict, and that a 八字's
-favourable element — the thing every manual opens by choosing — is withheld
-rather than missing.
+reader's. The two boards of 命 are laid on a birth and their prompts ask for a
+reading of the person: the birth situated, the arrangement read whole from a
+centre, then the themes of a life in short sections — temperament, tensions,
+the work on oneself, undertakings, ties — with every claim standing on the
+board and every choice said as it is made. A 八字's favourable element stays
+uncomputed: the schools divide on how it is chosen, so choosing it is a step
+the reading names together with the method. What no reading gives: dated
+predictions, medical, legal or financial counsel, lucky numbers, scores.
 
 **And nothing is asked of a board of 命.** `--ask` works on `chart` and
 `liuren`, which are cast for a question, and is refused on `bazi` and
-`qizheng` rather than quietly dropped. A question there names a seat the board
-already prints, and a reading that starts from it has arrived at that seat
-without ever having chosen it.
+`qizheng` rather than quietly dropped: the themes a reading traverses are
+commissioned in the prompt itself, and what the reader wants to look at next
+belongs to the conversation that follows.
 
 **A birth enters a chart the way the classics put it there.** `--born` adds a
 年命: 本命, the year pillar of the birth, and — with `--gender`, which is read

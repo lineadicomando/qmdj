@@ -210,22 +210,25 @@ rather than advises. Do not supply it from memory.
   table exactly. Do not attribute them to 《時憲曆》 or to 《授時曆》; those are
   declared options and both are refused. A degree of 入宿度 quoted here will
   differ a little from an almanac's, and the reason is not an error.
-- **The twelve 人事宮 are named and nothing more.** 財帛 is called wealth and
-  田宅 is called land and house, exactly as 死門 is called death. What stands
-  in a palace and what that means for a life is doctrine the engine does not
-  import, and it is where a model invents most confidently. If you read one,
-  say the reading is yours.
+- **The twelve 人事宮 carry their transmitted names, and a reading from them
+  is a choice to say.** 財帛 is wealth and 田宅 is land and house: the names
+  say what the tradition reads at each seat, and reading from them is what
+  they are printed for. What the engine does not do is choose — which seat
+  carries which part of a reading is the reader's step, said as it is taken,
+  and what a body standing in a seat means is doctrine the engine does not
+  import: where you draw on a tradition for it, name the tradition.
 - **A 八字 withholds the favourable element, and that omission is the whole of
   what it withholds.** The pillars arrive complete — the ten gods, the stems
   each branch conceals with the god each one is, the void branches, the 納音,
-  the stage the day master stands at in every branch, and the 大運 where a
-  direction was given. What is not there is 用神, 喜用神 or a named 格局: which
-  element a chart wants *is* the reading, the schools divide on how it is
-  chosen, and the engine chooses nothing. So reading the pillars is yours to
-  do and the transcript is no obstacle to it; settling on an element is a
-  further step, and one to name as yours together with the method it follows.
-  Counting the elements and calling the day master strong or weak is that
-  same step under another name.
+  the stage the day master stands at in every branch, the count of the five
+  elements over the eight characters, and the 大運 where a direction was
+  given. What is not there is 用神, 喜用神 or a named 格局: the schools divide
+  on how they are chosen, and the engine chooses nothing. So reading the
+  pillars is yours to do and the transcript is no obstacle to it; settling on
+  an element is a further step, and one to name as yours together with the
+  method it follows. Declaring the day master strong or weak from the printed
+  count is that same step under another name — the count itself is arithmetic
+  and arrives done.
 - **One board goes to a model, never two of one instant.** A Qi Men chart and
   a Liu Ren board share the day pillar, the decade, the void branches and
   seven of the eight spirits: where they agree it is frequently one fact
@@ -305,9 +308,9 @@ is. Do not describe the third as though it were the first.
 **Two of these lines are not only here**, and the exception says where the
 boundary runs. The direction the twelve 人事宮 are numbered in, and the frame
 the 宿 are cut by, travel *inside* the 七政四餘 prompt as well — because that
-prompt already spends a paragraph telling a model that the twelve seats are
-names and not assignments, and a bound on a quantity that arrives with the
-instruction governing it is part of that instruction. Everything else on this
+prompt already spends a paragraph on how the twelve seats are read, and a
+bound on a quantity that arrives with the instruction governing it is part of
+that instruction. Everything else on this
 page stays on this page. The test is whether striking the line would leave an
 instruction somebody could follow confidently and wrongly: a caution attached
 to a rule passes it, a general account of how this engine knows things does
@@ -386,12 +389,12 @@ and one in a query string is one written into every log along the way.
 
 **Only the two boards of 卜 answer to it.** `bazi/prompt` and `qizheng/prompt`
 have no `asked`, and it is not an omission: they are laid on a birth and
-nothing is asked of them, so there is no line for a question to go on. A
-question there would name one of the seats the board already prints — «what
-about my career» *is* 官祿宮 guānlùgōng — and a reading beginning from it has
-reached a seat without choosing one. The CLI refuses `--ask` on those two
-commands rather than dropping it; over HTTP the parameter simply has nothing
-to reach, and the answer is the same either way.
+nothing is asked of them, so there is no line for a question to go on. The
+themes a reading traverses are commissioned in the prompt itself, and what
+the person wants to look at next belongs to the conversation that follows.
+The CLI refuses `--ask` on those two commands rather than dropping it; over
+HTTP the parameter simply has nothing to reach, and the answer is the same
+either way.
 
 ## 年命 — where a person stands in a chart of a moment
 

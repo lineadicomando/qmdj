@@ -58,6 +58,16 @@ describe('a verified chart', () => {
     expect(bazi.dayMaster.hanzi).toBe('辛');
   });
 
+  /**
+   * 戊申 乙卯 辛巳 乙未 by hand: stems 土金木木, branches 金木火土. The zero is
+   * the point — water is nowhere in these eight, and the count has to say so
+   * rather than drop the row.
+   */
+  it('counts the five elements over the eight characters, zeroes included', () => {
+    expect(bazi.distribution).toStrictEqual({ mu: 3, huo: 1, tu: 2, jin: 2, shui: 0 });
+    expect(Object.values(bazi.distribution).reduce((a, b) => a + b, 0)).toBe(8);
+  });
+
   it('names the image of each pair', () => {
     expect(column(bazi, (p) => p.nayin.hanzi)).toBe('大驛土 大溪水 白蠟金 沙中金');
   });

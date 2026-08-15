@@ -24,6 +24,14 @@
 
   const say = (pair: any): string =>
     `${t(`label.stem.${pair.stem.id}` as MessageKey)} · ${t(`label.branch.${pair.branch.id}` as MessageKey)}`;
+
+  // All five, zeroes included, in the order `formatBazi` prints them: the
+  // count exists to show what is absent as much as what abounds.
+  const elements = ['mu', 'huo', 'tu', 'jin', 'shui'] as const;
+  const counted = (distribution: any): string =>
+    elements
+      .map((element) => `${t(`label.element.${element}` as MessageKey)} ${distribution[element]}`)
+      .join(' · ');
 </script>
 
 <!--
@@ -42,6 +50,8 @@
     {t('cli.field.dayMaster')}: {t(`label.stem.${bazi.dayMaster.id}` as MessageKey)}
     <span class="glyph">{glyph(bazi.dayMaster)}</span>
   </p>
+
+  <p class="master">{t('cli.field.distribution')}: {counted(bazi.distribution)}</p>
 
   <!-- Five columns that do not break: on a narrow screen it is the table that
        scrolls, not the page.

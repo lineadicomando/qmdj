@@ -275,13 +275,13 @@ describe('the prompt with a 年命 in it', () => {
 });
 
 /**
- * The boards of 命, where the refusal changes shape.
+ * The boards of 命, whose prompts ask for a reading of the person.
  *
- * A board of 卜 withholds the 用神 and a model must choose one to say anything;
- * these arrive with their parts already named, so what has to be asserted is
- * that the prompt says outright what the names are not. And that no question
- * line is anywhere in them: nothing is asked of these boards, so the machinery
- * the other two end on must be absent rather than empty.
+ * What has to be asserted: the subject is the person the board was laid on,
+ * the themes of a life are commissioned by name with their bounds beside
+ * them, every choice travels signed, and no question machinery is anywhere in
+ * them — nothing is asked of these boards, so the line the 卜 boards end on
+ * must be absent rather than empty.
  */
 describe('the prompt for a board of 命', () => {
   function board() {
@@ -306,8 +306,10 @@ describe('the prompt for a board of 命', () => {
 
     expect(fenced).toContain('命宮');
     expect(fenced).toContain('2024-06-15T14:00:00+08:00');
-    expect(instructions).toContain('names of the seats');
-    expect(instructions).toContain('not an assignment of a life');
+    // The seats are read by their transmitted names, and the choice of which
+    // carries which theme is said rather than smuggled.
+    expect(instructions).toContain('what the tradition reads at that seat');
+    expect(instructions).toContain('a choice reads better said than smuggled');
   });
 
   /**
@@ -334,10 +336,12 @@ describe('the prompt for a board of 命', () => {
     const instructions = text.slice(0, text.indexOf('```'));
 
     expect(fenced).toContain('2024-06-15T14:00:00+08:00');
+    // The count travels computed, and the prompt says it is already done.
+    expect(fenced).toContain('five elements');
+    expect(instructions).toContain('arithmetic already done');
     expect(instructions).toContain('用神');
     expect(instructions).toContain('this engine does not choose');
-    // The 大運 are a timeline of pillars and the commonest thing to do with
-    // them is the one thing the engine refuses everywhere else: dating.
+    // The 大運 are a timeline of pillars, read as direction and never dated.
     expect(instructions).toContain('大運');
     expect(instructions).toContain('not a timeline of events');
   });
@@ -352,12 +356,9 @@ describe('the prompt for a board of 命', () => {
 
   /**
    * What these two end on, and it is an instruction to read rather than one to
-   * stop. The closing line used to be `prompt.noQuestion` in other words —
-   * describe the board and «stop there» — which is the *degenerate* branch of a
-   * board of 卜, where a palace genuinely cannot be chosen until somebody asks
-   * something. Nothing is missing here: the pillars are complete and the seats
-   * arrive named. Told to describe and stop, a model wrote the fence back out
-   * in prose and called it a reading.
+   * stop. And that no question machinery is anywhere in them: nothing is asked
+   * of a board of 命, so the line the 卜 boards end on must be absent rather
+   * than empty.
    */
   it('ends by asking for a reading, and never on a question line', () => {
     const at = moment();
@@ -370,25 +371,18 @@ describe('the prompt for a board of 命', () => {
       // withhold and no line for a browser to append one to.
       expect(text).not.toContain('The question asked is');
       expect(text).not.toContain('No question was asked. Describe how the chart stands');
-      // What stays refused is what needs a question to have been asked, and
-      // both boards still say so on the way out.
-      expect(text).toContain('Do not date anything');
-      expect(text).toContain('what to do');
+      // What stays out of a reading, on both boards: dated predictions, the
+      // professions, the games.
+      expect(text).toContain('predictions with dates on them');
+      expect(text).toContain('games of chance');
     }
   });
 
   /**
-   * The three rules that turn a transcript into something a reader can use,
-   * and the reason the two boards of 命 needed them where the two of 卜 did
-   * not: a board of 卜 ends on a question, which is by itself an instruction
-   * to write prose. These end on a birth, and without these they ended on a
-   * list.
-   */
-  /**
-   * The five steps after the fence, in the order the reply is to be written
-   * in. Asserted as an order and not as five substrings, because the order is
-   * the point: a panorama under the detail is a summary nobody needed, and an
-   * introduction under either is a frame arriving after the thing it framed.
+   * The six steps after the fence, in the order the reply is to be written
+   * in. Asserted as an order and not as six substrings, because the order is
+   * the point: a panorama under the detail is a summary nobody needed, and
+   * the themes without the whole are a report with no thesis.
    */
   it('lays out the reply after the fence, in order', () => {
     const at = moment();
@@ -402,7 +396,8 @@ describe('the prompt for a board of 命', () => {
         'none is needed',
         `a birth written in ${written}`,
         'read the board whole',
-        'Then the parts',
+        'Then the themes',
+        'Where to look for all of that',
         'End by opening',
       ].map((step) => closing.indexOf(step));
 
@@ -412,43 +407,44 @@ describe('the prompt for a board of 命', () => {
   });
 
   /**
-   * The one fixed sentence, quoted rather than commissioned for the reason the
-   * disclaimer is: told to introduce a board in its own words, a model
-   * introduces *this person's* board by the third sentence and the frame
-   * becomes the first instalment of the reading.
-   *
-   * **It says what the reader is looking at and nothing about what a chart of
-   * 命 is for.** A frame on 命 and 運 stood in front of it, twice — five
-   * sentences, then two — and both went, because a paragraph about destiny
-   * before the reading starts is preamble however true it is. The length is
-   * measured here rather than described, so it cannot grow back by degrees.
+   * The birth is situated in the model's own words — the one fixed line in a
+   * prompt is the disclaimer, and there is exactly one of it. What situating
+   * may not become is a frame: no paragraph on the art or on destiny before
+   * the reading starts.
    */
-  it('fixes one sentence of orientation, and keeps it to one', () => {
+  it('situates the birth, and fixes no words for it', () => {
     for (const [text, written] of [
       [baziReadingPrompt(moment(), pillars(), en), 'a calendar'],
       [qizhengReadingPrompt(moment(), board(), en), 'the sky'],
     ] as const) {
-      const quoted = /"([^"]*a birth written in[^"]*)"/.exec(text)?.[1] ?? '';
-
-      expect(quoted).toContain(`a birth written in ${written}`);
-      expect(text).toContain('Those words and no others');
-      expect(quoted.length).toBeLessThan(220);
-      // The frame that used to precede it, gone from both boards.
-      expect(text).not.toContain('運 yùn');
+      expect(text).toContain('situate the birth');
+      expect(text).toContain(`a birth written in ${written}`);
+      expect(text).toContain('Situate and move on');
+      // The disclaimer is the only fixed-words instruction in the prompt.
+      expect(text.match(/Those words and no others/g)).toHaveLength(1);
+      // And no destiny frame stands in front of the reading.
       expect(text).not.toContain('了凡四訓');
     }
   });
 
-  /** Warmth is the direction the configuration/person line gets crossed in. */
-  it('lets the register soften without letting the subject move', () => {
+  /**
+   * The subject of the reading is the person the board was laid on, and the
+   * register holds it descriptive: conditional verbs, warmth without
+   * flattery, and none of the professions' work.
+   */
+  it('reads the person, with the verbs held conditional', () => {
     for (const text of [
       qizhengReadingPrompt(moment(), board(), en),
       baziReadingPrompt(moment(), pillars(), en),
     ]) {
-      expect(text).toContain('is a sentence about a board');
-      expect(text).toContain('you are somebody who X');
-      expect(text).toContain('what they feel, fear or want');
+      expect(text).toContain('the person they were laid on');
+      expect(text).toContain('Start from who they are');
+      expect(text).toContain('never deterministic');
       expect(text).toContain('never flattering');
+      // The themes, commissioned by name and bounded where they bite.
+      expect(text).toContain('a theme of the life');
+      expect(text).toContain('functions, not professions');
+      expect(text).toContain('no partner judged and no compatibility settled');
     }
   });
 
@@ -478,15 +474,12 @@ describe('the prompt for a board of 命', () => {
     }
   });
 
-  it('asks for the configuration and refuses the recital', () => {
+  it('asks for a reading of the person and refuses the recital', () => {
     const at = moment();
 
     for (const text of [qizhengReadingPrompt(at, board(), en), baziReadingPrompt(at, pillars(), en)]) {
-      // The line: what the configuration *is* may be written; what needs a
-      // question may not. It is the standard `Pattern` is built on, said to a
-      // model instead of encoded in a table.
-      expect(text).toContain('between the configuration and the person');
-      // Said since the 年命 arrived and never carried to these two.
+      // The subject, said first: the reading is not the transcript in prose.
+      expect(text).toContain('its subject is not the pillars');
       expect(text).toContain('Do not give it back to them');
       // «Usable without a glossary», which the pages are held to and the
       // prompt was not.
@@ -511,7 +504,7 @@ describe('the prompt for a board of 命', () => {
     const it = createTranslator('it');
 
     expect(qizhengReadingPrompt(at, board(), it)).toContain('Rispondi in italiano.');
-    expect(qizhengReadingPrompt(at, board(), it)).toContain('nomi trasmessi dei seggi');
+    expect(qizhengReadingPrompt(at, board(), it)).toContain('la tradizione legge a quel seggio');
     expect(baziReadingPrompt(at, pillars(), it)).toContain('elemento favorevole');
     // The names are not a locale and stand in both.
     expect(baziReadingPrompt(at, pillars(), it)).toContain('用神');

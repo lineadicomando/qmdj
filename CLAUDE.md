@@ -174,72 +174,39 @@ the engine falls back to Moshier, which needs no files.
   which is where it moved from the root when the consultation took the lead.
   A prompt is an asking and belongs where the asking is. See `navigation.ts`
   for what that cost and bought, and `PLAN.md` § 4 phase 18 for the widening.
-- **A 命 board arrives with its palaces already named, and the prompt says a
-  name is not a verdict.** On a board of 卜 the refusal is a withholding: the
-  用神 is the reader's, and without one the board is a map with no pin. That
-  lever does not exist here. 七政四餘 ships 財帛, 官祿, 疾厄 and nine more,
-  each seated on a palace, because those are the transmitted names of the
-  seats — and a model handed a palace already called wealth has nothing left
-  to refuse, the label having done the reading for it. So the fence carries
-  what the label cannot: that the twelve are **named and not assigned**, that
-  which of them answers what was asked is the reader's exactly as the 用神 is,
-  and that the direction they are numbered in stands on one source and three
-  derivations rather than on two agreeing statements of a rule. A prompt that
-  omits this is the project outsourcing in a fence what it declines in code —
-  `purposes.ts` and the 年命 rule below decline the same doctrine, and a board
-  changing the subject does not change the standard.
-- **A 命 prompt asks for a reading, and the line it draws is between the
-  configuration and the person.** The refusal above is not an instruction to
-  say nothing, and for a while it read as one: both 命 prompts closed on the
-  no-question branch of a 卜 board — *describe how it stands and stop there* —
-  and a model obeyed exactly, writing the fence back out in prose. The
-  premise was wrong. On a board of 卜 that branch is degenerate because
-  without a question the 用神 genuinely cannot be chosen; **nothing is missing
-  on a board of 命**, whose pillars are complete and whose seats arrive named.
-  So `prompt.ming.configuration` states the standard the withholding used to
-  imply: what a configuration **is** may be written, because the sources name
-  those meanings beside the thing they name — it is the rule `Pattern` already
-  carries a `valence` for — while what needs a question to have been asked
-  stays refused, and a school's method taken up is a step said aloud as the
-  reader's. Two rules keep it usable: `prompt.ming.noRecital`, which is
-  `prompt.nianming`'s «the tables above already say all of that» carried at
-  last to the boards that needed it more, and `prompt.ming.explain`, which is
-  «usable without a glossary» applied to a prompt instead of a page. A caution
-  is under the same discipline: `prompt.ming.time` and the two 七政四餘 bounds
-  are told to arrive where they bite and never as an opening section, since a
-  bound recited before the reading is the recital this rule exists to stop.
-- **A reading of 命 opens on the tradition's own quarrel, in fixed words.**
-  Bounds alone produce a correct and unreadable reply, so what follows the
-  fence on these two boards is not one instruction but five in order — no
-  question was asked and none is needed, one sentence saying what the reader is
-  looking at, the board read whole, the board read in parts, an opening for
-  what to ask next — assembled by `mingClosing`. That sentence is quoted rather
-  than commissioned, for the reason `prompt.disclaimer` is: told to introduce a
-  board in its own words, a model introduces *this person's* board by the third
-  sentence. **It says what is in front of them and nothing about what a chart
-  of 命 is for.** A frame on 命 and 運 stood in front of it and is gone, cut to
-  two sentences and then removed: it made the disclaimer's free-will clause
-  native rather than bolted on, which was a good argument that cost a paragraph
-  about destiny before the reading began. A test measures the length so it
-  cannot grow back by degrees, and `docs/sources.md` keeps the citations so
-  restoring it would be a decision rather than a rediscovery.
-- **What the closing block asks for came from outside, and only half of it
-  could.** The shape is borrowed from a natal-astrology prompt written for a
-  different tradition: an inspection order is not a writing order, write from a
-  centre — two or three forces and the tension between them — and let the data
-  arrive *after* the sentence it supports instead of opening the paragraph.
-  `prompt.ming.rulesStayOut` is the same loan and the most useful of them: a
-  bound kept by being obeyed never has to be announced, and is named where it
-  bites. What could **not** be borrowed is everything that source organises by
-  topic — headings named for a department of a life, a section on ties, one on
-  vocation, a mission read off an axis. That is the doctrine `purposes.ts` and
-  `prompt.qizheng.houses` decline, and a well-written version of it is still
-  the thing this project refuses; the register was importable, the assignment
-  table was not. The register may warm and the subject may not move: a reading
-  may say what a tradition reads in a configuration and may never say what the
-  reader is, feels or wants — the line is crossed by getting kinder, not by
-  getting bolder, which is what `prompt.ming.register` exists to name, and a
-  tension is never handed back as a defect (`prompt.ming.tension`).
+- **A 命 prompt asks for a reading of the person, and the themes are
+  commissioned in it.** The subject is the person the board was laid on —
+  `prompt.ming.configuration` opens on who they are, and the reply is laid out
+  by `mingClosing` in six steps: the disclaimer, the birth situated in the
+  model's own words, the board read whole from a centre, the themes of a life
+  in short sections titled for a theme and never a factor
+  (`prompt.ming.sections`: temperament, the forces in conflict, the work on
+  oneself, undertakings as functions, the ties), the per-board inspection list
+  those sections draw on, and an ending that opens. Every choice travels
+  signed: which seat, god or element carries a theme is said as it is made,
+  and a school's method arrives named as that school's — the seats of 七政四餘
+  are read by their transmitted names (`prompt.qizheng.houses`), the ten gods'
+  readings toward a life arrive as named teachings (`prompt.bazi.gods`), and
+  the favourable element stays uncomputed and is chosen aloud
+  (`prompt.bazi.yongshen`). What a reading never does is in
+  `prompt.ming.limits` and `prompt.ming.register`: no dated predictions, no
+  medical, psychiatric, legal or financial counsel, no lucky numbers or
+  gambling, no partner judged and no compatibility settled, and the verbs held
+  conditional — «tends to», never «you will». A tension is never handed back
+  as a defect (`prompt.ming.tension`), a bound is named where it bites and
+  never as an opening section (`prompt.ming.rulesStayOut`), the transcript is
+  never recited back (`prompt.ming.noRecital`), and every term is explained at
+  first use (`prompt.ming.explain`). The direction the twelve 人事宮 are
+  numbered in still travels as the weakest quantity on that board
+  (`prompt.qizheng.direction`), and it matters more now that the seats work.
+- **The five elements arrive counted, and the count is not a verdict.**
+  `bazi/distribution.ts` counts the eight characters — each stem by its
+  element, each branch by its own — zeroes included, because an absence weighs
+  as much as an abundance. The transcript prints it so a model never recounts;
+  declaring the day master strong or weak from it, and choosing what
+  compensates an absence, are method steps and travel signed
+  (`prompt.bazi.noScore`, `prompt.bazi.distribution`). This engine still
+  computes no 用神 and no 格局.
 - **A chart prints, and paper is the fourth appearance.** Not light: light is
   a paper-*coloured* screen, set against a lit surface. `@media print` in
   `app.css` resets the properties for white, at the specificity of

@@ -1,6 +1,7 @@
 import type { EphemerisContext } from '../ephemeris.js';
 import { decade, type Branch, type Ganzhi, type Stem } from '../ganzhi.js';
 import type { Moment } from '../pillars.js';
+import { elementCount, type ElementCount } from './distribution.js';
 import { hiddenStems, twelveStage, type HiddenStem, type TwelveStage } from './hidden-stems.js';
 import { luckCycles, type Gender, type LuckCycles, type LuckGranularity } from './luck.js';
 import { nayin, type Nayin } from './nayin.js';
@@ -33,6 +34,8 @@ export interface Bazi {
   pillars: BaziPillar[];
   /** The two branches missing from the day pillar's decade. */
   emptyBranches: [Branch, Branch];
+  /** The five elements counted over the eight characters, zeroes included. */
+  distribution: ElementCount;
   /** Absent unless a gender was given: the direction depends on it. */
   luck?: LuckCycles;
 }
@@ -93,7 +96,12 @@ export function computeBazi(
     empty: emptySet.has(ganzhi.branch.index),
   }));
 
-  const bazi: Bazi = { dayMaster, pillars, emptyBranches: empty };
+  const bazi: Bazi = {
+    dayMaster,
+    pillars,
+    emptyBranches: empty,
+    distribution: elementCount(order.map(([, ganzhi]) => ganzhi)),
+  };
   if (options.gender) {
     bazi.luck = luckCycles(
       moment,
@@ -106,6 +114,7 @@ export function computeBazi(
   return bazi;
 }
 
+export { ELEMENTS, elementCount, type ElementCount } from './distribution.js';
 export { hiddenStems, twelveStage, type HiddenRank, type HiddenStem, type TwelveStage, type TwelveStageId } from './hidden-stems.js';
 export {
   MAX_ANNUAL_YEARS,

@@ -1,6 +1,6 @@
 import type { MessageKey, Translator } from '@qimendunjia/i18n';
 import type { Almanac, YearGodSeat } from './almanac.js';
-import type { Bazi } from './bazi/index.js';
+import { ELEMENTS, type Bazi } from './bazi/index.js';
 import { palace, YUAN_HANZI, YUAN_PINYIN, type QimenChart } from './dunjia/index.js';
 import { BRANCHES, type Ganzhi } from './ganzhi.js';
 import type { LunarDate } from './lunar.js';
@@ -766,6 +766,15 @@ export function formatBazi(bazi: Bazi, t: Translator): string {
           bazi.emptyBranches
             .map((branch) => named(branch, `label.branch.${branch.id}` as MessageKey, t))
             .join(', '),
+        ],
+        // All five, zeroes included: the count exists to show what is absent
+        // as much as what abounds, and a row that skipped the zero would show
+        // half of that.
+        [
+          t('cli.field.distribution'),
+          ELEMENTS.map(
+            (element) => `${t(`label.element.${element}` as MessageKey)} ${bazi.distribution[element]}`,
+          ).join(' · '),
         ],
       ],
       4,

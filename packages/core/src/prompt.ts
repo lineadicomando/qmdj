@@ -294,16 +294,10 @@ export function readingPrompt(
  * There is no `question`, and the absence is the design rather than a field
  * nobody got round to. A board of 卜 is cast *for* a question and cannot be
  * read without one being chosen; a board of 命 is laid on a birth and stands
- * whether anybody asks anything or not.
- *
- * What a question would actually do here is worse than useless. A reader who
- * writes *what about my career* has named a palace — 官祿宮 is printed on this
- * board, in words — and a model handed the two together goes to that seat
- * without ever making a choice it could be asked to justify. That is the same
- * failure the 用神 rule exists to prevent, arriving by a door the 卜 boards do
- * not have. So the topic is not collected, and the prompt says instead that
- * which seat bears on what is the reader's. See `CLAUDE.md` and `PLAN.md` § 4
- * phase 18.
+ * whether anybody asks anything or not. The themes a reading traverses are
+ * commissioned in the prompt itself, and what the reader wants to look at
+ * next belongs to the conversation that follows. See `CLAUDE.md` and
+ * `PLAN.md` § 4 phases 18 and 19.
  */
 export interface MingReadingRequest {
   /** Where the board can be seen again, if the caller knows an address. */
@@ -352,20 +346,15 @@ export function qizhengReadingPrompt(
     '',
     t('prompt.language'),
     '',
-    // First and load-bearing. On a board of 卜 the refusal is a withholding —
-    // the 用神 is absent and a model must choose one to say anything at all.
-    // Here the seats arrive *named*, so there is nothing to withhold and the
-    // rule has to be stated outright or the labels do the reading.
-    // The line first, because everything under it is a bound on something and
-    // a list of bounds with nothing above it reads as an instruction to say
-    // nothing. This is the one rule here that asks for a reading rather than
-    // fencing one.
+    // The subject first: everything under it is a bound or a place to look,
+    // and a list of bounds with nothing above it reads as an instruction to
+    // say nothing.
     `- ${t('prompt.ming.configuration')}`,
     `- ${t('prompt.qizheng.houses')}`,
     `- ${t('prompt.ming.time')}`,
     `- ${t('prompt.qizheng.remainders')}`,
     `- ${t('prompt.qizheng.noScore')}`,
-    `- ${t('prompt.ming.noAdvice')}`,
+    `- ${t('prompt.ming.limits')}`,
     `- ${t('prompt.ming.noRecital')}`,
     `- ${t('prompt.ming.explain')}`,
     `- ${t('prompt.ming.register')}`,
@@ -403,26 +392,17 @@ export function qizhengReadingPrompt(
 /**
  * How a reading of a board of 命 is laid out, said after the fence.
  *
- * Everything above this is a bound. A model that has read every one of them
- * knows what it may not write and has been told nothing about what it should,
- * and what follows from bounds alone is a technical description — correct,
- * unreadable, and addressed to somebody who did not need it. These five are
- * the other half: that no question was asked and none is needed, one fixed
- * sentence saying what the reader is looking at, the board read whole, the
- * board read in parts, and an opening for whatever they want to ask next.
+ * Everything above this is a bound or a place to look, and what follows from
+ * bounds alone is a technical description addressed to somebody who did not
+ * need one. These six are the other half, in the order the reply is written:
+ * that no question was asked and none is needed, the birth situated in the
+ * model's own words, the board read whole from a centre, the themes of a life
+ * in short sections, the inspection list those sections draw on, and an
+ * opening for whatever the reader wants to ask next.
  *
- * **That sentence is fixed for the reason `prompt.disclaimer` is fixed**, and
- * it is per board because what the reader is looking at differs: a 八字 is a
- * birth written in a calendar and a 七政四餘 board is a birth written in the
- * sky. It says what is in front of them and stops.
- *
- * A frame stood in front of it once — 命 and 運, a chart as a starting
- * arrangement rather than a script — and it is gone. The argument for it was
- * good and is written down in `docs/sources.md` with what carried it. The
- * argument against was the one this whole block exists to make: a reader who
- * has to get past a paragraph about destiny before the reading starts is a
- * reader being given preamble, and the shape of the reply is already settled
- * by the four steps around this one.
+ * The situating and the inspection list are per board because the boards
+ * differ — a 八字 is a birth written in a calendar and a 七政四餘 board is a
+ * birth written in the sky; the rest is shared.
  */
 function mingClosing(t: Translator, board: 'bazi' | 'qizheng'): string[] {
   return [
@@ -431,6 +411,8 @@ function mingClosing(t: Translator, board: 'bazi' | 'qizheng'): string[] {
     t(`prompt.${board}.opening` as const),
     '',
     t('prompt.ming.panorama'),
+    '',
+    t('prompt.ming.sections'),
     '',
     t(`prompt.${board}.read` as const),
     '',
@@ -477,12 +459,9 @@ export function baziReadingPrompt(
     '',
     t('prompt.language'),
     '',
-    // The counterpart of the 用神 rule, and the reason this board needs one at
-    // all: what is missing here is not a palace but the favourable element,
-    // and a model will supply it unasked because every manual it has read
-    // begins by doing so.
-    // First for the reason it is first on the 七政四餘 board: what follows are
-    // all bounds, and bounds alone are read as an instruction to withhold.
+    // The subject first, for the reason it is first on the 七政四餘 board:
+    // what follows are bounds and places to look, and bounds alone are read
+    // as an instruction to withhold.
     `- ${t('prompt.ming.configuration')}`,
     `- ${t('prompt.bazi.yongshen')}`,
     `- ${t('prompt.ming.time')}`,
@@ -491,8 +470,9 @@ export function baziReadingPrompt(
     // Only where a direction was given for the cycles, since without one they
     // are absent from the transcript and the rule would name nothing.
     ...(bazi.luck ? [`- ${t('prompt.bazi.luck')}`] : []),
+    `- ${t('prompt.bazi.distribution')}`,
     `- ${t('prompt.bazi.noScore')}`,
-    `- ${t('prompt.ming.noAdvice')}`,
+    `- ${t('prompt.ming.limits')}`,
     `- ${t('prompt.ming.noRecital')}`,
     `- ${t('prompt.ming.explain')}`,
     `- ${t('prompt.ming.register')}`,

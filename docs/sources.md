@@ -1705,6 +1705,26 @@ names what the tradition names, exactly as it does for the gates.
 
 ---
 
+## 五行 of the eight characters — a count, not a weighing
+
+`bazi/distribution.ts` counts the five elements over the eight characters of
+a birth: each stem by its element, each branch by its own — the 本氣, the
+element the branch *is* in every table this engine already carries. Zeroes are
+printed, because the absence of an element is half of what the count exists to
+show.
+
+The basis needs no second source: the element of each stem and branch is
+tier-1 material, shared with the chart's seasonal states and the 納音, and the
+count is arithmetic over it. What **stops at the count** is deliberate: no
+weights for the concealed stems, no seasonal multiplier, no 得令/得地/得勢,
+no declaration that the day master is strong or weak. Those are the opening
+steps of the 扶抑 method and its rivals, the schools state them differently,
+and any one of them shipped here would be a school chosen silently. The prompt
+says the count is done and that everything past it is a method's step to be
+named — see `prompt.bazi.distribution` and `prompt.bazi.noScore`.
+
+---
+
 ## What is refused, and why
 
 | | Reason |
@@ -1734,43 +1754,6 @@ names what the tradition names, exactly as it does for the gates.
 therefore a candidate reference for several of these. It is five months old
 with four commits at the time of writing, which is why nothing here leans on
 it alone.
-
----
-
-## 命 and 運 — a frame that was written, weighed and removed
-
-Nothing in this project's prose now says what 命 is, and the record of why sits
-here rather than nowhere: the paragraph was written twice, and the citations
-are worth keeping so that restoring it is a decision and not a rediscovery.
-
-`prompt.ming.opening` opened a reading of a board of 命 by saying that 命 mìng
-is what was given and 運 yùn what moves through it, that a chart of this sort
-describes a starting arrangement and does not write down what is done with one.
-The first version continued: 知命 as a mark of maturity rather than of
-resignation — 《論語》為政 «五十而知天命» and 堯曰 «不知命，無以為君子也» — and
-了凡四訓, whose first 訓 立命之學 has 袁黃 recount 孔 先生 casting his
-examination places, his rank and his childlessness, twenty years of them
-arriving as cast, before 雲谷 禪師 tells him a fate holds only over a man who
-has not roused himself. It closed by saying that this is one strand and not the
-whole tradition, since 王充《論衡》命祿 argues the opposite and the quarrel ran
-for centuries.
-
-**The argument for it was real.** The disclaimer these boards carry ends on
-free will, and a Western caution set beside a Chinese chart reads as an apology
-for it — where the same claim made from *inside* the tradition is something a
-reader can go and check. The 命/運 distinction itself needed no defence: it is
-definitional in 命理, and the reason 大運 is named as it is.
-
-**The argument against won twice.** Cut to two sentences, then removed
-outright, for the reason `mingClosing` exists at all: a reader who has to get
-past a paragraph about destiny before the reading starts is a reader being
-given preamble, however true the paragraph is. What stands in its place is one
-fixed sentence per board saying what the reader is looking at — a birth written
-in a calendar, a birth written in the sky — and a test measures its length so
-that it cannot grow back by degrees.
-
-What was **never** claimed, in any version: that a fate can be moved, that the
-tradition agrees it can, or that a reading knows either way.
 
 ---
 

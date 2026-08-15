@@ -221,9 +221,9 @@ describe('bazi', () => {
  * `--prompt` on the two boards that are laid on a birth.
  *
  * The flag reaches all four commands now. What parts these two from the other
- * two is `--ask`, which is refused rather than dropped: a question here names
- * one of the seats the board already prints, so a reading that started from it
- * would have arrived at a seat without ever choosing one.
+ * two is `--ask`, which is refused rather than dropped: nothing is asked of a
+ * board of 命, and the themes a reading traverses are commissioned in the
+ * prompt itself.
  */
 describe('--prompt on a board of 命', () => {
   it('wraps the four pillars in what a reader has to be told', async () => {
@@ -234,10 +234,10 @@ describe('--prompt on a board of 命', () => {
     expect(out).toContain('food for thought and entertainment');
   });
 
-  it('wraps the 七政四餘 board in what its twelve names are not', async () => {
+  it('wraps the 七政四餘 board in how its twelve seats are read', async () => {
     expect(await run(['qizheng', ...MOMENT, '--prompt', '--lang', 'en'])).toBe(0);
 
-    expect(out).toContain('names of the seats');
+    expect(out).toContain('what the tradition reads at that seat');
     expect(out).toContain('one source and three derivations');
   });
 
