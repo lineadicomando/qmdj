@@ -823,7 +823,8 @@ turned out to state in a clause.
 the 四庫全書 — the one work of its kind that adjudicates between conflicting
 rules and says which it rejects, 卷三十六 being a whole chapter of rejections
 (辨訛). 卷四 義例二, under 建除十二神, quoting the 厯書
-([Wikisource](https://zh.wikisource.org/wiki/欽定協紀辨方書_(四庫全書本)/卷04)):
+([Wikisource](https://zh.wikisource.org/wiki/欽定協紀辨方書_(四庫全書本)/卷04),
+[rev](https://zh.wikisource.org/w/index.php?oldid=787340)):
 
 > 厯書曰厯家以建除滿平定執破危成收開閉凡十二日周而復始觀所值以定吉凶**每月交
 > 節則疊兩值日**其法從月建上起建與斗杓所指相應如正月建寅則寅日起建順行十二辰
