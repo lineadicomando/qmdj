@@ -257,6 +257,15 @@
           <!-- Under the two fields and tied to them: a date input has no
                placeholder to say what empty means, so the sentence has to. -->
           <p class="note" id="{uid}-now">{t('form.momentNote')}</p>
+          <!-- Only here, and only while there is an instant to leave: under a
+               birth there is no now to go back to, and over empty fields the
+               button would press to nothing. Named for the state it restores —
+               empty — which the note above has just finished defining. -->
+          {#if date || time}
+            <button type="button" class="now" onclick={() => { date = ''; time = ''; }}>
+              {t('form.momentNow')}
+            </button>
+          {/if}
         </div>
       </fieldset>
     {/if}
@@ -340,6 +349,22 @@
      can come back from, however wide the panel is. */
   details label:not(.check) { max-width: 26rem; }
   .note { margin: 0; color: var(--faint); font-size: 0.8em; max-width: 42rem; }
+
+  /* A link and not a block: it undoes a detour, it does not submit anything,
+     and a filled button under the fields would outrank the one that asks. */
+  .now {
+    justify-self: start;
+    border: 0;
+    padding: 0;
+    background: none;
+    color: var(--faint);
+    font: inherit;
+    font-size: 0.85em;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+  }
+  .now:hover, .now:focus-visible { color: var(--ink); }
 
   /*
    * A group of fields, named — and named to the machine as well.

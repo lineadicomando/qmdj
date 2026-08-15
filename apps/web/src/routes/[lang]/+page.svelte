@@ -66,8 +66,40 @@
   let { data } = $props();
   const t = $derived(data.t);
 
+  /**
+   * Whether the address arrived on an instrument of 命, whose date is a birth.
+   *
+   * The address writes one `date=`, and what it means turns on the instrument
+   * beside it: a birth under 八字, another instant to ask at under Qi Men. The
+   * instrument travels in the setup, so a reload can tell — and this is where
+   * it tells, handing the pair to one slot and leaving the other empty.
+   */
   // svelte-ignore state_referenced_locally
-  let asked = $state<MomentInput>({ ...data.moment });
+  const arrivedOnBirth = instrumentOf(data.instrument).needs === 'birth';
+  /** The moment of a question — the fields of a board of 卜, where empty is
+   * the press. Everything else in it is shared across both kinds: the place,
+   * and how the moment is read. */
+  // svelte-ignore state_referenced_locally
+  let asked = $state<MomentInput>({
+    ...data.moment,
+    ...(arrivedOnBirth ? { date: '', time: '' } : {}),
+  });
+  /**
+   * The birth a board of 命 is laid on, held apart from the moment above.
+   *
+   * One pair of fields used to play both parts, and the seam showed exactly
+   * where a reader crossed it: lay a 八字 on a birth, switch to Qi Men, and
+   * the birth was still standing in the options — meaning, now, «put the
+   * question to another instant», which nobody had said. Two quantities, two
+   * slots: switching instruments finds the other slot as it was left, and a
+   * question after a birth is asked at the press, which is the whole use.
+   */
+  // svelte-ignore state_referenced_locally
+  let birth = $state(
+    arrivedOnBirth
+      ? { date: data.moment.date, time: data.moment.time }
+      : { date: '', time: '' },
+  );
   let question = $state('');
   /**
    * The birth, which is optional and stays optional.
@@ -152,6 +184,19 @@
   const laidOnABirth = $derived(instrument.needs === 'birth');
 
   /**
+   * The pair the form is editing, by the kind of the instrument.
+   *
+   * A reference and not a copy: the fields bind through it, and writing
+   * `moment.date` writes the slot it points at. The other slot holds still.
+   */
+  const moment = $derived(laidOnABirth ? birth : asked);
+
+  /** The input as it travels: the shared fields, under the active moment. */
+  function input(): MomentInput {
+    return { ...asked, date: moment.date, time: moment.time };
+  }
+
+  /**
    * The birth given *beside* what was asked, where an instrument takes one.
    *
    * Only dunjia does. Under a board of 命 this stays empty and the birth
@@ -192,7 +237,7 @@
    */
   const missing = $derived<MessageKey | undefined>(
     laidOnABirth
-      ? asked.date === ''
+      ? birth.date === ''
         ? 'form.needed.birth'
         : undefined
       : question.trim() === ''
@@ -236,7 +281,7 @@
    * button to copy is simply not there, and the button to cast is.
    */
   const fields = $derived(
-    `${momentQuery(asked)}|${instrumentId}|${born}|${gender}|${question.trim()}`,
+    `${momentQuery(input())}|${instrumentId}|${born}|${gender}|${question.trim()}`,
   );
   let castFrom = $state('');
   const spent = $derived(chart !== undefined && castFrom !== fields);
@@ -251,10 +296,11 @@
   function mark(): void {
     const next = new URL(page.url);
     next.search = momentQuery(
-      // Whatever is in the fields, which is normally no date at all: an empty
-      // pair is the present and writes nothing into the address. A date
-      // somebody went and typed is setup like the place, and comes back.
-      { ...asked },
+      // The active slot's pair, which under a question is normally no date at
+      // all: an empty pair is the present and writes nothing into the address.
+      // A birth, or a date somebody went and typed, is setup like the place,
+      // and comes back — to the slot the instrument names.
+      input(),
       // The birth and the instrument are setup and survive a reload with the
       // rest of it. The question never does, and that is the line: what was
       // typed to get here comes back, what was asked does not.
@@ -288,7 +334,7 @@
       // Rome. The fields are under the options, empty, for the reader who
       // means another instant and says so.
       const query = momentQuery(
-        { ...asked },
+        input(),
         {
           lang: t.locale,
           // No birth reaches a Liu Ren board, and not by oversight: the person
@@ -331,7 +377,7 @@
       // consultation belongs to that minute and not to whenever this is read.
       const cast = { date: castMoment.input.date, time: castMoment.input.time };
       address = momentQuery(
-        { ...asked, ...cast },
+        { ...input(), ...cast },
         {
           lang: t.locale,
           born: sentBirth,
@@ -536,13 +582,17 @@
         already had for it. The moment *is* the input, so it stands in the open
         with the place; and empty stops being the press, because a birth left
         empty would be today's.
+
+        The pair binds through `moment`, which is the slot the kind names —
+        a birth and an instant-of-asking are different quantities, and a date
+        typed as one must never resurface meaning the other.
       -->
       <MomentForm
         {t}
         when={laidOnABirth ? 'fields' : 'options'}
         openLegend={laidOnABirth ? 'form.group.birth' : 'form.group.standing'}
-        bind:date={asked.date}
-        bind:time={asked.time}
+        bind:date={moment.date}
+        bind:time={moment.time}
         bind:place={asked.place}
         bind:trueSolarTime={asked.trueSolarTime}
         bind:dayBoundary={asked.dayBoundary}

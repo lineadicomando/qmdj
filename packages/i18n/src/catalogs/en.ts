@@ -631,6 +631,9 @@ export const en = {
   'form.moment': 'The moment',
   'form.momentNote':
     'Leave them empty and the chart is cast for the instant you press, in the time of the place above — which is the classical use. Fill them in to put the question to another moment.',
+  // The action, named by the state it restores and not by what it deletes:
+  // empty means now, and this is the one press back to it.
+  'form.momentNow': 'Back to now',
   'form.calculation': 'How it is computed',
   'form.trueSolarTime': 'Correct to true solar time',
   'form.dayBoundary': 'The day begins',

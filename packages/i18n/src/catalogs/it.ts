@@ -583,6 +583,7 @@ export const it: Record<MessageKey, string> = {
   'form.moment': 'L\'istante',
   'form.momentNote':
     'Lasciali vuoti e la carta è posta per l\'istante in cui premi, nell\'ora del luogo qui sopra — che è l\'uso classico. Compilali per porre la domanda a un altro momento.',
+  'form.momentNow': 'Torna ad adesso',
   'form.calculation': 'Come si calcola',
   'form.trueSolarTime': 'Correggi all\'ora solare vera',
   'form.dayBoundary': 'Il giorno comincia',
