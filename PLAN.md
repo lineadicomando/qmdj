@@ -2441,7 +2441,7 @@ waits on the page to be decided.
 
 ### Phase 18 — The consultation takes every instrument
 
-**Planned, and it revises phase 14 rather than extending it.** The
+**Done, and it revises phase 14 rather than extending it.** The
 consultation carries the two boards of 卜 and is the only surface that builds
 a prompt. This phase gives it the two boards of 命 as well — 八字 and
 七政四餘 — so that every board this engine computes can be handed to a model
@@ -2541,6 +2541,42 @@ and becomes a preamble and four.
 should show the board it is about to hand over as fully as the instrument's
 own section does, or less. Phase 14 left the same question open for 六壬 and
 it is still open; a fourth board is not the occasion to answer it.
+
+**What it found, which is the part worth carrying forward.** Two live defects,
+both on the consultation, both invisible to every test in the repository, and
+both of the same kind: **a page that read one board's shape and assumed all of
+them.** Neither was found by reasoning about the code. They were found by
+opening the site and pressing the button, which is the lesson.
+
+The first had been shipping since phase 14. `/api/liuren` hands the moment
+over beside the board; `/api/chart` keeps it inside the chart, because a chart
+carries its own. Phase 14 changed one line from `chart.moment` to `body.moment`
+so that it would serve both, and it serves one: **every Qi Men press threw on
+the line after the fetch**, was caught by the outer handler, and came back as
+«The board could not be laid.» On the section the site opens with, under the
+default instrument, for the whole of phases 15 to 17 — while 六壬 worked, which
+is why nothing looked broken from the inside. The engine was never wrong; the
+page could not read what it was handed. `test/api.test.ts` now asserts the
+moment is reachable on all four endpoints, by exactly the expression the page
+uses.
+
+The second this phase introduced and then caught. The result was rendered by
+the component of the **currently selected** instrument rather than the one the
+standing answer was laid with — so moving the field over a cast board handed a
+Qi Men chart to 八字's reading, which looks for four pillars on an object that
+has nine palaces. It threw. At two boards the same gap was survivable, because
+the two components failed quietly on each other's shape; the third and fourth
+made it fatal, which is the ordinary way a latent defect surfaces. The fix is
+`castInstrument`, pinned at the cast beside the address, the question and the
+moment — **which the page already did for all three of those and had never
+thought to do for the instrument itself.**
+
+Both say the same thing about this section: everything under the answer
+belongs to the instant that was laid, and everything in the form belongs to
+the reader. The page knew that rule and applied it to the data it carried,
+never to the *shape* of that data. There is no component test harness here,
+so the second class of defect still has no automated guard — the honest note
+to leave rather than a test that would not have caught it.
 
 ---
 

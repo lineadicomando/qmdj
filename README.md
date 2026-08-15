@@ -78,7 +78,7 @@ chart holding four 凶 configurations is not a bad time to do anything — bad i
 a word about an undertaking, and no undertaking is known here.
 See [`docs/agent-prompt.md`](docs/agent-prompt.md).
 
-## Handing a chart to something that will read it
+## Handing a board to something that will read it
 
 The refusal above has a consequence: somebody who wants a reading takes the
 date to a model, and a model handed a date and a place casts the chart from
@@ -86,22 +86,40 @@ memory and gets it wrong. A wrong chart read well is the worst thing this
 project can produce, because nothing downstream catches it — it looks exactly
 like a right one.
 
-So the chart travels **already computed**, and the conditions travel with it:
+So the board travels **already computed**, and the conditions travel with it:
 
 ```sh
 qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai \
             --ask "Will the contract be signed as it stands?"
 qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai \
             --born 1968-03-12 --gender female --prompt
+qimen bazi  --date 1968-03-12 --time 14:30 --tz Asia/Shanghai \
+            --gender female --prompt
 ```
 
-What comes out is the chart set out in full inside a fence, wrapped in what
-whoever reads it has to be told — that the 用神 belongs to the reader and is
-chosen for the question asked, that the fortunes do not add up to a score,
-that a 凶 is not advice, that the reading belongs to whoever gives it, and
-which of the three tiers of certainty each number sits in. It is
+What comes out is the board set out in full inside a fence, wrapped in what
+whoever reads it has to be told — that the reading belongs to whoever gives
+it, that the fortunes do not add up to a score, that a 凶 is not advice. It is
 [`docs/agent-prompt.md`](docs/agent-prompt.md) said to a model that will never
 read it.
+
+**All four boards, and each refuses differently.** A chart withholds the 用神:
+which palace bears on the question is chosen by the reader for the question
+asked, and without one the board is a map with no pin. A 六壬 board hands its
+三傳 over already drawn, by procedure, and the prompt says not to re-derive
+them — while the choice of which of the four courses to read from is still the
+reader's. The two boards of 命 have no such lever, because their parts arrive
+already *named*: a 七政四餘 board prints 財帛宮 and 官祿宮 against the palaces
+they fell on, and a 八字 prints the ten gods against the pillars. There the
+prompt has to say outright that a name is not a verdict, and that a 八字's
+favourable element — the thing every manual opens by choosing — is withheld
+rather than missing.
+
+**And nothing is asked of a board of 命.** `--ask` works on `chart` and
+`liuren`, which are cast for a question, and is refused on `bazi` and
+`qizheng` rather than quietly dropped. A question there names a seat the board
+already prints, and a reading that starts from it has arrived at that seat
+without ever having chosen it.
 
 **A birth enters a chart the way the classics put it there.** `--born` adds a
 年命: 本命, the year pillar of the birth, and — with `--gender`, which is read
@@ -157,7 +175,7 @@ longer there.
 | `packages/core` | the engine, and the `qimen` command |
 | `packages/plate` | the drawings: the nine palaces framed by the compass with the configurations under them, and the ring of twelve a 六壬 board and a 七政四餘 board share, SVG and PNG |
 | `packages/mcp` | MCP server, ten tools, stdio |
-| `apps/web` | SvelteKit: six sections at `/en` and `/it`, sixteen endpoints under `/api` |
+| `apps/web` | SvelteKit: six sections at `/en` and `/it`, eighteen endpoints under `/api` |
 
 npm workspaces, Node ≥ 22, ESM, TypeScript.
 

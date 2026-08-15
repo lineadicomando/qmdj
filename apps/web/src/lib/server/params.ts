@@ -114,9 +114,14 @@ function readCoordinate(name: string, value: string): number {
  * still says which chart it was made from — and so that anybody can cast it
  * again and see whether it says what the reading claimed.
  */
-export function pageAddress(url: URL, locale: Locale): string {
+export function pageAddress(url: URL, locale: Locale, section = ''): string {
   const page = new URL(url);
-  page.pathname = `/${locale}`;
+  // The language root by default, which is the consultation: a board of 卜 is
+  // cast at the instant of the asking, so the honest link is to the form that
+  // would cast it again rather than to an address claiming to hold it. A board
+  // laid on a birth is a pure function of that birth and its section does hold
+  // it, so those name one and the reader lands on the board itself.
+  page.pathname = section ? `/${locale}/${section}` : `/${locale}`;
   // The parameters only the API answers to — and the birth, which the chart
   // section does not take and which nobody's address should carry: the link
   // is there so the chart can be cast again and checked, and the chart is the

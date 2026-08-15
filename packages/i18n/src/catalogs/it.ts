@@ -640,6 +640,8 @@ export const it: Record<MessageKey, string> = {
   'form.needed.interval': "Mancano ancora le due date dell'intervallo.",
   'form.needed.question':
     'Manca ancora una domanda: il prompt è costruito perché la carta sia letta alla luce di una domanda.',
+  'form.needed.birth':
+    'Manca ancora una data di nascita. Questo quadro è steso su una nascita, e una data vuota sarebbe oggi.',
   'form.needed.gender':
     'I cicli decennali richiedono il sesso, perché la tradizione ne trae la direzione. Senza, i pilastri restano comunque completi.',
   'form.jumpDate': 'Il giorno per cui la carta è posta',
@@ -668,8 +670,10 @@ export const it: Record<MessageKey, string> = {
   'consult.birthNote':
     'La carta resta posta per l\'istante in cui chiedi. Quello che la nascita aggiunge è dove cade dentro di essa — 本命 běnmìng, l\'anno in cui sei nato, e 行年 xíngnián, l\'anno che stai vivendo.',
   'consult.lead':
-    'Poni una domanda e ottieni un prompt pronto — da incollare in ChatGPT, Claude o un altro assistente.',
+    'Poni una domanda, oppure dai una nascita, e ottieni un prompt pronto — da incollare in ChatGPT, Claude o un altro assistente.',
   'consult.cast': 'Poni la domanda',
+  'consult.lay': 'Stendi il quadro',
+  'consult.changeBirth': 'Cambia la nascita',
   'consult.change': 'Cambia la domanda',
   'consult.castAt': 'Posto per il {when}',
   'consult.castFailed': 'Non è stato possibile porre il quadro.',
@@ -843,9 +847,12 @@ export const it: Record<MessageKey, string> = {
   // nome: i campi sopra sono quelli che la riga d'apertura già annuncia, e un
   // titolo su di essi direbbe una terza volta ciò che dicono due etichette.
   'form.group.standing': 'Da dove chiedi',
-  'form.instrument': 'Che tipo di domanda è',
+  'form.group.birth': 'La nascita su cui il quadro è steso',
+  'form.instrument': 'Che tipo di lettura è',
   'form.instrument.qimen': 'Quando muovermi, e da che parte — 奇門遁甲 qíméndùnjiǎ',
   'form.instrument.liuren': 'Cosa sta succedendo, e con chi — 大六壬 dàliùrén',
+  'form.instrument.qizheng': 'Il cielo sotto cui una vita è cominciata — 七政四餘 qīzhèngsìyú',
+  'form.instrument.bazi': "Di che cosa è fatta una vita, all'ora di una nascita — 八字 bāzì",
   'form.guiren': 'Quale verso insedia il nobile (貴人)',
   'form.guiren.chou': '甲 con 戊 e 庚, a 丑 e 未',
   'form.guiren.wei': '甲 da solo, a 未 e 丑',
@@ -990,6 +997,8 @@ export const it: Record<MessageKey, string> = {
     'L\'opzione "{option}" non accetta il valore "{value}". Se non venisse controllato non corrisponderebbe a nulla, il che si legge esattamente come una disposizione che non si è mai presentata.',
   'cli.error.genderRequired':
     'I cicli decennali richiedono --gender, perché la tradizione ne trae la direzione. Senza, i pilastri restano comunque completi.',
+  'cli.error.notAsked':
+    'Il comando "{command}" stende un quadro su una nascita, e ad esso non si chiede nulla — quindi "--ask" non ha dove andare. Per quale parte di una vita si legga un quadro di 命 lo sceglie il lettore, ad alta voce, dopo che è stato steso. Togli la domanda, oppure ponila a `chart` o a `liuren`, che sono posti per una.',
 
   'search.none': 'Nessun luogo trovato per "{query}".',
   'search.coverage':

@@ -1,15 +1,14 @@
 import {
   DEFAULT_QIZHENG_OPTIONS,
-  formatMoment,
-  formatQizheng,
-  formatWarnings,
   qizhengBoard,
+  qizhengTranscript,
   type QizhengOptions,
 } from '@qimendunjia/core';
 import { createTranslator } from '@qimendunjia/i18n';
 import {
   ephemerisContext,
   momentIsFixed,
+  pageAddress,
   readLocale,
   readMoment,
 } from '$lib/server/params';
@@ -20,14 +19,16 @@ import type { RequestHandler } from './$types';
  * `GET /api/qizheng/text?date=2026-08-14&time=14:30&locationId=3169070`
  *
  * The board said in words, in the form the CLI prints. Not a second
- * rendering: `formatQizheng` is the one the terminal uses, so what is copied
- * here cannot drift from what the engine's own surface shows.
+ * rendering: `qizhengTranscript` is the one the terminal uses and the one that
+ * goes inside `/prompt`, so what is copied here cannot drift from what the
+ * engine's own surfaces show.
  *
- * There is no `/prompt` beside it, and that is deliberate rather than
- * pending. A consultation takes one instrument, chosen before the press —
- * and this board shares the day pillar and the twelve palaces with the other
- * two, so a model handed it alongside one of them would count one fact twice.
- * See `PLAN.md` § 4 phase 14.
+ * It composed the same parts by hand until the prompt beside it needed them
+ * too, and printed the almanac's officer with them where the chart's and the
+ * board's transcripts had always left it out. One rendering settles both: the
+ * officer is a function of two pillars printed above it, and this is the one
+ * board where the word for it collides with something else on the page — every
+ * body here carries a 宿, and the almanac's 值日宿 is a lodge of another kind.
  */
 export const GET: RequestHandler = ({ url, request, setHeaders }) => {
   try {
@@ -50,9 +51,7 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
       vary: 'Accept-Language',
     });
     return new Response(
-      [formatMoment(moment, t), '', formatQizheng(board, t), formatWarnings(moment, t)]
-        .filter((part) => part !== '')
-        .join('\n'),
+      qizhengTranscript(moment, board, t, { source: pageAddress(url, locale, 'qizheng') }),
       { headers: { 'content-type': 'text/plain; charset=utf-8' } },
     );
   } catch (cause) {

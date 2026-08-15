@@ -49,13 +49,16 @@
   import { replaceState } from '$app/navigation';
   import { page } from '$app/state';
   import { appearance } from '$lib/appearance.svelte';
-  import { INSTRUMENTS, instrumentOf, type InstrumentId } from '$lib/instruments';
+  import { INSTRUMENTS, instrumentOf, type Instrument, type InstrumentId } from '$lib/instruments';
   import { momentQuery, sayFailure, type Failure, type MomentInput } from '$lib/moment';
+  import BaziReading from '$lib/components/BaziReading.svelte';
   import ChartReading from '$lib/components/ChartReading.svelte';
   import Takeaway from '$lib/components/Takeaway.svelte';
   import FormPanel from '$lib/components/FormPanel.svelte';
   import LiurenReading from '$lib/components/LiurenReading.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
+  import PillarPlate from '$lib/components/PillarPlate.svelte';
+  import QizhengReading from '$lib/components/QizhengReading.svelte';
   import StrengthLegend from '$lib/components/StrengthLegend.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
   import type { MessageKey } from '@qimendunjia/i18n';
@@ -108,8 +111,27 @@
    */
   // svelte-ignore state_referenced_locally
   let failure = $state<Failure | undefined>(data.failure);
-  /** The board as it came back — a Qi Men chart, or a Liu Ren board. */
+  /** The board as it came back — whichever of the four was laid. */
   let chart = $state<any>();
+  /**
+   * The instrument the standing answer was laid with, pinned at the cast.
+   *
+   * The field goes on being editable after the press and the answer does not
+   * follow it — which the page already knew about the question, the moment and
+   * the address, and did not know about the instrument. Everything under the
+   * result reads *this*, and everything in the form reads the field.
+   *
+   * The gap was not cosmetic. The answer on screen is rendered by the
+   * component its board belongs to, so a reader who cast a chart and then
+   * moved the field was shown a Qi Men chart handed to 八字's reading, which
+   * looks for four pillars on an object that has nine palaces — an exception
+   * in a render, on the section's own landing page. It was survivable while
+   * there were two boards only because both were read by components that
+   * failed quietly on each other's shape.
+   */
+  let castInstrument = $state<Instrument | undefined>();
+  /** The instrument the answer on screen belongs to, or the field before any. */
+  const shown = $derived(castInstrument ?? instrument);
   /**
    * The moment that was cast, held apart from the board.
    *
@@ -126,14 +148,56 @@
 
   const said = $derived(failure ? sayFailure(t, failure) : '');
 
+  /** Whether the board is laid on a birth rather than cast for a question. */
+  const laidOnABirth = $derived(instrument.needs === 'birth');
+
+  /**
+   * The birth given *beside* what was asked, where an instrument takes one.
+   *
+   * Only dunjia does. Under a board of 命 this stays empty and the birth
+   * travels as the moment itself, which is what `needs` means.
+   */
+  const sentBirth = $derived((instrument.takesBirth && born) || undefined);
+
+  /**
+   * The sex, where it changes something — and it changes different things.
+   *
+   * Under dunjia it fixes the direction the 行年 count runs, so it is
+   * meaningless without a birth beside the chart and travels only with one.
+   * Under 八字 it fixes the direction the 大運 run, and there it travels alone,
+   * because the birth is the board's own moment rather than an addition to it.
+   * The other two do not read it at all.
+   */
+  const sentGender = $derived(
+    !instrument.takesGender || !gender
+      ? undefined
+      : instrument.takesBirth
+        ? (born && gender) || undefined
+        : gender,
+  );
+
   /**
    * What is still missing, checked before anything is asked of the server.
    *
-   * Only the question. The birth is an addition and never a requirement:
-   * a consultation without one is the whole of the classical use.
+   * Under a board of 卜 it is the question, and only the question: the birth
+   * is an addition and never a requirement, since a consultation without one
+   * is the whole of the classical use.
+   *
+   * Under a board of 命 it is the **date**, and that reverses the page's own
+   * rule about an empty field. Everywhere else here empty is the press and
+   * means now, which is exactly what a birth cannot mean: a board of 命 laid
+   * on an empty date would be laid on today, look like an answer, and be
+   * nobody's. So the one field this section is proudest of leaving blank is
+   * the one field the other kind of instrument insists on.
    */
   const missing = $derived<MessageKey | undefined>(
-    question.trim() === '' ? 'form.needed.question' : undefined,
+    laidOnABirth
+      ? asked.date === ''
+        ? 'form.needed.birth'
+        : undefined
+      : question.trim() === ''
+        ? 'form.needed.question'
+        : undefined,
   );
 
   /**
@@ -196,8 +260,8 @@
       // typed to get here comes back, what was asked does not.
       {
         instrument: instrumentId,
-        born: (instrument.takesBirth && born) || undefined,
-        gender: (instrument.takesBirth && born && gender) || undefined,
+        born: sentBirth,
+        gender: sentGender,
       },
     );
     replaceState(next, page.state);
@@ -231,8 +295,8 @@
           // asking is already in it, standing on the day stem. Which boards
           // take one is `takesBirth`, where the reason is written down. See
           // the page's own note, and `PLAN.md` § 4 phase 14.
-          born: (instrument.takesBirth && born) || undefined,
-          gender: (instrument.takesBirth && born && gender) || undefined,
+          born: sentBirth,
+          gender: sentGender,
         },
       );
       const response = await fetch(`/api/${instrument.api}?${query}`);
@@ -240,6 +304,7 @@
 
       if (!response.ok) {
         chart = undefined;
+        castInstrument = undefined;
         castMoment = undefined;
         address = '';
         failure = body as Failure;
@@ -249,24 +314,37 @@
       // An endpoint returns its board named after itself, which is the
       // convention `api` stands on — see `instruments.ts`.
       chart = body[instrument.api];
-      castMoment = body.moment ?? null;
+      /**
+       * The moment, from wherever this board keeps it.
+       *
+       * Three of the four are handed it beside the board; a chart carries its
+       * own inside. Read only from `body.moment`, the chart's press threw on
+       * every consultation from the day a second board arrived — the reading
+       * came back, the moment did not, and the whole cast was reported as a
+       * board that could not be laid. It failed silently in the sense that
+       * matters: the message it produced is one a reader would read as an
+       * outage rather than as a bug, and the other instrument worked.
+       */
+      castMoment = body.moment ?? body[instrument.api]?.moment ?? null;
       // Pinned to what the engine actually cast for. Under a question that is
       // the instant of the press, and it is the whole point of the mode: the
       // consultation belongs to that minute and not to whenever this is read.
-      const cast = { date: body.moment.input.date, time: body.moment.input.time };
+      const cast = { date: castMoment.input.date, time: castMoment.input.time };
       address = momentQuery(
         { ...asked, ...cast },
         {
           lang: t.locale,
-          born: (instrument.takesBirth && born) || undefined,
-          gender: (instrument.takesBirth && born && gender) || undefined,
+          born: sentBirth,
+          gender: sentGender,
         },
       );
       castFrom = fields;
+      castInstrument = instrument;
       posed = question.trim();
-      at = `${body.moment.input.date} ${body.moment.input.time.slice(0, 5)}`;
+      at = `${cast.date} ${cast.time.slice(0, 5)}`;
     } catch {
       chart = undefined;
+      castInstrument = undefined;
       address = '';
       // The request itself failed, so there is no code to translate — and it
       // may well be the first press, when nothing was ever cast to be "read
@@ -284,7 +362,7 @@
     if (chart && !failure) await panel?.close();
   }
 
-  const plate = $derived(`/api/${instrument.api}/plate?${address}&scheme=${appearance.current}`);
+  const plate = $derived(`/api/${shown.api}/plate?${address}&scheme=${appearance.current}`);
 
   /**
    * The same board, drawn for paper.
@@ -298,8 +376,8 @@
    * Not asked for at all when the reader is already reading in light, since
    * then the board on screen is the board for paper.
    */
-  const onPaper = $derived(appearance.current !== 'light');
-  const paper = $derived(`/api/${instrument.api}/plate?${address}&scheme=light`);
+  const onPaper = $derived(appearance.current !== 'light' && shown.plate !== undefined);
+  const paper = $derived(`/api/${shown.api}/plate?${address}&scheme=light`);
 
   /**
    * Fetched as soon as there is a chart, not when the printer is asked for.
@@ -326,7 +404,9 @@
    * the line itself. The birth travels — it is what the 年命 is computed
    * from — and the question does not.
    */
-  const promptUrl = $derived(`/api/${instrument.api}/prompt?${address}&asked=true`);
+  const promptUrl = $derived(
+    `/api/${shown.api}/prompt?${address}` + (shown.needs === 'birth' ? '' : '&asked=true'),
+  );
 
   /** The instant the board was actually laid for, for the line that says so. */
   let at = $state('');
@@ -374,7 +454,7 @@
     {t}
     bind:this={panel}
     legend={null}
-    reopenLabel="consult.change"
+    reopenLabel={laidOnABirth ? 'consult.changeBirth' : 'consult.change'}
     closable={chart !== undefined}
     onsubmit={consult}
   >
@@ -392,15 +472,26 @@
         do it; what takes a name below is the circumstance, which is a
         different kind of thing and reads as the step it is.
       -->
-      <label class="question">
-        {t('form.question')}
-        <!-- Five lines rather than two. What is typed here is the one thing on
-             the page the reader composes rather than picks, and a box the size
-             of a caption says to keep it to a caption — when what makes a
-             question readable is the circumstance around it. -->
-        <textarea bind:value={question} rows="5" placeholder={t('form.questionPlaceholder')}
-        ></textarea>
-      </label>
+      <!--
+        Absent under a board of 命, rather than disabled or ignored.
+
+        Nothing is asked of those two, and a box standing empty over them would
+        be the page inviting exactly the thing the prompt refuses: a topic
+        names one of the seats the board prints — «my career» *is* 官祿宮 — and
+        a reading that started from it would have reached a seat without ever
+        choosing one. See `prompt.ts` and `PLAN.md` § 4 phase 18.
+      -->
+      {#if !laidOnABirth}
+        <label class="question">
+          {t('form.question')}
+          <!-- Five lines rather than two. What is typed here is the one thing
+               on the page the reader composes rather than picks, and a box the
+               size of a caption says to keep it to a caption — when what makes
+               a question readable is the circumstance around it. -->
+          <textarea bind:value={question} rows="5" placeholder={t('form.questionPlaceholder')}
+          ></textarea>
+        </label>
+      {/if}
 
       <!--
         Which board the question is put to, in the open with it.
@@ -412,29 +503,44 @@
         recognises the shape of their own, where `Qi Men` and `Liu Ren` are
         two words they have no way to weigh.
       -->
-      <label class="instrument">
-        {t('form.instrument')}
-        <select bind:value={instrumentId}>
-          {#each INSTRUMENTS as choice (choice.id)}
-            <option value={choice.id}>{t(choice.option)}</option>
-          {/each}
-        </select>
-      </label>
+      <!--
+        Four of them, and no longer a `select`.
+
+        A `select` gives one line to an option and shows one at a time, which
+        held while there were two and stops holding at four: a reader who knows
+        none of these arts is choosing between descriptions, and descriptions
+        have to be read side by side to be weighed. Radios show all four at
+        once, and the fieldset carries the same label the `select` did.
+      -->
+      <fieldset class="instrument">
+        <legend>{t('form.instrument')}</legend>
+        {#each INSTRUMENTS as choice (choice.id)}
+          <label>
+            <input type="radio" name="instrument" value={choice.id} bind:group={instrumentId} />
+            <span>{t(choice.option)}</span>
+          </label>
+        {/each}
+      </fieldset>
 
       <!--
-        The place in the open, and everything else behind the disclosure.
+        The moment, and where it stands depends on what it is.
 
-        What a consultation needs is a question and somewhere to stand: the
-        hour pillar turns on the place, and there is no default for it that
-        would not be somebody else's city. The date and the time are in the
-        options and empty, because empty is the instant of the press and that
-        is the whole use of this section — a field filled in for nine readers
-        out of ten belongs where the tenth can find it.
+        Under a board of 卜 what a consultation needs is a question and
+        somewhere to stand: the hour pillar turns on the place, and there is no
+        default for it that would not be somebody else's city. The date and the
+        time go in the options and empty, because empty is the instant of the
+        press and that is the whole use of this section — a field filled in for
+        nine readers out of ten belongs where the tenth can find it.
+
+        Under a board of 命 that reverses, and `when` is the lever the component
+        already had for it. The moment *is* the input, so it stands in the open
+        with the place; and empty stops being the press, because a birth left
+        empty would be today's.
       -->
       <MomentForm
         {t}
-        when="options"
-        openLegend="form.group.standing"
+        when={laidOnABirth ? 'fields' : 'options'}
+        openLegend={laidOnABirth ? 'form.group.birth' : 'form.group.standing'}
         bind:date={asked.date}
         bind:time={asked.time}
         bind:place={asked.place}
@@ -481,6 +587,26 @@
       </MomentForm>
 
       <!--
+        The sex, in the open beside the birth and under one instrument only.
+
+        A third rule, agreeing with neither of the two above it: here it is not
+        an addition to a board cast for a question but a direction the board's
+        own cycles run in, and without it the 大運 are simply absent. So it
+        stands with the birth rather than under the options, where the same
+        field sits when dunjia reads it for a 行年. See `sentGender`.
+      -->
+      {#if laidOnABirth && instrument.takesGender}
+        <label class="birthField">
+          {t('form.gender')}
+          <select bind:value={gender}>
+            <option value="">{t('form.gender.unset')}</option>
+            <option value="male">{t('form.gender.male')}</option>
+            <option value="female">{t('form.gender.female')}</option>
+          </select>
+        </label>
+      {/if}
+
+      <!--
         One thing to do at a time, and the box says which.
 
         Nothing cast, or a field moved since: the only thing to press is the
@@ -493,7 +619,7 @@
       <div class="actions">
         <SubmitButton
           {t}
-          label="consult.cast"
+          label={laidOnABirth ? 'consult.lay' : 'consult.cast'}
           {busy}
           needed={needed ?? undefined}
           quiet={chart !== undefined && !spent}
@@ -539,52 +665,71 @@
     -->
     <section class="result" class:stale={busy || spent} aria-busy={busy}>
       <header class="posed">
-        <p class="asked">{posed}</p>
+        <!-- Empty under a board of 命, where nothing was asked. The line below
+             still says which instant it was laid for, which on paper is the
+             only answer there is to *which* board this is. -->
+        {#if posed}<p class="asked">{posed}</p>{/if}
         <p class="note">
           {t('consult.castAt', { when: at })}{asked.place ? ` · ${asked.place.name}` : ''}
         </p>
       </header>
 
-      <!-- The board, and under it the key to its marks where it has any: the
-           ramp of strengths belongs to the nine palaces and there is nothing
-           for it to explain on a ring of twelve. -->
-      <div class="board" class:swapped={onPaper} class:ring={instrument.plate.ring}>
-        <img
-          src={plate}
-          alt=""
-          width={instrument.plate.width}
-          height={instrument.plate.height}
-          class="screen"
-        />
-        <!-- The same board in the light scheme, for paper and nothing else.
-             Only drawn when the two differ — see `onPaper`. -->
-        {#if onPaper}
+      <!--
+        The board, and under it the key to its marks where it has any: the ramp
+        of strengths belongs to the nine palaces and there is nothing for it to
+        explain on a ring of twelve.
+
+        Three of the four are a picture at an address. 八字 is not and never
+        was: four pillars are a table, and `PillarPlate` sets them out as one
+        without an image to fetch — so there is no second copy to warm for
+        paper either, since a component takes the print stylesheet the page's
+        own rules give it.
+      -->
+      {#if shown.plate}
+        <div class="board" class:swapped={onPaper} class:ring={shown.plate.ring}>
           <img
-            src={paper}
+            src={plate}
             alt=""
-            width={instrument.plate.width}
-            height={instrument.plate.height}
-            class="paper"
+            width={shown.plate.width}
+            height={shown.plate.height}
+            class="screen"
           />
-        {/if}
-        {#if instrument.strengths}<StrengthLegend {t} />{/if}
-      </div>
+          <!-- The same board in the light scheme, for paper and nothing else.
+               Only drawn when the two differ — see `onPaper`. -->
+          {#if onPaper}
+            <img
+              src={paper}
+              alt=""
+              width={shown.plate.width}
+              height={shown.plate.height}
+              class="paper"
+            />
+          {/if}
+          {#if shown.strengths}<StrengthLegend {t} />{/if}
+        </div>
+      {:else}
+        <PillarPlate pillars={chart.pillars} {t} />
+      {/if}
       <!-- `wide`: the board above has the page to itself, so what it was cast
            from is set as its caption — at the drawing's own measure, centred
            on it. See `ChartReading`. -->
       <!--
         The one branch the descriptor does not take, and deliberately.
 
-        What reads a board is a component, and these two do not share a shape:
-        one is handed the board and the moment beside it, the other a chart
-        that carries its own. A registry entry naming a component would have
-        to name the props with it, and a table of prop shapes is a conditional
-        written sideways. It is keyed on the identifier rather than on a
-        boolean, so a third board adds an arm here and changes nothing else.
+        What reads a board is a component, and the four do not share a shape:
+        one is handed the board and the moment beside it, one a chart that
+        carries its own, one only the board. A registry entry naming a
+        component would have to name the props with it, and a table of prop
+        shapes is a conditional written sideways. It is keyed on the identifier
+        rather than on a boolean, so a fifth board adds an arm and nothing else.
       -->
       <div>
-        {#if instrument.id === 'liuren'}
+        {#if shown.id === 'liuren'}
           <LiurenReading board={chart} {t} moment={castMoment} />
+        {:else if shown.id === 'qizheng'}
+          <QizhengReading board={chart} {t} />
+        {:else if shown.id === 'bazi'}
+          <BaziReading bazi={chart} {t} />
         {:else}
           <ChartReading {chart} {t} wide />
         {/if}
@@ -612,10 +757,26 @@
   .wide { max-width: none; }
 
   .question { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 46rem; }
-  /* Bounded: a `select` of two lines does not become clearer for being a
-     panel wide. */
-  .instrument { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 34rem; }
-  .instrument :global(select) { color: var(--ink); }
+  /* Four descriptions, read side by side rather than one at a time. Bounded
+     at the same measure the `select` had: the lines are sentences, and a
+     sentence set the width of the panel is one the eye loses the start of. */
+  .instrument { display: grid; gap: 0.35rem; border: 0; padding: 0; margin: 0; max-width: 34rem; }
+  .instrument legend { padding: 0; font-size: 0.9em; color: var(--faint); }
+  /* The control and its words on one line, with the words carrying the hang:
+     a description that wrapped under its own radio would read as a paragraph
+     with a bullet, not as one option among four. */
+  .instrument label {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem;
+    align-items: baseline;
+    font-size: 0.9em;
+    cursor: pointer;
+  }
+  .instrument input { margin: 0; }
+  /* Full ink: the legend above them is the faint thing, and four options a
+     reader is choosing between are not an aside. */
+  .instrument span { color: var(--ink); }
   /* The ring is drawn narrower than the grid of nine and does not want the
      full measure the chart's board takes. Left rather than centred: the
      reading under it starts at the margin, and a picture centred over a

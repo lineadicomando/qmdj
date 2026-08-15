@@ -60,7 +60,13 @@ import {
 } from './qizheng.js';
 import { nianmingOf, yearsLived, type Nianming, type NianmingOptions } from './nianming.js';
 import { resolveMoment, type Moment } from './pillars.js';
-import { chartTranscript, liurenReadingPrompt, readingPrompt } from './prompt.js';
+import {
+  baziReadingPrompt,
+  chartTranscript,
+  liurenReadingPrompt,
+  qizhengReadingPrompt,
+  readingPrompt,
+} from './prompt.js';
 import { PURPOSES, purposeCriteria, type PurposeId } from './purposes.js';
 import { matchRuns, scanCharts, type ScanCriteria } from './scan.js';
 import { solarTermsOfYear } from './solar-terms.js';
@@ -183,14 +189,16 @@ Narrowing a scan
   --json                 the data, unformatted and untranslated
   --help
 
-Handing a chart to a model
-  --prompt               for \`chart\` and \`liuren\`: the board wrapped in the
-                         instructions
-                         for reading it, to paste into an assistant that has
-                         no connection to this engine
+Handing a board to a model
+  --prompt               for any of the four boards: it wrapped in the
+                         instructions for reading it, to paste into an
+                         assistant that has no connection to this engine
   --ask "…"              the question it is to be read for; implies --prompt.
                          Without one the prompt says none was asked, which is
-                         not the same as choosing a 用神 on nobody's behalf
+                         not the same as choosing a 用神 on nobody's behalf.
+                         For \`chart\` and \`liuren\` only: \`bazi\` and
+                         \`qizheng\` are laid on a birth and asked nothing,
+                         and refuse it rather than dropping it
   --born, with --prompt  the 年命 travels inside the prompt with the chart,
                          and the prompt says what it is not: not a chart of a
                          birth, and no palace standing for a part of a life
@@ -354,6 +362,12 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
     }
     const bazi = computeBazi(moment, gender ? { gender } : {}, context);
     if (options.json) return JSON.stringify({ moment, bazi }, null, 2);
+
+    // Unlike `chart` and `liuren`, `--ask` does not imply `--prompt` here: it
+    // is refused outright. See `refuseQuestion`.
+    refuseQuestion(command, options);
+    if (options.prompt) return baziReadingPrompt(moment, bazi, t);
+
     return [
       // The one command that prints pillars and leaves the almanac's line out.
       // It printed it until now by the default of `formatMoment` rather than
@@ -404,6 +418,9 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
       context,
     );
     if (options.json) return JSON.stringify({ moment, qizheng: board }, null, 2);
+
+    refuseQuestion(command, options);
+    if (options.prompt) return qizhengReadingPrompt(moment, board, t);
 
     const parts = [formatMoment(moment, t), '', formatQizheng(board, t)];
     const warnings = warningsOf(moment, t);
@@ -513,6 +530,24 @@ function placeBirth(
 function warningsOf(moment: Parameters<typeof formatWarnings>[0], t: Parameters<typeof formatWarnings>[1]): string {
   const text = formatWarnings(moment, t);
   return text ? `\n${text}` : '';
+}
+
+/**
+ * `--ask` on a board of 命, which is refused rather than ignored.
+ *
+ * On `chart` and `liuren` a question implies `--prompt`, because a question
+ * asked is a question meant to be carried. These two are laid on a birth and
+ * nothing is asked of them, so there is no line for a question to go on — and
+ * dropping it silently would be the flag that did nothing, which is the thing
+ * `--ask` was given that behaviour to avoid in the first place.
+ *
+ * It is not squeamishness about the question. A question here names one of the
+ * seats the board already prints — «what about my career» *is* 官祿宮 — and a
+ * reading that starts from it has arrived at a seat without choosing one. See
+ * `prompt.ts` and `PLAN.md` § 4 phase 18.
+ */
+function refuseQuestion(command: string, options: Options): void {
+  if (options.ask !== undefined) throw new UsageError('cli.error.notAsked', { command });
 }
 
 /**

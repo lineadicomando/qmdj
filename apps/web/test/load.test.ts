@@ -154,11 +154,13 @@ describe('the consult page', () => {
     const { data: absent } = await open(consult, '/en');
     expect(absent.instrument).toBe('qimen');
 
-    // `qizheng` rather than a nonsense word on purpose: it is a board this
-    // engine computes and not an instrument this section offers, which is the
-    // boundary actually worth guarding. Phase 18 moves it across, and this
-    // line is meant to fail on the day it does.
-    const { data: outside } = await open(consult, '/en?instrument=qizheng');
+    // All four are instruments now — this line named `qizheng` as the outside
+    // case and was written to fail on the day phase 18 moved it across, which
+    // it did. What is outside is a board this engine does not compute.
+    const { data: ofMing } = await open(consult, '/en?instrument=qizheng');
+    expect(ofMing.instrument).toBe('qizheng');
+
+    const { data: outside } = await open(consult, '/en?instrument=taiyi');
     expect(outside.instrument).toBe('qimen');
   });
 });

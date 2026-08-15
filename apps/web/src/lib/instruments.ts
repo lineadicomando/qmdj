@@ -20,16 +20,14 @@ import type { MessageKey } from '@qimendunjia/i18n';
  * live one are the same shape. A descriptor cannot hide that — a column of
  * one repeated value is visible on the page.
  *
- * **A row is a board, and a fourth board is a row.** `PLAN.md` § 4 phase 18
- * gives the consultation the instruments of 命 as well, and the field that
- * arrives with them says what the reader is asked for: a question, cast at the
- * instant of asking, or a birth, cast at the birth. It is deliberately not
- * declared here yet. A column holding one value across every row carries no
- * information and no test can hold it to anything; it arrives with the row
- * that makes it differ, which is the same standard the engine's own
- * quantities are held to.
+ * **A row is a board, and the fourth board was a row.** `PLAN.md` § 4 phase 18
+ * gave the consultation the instruments of 命 as well, and `needs` is the field
+ * that arrived with them: a question, cast at the instant of asking, or a
+ * birth, cast at the birth. It was left undeclared while both rows would have
+ * held the same value, because a column with one value across every row
+ * carries no information and no test can hold it to anything.
  */
-export type InstrumentId = 'qimen' | 'liuren';
+export type InstrumentId = 'qimen' | 'liuren' | 'qizheng' | 'bazi';
 
 export interface Instrument {
   readonly id: InstrumentId;
@@ -49,7 +47,26 @@ export interface Instrument {
    */
   readonly api: string;
   /**
-   * Whether a birth may be given with the question.
+   * What the reader is asked for, which is the whole of the difference between
+   * the two kinds.
+   *
+   * `question` — a board of 卜. The reader writes what they are asking and the
+   * board is cast at the instant of the press: the question comes before the
+   * casting or it is a caption on a board that was already there. The date and
+   * the time sit under the options and empty, and empty is the press.
+   *
+   * `birth` — a board of 命. Nothing is asked of it. The date, the time and
+   * the place *are* the input, so they stand in the open and a date is
+   * required: a birth left empty would be the present, which is nobody's.
+   */
+  readonly needs: 'question' | 'birth';
+  /**
+   * Whether a birth may be given **beside** what was asked.
+   *
+   * Only where a board is cast for a question and a person can be placed
+   * inside it — which is dunjia's 年命 and nothing else here. Not to be
+   * confused with `needs: 'birth'`, where the birth is not an addition to the
+   * board but the whole of its input.
    *
    * Under Qi Men it places a 年命 — 本命 and 行年, looked up *inside* the
    * chart of the moment, which is the classical direction. Under 六壬 it is
@@ -58,6 +75,17 @@ export interface Instrument {
    * acquires a relation that was never there.
    */
   readonly takesBirth: boolean;
+  /**
+   * Whether a sex changes what is computed — and a third reason dividing the
+   * four, agreeing with neither of the two above.
+   *
+   * Under dunjia it sets the direction the 行年 count runs, and so is only
+   * meaningful beside a birth. Under 八字 it sets the direction the 大運 run,
+   * and there it stands alone because the birth is the board's own input.
+   * 六壬 and 七政四餘 have no use for it at all. Three fields, three reasons;
+   * folding any pair of them would hold until the fifth board.
+   */
+  readonly takesGender: boolean;
   /**
    * Whether the drawing has a ramp of strengths to explain beneath it.
    *
@@ -68,8 +96,16 @@ export interface Instrument {
    * dividing them at the third.
    */
   readonly strengths: boolean;
-  /** The drawing, at the measure the plate actually emits it. */
-  readonly plate: {
+  /**
+   * The drawing, at the measure the plate actually emits it — where there is
+   * one.
+   *
+   * Absent for 八字, which has no `/plate` and never had: four pillars are a
+   * table and a table of four is not a picture. What stands in its place on
+   * the page is `PillarPlate`, a component rather than an image, so nothing
+   * here has a size to declare.
+   */
+  readonly plate?: {
     readonly width: number;
     readonly height: number;
     /**
@@ -93,7 +129,9 @@ export const INSTRUMENTS: readonly Instrument[] = [
   {
     id: 'qimen',
     api: 'chart',
+    needs: 'question',
     takesBirth: true,
+    takesGender: true,
     strengths: true,
     plate: { width: 900, height: 1280, ring: false },
     option: 'form.instrument.qimen',
@@ -101,10 +139,31 @@ export const INSTRUMENTS: readonly Instrument[] = [
   {
     id: 'liuren',
     api: 'liuren',
+    needs: 'question',
     takesBirth: false,
+    takesGender: false,
     strengths: false,
     plate: { width: 900, height: 1379, ring: true },
     option: 'form.instrument.liuren',
+  },
+  {
+    id: 'qizheng',
+    api: 'qizheng',
+    needs: 'birth',
+    takesBirth: false,
+    takesGender: false,
+    strengths: false,
+    plate: { width: 900, height: 1450, ring: true },
+    option: 'form.instrument.qizheng',
+  },
+  {
+    id: 'bazi',
+    api: 'bazi',
+    needs: 'birth',
+    takesBirth: false,
+    takesGender: true,
+    strengths: false,
+    option: 'form.instrument.bazi',
   },
 ];
 

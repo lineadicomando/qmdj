@@ -712,6 +712,11 @@ export const en = {
   'form.needed.date': 'A date is still needed.',
   'form.needed.interval': 'Both dates of the interval are still needed.',
   'form.needed.question': 'A question is still needed: the prompt is built to be read towards one.',
+  // The counterpart on a board of 命, and it says what an empty field would
+  // otherwise quietly mean. Under the other two boards empty is the press and
+  // the instant is now; here now is nobody's birth.
+  'form.needed.birth':
+    'A date of birth is still needed. This board is laid on one, and an empty date would be today.',
   // The hour, and not only the day. A Qi Men chart turns on the hour pillar,
   // so a birth without a time is not a rougher chart — it is a different one.
   // The same thing `cli.error.genderRequired` says, without naming a command
@@ -774,8 +779,13 @@ export const en = {
   // the footer, in the privacy note and in the notes — and not this, which is
   // the only thing a newcomer needs before they start typing.
   'consult.lead':
-    'Ask a question and get a prompt, ready to paste into ChatGPT, Claude or another assistant.',
+    'Ask a question, or give a birth, and get a prompt ready to paste into ChatGPT, Claude or another assistant.',
   'consult.cast': 'Put the question',
+  // The press under a board of 命, where there is no question to put. It says
+  // the act the way `consult.cast` does, and it is a different act: one is
+  // asked at an instant, the other is laid on one.
+  'consult.lay': 'Lay the board',
+  'consult.changeBirth': 'Change the birth',
   // What reopening the panel offers, which is the question and not the
   // moment: a second consultation begins by rewriting the question, and
   // everything else in there is setup somebody set once. It is also the only
@@ -1045,9 +1055,21 @@ export const en = {
   // name: the fields above it are what the page's lead line already announces,
   // and a heading over them would say a third time what two labels say.
   'form.group.standing': 'Where you are asking from',
-  'form.instrument': 'What kind of question is it',
+  // The instant a board of 命 is laid on, which is a birth and not the press.
+  // Named where the other kind names where you stand, because there the moment
+  // is the circumstance and here it is the whole of the input.
+  'form.group.birth': 'The birth the board is laid on',
+  // Widened when the two boards of 命 arrived: two of the four are not asked
+  // anything, so a label reading «what kind of question is it» would have named
+  // something half the options do not have. What it still refuses to say is
+  // *which board* — an option reading `Qi Men` is two words a reader has no way
+  // to weigh, and the whole point of these four lines is that somebody arriving
+  // recognises the shape of their own errand.
+  'form.instrument': 'What kind of reading is it',
   'form.instrument.qimen': 'When to move, and which way — 奇門遁甲 qíméndùnjiǎ',
   'form.instrument.liuren': 'What is going on, and with whom — 大六壬 dàliùrén',
+  'form.instrument.qizheng': 'The sky a life began under — 七政四餘 qīzhèngsìyú',
+  'form.instrument.bazi': 'What a life is built from, at the hour of a birth — 八字 bāzì',
   'form.guiren': 'Which verse seats the noble (貴人)',
   'form.guiren.chou': '甲 with 戊 and 庚, at 丑 and 未',
   'form.guiren.wei': '甲 apart, at 未 and 丑',
@@ -1197,6 +1219,13 @@ export const en = {
     'Option "{option}" does not take the value "{value}". Left unchecked it would match nothing, which reads exactly like an arrangement that never occurred.',
   'cli.error.genderRequired':
     'The luck cycles need --gender, since the tradition takes their direction from it. Without it the pillars are still complete.',
+  // The same refusal as `exclusive`, from the other side: there a chart of a
+  // birth was asked a question, here a board that is only ever laid on a birth
+  // is. It is not that the flag is unimplemented — a question would name one of
+  // the seats the board prints, and the reading would arrive at it without ever
+  // having chosen it.
+  'cli.error.notAsked':
+    'The command "{command}" lays a board on a birth, and nothing is asked of it — so "--ask" has nowhere to go. Which part of a life a board of 命 is read for is chosen by the reader, out loud, after it is laid. Drop the question, or ask it of `chart` or `liuren`, which are cast for one.',
 
   // The place search, as the MCP server words it. The reader here is a model
   // relaying an answer to somebody, so `lang` has to reach the prose too: a

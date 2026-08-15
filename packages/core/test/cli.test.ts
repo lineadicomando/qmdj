@@ -217,6 +217,43 @@ describe('bazi', () => {
   });
 });
 
+/**
+ * `--prompt` on the two boards that are laid on a birth.
+ *
+ * The flag reaches all four commands now. What parts these two from the other
+ * two is `--ask`, which is refused rather than dropped: a question here names
+ * one of the seats the board already prints, so a reading that started from it
+ * would have arrived at a seat without ever choosing one.
+ */
+describe('--prompt on a board of 命', () => {
+  it('wraps the four pillars in what a reader has to be told', async () => {
+    expect(await run(['bazi', ...MOMENT, '--gender', 'male', '--prompt', '--lang', 'en'])).toBe(0);
+
+    expect(out).toContain('用神');
+    expect(out).toContain('this engine does not choose');
+    expect(out).toContain('food for thought and entertainment');
+  });
+
+  it('wraps the 七政四餘 board in what its twelve names are not', async () => {
+    expect(await run(['qizheng', ...MOMENT, '--prompt', '--lang', 'en'])).toBe(0);
+
+    expect(out).toContain('names of the seats');
+    expect(out).toContain('one source and three derivations');
+  });
+
+  it('refuses a question rather than printing a board that ignored it', async () => {
+    for (const command of ['bazi', 'qizheng']) {
+      expect(await run([command, ...MOMENT, '--ask', 'Will it go well?', '--lang', 'en'])).toBe(2);
+      expect(err).toContain('nothing is asked of it');
+    }
+  });
+
+  it('still takes a question on the two boards that are cast for one', async () => {
+    expect(await run(['chart', ...MOMENT, '--ask', 'Will it go well?', '--lang', 'en'])).toBe(0);
+    expect(out).toContain('Will it go well?');
+  });
+});
+
 describe('terms and calendar', () => {
   it('prints twenty-four terms', async () => {
     expect(await run(['terms', '--year', '2024', '--tz', 'Asia/Shanghai', '--lang', 'en'])).toBe(0);

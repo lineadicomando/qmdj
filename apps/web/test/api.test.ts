@@ -4,7 +4,11 @@ import { GET as plate } from '../src/routes/api/chart/plate/+server';
 import { GET as prompt } from '../src/routes/api/chart/prompt/+server';
 import { GET as text_ } from '../src/routes/api/chart/text/+server';
 import { GET as bazi } from '../src/routes/api/bazi/+server';
+import { GET as liuren } from '../src/routes/api/liuren/+server';
+import { GET as baziPrompt } from '../src/routes/api/bazi/prompt/+server';
+import { GET as baziText } from '../src/routes/api/bazi/text/+server';
 import { GET as qizheng } from '../src/routes/api/qizheng/+server';
+import { GET as qizhengPrompt } from '../src/routes/api/qizheng/prompt/+server';
 import { GET as qizhengText } from '../src/routes/api/qizheng/text/+server';
 import { GET as terms } from '../src/routes/api/terms/+server';
 import { GET as locations } from '../src/routes/api/locations/+server';
@@ -127,6 +131,120 @@ describe('GET /api/qizheng', () => {
     // The two things the page owes a reader who counts.
     expect(text).toMatch(/three, not four/i);
     expect(text).toMatch(/determinative stars/i);
+  });
+});
+
+/**
+ * The moment, reachable on every board — which is what the consultation needs
+ * and what it silently did not have.
+ *
+ * Three of the four endpoints hand the moment over beside the board; `/api/chart`
+ * keeps it inside the chart, because a chart carries its own. The consultation
+ * read `body.moment` alone from the day a second board arrived, so every Qi Men
+ * press threw on the line after the fetch and was reported as a board that could
+ * not be laid — on the section the site opens with, for a year of commits,
+ * while the other instrument worked. Nothing here asserted it, which is why
+ * this is asserted here and not in the page: the contract is the endpoint's.
+ */
+describe('every board endpoint yields the instant it was laid for', () => {
+  const BIRTH = 'date=1968-03-12&time=14:30&timezone=Asia/Shanghai&trueSolarTime=false';
+
+  it.each([
+    ['chart', chart, MOMENT],
+    ['liuren', liuren, MOMENT],
+    ['qizheng', qizheng, BIRTH],
+    ['bazi', bazi, BIRTH],
+  ])('%s', async (key, handler, query) => {
+    const { body } = await call(handler as Handler, query);
+    const answer = body as Record<string, { moment?: { input: { date: string } } }> & {
+      moment?: { input: { date: string } };
+    };
+
+    // Exactly how the consultation reads it: beside the board, or inside it.
+    const moment = answer.moment ?? answer[key]?.moment;
+    expect(moment?.input.date).toBeTruthy();
+  });
+});
+
+/**
+ * The two boards of 命, handed over.
+ *
+ * What is asserted is the one thing that parts them from the two boards of 卜:
+ * nothing is asked of them, so there is no question machinery to leave empty —
+ * and each says outright what its own already-printed names are not.
+ */
+describe('the prompts for a board of 命', () => {
+  const BIRTH = 'date=1968-03-12&time=14:30&timezone=Asia/Shanghai&trueSolarTime=false';
+
+  it('carries the 七政四餘 board and what its twelve names are not', async () => {
+    const { status, headers, text } = await call(qizhengPrompt, `${BIRTH}&lang=en`);
+
+    expect(status).toBe(200);
+    expect(headers['content-type']).toMatch(/text\/plain/);
+    // The board itself, and not an instruction to compute one.
+    expect(text).toContain('太陽');
+    expect(text).toContain('命宮');
+    expect(text).toContain('names of the seats');
+    // The two bounds that travel with the instruction they govern.
+    expect(text).toContain('one source and three derivations');
+    expect(text).toContain('over-determination');
+  });
+
+  it('carries the four pillars and the element it withholds', async () => {
+    const { status, text } = await call(baziPrompt, `${BIRTH}&gender=male&lang=en`);
+
+    expect(status).toBe(200);
+    expect(text).toContain('用神');
+    expect(text).toContain('this engine does not choose');
+    // The decades are there, so the rule that bounds them is too.
+    expect(text).toContain('大運');
+    expect(text).toContain('not a timeline of events');
+  });
+
+  it('drops the rule for the decades when there are none', async () => {
+    const { text } = await call(baziPrompt, `${BIRTH}&lang=en`);
+
+    expect(text).not.toContain('大運');
+  });
+
+  /**
+   * The flag the two boards of 卜 answer to does nothing here, and that has to
+   * be asserted rather than assumed: a prompt that honoured it would end on a
+   * dangling line introducing a question nobody is going to append.
+   */
+  it('has no question machinery for `asked` to reach', async () => {
+    for (const handler of [qizhengPrompt, baziPrompt]) {
+      const plain = await call(handler, `${BIRTH}&lang=en`);
+      const flagged = await call(handler, `${BIRTH}&lang=en&asked=true`);
+
+      expect(plain.text).toBe(flagged.text);
+      expect(plain.text).not.toContain('The question asked is');
+      expect(plain.text).toContain('asked questions');
+    }
+  });
+
+  it('cites the section that holds the board, not the consultation', async () => {
+    // A board of 卜 links to the form that would cast it again, since it
+    // belongs to the instant it was asked at. These are a pure function of a
+    // birth, and their sections do hold them — so the link lands on the board.
+    const { text } = await call(qizhengPrompt, `${BIRTH}&lang=en`);
+    const pillars = await call(baziText, `${BIRTH}&lang=en`);
+
+    expect(text).toContain('http://localhost/en/qizheng?date=1968-03-12');
+    expect(pillars.text).toContain('http://localhost/en/bazi?date=1968-03-12');
+  });
+
+  it('says the four pillars in words, as the terminal prints them', async () => {
+    const { status, headers, text } = await call(baziText, `${BIRTH}&gender=male&lang=en`);
+
+    expect(status).toBe(200);
+    expect(headers['content-type']).toMatch(/text\/plain/);
+    expect(text).toContain('1968-03-12');
+    // The pillars, and what is read off them rather than only the ganzhi.
+    expect(text).toContain('戊申');
+    expect(text).toMatch(/day master/i);
+    // No rules around it: a transcript is the board said, and nothing more.
+    expect(text).not.toContain('用神');
   });
 });
 

@@ -336,12 +336,15 @@ GET /api/locations?q=Beijing&lang=en
 GET /api/locations?id=1816670&lang=en          # the way back from an address
 GET /api/chart?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/bazi?date=1968-03-12&time=14:30&locationId=3169070&gender=male
+GET /api/bazi/text?date=1968-03-12&time=14:30&locationId=3169070&gender=male
+GET /api/bazi/prompt?date=1968-03-12&time=14:30&locationId=3169070&gender=male
 GET /api/liuren?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/liuren/plate?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/liuren/text?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/liuren/prompt?date=2024-06-15&time=14:00&locationId=1816670&asked=true
 GET /api/qizheng?date=1968-03-12&time=14:30&locationId=3169070
 GET /api/qizheng/text?date=1968-03-12&time=14:30&locationId=3169070
+GET /api/qizheng/prompt?date=1968-03-12&time=14:30&locationId=3169070
 GET /api/terms?year=2024&timezone=Asia/Shanghai
 GET /api/chart/plate?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/moments?from=2026-09-01&to=2026-09-08&locationId=3169070&gate=kaimen&towards=se,s
@@ -369,6 +372,15 @@ the model that is not.
 ends on the line that introduces a question, for the caller to append; without
 it the prompt says plainly that none was asked. A question is somebody's own,
 and one in a query string is one written into every log along the way.
+
+**Only the two boards of 卜 answer to it.** `bazi/prompt` and `qizheng/prompt`
+have no `asked`, and it is not an omission: they are laid on a birth and
+nothing is asked of them, so there is no line for a question to go on. A
+question there would name one of the seats the board already prints — «what
+about my career» *is* 官祿宮 guānlùgōng — and a reading beginning from it has
+reached a seat without choosing one. The CLI refuses `--ask` on those two
+commands rather than dropping it; over HTTP the parameter simply has nothing
+to reach, and the answer is the same either way.
 
 ## 年命 — where a person stands in a chart of a moment
 

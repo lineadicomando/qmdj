@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { glyph } from '$lib/glyph';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
-  import type { MessageKey } from '@qimendunjia/i18n';
   import { momentQuery, sayFailure, type MomentInput } from '$lib/moment';
+  import BaziReading from '$lib/components/BaziReading.svelte';
   import CalendarAndAlmanac from '$lib/components/CalendarAndAlmanac.svelte';
   import FormPanel from '$lib/components/FormPanel.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
@@ -57,9 +56,6 @@
     // what has to be corrected is in them.
     if (!data.failure && data.result) await panel?.close();
   }
-
-  const say = (pair: any): string =>
-    `${t(`label.stem.${pair.stem.id}` as MessageKey)} · ${t(`label.branch.${pair.branch.id}` as MessageKey)}`;
 </script>
 
 <svelte:head><title>{t('cli.heading.pillars')}</title></svelte:head>
@@ -102,53 +98,9 @@
   <!-- Spent while the next reading is on its way, rather than swapped without
        warning: see the chart, where the same rule holds. -->
   <div class="result" class:stale={busy} aria-busy={busy}>
-    <p class="master">
-      {t('cli.field.dayMaster')}: {t(`label.stem.${result.bazi.dayMaster.id}` as MessageKey)}
-      <span class="glyph">{glyph(result.bazi.dayMaster)}</span>
-    </p>
-
     <!-- The four pillars at a glance, then the same four read out in full. -->
     <PillarPlate pillars={result.bazi.pillars} {t} />
-
-    <!-- Five columns that do not break: on a narrow screen it is the table
-         that scrolls, not the page. -->
-    <div class="scroller">
-      <table>
-        <thead>
-          <tr>
-            <th></th><th>{t('cli.column.pillar')}</th><th>{t('cli.column.god')}</th>
-            <th>{t('cli.column.hidden')}</th><th>{t('cli.column.stage')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each result.bazi.pillars as pillar}
-            <tr>
-              <th scope="row">{t(`cli.column.${pillar.position}` as MessageKey)}</th>
-              <td>
-                <span>{say(pillar.ganzhi)}</span>
-                <span class="glyph">{glyph(pillar.ganzhi)}</span>
-              </td>
-              <td>{#if pillar.stemGod}{t(`label.god.${pillar.stemGod.id}` as MessageKey)}{:else}—{/if}</td>
-              <td>{pillar.hidden.map((h: any) => t(`label.stem.${h.stem.stem.id}` as MessageKey)).join(', ')}</td>
-              <td>{t(`label.stage.${pillar.stage.id}` as MessageKey)}</td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
-    </div>
-
-    {#if result.bazi.luck}
-      <h2>{t('cli.heading.luck')}</h2>
-      <ul class="cycles">
-        {#each result.bazi.luck.cycles as cycle}
-          <li><small>{cycle.startAge}</small> {say(cycle.ganzhi)}</li>
-        {/each}
-      </ul>
-    {:else}
-      <!-- Not `cli.error.genderRequired`: that one names `--gender`, which is
-           a flag nobody reading a web page has. -->
-      <p class="note">{t('form.needed.gender')}</p>
-    {/if}
+    <BaziReading bazi={result.bazi} {t} />
 
     <!--
       The calendar the pillars were cast from, and here the case is stronger
@@ -166,35 +118,16 @@
 {/if}
 
 <style>
-  h2 { font-size: 1em; font-weight: 500; margin: 1.5rem 0 0.5rem; }
+  /* What is read *off* the pillars is dressed in `BaziReading`, which is where
+     that markup went: a style left behind here would be one nobody could find
+     from the thing it styles. */
   /* The one field the pillars ask for beyond the moment. Bounded: a `select`
      of three words does not become clearer for being a panel wide. */
   label { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 26rem; }
   label :global(select) { color: var(--ink); }
   .result { transition: opacity 0.15s ease-out; }
   .stale { opacity: 0.5; }
-  table { width: 100%; min-width: max-content; max-width: 46rem; border-collapse: collapse; }
-  th, td {
-    text-align: left;
-    padding: 0.35rem 0.5rem;
-    border-bottom: 1px solid var(--rule);
-    vertical-align: baseline;
-    white-space: nowrap;
-  }
-  thead th { color: var(--faint); font-weight: 400; font-size: 0.85em; }
-  .glyph { display: block; color: var(--faint); font-size: 0.8em; }
-  .master { margin: 0 0 1rem; }
-  .cycles {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-    gap: 0.3rem 1rem;
-  }
-  .cycles small { color: var(--faint); margin-right: 0.4rem; }
   .failure { color: var(--alarm); }
-  .note { color: var(--faint); font-size: 0.85em; margin-top: 1rem; }
   @media (prefers-reduced-motion: reduce) {
     .result { transition: none; }
   }
