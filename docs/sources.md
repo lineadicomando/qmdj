@@ -1110,6 +1110,10 @@ nothing at all. They are the first entries under the `shensha` parameter of
 | 土符 | enumerated, with 曹震圭's 「春三月歴巳酉丑……夏三月歴寅午戌」 | the month, one branch |
 | 月煞 | 「正月起丑，逆行四季」, and the 按: 「在嵗為嵗煞，在月為月煞，無二義也」 | the year god's own rule, read on the month |
 | 地囊 | enumerated: 「正月庚子庚午，二月癸未癸丑，三月甲子甲寅……」 | two whole day pillars to a month |
+| 月害 | 「正月起巳，逆行十二辰」, and 曹震圭's 六害 reading | the 六害 of the month's branch |
+| 天吏 | 「正月起酉，逆行四仲」, and 「三合五行死氣之位」 | the 死 of the month's triad |
+| 四絕 | 「四立前一辰也」 | **calendrical**: the eve of each 立 |
+| 四離 | 「冬至前一日水離，夏至前一日火離，春分前一日……秋分前一日……」 | **calendrical**: the eve of each 分 and 至 |
 
 **三合's enumeration has one cell that contradicts its own rule, and the rule
 is what ships.** 卷六 lists the twelve months and the twelfth reads 丑巳 — which
@@ -1161,8 +1165,24 @@ sentence is 宜忌 — 「其日忌修造倉庫出入貨財」 — and does not 
 | 六合 · 遊禍 · 歸忌 | 3 645 / 3 650 | 99.86 % |
 | 金堂 · 普護 | 3 641 / 3 650 | 99.75 % |
 | 天倉 | 3 639 / 3 650 | 99.70 % |
+| 月害 | 3 650 / 3 650 | **100 %** |
+| 天吏 | 3 644 / 3 650 | 99.84 % |
 | 隂德 · 陽德 | ~3 625 / 3 650 | 99.3 % |
 | 地囊 | 3 462 / 3 650 | **94.85 %**, the weakest here |
+
+**Three of the twenty-eight have no runnable reference, and they are not in one
+position.** `lunar-javascript` carries no 兵禁, no 四絕 and no 四離, so no
+agreement figure exists for any of the three — the percentages the comparison
+first printed for them, 91.7 %, 98.9 % and 98.8 %, were this engine's own days
+measured against a constant no, and they are withheld.
+
+But the three do not rest on the same thing. **兵禁 rests on a table nothing
+checks.** 四絕 and 四離 rest on one clause each — 「四立前一辰也」, and the eve of
+each 分 and 至 — over solar terms this project computes to the second and has
+verified against published astronomy. That is tier 1 underneath a rule with no
+room in it to be wrong, and it is a stronger position than most of the entries
+above with a percentage beside them. The register distinguishes them rather than
+filing all three as unverified.
 
 **兵禁 has no figure, and that is the finding.** `lunar-javascript` carries no
 such name in either of its lists, so the 91.7 % this comparison first printed

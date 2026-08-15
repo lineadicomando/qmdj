@@ -514,6 +514,16 @@ describe('建除十二神', () => {
     // 月煞 is the year's 歲煞 read on the month — 「無二義也」.
     for (const m of ['寅', '午', '戌']) expect(carries(m, '丑', 'yuesha')).toBe(true);
 
+    // 月害:「正月起巳，逆行十二辰」 — the 六害 of the month's own branch.
+    for (const [m, b] of [['寅', '巳'], ['子', '未'], ['丑', '午'], ['卯', '辰'],
+                          ['申', '亥'], ['酉', '戌']] as const) {
+      expect(carries(m, b, 'yuehai')).toBe(true);
+    }
+    // 天吏:「三合五行死氣之位」 — the 死 of the month's triad, the pair to
+    // 大時's 沐浴 and 遊禍's 臨官.
+    for (const m of ['寅', '午', '戌']) expect(carries(m, '酉', 'tianli')).toBe(true);
+    for (const m of ['申', '子', '辰']) expect(carries(m, '卯', 'tianli')).toBe(true);
+
     // 五合「寅夘日也」 and 五離 「反此則為申酉」 — neither looks at the month.
     for (const m of ['寅', '午', '戌', '子']) {
       expect(carries(m, '寅', 'wuhe')).toBe(true);
@@ -522,6 +532,24 @@ describe('建除十二神', () => {
       expect(carries(m, '酉', 'wuli')).toBe(true);
       expect(carries(m, '辰', 'wuhe')).toBe(false);
     }
+  });
+
+  it('puts 四絕 and 四離 on the eves the terms give them', () => {
+    // 四絕 「四立前一辰也」, 四離 the day before each 分 and each 至. Four days
+    // a year each, and no table at all: they are read off the sky.
+    const carries = (y: number, m: number, d: number, id: string): boolean =>
+      almanacAt(noonAt(y, m, d), context()).shensha.find((g) => g.id === id)?.onDay ?? false;
+
+    // 立秋 2026 falls on 7 August, 白露 on 7 September.
+    expect(carries(2026, 8, 6, 'sijue')).toBe(true);
+    expect(carries(2026, 8, 7, 'sijue')).toBe(false);
+    expect(carries(2026, 9, 6, 'sijue')).toBe(false);
+    // 秋分 2026 falls on 23 September.
+    expect(carries(2026, 9, 22, 'sili')).toBe(true);
+    expect(carries(2026, 9, 23, 'sili')).toBe(false);
+    // Neither is ever the other.
+    expect(carries(2026, 8, 6, 'sili')).toBe(false);
+    expect(carries(2026, 9, 22, 'sijue')).toBe(false);
   });
 
   it('keeps every seat the source gives to more than one god', () => {

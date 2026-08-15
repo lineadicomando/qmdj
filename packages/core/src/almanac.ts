@@ -14,7 +14,7 @@ import { PALACES, type Palace } from './dunjia/palaces.js';
 import { VALENCE, type Valence, type ValenceId } from './dunjia/patterns.js';
 import { calendarDayNumber, CALENDAR_ZONE } from './lunar.js';
 import { fromJulianDay } from './time.js';
-import { jieAt, SOLAR_TERMS, type SolarTermDefinition } from './solar-terms.js';
+import { jieAt, solarTermAt, SOLAR_TERMS, type SolarTermDefinition } from './solar-terms.js';
 
 /**
  * 曆注 — what a printed almanac puts under a date.
@@ -551,7 +551,8 @@ export type ShenshaId =
   | 'sanhe' | 'linri'
   | 'liuhe' | 'dashi' | 'youhuo' | 'tiancang' | 'guiji' | 'yinde'
   | 'yaoan' | 'jintang' | 'puhu' | 'shengxin' | 'xushi'
-  | 'yangde' | 'tianma' | 'bingjin' | 'tufu' | 'yuesha' | 'dinang';
+  | 'yangde' | 'tianma' | 'bingjin' | 'tufu' | 'yuesha' | 'dinang'
+  | 'yuehai' | 'tianli' | 'sili' | 'sijue';
 
 export interface Shensha {
   id: ShenshaId;
@@ -697,6 +698,12 @@ const SHENSHA: readonly {
         ][m.index] as readonly string[]
       ).includes(`${d.stem.hanzi}${d.branch.hanzi}`),
   },
+  // 「正月起巳，逆行十二辰」, which 曹震圭 gives as the 六害 of the month's own
+  // branch: 「寅巳相害者……」. 子未, 丑午, 寅巳, 卯辰, 申亥, 酉戌.
+  { id: 'yuehai', hanzi: '月害', pinyin: 'yuèhài', valence: 'xiong', holds: (m, d) => d.branch.index === (19 - m.index) % 12 },
+  // 「正月起酉，逆行四仲」, and 「三合五行死氣之位」 — the 死 of the month's
+  // triad, which is the pair to 大時's 沐浴 and 遊禍's 臨官.
+  { id: 'tianli', hanzi: '天吏', pinyin: 'tiānlì', valence: 'xiong', holds: (m, d) => d.branch.index === ([3, 0, 9, 6][m.index % 4] as number) },
   {
     id: 'linri', hanzi: '臨日', pinyin: 'línrì', valence: 'xiong',
     // 「陽建之月在三合前辰，隂建之月在三合後辰」, which the 按 names: 三合前辰
@@ -716,15 +723,74 @@ function seasonOf(monthBranch: Branch): number {
   return Math.floor(((monthBranch.index + 10) % 12) / 3);
 }
 
+/**
+ * The two that are calendrical rather than tabular, and the only ones here.
+ *
+ * 四絕 is 「四立前一辰也」 — the day before each of the four 立 — and 四離 is
+ * the day before each of 冬至, 夏至, 春分 and 秋分: 「冬至前一日水離，夏至前一
+ * 日火離，春分前一日陽體分而木亦離也，秋分前一日隂體分而金亦離也」. Neither
+ * is a table at all: they are read off the sky the layer's own day grain
+ * already reads, and each falls on exactly four days a year.
+ *
+ * `eve` is the term that opens tomorrow, if one does. The next term is always
+ * 15° on from the one in force, so this costs one crossing rather than eight.
+ *
+ * **No 神煞 reference carries either of them**, as none carries 兵禁 — but the
+ * three are not in the same position, and the register says which is which.
+ * 兵禁 rests on a table nothing checks. These two rest on one clause of the
+ * source and on the solar terms underneath it, which are the best-verified
+ * quantity in this project: tier 1, checked against published astronomy. The
+ * rule has no room to be wrong in that a table has.
+ */
+function termOpeningTomorrow(
+  julianDayUT: number,
+  dayNumber: number,
+  context: EphemerisContext,
+): SolarTermDefinition | undefined {
+  const current = solarTermAt(julianDayUT, context);
+  const nextLongitude = (current.term.longitude + 15) % 360;
+  const definition = SOLAR_TERMS.find(
+    (term) => term.longitude === nextLongitude,
+  ) as SolarTermDefinition;
+  const crossing = sunCrossing(definition.longitude, current.julianDayUT + 1, context);
+  return calendarDayNumber(crossing) === dayNumber + 1 ? definition : undefined;
+}
+
+/** The longitudes of the four 立, and of the two 分 and two 至. */
+const SIJUE_TERMS: readonly number[] = [315, 45, 135, 225];
+const SILI_TERMS: readonly number[] = [0, 90, 180, 270];
+
 /** The 神煞 this day carries and does not. */
-export function shenshaOf(monthBranch: Branch, day: Ganzhi): readonly Shensha[] {
-  return SHENSHA.map(({ id, hanzi, pinyin, valence, holds }) => ({
+export function shenshaOf(
+  monthBranch: Branch,
+  day: Ganzhi,
+  eve?: SolarTermDefinition,
+): readonly Shensha[] {
+  const tabular = SHENSHA.map(({ id, hanzi, pinyin, valence, holds }) => ({
     id,
     hanzi,
     pinyin,
     valence: VALENCE[valence] as Valence,
     onDay: holds(monthBranch, day),
   }));
+
+  return [
+    ...tabular,
+    {
+      id: 'sijue' as ShenshaId,
+      hanzi: '四絕',
+      pinyin: 'sìjué',
+      valence: VALENCE.xiong as Valence,
+      onDay: eve !== undefined && SIJUE_TERMS.includes(eve.longitude),
+    },
+    {
+      id: 'sili' as ShenshaId,
+      hanzi: '四離',
+      pinyin: 'sìlí',
+      valence: VALENCE.xiong as Valence,
+      onDay: eve !== undefined && SILI_TERMS.includes(eve.longitude),
+    },
+  ];
 }
 
 export interface Almanac {
@@ -803,7 +869,7 @@ export function almanacAt(julianDayUT: number, context: EphemerisContext): Alman
     year,
     yearGods: yearGodsOf(year),
     monthGods: monthGodsOf(monthBranch, day),
-    shensha: shenshaOf(monthBranch, day),
+    shensha: shenshaOf(monthBranch, day, termOpeningTomorrow(julianDayUT, dayNumber, context)),
   };
 }
 
