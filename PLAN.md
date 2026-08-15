@@ -1900,6 +1900,14 @@ and an entry in `docs/sources.md` written the day it landed. It reaches the CLI,
 the REST answers, four MCP tools and both board pages, and deliberately not the
 prompt's fence or `packages/plate`.
 
+**The web lagged the engine by two blocks and was caught by being asked.** The
+page rendered the officer, the lodge, the day's god and the 年神 and stopped
+there, while the CLI, the JSON and the MCP tools already carried the 四德 and
+the 神煞 — a feature that had crossed five surfaces of six and looked finished
+from every one of them. Both components now show all of it. The lesson is the
+`new-feature` skill's own and it needed relearning: a surface left behind does
+not announce itself, because everything that *is* there works.
+
 **What it does not hold is declared rather than missing**, and the phase's own
 「but only some」 is where that was allowed for: 往亡, 氣往亡, 反支, 上朔 and the
 four of 卷六's nine it does not enumerate are unread; 母倉 waits on the 土旺用事

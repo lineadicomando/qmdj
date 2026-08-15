@@ -161,6 +161,31 @@
       · <span class="glyph">{page.god.hanzi} {page.god.pinyin}</span>
       {t(`label.daygod.${page.god.id}` as MessageKey)}
       <span class="glyph">{page.god.valence.hanzi}</span>
+    {#if page.monthGods}
+    <span class="gods">
+      {t('cli.field.monthGods')}:
+      {#each page.monthGods as god}
+        <span class="glyph" class:onday={god.onDay}>{god.hanzi}</span>&nbsp;{god.seat
+          ? god.seat.kind === 'stem'
+            ? t(`label.stem.${god.seat.stem.id}` as MessageKey)
+            : t(`label.palace.${god.seat.trigram.id}` as MessageKey)
+          : '—'}{' '}
+      {/each}
+    </span>
+    {/if}
+    <!-- Only the 神煞 the day carries. The list is mostly absences — 天赦 falls
+         a few times a year — and printing every «no» would bury the one «yes».
+         What each is *for* is 宜忌 and is not here. -->
+    {#if page.shensha?.some((g: any) => g.onDay)}
+      <span class="gods">
+        {t('cli.field.shensha')}:
+        {#each page.shensha.filter((g: any) => g.onDay) as god}
+          <span class="glyph">{god.hanzi}</span>&nbsp;{t(
+            `label.shensha.${god.id}` as MessageKey,
+          )}&nbsp;<span class="glyph">{god.valence.hanzi}</span>{' '}
+        {/each}
+      </span>
+    {/if}
     <span class="gods">
       {page.year.hanzi} —
       {#each page.yearGods as god}
@@ -213,6 +238,10 @@
   thead th { color: var(--faint); font-weight: 400; font-size: 0.85em; }
   .drawn { margin-top: 1.4rem; }
   .note { color: var(--faint); font-size: 0.85em; }
+  .note .gods { display: block; margin-block-start: 0.15rem; }
+  /* A virtue the day actually carries is the news; where each merely sits is
+     the frame. Weight and not colour, so it survives print. */
+  .note .onday { font-weight: 600; }
 
   /* On paper the table gives up its scrolling frame: one that still clipped
      would print three rows of twelve and give no sign of the other nine. */
