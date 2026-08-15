@@ -1,3 +1,4 @@
+import { ChartError } from './errors.js';
 import { sunCrossing, type EphemerisContext } from './ephemeris.js';
 import { nayin } from './bazi/nayin.js';
 import {
@@ -15,6 +16,7 @@ import { VALENCE, type Valence, type ValenceId } from './dunjia/patterns.js';
 import { calendarDayNumber, CALENDAR_ZONE } from './lunar.js';
 import { fromJulianDay } from './time.js';
 import { jieAt, solarTermAt, SOLAR_TERMS, type SolarTermDefinition } from './solar-terms.js';
+import type { ChartOptions } from './types.js';
 
 /**
  * 曆注 — what a printed almanac puts under a date.
@@ -846,12 +848,23 @@ export function officerOf(monthBranch: Branch, dayBranch: Branch): Officer {
 /**
  * The almanac's page for an instant.
  *
- * It takes an instant and no options, which is the whole of what makes it a
- * page rather than a chart: `dayBoundary` and `trueSolarTime` move the hour
- * and the day a chart is read at, and they do not move what an almanac
- * printed.
+ * It takes an instant and **one** option, and which one is the whole of what
+ * makes this a page rather than a chart. `dayBoundary` and `trueSolarTime`
+ * move the hour and the day a chart is read at, and they never reach here: an
+ * almanac belongs to a date, and the same date is the same page for everybody
+ * who opens it. `shensha` is not of that kind — it says which register was
+ * copied out, which is a fact about the page rather than about the reader, and
+ * it is the parallel of dunjia's `method`.
  */
-export function almanacAt(julianDayUT: number, context: EphemerisContext): Almanac {
+export function almanacAt(
+  julianDayUT: number,
+  options: Pick<ChartOptions, 'shensha'>,
+  context: EphemerisContext,
+): Almanac {
+  if (options.shensha !== 'xieji') {
+    throw new ChartError('OPTION_NOT_IMPLEMENTED', { option: 'shensha', value: options.shensha });
+  }
+
   const dayNumber = calendarDayNumber(julianDayUT);
   const jie = monthOpeningOn(julianDayUT, dayNumber, context);
   const day = dayGanzhi(dayNumber);

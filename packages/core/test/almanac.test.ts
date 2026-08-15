@@ -1,5 +1,6 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { almanacAt, dayGodOf, lodgeOn, monthGodsOf, officerOf, shenshaOf, yearGodsOf, DAY_GOD_LIST, LODGES, OFFICERS } from '../src/almanac.js';
+import { ChartError } from '../src/errors.js';
 import { initEphemeris, type EphemerisContext } from '../src/ephemeris.js';
 import { BRANCHES, ganzhiOf, type Branch, type Ganzhi } from '../src/ganzhi.js';
 import { toJulianDay } from '../src/time.js';
@@ -54,7 +55,7 @@ describe('建除十二神', () => {
   });
 
   it('names the officer of an ordinary day', () => {
-    const page = almanacAt(noonAt(2026, 8, 4), context());
+    const page = almanacAt(noonAt(2026, 8, 4), { shensha: 'xieji' }, context());
     expect(page.day.hanzi).toBe('庚戌');
     expect(page.monthBranch.hanzi).toBe('未');
     expect(page.officer.hanzi).toBe('平');
@@ -63,9 +64,9 @@ describe('建除十二神', () => {
 
   it('gives the same officer to the two days a 交節 doubles', () => {
     // 立秋 falls on 2026-08-07. 「每月交節則疊兩值日」.
-    const before = almanacAt(noonAt(2026, 8, 6), context());
-    const onTheJie = almanacAt(noonAt(2026, 8, 7), context());
-    const after = almanacAt(noonAt(2026, 8, 8), context());
+    const before = almanacAt(noonAt(2026, 8, 6), { shensha: 'xieji' }, context());
+    const onTheJie = almanacAt(noonAt(2026, 8, 7), { shensha: 'xieji' }, context());
+    const after = almanacAt(noonAt(2026, 8, 8), { shensha: 'xieji' }, context());
 
     expect([before.day.hanzi, onTheJie.day.hanzi, after.day.hanzi]).toEqual([
       '壬子',
@@ -78,9 +79,9 @@ describe('建除十二神', () => {
   });
 
   it('marks the second of the doubled days and not the first', () => {
-    expect(almanacAt(noonAt(2026, 8, 6), context()).doubled).toBe(false);
-    expect(almanacAt(noonAt(2026, 8, 7), context()).doubled).toBe(true);
-    expect(almanacAt(noonAt(2026, 8, 8), context()).doubled).toBe(false);
+    expect(almanacAt(noonAt(2026, 8, 6), { shensha: 'xieji' }, context()).doubled).toBe(false);
+    expect(almanacAt(noonAt(2026, 8, 7), { shensha: 'xieji' }, context()).doubled).toBe(true);
+    expect(almanacAt(noonAt(2026, 8, 8), { shensha: 'xieji' }, context()).doubled).toBe(false);
   });
 
   it('gives the whole of a 節 day to the new month, hour by hour', () => {
@@ -89,7 +90,7 @@ describe('建除十二神', () => {
     // the difference between the page and the month pillar, and it is the one
     // thing about this layer that could have gone wrong silently.
     for (const hour of [0, 6, 12, 18, 23]) {
-      const page = almanacAt(toJulianDay(2026, 9, 7, hour) - 8 / 24, context());
+      const page = almanacAt(toJulianDay(2026, 9, 7, hour) - 8 / 24, { shensha: 'xieji' }, context());
       expect(page.monthBranch.hanzi).toBe('酉');
       expect(page.officer.hanzi).toBe('閉');
       expect(page.doubled).toBe(true);
@@ -102,12 +103,12 @@ describe('建除十二神', () => {
     // Rome, where it is still the evening of the 15th, exactly as in Beijing.
     // The layer takes no timezone at all, which is what makes that true.
     const evening = toJulianDay(2026, 3, 15, 16);
-    expect(almanacAt(evening, context()).day.hanzi).toBe('己丑');
-    expect(almanacAt(evening, context()).officer.hanzi).toBe('開');
+    expect(almanacAt(evening, { shensha: 'xieji' }, context()).day.hanzi).toBe('己丑');
+    expect(almanacAt(evening, { shensha: 'xieji' }, context()).officer.hanzi).toBe('開');
 
     const morning = toJulianDay(2026, 3, 15, 4);
-    expect(almanacAt(morning, context()).day.hanzi).toBe('戊子');
-    expect(almanacAt(morning, context()).officer.hanzi).toBe('收');
+    expect(almanacAt(morning, { shensha: 'xieji' }, context()).day.hanzi).toBe('戊子');
+    expect(almanacAt(morning, { shensha: 'xieji' }, context()).officer.hanzi).toBe('收');
   });
 
   it('stays out of what a model is handed', () => {
@@ -157,8 +158,8 @@ describe('建除十二神', () => {
   });
 
   it('holds the lodge across a 節, where the officer doubles', () => {
-    const before = almanacAt(noonAt(2026, 8, 6), context());
-    const onTheJie = almanacAt(noonAt(2026, 8, 7), context());
+    const before = almanacAt(noonAt(2026, 8, 6), { shensha: 'xieji' }, context());
+    const onTheJie = almanacAt(noonAt(2026, 8, 7), { shensha: 'xieji' }, context());
 
     expect(before.officer.hanzi).toBe(onTheJie.officer.hanzi);
     expect(before.lodge.hanzi).not.toBe(onTheJie.lodge.hanzi);
@@ -538,7 +539,7 @@ describe('建除十二神', () => {
     // 四絕 「四立前一辰也」, 四離 the day before each 分 and each 至. Four days
     // a year each, and no table at all: they are read off the sky.
     const carries = (y: number, m: number, d: number, id: string): boolean =>
-      almanacAt(noonAt(y, m, d), context()).shensha.find((g) => g.id === id)?.onDay ?? false;
+      almanacAt(noonAt(y, m, d), { shensha: 'xieji' }, context()).shensha.find((g) => g.id === id)?.onDay ?? false;
 
     // 立秋 2026 falls on 7 August, 白露 on 7 September.
     expect(carries(2026, 8, 6, 'sijue')).toBe(true);
@@ -550,6 +551,16 @@ describe('建除十二神', () => {
     // Neither is ever the other.
     expect(carries(2026, 8, 6, 'sili')).toBe(false);
     expect(carries(2026, 9, 22, 'sijue')).toBe(false);
+  });
+
+  it('refuses a register it does not carry rather than serving 協紀\'s', () => {
+    // The parameter exists before there is a second value to give it, because
+    // adding it later would break every shared address at once. What it must
+    // never do is accept an unknown register and quietly answer with this one.
+    expect(() =>
+      almanacAt(noonAt(2024, 6, 15), { shensha: 'tongshu' as 'xieji' }, context()),
+    ).toThrow(ChartError);
+    expect(almanacAt(noonAt(2024, 6, 15), { shensha: 'xieji' }, context()).officer.hanzi).toBe('定');
   });
 
   it('keeps every seat the source gives to more than one god', () => {
@@ -570,16 +581,16 @@ describe('建除十二神', () => {
   it('turns the page\'s year at 立春, giving the whole of that date to it', () => {
     // 2026 立春 falls on 4 February. The chart's `yearBoundary` never reaches
     // here: a page turns its year on the date, as it turns its month.
-    expect(almanacAt(noonAt(2026, 2, 3), context()).year.hanzi).toBe('乙巳');
-    expect(almanacAt(noonAt(2026, 2, 4), context()).year.hanzi).toBe('丙午');
+    expect(almanacAt(noonAt(2026, 2, 3), { shensha: 'xieji' }, context()).year.hanzi).toBe('乙巳');
+    expect(almanacAt(noonAt(2026, 2, 4), { shensha: 'xieji' }, context()).year.hanzi).toBe('丙午');
     // Every hour of the 立春 date, before the crossing as well as after it.
     for (const hour of [0, 12, 23]) {
-      expect(almanacAt(toJulianDay(2026, 2, 4, hour) - 8 / 24, context()).year.hanzi).toBe('丙午');
+      expect(almanacAt(toJulianDay(2026, 2, 4, hour) - 8 / 24, { shensha: 'xieji' }, context()).year.hanzi).toBe('丙午');
     }
   });
 
   it('carries the 節 that opened the month it counted from', () => {
-    const page = almanacAt(noonAt(2026, 8, 4), context());
+    const page = almanacAt(noonAt(2026, 8, 4), { shensha: 'xieji' }, context());
     expect(page.jie.hanzi).toBe('小暑');
     expect(page.jie.kind).toBe('jie');
   });

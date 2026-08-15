@@ -769,6 +769,18 @@ source is registered for them here. They stay uncoloured until one is.
 
 ## 曆注 — the almanac's page, and the block its own source refuses
 
+**The layer has one option and it is `shensha`.** `dayBoundary` and
+`trueSolarTime` say how an *instant* is read and never reach here, because a
+page belongs to a date and the same date is the same page for everybody who
+opens it. `shensha` is not of that kind: it says which register was copied out,
+which is a fact about the page rather than about the reader, and it is the
+parallel of dunjia's `method`. Only `xieji` exists — what the 協紀 ratifies, cut
+to the day and the bearing — and anything else is refused with
+`OPTION_NOT_IMPLEMENTED` rather than quietly served this one. It travels in the
+URL, in the MCP schema and on the CLI from before there is a second register,
+for the reason `PLAN.md` § 3 gives: added later it would break every shared
+address at once.
+
 The layer dunjia was read beside. It arrives one block at a time; **建除十二神
 is the first**, and it is the block whose one dangerous decision the source
 turned out to state in a clause.

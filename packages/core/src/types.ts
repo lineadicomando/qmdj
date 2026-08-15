@@ -113,6 +113,25 @@ export interface ChartOptions {
    * will not do.
    */
   centreLodging: 'kun' | 'dun';
+
+  /**
+   * Which register of 神煞 the almanac's page carries (曆注).
+   *
+   * `xieji` is the only value implemented: what 《協紀辨方書》 ratifies, cut to
+   * what bears on the quality of a day and the bearing of a direction. There
+   * are hundreds of 神煞 and they diverge by lineage far more than the schools
+   * of dunjia do, so a second register must be able to arrive without breaking
+   * a shared link — which is why this exists before there is anything to
+   * choose.
+   *
+   * **It is the one option the page reads, and the exception proves the rule
+   * it lives by.** `dayBoundary` and `trueSolarTime` say how an *instant* is
+   * read and never reach the almanac, because a page belongs to a date and the
+   * same date is the same page for everybody. This says which *book* was
+   * copied out, which is a fact about the page itself — the parallel of
+   * `method` in dunjia, not of `dayBoundary`.
+   */
+  shensha: 'xieji';
 }
 
 /**
@@ -132,6 +151,7 @@ export const DEFAULT_OPTIONS: ChartOptions = Object.freeze({
   dayBoundary: 'zishi',
   system: 'shijia',
   centreLodging: 'kun',
+  shensha: 'xieji',
 });
 
 /** Where on Earth the chart is cast. */

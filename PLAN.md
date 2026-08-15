@@ -2077,6 +2077,14 @@ stand in this file and in `liuren.ts`'s comments, not in the register
 CLAUDE.md calls mandatory. A third layer's tables do not land in a register
 the second board never entered.
 
+**The layer's one option exists, and it is the one § 3 named.** `shensha`
+reaches `ChartOptions`, the URL, the MCP schema and the CLI, with `xieji` its
+only value and anything else refused. It was very nearly left out: the layer
+was written optionless on the argument that a page has no options, and that
+argument is right about `dayBoundary` and `trueSolarTime` — which say how an
+instant is read — and wrong about this one, which says which book was copied.
+§ 3's rule held: a parameter added after the addresses exist breaks them all.
+
 **建除十二神, 二十八宿值日, the 十二神, twenty-six 年神, the 四德 and twenty-eight 神煞 are built; the rest of 卷三 is not.** `almanac.ts`, `almanacAt`, and the
 page beside the pillars on the CLI, the API, the MCP tools, the chart page and
 the 六壬 page. Agreement with `lunar-javascript` on **14 600 / 14 600 days of

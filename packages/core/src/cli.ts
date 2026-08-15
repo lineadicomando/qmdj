@@ -108,6 +108,7 @@ interface Options {
   trueSolar?: boolean;
   dayBoundary?: string;
   method?: string;
+  shensha?: string;
   yuan?: string;
   until?: string;
   gate?: string;
@@ -160,6 +161,7 @@ Narrowing a scan
   --true-solar, --no-true-solar   default: on
   --day-boundary zishi|midnight   default: zishi
   --method chaibu|zhirun          how the ju is determined; default: chaibu
+  --shensha xieji                 which register the almanac line carries
   --yuan term|futou               under chaibu, where the third of the term is
                                   counted from; default: term
   --guiren chou|wei               for \`liuren\`: which verse seats the 貴人.
@@ -629,6 +631,15 @@ function resolveOptions(options: Options): ChartOptions {
     }
     chartOptions.yuan = options.yuan;
   }
+  // One register exists, so this can only ever be right or refused. It is
+  // offered anyway: a script that passes it today keeps working when a second
+  // arrives, and one that cannot pass it at all would have to be rewritten.
+  if (options.shensha !== undefined) {
+    if (options.shensha !== 'xieji') {
+      throw new UsageError('cli.error.unknownValue', { option: '--shensha', value: options.shensha });
+    }
+    chartOptions.shensha = options.shensha;
+  }
   return chartOptions;
 }
 
@@ -663,6 +674,7 @@ const FLAGS: Record<string, keyof Options> = {
   '--lang': 'lang',
   '--day-boundary': 'dayBoundary',
   '--method': 'method',
+  '--shensha': 'shensha',
   '--yuan': 'yuan',
   '--until': 'until',
   '--gate': 'gate',

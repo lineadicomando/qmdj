@@ -165,7 +165,7 @@ export function resolveMoment(
 
   // Enumerable for the same reason the lunar date is: a moment that
   // serialises without its page is a moment a surface has to ask twice for.
-  const almanac = deferred(() => almanacAt(time.julianDayUT, context));
+  const almanac = deferred(() => almanacAt(time.julianDayUT, options, context));
   Object.defineProperty(moment, 'almanac', { get: almanac, enumerable: true });
 
   // The futou is a fact about the day pillar, so the bookkeeping reads the

@@ -97,6 +97,10 @@ read and name what you are missing, rather than filling it in.
 
 ## The almanac line, and what it is not
 
+The register it carries is `shensha`, and `xieji` is its only value: what
+《協紀辨方書》 ratifies. Passing anything else is refused rather than answered
+with this one. Say which register you are quoting if you quote a 神煞.
+
 A chart and a 六壬 board both come back with the day's officer beside them —
 建 jiàn, 除 chú, 滿 mǎn and the rest; the lodge of the day with its 七政 —
 胃土 wèi, 鬼金 guǐ; and the god of the day with a 吉 or a 凶 — in a tool's

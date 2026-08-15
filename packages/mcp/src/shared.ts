@@ -209,6 +209,12 @@ export const optionSchema = {
     .describe(
       'Under chaibu, where the third of the term is counted from. Default term, counting from the instant the term began. futou counts from the days instead: where the day pillar stands in the fifteen-day cycle headed by Jia and Ji is the yuan, whatever the term is doing. A divergence inside chaibu, and it moves the ju on most days. No bearing under zhirun, where the yuan is the futou\'s by construction. Does not affect the Four Pillars.',
     ),
+  shensha: z
+    .enum(['xieji'])
+    .optional()
+    .describe(
+      'Which register of shensha the almanac line carries. Only xieji exists: what the Xieji Bianfang Shu ratifies, cut to what bears on the quality of a day and the bearing of a direction. There are hundreds of shensha and they diverge by lineage far more than the schools of Qi Men do, so the parameter is here before there is a second register to choose. Affects only the almanac line, never the chart or the pillars.',
+    ),
 };
 
 export interface ResolvedInput {
@@ -229,6 +235,7 @@ interface RawInput {
   year_boundary?: 'lichun' | 'chunjie' | undefined;
   method?: 'chaibu' | 'zhirun' | undefined;
   yuan?: 'term' | 'futou' | undefined;
+  shensha?: 'xieji' | undefined;
   born?: string | undefined;
   born_time?: string | undefined;
   born_timezone?: string | undefined;
@@ -267,6 +274,7 @@ export function resolveInput(raw: RawInput, context: ToolContext): ResolvedInput
   if (raw.year_boundary) options.yearBoundary = raw.year_boundary;
   if (raw.method) options.method = raw.method;
   if (raw.yuan) options.yuan = raw.yuan;
+  if (raw.shensha) options.shensha = raw.shensha;
 
   const ephemeris: EphemerisContext = initEphemeris(context.ephemerisPath);
   return {

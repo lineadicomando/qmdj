@@ -220,6 +220,19 @@ export function readOptions(params: URLSearchParams): ChartOptions {
     options.yuan = yuan;
   }
 
+  // Strict for the same reason again, and worth saying why it is here at all
+  // when only one register exists: a page cast under a second one would carry
+  // different 神煞 under the same address, so the parameter has to travel in
+  // the URL from before there is a second. The engine refuses anything else
+  // with a 501 rather than quietly serving 協紀's.
+  const shensha = params.get('shensha');
+  if (shensha !== null) {
+    if (shensha !== 'xieji') {
+      throw new ChartError('UNKNOWN_IDENTIFIER', { parameter: 'shensha', value: shensha });
+    }
+    options.shensha = shensha;
+  }
+
   return options;
 }
 
