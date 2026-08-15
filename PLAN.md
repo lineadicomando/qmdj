@@ -2077,7 +2077,7 @@ stand in this file and in `liuren.ts`'s comments, not in the register
 CLAUDE.md calls mandatory. A third layer's tables do not land in a register
 the second board never entered.
 
-**建除十二神, 二十八宿值日, the 十二神, twenty-six 年神, the 四德 and seven 神煞 are built; the rest of 卷三 is not.** `almanac.ts`, `almanacAt`, and the
+**建除十二神, 二十八宿值日, the 十二神, twenty-six 年神, the 四德 and nine 神煞 are built; the rest of 卷三 is not.** `almanac.ts`, `almanacAt`, and the
 page beside the pillars on the CLI, the API, the MCP tools, the chart page and
 the 六壬 page. Agreement with `lunar-javascript` on **14 600 / 14 600 days of
 2000 to 2039** for the officer and again for the lodge with its 七政; the 480

@@ -1097,6 +1097,21 @@ nothing at all. They are the first entries under the `shensha` parameter of
 | 九空 | 「正月在辰，逆行四季」, and 曹震圭's 「寅午戌月火庫在戌，辰能衝散也」 | the month's triad |
 | 五虛 | 「春巳酉丑，夏申子辰，秋亥卯未，冬寅午戌」, 「春木旺，巳酉丑金絶也」 | the season's 絕 triad |
 | 五合 · 五離 | 「五合者寅夘日也」 and 「反此則為申酉」 | nothing — the day branch alone |
+| 三合 | 考原:「各與其月建㑹成三合局也」, and 卷六's own twelve-month list | the month's triad, two days in twelve |
+| 臨日 | 「陽建之月在三合前辰，隂建之月在三合後辰」, the 按 naming them 定日 and 成日 | the month, one branch |
+
+**三合's enumeration has one cell that contradicts its own rule, and the rule
+is what ships.** 卷六 lists the twelve months and the twelfth reads 丑巳 — which
+is the eighth month's entry repeated verbatim — where 「各與其月建㑹成三合局」
+gives 巳酉. A month cannot appear in its own 三合, since the list is what forms
+a triad *with* it, so this is a copying slip rather than a divergence. The other
+eleven cells reproduce the rule exactly, and `lunar-javascript` agrees with the
+rule on every one of 3 650 days, which settles it from outside the text.
+
+**臨日 is the reverse case: a derivation that reproduces an enumeration whole.**
+「陽建之月在三合前辰，隂建之月在三合後辰」, and the 按 names those the 定 day
+and the 成 day — two clauses of 建除, which this layer already computes. All
+twelve of 歴例's branches fall out.
 
 **九空 is stated twice and the two agree.** 「逆行四季」 walks backward round
 辰丑戌未; 曹震圭 instead names the branch that clashes with the 墓 of the
@@ -1117,7 +1132,7 @@ sentence is 宜忌 — 「其日忌修造倉庫出入貨財」 — and does not 
 
 | | | |
 |---|---|---|
-| 天赦 · 四相 · 五離 | 3 650 / 3 650 | **100 %** |
+| 天赦 · 四相 · 五離 · 三合 · 臨日 | 3 650 / 3 650 | **100 %** |
 | 九空 · 五合 | 3 645 / 3 650 | 99.86 % |
 | 解神 | 3 637 / 3 650 | 99.64 % |
 | 五虛 | 3 635 / 3 650 | 99.59 % |

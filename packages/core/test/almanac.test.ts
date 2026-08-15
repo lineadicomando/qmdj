@@ -445,6 +445,22 @@ describe('建除十二神', () => {
     for (const b of ['申', '子', '辰']) expect(carries('午', b, 'wuxu')).toBe(true);
     expect(carries('卯', '申', 'wuxu')).toBe(false);
 
+    // 三合:「各與其月建㑹成三合局也」 — the other two of the month's triad.
+    for (const b of ['午', '戌']) expect(carries('寅', b, 'sanhe')).toBe(true);
+    expect(carries('寅', '寅', 'sanhe')).toBe(false);
+    // The twelfth month is where 卷六's own enumeration slips: it prints 丑巳,
+    // the eighth month's entry repeated, where the rule gives 巳酉. A month is
+    // never in its own 三合, and the reference agrees with the rule.
+    for (const b of ['巳', '酉']) expect(carries('丑', b, 'sanhe')).toBe(true);
+    expect(carries('丑', '丑', 'sanhe')).toBe(false);
+
+    // 臨日:「陽建之月在三合前辰，隂建之月在三合後辰」 — the 定 day of a yang
+    // month and the 成 day of a yin one, which is 歴例's whole list.
+    for (const [m, b] of [['寅', '午'], ['卯', '亥'], ['辰', '申'], ['巳', '丑'], ['午', '戌'], ['未', '卯'],
+                          ['申', '子'], ['酉', '巳'], ['戌', '寅'], ['亥', '未'], ['子', '辰'], ['丑', '酉']] as const) {
+      expect(carries(m, b, 'linri')).toBe(true);
+    }
+
     // 五合「寅夘日也」 and 五離 「反此則為申酉」 — neither looks at the month.
     for (const m of ['寅', '午', '戌', '子']) {
       expect(carries(m, '寅', 'wuhe')).toBe(true);

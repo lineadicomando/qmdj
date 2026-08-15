@@ -547,7 +547,8 @@ export function monthGodsOf(monthBranch: Branch, day: Ganzhi): readonly MonthGod
 
 
 export type ShenshaId =
-  | 'tianshe' | 'sixiang' | 'jieshen' | 'jiukong' | 'wuxu' | 'wuhe' | 'wuli';
+  | 'tianshe' | 'sixiang' | 'jieshen' | 'jiukong' | 'wuxu' | 'wuhe' | 'wuli'
+  | 'sanhe' | 'linri';
 
 export interface Shensha {
   id: ShenshaId;
@@ -587,6 +588,15 @@ export interface Shensha {
  *   phase is 絕 in: 「春木旺，巳酉丑金絶也」.
  * - **五合 · 五離** 「五合者寅夘日也」, and 五離 its opposite pair, 申酉, which
  *   the 按 settles: 「反此則為申酉」. Neither looks at the month at all.
+ * - **三合** 「各與其月建㑹成三合局也」 — the other two of the month's triad.
+ *   卷六 enumerates it too, and **one cell of the enumeration contradicts the
+ *   rule**: the twelfth month reads 丑巳, which is the eighth month's entry
+ *   repeated verbatim, where the rule gives 巳酉. A month cannot be in its own
+ *   三合 list, since the list is what forms a triad *with* it, so this is a
+ *   copying slip and not a divergence. The rule ships; the other eleven cells
+ *   agree with it exactly.
+ * - **臨日** 「陽建之月在三合前辰，隂建之月在三合後辰」, which the 按 names as
+ *   the 定 day and the 成 day. That reproduces all twelve of the enumeration.
  */
 const SHENSHA: readonly {
   id: ShenshaId;
@@ -625,6 +635,21 @@ const SHENSHA: readonly {
   },
   { id: 'wuhe', hanzi: '五合', pinyin: 'wǔhé', valence: 'ji', holds: (_m, d) => d.branch.index === 2 || d.branch.index === 3 },
   { id: 'wuli', hanzi: '五離', pinyin: 'wǔlí', valence: 'xiong', holds: (_m, d) => d.branch.index === 8 || d.branch.index === 9 },
+  {
+    id: 'sanhe', hanzi: '三合', pinyin: 'sānhé', valence: 'ji',
+    // 考原:「三合者，各與其月建㑹成三合局也」 — the other two of the month's
+    // own triad, so two days in twelve. See `SHENSHA` for the one cell of the
+    // enumeration that contradicts this and why the rule is what ships.
+    holds: (m, d) =>
+      d.branch.index === (m.index + 4) % 12 || d.branch.index === (m.index + 8) % 12,
+  },
+  {
+    id: 'linri', hanzi: '臨日', pinyin: 'línrì', valence: 'xiong',
+    // 「陽建之月在三合前辰，隂建之月在三合後辰」, which the 按 names: 三合前辰
+    // 為定日, 三合後辰為成日. So a yang month takes its 定 day and a yin month
+    // its 成 — and that reproduces all twelve of 歴例's own list.
+    holds: (m, d) => d.branch.index === (m.index + (m.index % 2 === 0 ? 4 : 8)) % 12,
+  },
 ];
 
 /** Which quarter a month branch falls in: 0 春, 1 夏, 2 秋, 3 冬. */

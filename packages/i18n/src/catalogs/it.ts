@@ -406,6 +406,8 @@ export const it: Record<MessageKey, string> = {
   'label.monthgod.yuedehe': 'la virtù del mese congiunta',
 
 
+  'label.shensha.sanhe': 'l\'unione triplice',
+  'label.shensha.linri': 'il giorno che sovrasta',
   'label.shensha.tianshe': 'il perdono del cielo',
   'label.shensha.sixiang': 'i quattro ministri',
   'label.shensha.jieshen': 'lo scioglitore',

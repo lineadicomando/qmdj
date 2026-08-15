@@ -426,6 +426,8 @@ export const en = {
   'label.monthgod.yuedehe': 'the month\'s virtue joined',
 
 
+  'label.shensha.sanhe': 'the threefold union',
+  'label.shensha.linri': 'the overbearing day',
   'label.shensha.tianshe': 'the pardon of heaven',
   'label.shensha.sixiang': 'the four ministers',
   'label.shensha.jieshen': 'the loosener',
