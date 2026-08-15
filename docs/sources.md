@@ -542,15 +542,41 @@ a Ming judge of 懷慶府
 page-reader over the same page disagreed on a character — 隂 against 隐 in the
 比用 line — so the transcription was taken from the API instead and is
 reproduced here as the edition has it, `{{SKchar}}` placeholders expanded and
-interlinear notes moved into 〈〉. **No printed edition was consulted**, unlike
-the 統宗 passages above, so this extract stands one degree weaker than those:
-it is a transcription of a photographic edition, checked against itself.
+interlinear notes moved into 〈〉.
 
-The 四庫 text writes 己 and 巳 for each other in two places (丙戊課**己**,
-丁**巳**課未, 丁**巳**辛), which is the ordinary scribal confusion of the two
-graphs and is read here as 巳 and 己 respectively. It also uses the edition's
-variant forms throughout — 尅 for 剋, 渉 for 涉, 隂 for 陰, 逓 for 遞, 别 for
-別, 眀 for 明.
+**It has since been collated against two modern typesettings, and that closes
+the reservation this entry used to carry.** As first written it said that no
+printed edition had been consulted, unlike the 統宗 passages above, and that
+the extract therefore stood one degree weaker than those — a transcription of
+a photographic edition, checked only against itself. It is now checked against
+精校本六壬大全 (簡體), which reprints the 四庫 提要 ahead of the text, and
+against a second collated 六壬大全 卷一到十. Neither is a photographic
+edition either, so the 四庫 wording above remains the one quoted; what the two
+supply is agreement on the places where reading it required a decision.
+
+**Those places are the 己/巳 confusion, and the collation carries every
+instance of it.** The 四庫 text writes 己 and 巳 for each other,
+which is the ordinary scribal confusion of the two graphs, and this file read
+three instances the way the sense requires. Both typesettings print
+丙戊課**巳** and 丁**己**課未 outright — which does not make the first two
+certain, since an editor emending is still an editor, but it does move them
+off this file's own conjecture and onto a reading two editors arrived at
+independently. The third, 丁**巳**辛 in the 返吟 line, splits, and the split is
+worth more than concord would have been:
+
+| | 入手法, the line quoted above | the same rule restated later in the same volume |
+|---|---|---|
+| 精校本 | 丑未同干**丁己辛** | 井欄丑未**乙巳辛** — 乙 for 丁 is a slip |
+| 卷一到十 | 丑未同干**丁巳辛**, the 四庫 reading kept | 井欄丑未**丁己辛** |
+
+Each edition emends in one place and does not in the other, and they do not
+agree on which — so neither is silently normalising 巳 to 己 wherever it meets
+it, which is the failure a concordant pair would not have ruled out. Both
+places have a witness for 己, and no witness anywhere reads the line in a way
+that would change what `liuren.ts` computes.
+
+The extract also uses the edition's variant forms throughout — 尅 for 剋, 渉
+for 涉, 隂 for 陰, 逓 for 遞, 别 for 別, 眀 for 明.
 
 > 　　入手法
 > 　　**十干寄宫**
@@ -663,7 +689,13 @@ two of them into something other than what they looked like.
 
 - **復等柔辰剛日宜 — a clause with nothing to do.** 涉害 ties are broken in the
   verse: an equal depth goes to the branch's seat on a yin day and the stem's
-  on a yang one. `shehai` left a surviving tie to the order of the courses, and
+  on a yang one. The 四庫 text is unpunctuated and the clause has to be cut out
+  of the line by the reader; the two typesettings collated above disagree on
+  where — 精校本 gives 「孟深仲淺季當休，復等柔辰剛日宜」, which is the cut read
+  here, while 卷一到十 sets the comma one phrase earlier. The difference cannot
+  reach the engine, for the reason the rest of this bullet gives, but it is
+  what the punctuation of a modern edition is worth: an editor's reading, not
+  a witness. `shehai` left a surviving tie to the order of the courses, and
   `PLAN.md` called the disagreements that remain "a question for 《六壬大全》".
   The question was put. **A tie survives the palaces on 540 of the 1 380 涉害
   boards, and on none of them does the clause change the answer.** It was tried

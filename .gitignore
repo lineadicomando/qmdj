@@ -21,4 +21,11 @@ packages/geo/data/
 build/
 
 compose.override.yaml
+
+# Scans of the primary and secondary sources, and scratch work against them.
+# Most were bought and cannot be redistributed, and the largest is ~96 MB.
+# What a source establishes belongs in docs/sources.md, which cites by title
+# and never by path: nothing in the repository depends on either directory
+# existing. See texts/README.md.
+texts/
 temp/

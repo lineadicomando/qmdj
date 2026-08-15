@@ -13,6 +13,12 @@ message.
 to do, what it found, and what it got wrong on the way. `CLAUDE.md` holds the
 constraints that have to be known before touching any code.
 
+The scans `sources.md` was read off are **not in the repository**. Most were
+bought and cannot be redistributed, so they are held locally in `texts/`,
+which `.gitignore` excludes and whose own README lists what is on the shelf.
+`sources.md` therefore cites by title, edition and chapter — never by path —
+and every claim in it has to stand for a reader who has only the citation.
+
 ## Where a new document belongs here
 
 When it is **reference** — something a reader returns to and looks things up
