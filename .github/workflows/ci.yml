@@ -10,13 +10,23 @@ on:
     branches: [main]
   pull_request:
 
+# Every action here is pinned to a major that runs on **Node 24**. The runners
+# stopped supporting Node 20 in September 2025 and force anything targeting it
+# onto 24 anyway, with a deprecation annotation on every run — so the choice was
+# already made, and being forced is the arrangement that ends without warning.
+# `runs.using` in each action's `action.yml` is what to check when moving these.
+#
+# The one breaking change in the range worth knowing about is `setup-node`'s,
+# twice over: v5 began caching automatically when `package.json` names a
+# `packageManager`, and v6 narrowed that to npm alone. Neither reaches this
+# file, which has always said `cache: npm` in as many words.
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           # The same major the runtime image runs on; `engines` states the floor.
           node-version-file: .nvmrc
@@ -33,7 +43,7 @@ jobs:
       # Swiss Ephemeris precision, and an instant asserted to the minute must
       # not drift across a minute boundary for want of a download.
       - name: Restore the ephemeris files
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: packages/core/ephe
           key: swiss-ephemeris-1800-2399
@@ -57,7 +67,7 @@ jobs:
   image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Build, never push: what is asserted is that the Dockerfile still
       # describes this repository — every stage, including the web build and
