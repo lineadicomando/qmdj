@@ -271,7 +271,12 @@ function tombs(heaven: ByPalace<Stem>): Pattern[] {
  *
  * Derived, not tabulated. The published list — the gates of metal in the
  * palaces of wood, the gate of water in the palace of fire, and so on — is
- * exactly the set this produces, which makes the list a test.
+ * the set this produces, which makes the list a test.
+ *
+ * The list in 《奇門遁甲統宗》卷一 迫 is eleven of these thirteen: it drops
+ * 傷門臨二宮 and 景門臨七宮 while keeping both earth palaces under 杜門 and
+ * both wood palaces under 開門 and 驚門, so it is a list two lines short and
+ * not a rule two cells narrower. See `docs/sources.md`.
  *
  * Said in terms of `relationOf` rather than of `CONTROLS` directly, because
  * that is what it is: 門迫 is the name and the fortune the tradition attaches

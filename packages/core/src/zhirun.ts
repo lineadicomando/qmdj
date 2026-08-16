@@ -38,15 +38,23 @@ const BLOCK = 15;
  * How many whole days the block head may precede the solstice's civil day.
  *
  * This is the contested pin of the whole method. The classical rule says to
- * intercalate when the 超神 has grown to nine days or more, which bounds the
- * head to at most eight days before the solstice and, the blocks being
- * fifteen days apart, to at most six after it — a window of exactly one
- * block, so the head a solstice takes is never ambiguous. Sources that say
- * "ten" instead of "nine" shift the window by one day, and a Japanese
- * tradition that says "the futou nearest the solstice" shifts it the other
- * way; the three coincide except when the head falls exactly at the edge.
- * `kinqimen`, the one runnable reference, intercalates at nine, and so does
- * this table.
+ * intercalate when the 超神 has grown to nine days or more, which is read here
+ * as a gap of nine, bounding the head to at most eight days before the
+ * solstice and, the blocks being fifteen days apart, to at most six after it —
+ * a window of exactly one block, so the head a solstice takes is never
+ * ambiguous. Sources that say "ten" instead of "nine" shift the window by one
+ * day, and a Japanese tradition that says "the futou nearest the solstice"
+ * shifts it the other way; the three coincide except when the head falls
+ * exactly at the edge. `kinqimen`, the one runnable reference, intercalates at
+ * nine that way, and so does this table.
+ *
+ * **《奇門遁甲統宗》卷一 置閏法 counts its nine inclusively**, which makes it a
+ * gap of eight, and its dated worked example over 1717–1719 intercalates one
+ * day earlier than this. Every day pillar in that example is reproduced here
+ * and the two part in exactly one cell — a solstice at position 8. The value
+ * is left at 8 because one text against one runnable reference is one against
+ * one; `docs/sources.md` § 置閏 has the whole of it, and this is the first
+ * thing to reopen if a second witness turns up.
  */
 const MAX_CHAOSHEN = 8;
 

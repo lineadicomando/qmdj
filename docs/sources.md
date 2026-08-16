@@ -135,6 +135,89 @@ year field stops at 2020 while it will cast any year it is handed.
 piecewise: the four 符頭 heads, the solstice anchor, the 195-day leap. An
 independent tradition, which is what makes it valuable.
 
+### 置閏 has a dated worked example, and it moves the pin by a day
+
+《奇門遁甲統宗》卷一 置閏法 states the method and then works it, by name and
+by date, over three years of the Kangxi reign — 康熙五十六年 to 五十八年, which
+is 1717 to 1719. It is the only source in this file that says when its rule
+fires and shows the days it fires on, and it was on the shelf unread while the
+pin below was decided from a Python package.
+
+The passage was read off the ctext transcription of 卷一 and then confirmed on
+a photographic edition, 故宮珍本叢刊 第426冊 《奇門遁甲統宗大全》, 故宮博物院編,
+海南出版社, at that volume's page 11 — the same characters, including the two
+the argument turns on. (The 叢刊 numbers its own pages and prints two leaves of
+the original to each; citations to it here are by that pagination.)
+
+**Where that copy came from, and why the address is written down.** The scan is
+one of thirteen files taken from **白雲深處人家**, an archive of Daoist and
+術數 texts online since 2005 at `www.byscrj.com`, downloaded in 2012. That host
+no longer exists; the library survives at `www.homeinmists.com` and at the
+overseas site <https://homeinmists.ilotus.org/>. The archive distributed its
+holdings inside RAR anthologies, so **no address ever pointed at this PDF** and
+none can be given — `docs/provenance.tsv` carries the origin and the sha256 and
+says outright that the per-file URL does not exist. This file's rule is that a
+link is not the evidence and the extract is; here the link is gone and the
+extract is what remains, which is the case the rule was written for.
+
+**Every date in it is reproduced.** Twelve of its lunar dates carry a day
+pillar, and all twelve come back with that pillar; a thirteenth pillar is the
+error discussed below. The four terms the text dates fall on the civil days it
+puts them on:
+
+| the text | the engine |
+|---|---|
+| 康熙56 五月十一日甲子, 十三日丙寅 交夏至 | 1717-06-19 甲子, 1717-06-21 丙寅 |
+| 康熙56 十一月二十日庚午 寅正 交冬至 | 1717-12-22 庚午, 冬至 at 04:47 |
+| 康熙57 五月二十四日壬申 卯初二度 交夏至 | 1718-06-22 壬申, 夏至 at 06:32 |
+| 康熙58 六月二十三日立秋, 甲子符頭恰當日 | 1719-08-08 甲子, 立秋 that day |
+| 康熙58 七月初九日庚辰 處暑 | 1719-08-24 庚辰, 處暑 that day |
+
+The two instants stated to the quarter-hour both come back about an hour late
+here, in the same direction; a quarter of that is Beijing standing at 116.4°E
+where this reckoning stands at 120°E, and the rest is what an eighteenth-century
+computation was worth. Nothing in the method turns on it, because the method
+reads the *day*.
+
+**What the text counts in is inclusive, and that is what moves the pin.**
+Three times it names a 符頭 and says how far the block has run ahead: 甲子
+against a 夏至 two days later is 超三日, 甲子 against a 冬至 six days later is
+超七日, and 甲子 against a 夏至 eight days later is 超九日 — which is the one
+that triggers the intercalation, 「宜先於芒種節上置閏」. So 統宗's nine days is
+a gap of eight, and its rule 「超遇九日十日或十一日則仍置閏」 intercalates when
+the block head stands eight days or more before the solstice's day.
+
+`MAX_CHAOSHEN` in `zhirun.ts` is 8, meaning the head may stand up to eight days
+before and the intercalation waits for nine. It follows `kinqimen`, the one
+runnable reference, and `zhirun.ts` calls this «the contested pin of the whole
+method» — reading the classical 九日 as a gap of nine. **It is a gap of eight,
+and the engine is one day loose.** The 1718 case is exactly the cell where the
+two part: 夏至 falls on 壬申, whose position in the block is 8, so this engine
+seats 五月十六日甲子 as 夏至上元 where the 統宗 makes it 芒種閏奇上元 and does
+not reach 夏至上局 until 六月初二日己卯. Both the 1717 cases, at positions 2 and
+6, agree.
+
+This is **not** a change made in the code, and the reason is the standard: one
+text against one runnable reference is one against one. What it does is name
+the disagreement precisely — a single day, at a single position, in one
+direction — where before there was a comment saying the pin was contested and
+no witness that could say which way.
+
+**One error in the text, caught by the engine.** For the 1717 winter solstice
+it writes 「去符頭甲午日共超七日」, and 甲午 stands thirty-six days before 庚午,
+not six. The head that fits its own 超七日 is 甲子, and the photographic edition
+reads 甲午 too, so the slip is the compiler's and not a transcription's. It is
+recorded because a reader collating this passage will meet it, and because a
+worked example that survives its own arithmetic error is still worth more than
+a rule stated without one.
+
+**And one aside that does not fit.** After the 正授 of 康熙五十八年 the text
+adds 「上元至七月初九日庚辰處暑即超一日矣」; the head there is 己卯, one day
+before 庚辰, which is a gap of one and an inclusive count of two. Three
+instances inside the worked computation count inclusively and this remark does
+not. It is left standing rather than reconciled, because the three that decide
+the rule agree with each other and this one decides nothing.
+
 ---
 
 ## Tier 3 — the reading layer
@@ -148,12 +231,23 @@ independent sources naming the same thing the same way**.
 
 | Rule | Derived from | The list that tests it |
 |---|---|---|
-| 門迫 | the gate's phase controls the palace's | the published list of oppressed gates |
+| 門迫 | the gate's phase controls the palace's | 《奇門遁甲統宗》卷一 迫, and see below |
 | 五不遇時 | the hour's stem controls the day's, same polarity | the ten transmitted pairings — and the rule found the mnemonic **incomplete**: on two days in ten the condition strikes twice and the mnemonic names one |
 | 驛馬 | the branch facing the triad's 長生 | 申子辰馬在寅 and its three fellows |
 | the earth plate | count the instruments and marvels through the Luoshu | all eighteen published arrangements |
 | 旺相休囚死 | the five-phase reckoning against the season | stateable in a sentence and checked against it |
 | 門宮 · 星宮 | the five relations of the phases | 門迫 is one of the five, and a test asserts the two never disagree |
+
+**The list that tests 門迫 is two cells shorter than the rule.** 《統宗》卷一
+迫 — ctext, and 故宮珍本叢刊 第426冊 page 13 — prints eight lines — 開門臨三四宮（金克木）· 休門臨九宮 · 生門臨一宮 ·
+傷門臨八宮 · 景門臨六宮 · 死門臨一宮 · 驚門臨三四宮 · 杜門臨二八宮 — which is
+eleven cells, where the derivation yields thirteen. The two it does not print
+are 傷門臨二宮 and 景門臨七宮. **Neither is a doctrine the list holds against
+the rule**, and the list says so itself: it gives 杜門, the other gate of wood,
+both earth palaces, and it gives 開門 and 驚門, the two gates of metal, both
+palaces of wood. A compiler who knew wood oppresses 二 and 八 under 杜門, and
+that metal oppresses 三 and 四 twice over, has dropped two lines rather than
+excluded two cells. The parenthesised reasons in his own list are the argument.
 
 ### Transmitted, not derived
 
@@ -162,6 +256,22 @@ says so — **`TOMB` and `STRIKE` in `patterns.ts` are marked as transmitted
 precisely so nobody "fixes" them later.** 入墓 in particular does *not* follow
 the twelve stages: those put the tomb of 乙 at 戌 in Qian, while the Qi Men
 tradition puts it in Kun with 甲.
+
+**Both now have a printed witness, and it agrees cell for cell.** 《奇門遁甲
+統宗》卷一 奇門四十格 tabulates them, and these two entries fall after the leaf
+the photographic 故宮珍本叢刊 第426冊 is missing, so they were read there —
+page 12 — as well as off ctext:
+
+> 三奇入墓　乙奇坤宮　丙奇乾宮　丁奇艮宮
+> 六儀擊刑　甲子直符三　甲戌直符二　甲申直符八　甲午直符九　甲辰直符四　甲寅直符四
+
+`STRIKE` is the six of them exactly, decade for decade and palace for palace,
+which is the first source in this file to state that table rather than have it
+inferred. `TOMB` holds four and the list holds three: 乙 in Kun is the reading
+that parts from the twelve stages, and it is here in print, while 戊 in Qian
+has no line of its own — 戊 is an instrument and not a 奇, so the heading it
+would have to stand under excludes it. That is where the fourth entry stands:
+transmitted, and not witnessed by this list.
 
 ---
 
@@ -226,6 +336,8 @@ implemented.** The other seventy are absent, and the reason is below.
 | Key | Source | Kind | Licence | Cites its own source? |
 |---|---|---|---|---|
 | **V** | [煙波釣叟歌, Wikisource](https://zh.wikisource.org/zh-hant/%E7%85%99%E6%B3%A2%E9%87%A3%E5%8F%9F%E6%AD%8C) ([rev](https://zh.wikisource.org/w/index.php?oldid=1336835)) | Song-dynasty verse, complete | public domain | is the source |
+| **T** | 《奇門遁甲統宗》卷一 奇門四十格 | Ming compilation, **forty formations as a table**, each with its stem condition | public domain | is a source |
+| **Y** | 《奇門遁甲元靈經》卷二 天盤加地盤吉凶 — 海昌 許松如 署, preface 光緒九年 (1883), held only as a transcription from 白雲深處人家 ([mirror](https://homeinmists.ilotus.org/), origin `www.byscrj.com` defunct) | Qing, the table itself — one stem over another, named and weighed, in prose | public domain | is a source |
 | **K** | [ktonko.com, 奇門遁甲の凶格局](https://ktonko.com/html/syoi/32_kyo.html) | Japanese tradition, 16 formations with explicit stem conditions | — | no |
 | **B** | [`perfhelf/bigfishmarquis-qimen`](https://github.com/perfhelf/bigfishmarquis-qimen), `src/data/shi_gan_ke_ying.json` | all 81, with name and fortune | MIT | no |
 | **H** | [`HeiGeAi/HeiGe-SuanMing`](https://github.com/HeiGeAi/HeiGe-SuanMing), `references/22_qimen_duanju.md` | all 81, declared cross-checked against three named Chinese sources | **PolyForm Noncommercial 1.0.0** | yes, three sources |
@@ -240,36 +352,70 @@ Also surveyed and not used: [`dxbuyi/qimen.skill`](https://github.com/dxbuyi/qim
 (MIT, no stem-pair table), [`oceanjustinlin/qimen`](https://github.com/oceanjustinlin/qimen)
 (MIT, a scoring engine — which is the layer this project declines to have),
 [道音文化](https://www.daoisms.com.cn/2010/29/19/23446/) and
-[靈匣網](https://www.lnka.tw/html/topic/986_2.html) (Chinese, uncited),
-[奇門遁甲統宗 on ctext.org](https://ctext.org/wiki.pl?if=gb&chapter=548853)
-(the chapter checked carries commentary in verse, not the table in tabular
-form; the full text is there and citable for whoever locates the right one).
+[靈匣網](https://www.lnka.tw/html/topic/986_2.html) (Chinese, uncited).
+
+**The 統宗 entry used to stand in that list**, saying that the chapter checked
+carried commentary in verse rather than the table, and that the full text was
+there for whoever located the right one. It is 卷一, and it is located: the
+survey above was built out of two GitHub repositories and a Japanese web page
+while the tabular form sat in a Ming compilation on this project's own shelf.
+That is the finding to keep from this section — not the cells it changed, of
+which there is one, but that the search had stopped at the first four sources
+that came back.
 
 ### The cross-check
 
 甲 is concealed by the instrument of its decade, so the verse's 丙加甲 and
-甲加丙 are read as 丙 over 戊 and 戊 over 丙.
+甲加丙 are read as 丙 over 戊 and 戊 over 丙. **T and Y write those two cells
+with 甲 outright** — 甲直符加地盤丙奇, 天盤丙加地盤甲 — which is the reading
+this engine had to supply, arriving stated.
 
-| above + below | V | K | B | shipped as |
-|---|---|---|---|---|
-| 丙 + 戊 | 鳥跌穴 | — | 飞鸟跌穴 | **飛鳥跌穴** 吉 |
-| 戊 + 丙 | 龍返首 | — | 青龙**转光** | **青龍返首** 吉 |
-| 庚 + 丙 | 白入熒 | 太白入熒 | 太白入荧 | **太白入熒** 凶 |
-| 丙 + 庚 | 熒入白 | 熒入太白 | 荧入太白 | **熒入太白** 凶 |
-| 庚 + 癸 | 大格 | 大格 | 太白**冲刑** | **大格** 凶 |
-| 庚 + 己 | 刑格 | 刑格 | 太白**大刑** | **刑格** 凶 |
-| 庚 + 庚 | — | 戦格 | 太白**同宫** | **戰格** 凶 |
-| 癸 + 丁 | 蛇夭矯 | 騰蛇妖矯 | 螣蛇夭矫 | **螣蛇夭矯** 凶 |
-| 丁 + 癸 | 雀投江 | 朱雀投江 | 朱雀投江 | **朱雀投江** 凶 |
-| 乙 + 辛 | 龍逃走 | 青龍逃走 | 青龙逃走 | **青龍逃走** 凶 |
-| 辛 + 乙 | 虎猖狂 | 白虎猖狂 | 白虎猖狂 | **白虎猖狂** 凶 |
-| 庚 + 壬 | — | 小格 | 太白退位 | **not shipped** |
+| above + below | V | T | Y | K | B | shipped as |
+|---|---|---|---|---|---|---|
+| 丙 + 戊 | 鳥跌穴 | 鳥跌穴 | 飛鳥跌穴 | — | 飞鸟跌穴 | **飛鳥跌穴** 吉 |
+| 戊 + 丙 | 龍返首 | 龍**回**首 | 青龍返首 | — | 青龙**转光** | **青龍返首** 吉 |
+| 庚 + 丙 | 白入熒 | 太白入熒 | — | 太白入熒 | 太白入荧 | **太白入熒** 凶 |
+| 丙 + 庚 | 熒入白 | 火入**金鄉** | **織女尋牛郎** | 熒入太白 | 荧入太白 | **熒入太白** 凶 |
+| 庚 + 癸 | 大格 | 大格 | — | 大格 | 太白**冲刑** | **大格** 凶 |
+| 庚 + 己 | 刑格 | 刑格 | — | 刑格 | 太白**大刑** | **刑格** 凶 |
+| 庚 + 庚 | — | — | — | 戦格 | 太白**同宫** | **戰格** 凶 |
+| 癸 + 丁 | 蛇夭矯 | 蛇**妖**矯 | — | 騰蛇妖矯 | 螣蛇夭矫 | **螣蛇夭矯** 凶 |
+| 丁 + 癸 | 雀投江 | 雀投江 | — | 朱雀投江 | 朱雀投江 | **朱雀投江** 凶 |
+| 乙 + 辛 | 龍逃走 | 龍逃走 | 青龍逃走 | 青龍逃走 | 青龙逃走 | **青龍逃走** 凶 |
+| 辛 + 乙 | 虎猖狂 | 虎猖狂 | — | 白虎猖狂 | 白虎猖狂 | **白虎猖狂** 凶 |
+| 庚 + 壬 | — | 小格 | — | 小格 | 太白退位 | **not shipped — and see below** |
 
 `test/stem-pairs.test.ts` states each couplet of the verse as data and asserts
 the engine reproduces it. Ten of the eleven are pinned to a line of the song;
 戰格 is pinned to K and H agreeing.
 
-### Three findings
+**T is read off a transcription, and the printed copy here cannot confirm it.**
+The photographic edition on the shelf — 故宮珍本叢刊 第426冊 — carries the
+四十格 across two leaves and prints, between them, 「卷一原書缺第10面。」: the
+original the Palace Museum reproduced is missing leaf 10 of 卷一. The entries
+before the gap are 龍回首 · 鳥跌穴 · the nine 遁 · 龍逃走 · 虎猖狂 · 蛇妖矯 ·
+雀投江 · 三奇得使, and the entries after it are 三奇入墓 · 時墓 · 六儀擊刑 ·
+六儀受制 · 地羅遮蔽 · 天網四張 · 尺寸高低. **The leaf that is gone is the one
+carrying 大格, 刑格, 小格, 太白入熒 and 火入金鄉** — which is to say every T
+cell the survey above leans on that is not also in the verse, and the whole of
+the 小格 finding. Those five stand on the ctext transcription alone, from a
+complete copy this shelf does not hold. The six that survive the gap are
+confirmed in print, and so are 三奇入墓 and 六儀擊刑 above.
+
+**Y covers 甲, 乙 and 丙 over all nine and stops.** Twenty-seven cells of the
+eighty-one, of which the nine under 甲 are cells this engine has no place for.
+Where the transcription held ends, 卷三 begins; whether the rest was ever there
+is not established from the copy on the shelf, and the four rows it would have
+answered — 丁, 庚, 辛, 癸 — are four of the six the shipped table draws on.
+
+**And Y stands one degree below T and V**, for the reason 六壬大全's extract
+once did: no printed edition has been consulted. What is held is a
+simplified-character transcription of unstated editorial provenance, from an
+archive that no longer exists at the address it was taken from. It is used
+here to corroborate names three other sources already carry and to record one
+dissent; nothing rests on it alone, and nothing should until a print is found.
+
+### Four findings
 
 **The pairing is agreed far more widely than the name.** Every source marks
 庚 over 癸 as a named configuration. V and K call it 大格; B calls it 太白沖刑.
@@ -277,17 +423,36 @@ The same happens at 刑格 and 戰格, and at the two 甲/庚 pairings K names
 伏宮格 · 飛宮格 where B names 天乙伏宮 · 值符飛宮. Where the sources name a
 pairing differently the classical verse decides — it is the text the others
 descend from — and the divergence is recorded here rather than resolved in
-silence.
+silence. **T and Y widen the spread without moving a single pairing**: every
+cell either of them carries is a cell the shipped table already has, at the
+same two stems, and 丙 over 庚 alone now answers to four names across five
+witnesses — 熒入白, 熒入太白, 火入金鄉, 織女尋牛郎. The verse still decides.
 
-**One pairing is excluded for exactly this reason.** 庚 over 壬 is 小格 in K
-alone; the verse as fetched does not carry it and B calls it something else.
-One source is not enough for a table that cannot be derived. 三奇得使 is the
-precedent, and the two refusals differ only in cause: there the sources
-disagree, here there is only one.
+**One pairing was excluded for want of a second source, and it has one.**
+庚 over 壬 was 小格 in K alone. 《統宗》卷一 prints 「小格　庚臨壬」, which is a
+classical witness naming it what the Japanese tradition names it, and the
+standard this file sets — two independent sources, the same thing the same way
+— **is met.** It is still not shipped, because meeting the standard is what
+makes a pairing eligible and not what adds it: a twelfth entry needs an id, a
+hanzi, a reading, a valence and a line in `test/stem-pairs.test.ts`, and it
+needs the 凶 it would carry to be read off a source rather than assumed from
+its neighbours in the list. And it stands on the leaf the printed copy here is
+missing, per the note below. **This is a decision that is now waiting, not a
+refusal.** 三奇得使 is no longer its precedent: there the sources disagree,
+which is a different thing from there being only one, and only the second was
+ever true here.
 
 **B dissents on 戊 over 丙**, calling it 青龍轉光 where V and H call it
-青龍返首. The engine keeps 青龍返首 — two sources including the classical
-text — and this is the entry to revisit first if a fourth source turns up.
+青龍返首. The engine keeps 青龍返首, and Y is the fourth source and the second
+classical one to write it out in full. T writes 龍**回**首 for the same cell,
+which is the variant to know when collating: 回 and 返 both say the dragon
+turns its head, and no source seen puts a different configuration there.
+
+**A name in Y belongs to a pairing the engine gives to another.** Its 乙 row
+has 乙加地盤丁　朱雀入江格, where 朱雀投江 is shipped for 丁 over 癸 on the
+authority of V, K and B together. 入江 and 投江 are not the same word and the
+two need not be the same formation, but a reader collating Y against this table
+will meet the collision, so it is written down. Nothing is taken from it.
 
 ### What is deliberately not imported
 
@@ -429,6 +594,11 @@ the 用神 doctrine does not.
 transcription: 上海文明書局, 第一冊, 卷一 頁一三 and 卷二 頁一五–一六. The
 transcription agrees character for character, with one variant — the print
 reads 招賢**調**貴 where ctext reads 招賢**謁**貴.
+
+A second printed edition now stands behind 卷一 論八門執事歌: 故宮珍本叢刊
+第426冊 《奇門遁甲統宗大全》, page 13, where the four couplets read as
+transcribed. It is the copy with a leaf missing further back — see the 十干克應
+section — and the gap falls well before this passage.
 
 ### What each entry stands on
 
