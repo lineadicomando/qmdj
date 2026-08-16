@@ -1,3 +1,4 @@
+import { broken, escape, fitted, round } from './fit.js';
 import { FONT_STACK, styleSheet } from './palette.js';
 import { drawReadings, said, wrapped, type Said } from './readings.js';
 import type {
@@ -333,21 +334,6 @@ function worded(
   );
 }
 
-function broken(word: string, size: number, room: number): string[] {
-  if (fitted(word, size, room) === size) return [word];
-  const spaces = [...word].flatMap((character, index) => (character === ' ' ? [index] : []));
-  if (spaces.length === 0) return [word];
-
-  // The split that leaves the two halves most nearly equal, so a wrapped word
-  // reads as a block rather than as a line with a crumb under it.
-  const middle = word.length / 2;
-  const at = spaces.reduce((best, index) =>
-    Math.abs(index - middle) < Math.abs(best - middle) ? index : best,
-  );
-  const halves = [word.slice(0, at), word.slice(at + 1)];
-  return halves.every((half) => fitted(half, size, room) === size) ? halves : [word];
-}
-
 /**
  * What the board turned out to be, written in the space the ring leaves.
  *
@@ -376,22 +362,6 @@ function middle(
     text(centre, top + box.cell * (keti ? 0.86 : 1.05), rule ?? '', fitted(rule ?? '', box.cell * 0.2, room)),
     text(centre, top + box.cell * 1.3, keti ?? '', fitted(keti ?? '', box.cell * 0.17, room), 'faint'),
   ];
-}
-
-/**
- * A font size that keeps a line inside the room it was given.
- *
- * Measured rather than assumed, and crudely on purpose: a hanzi occupies about
- * one em and a Latin letter about half of one, which is close enough to keep
- * type off a rule and far cheaper than laying the glyphs out. It only ever
- * shrinks — a short caption is not blown up to fill the middle.
- */
-function fitted(content: string, size: number, room: number): number {
-  if (!content) return size;
-  let ems = 0;
-  for (const character of content) ems += character.codePointAt(0)! > 0x2e7f ? 1 : 0.52;
-  const width = ems * size;
-  return width <= room ? size : (size * room) / width;
 }
 
 /** The twelve branches, for the ground of each palace, and their phases. */
@@ -425,16 +395,4 @@ function text(
     `<text x="${round(x)}" y="${round(y)}" font-size="${round(size)}" ` +
     `text-anchor="${anchor}"${cls}>${escape(content)}</text>`
   );
-}
-
-function round(value: number): number {
-  return Math.round(value * 100) / 100;
-}
-
-function escape(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
 }

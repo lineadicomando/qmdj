@@ -1,3 +1,4 @@
+import { escape, fitted, round } from './fit.js';
 import { FONT_STACK, styleSheet } from './palette.js';
 import { drawReadings, said, wrapped, type Said } from './readings.js';
 import type {
@@ -346,20 +347,6 @@ function middle(
   ];
 }
 
-/**
- * A font size that keeps a line inside the room it was given.
- *
- * The same crude measure the other two drawings use — a hanzi about one em, a
- * Latin letter about half — and it only ever shrinks.
- */
-function fitted(content: string, size: number, room: number): number {
-  if (!content) return size;
-  let ems = 0;
-  for (const character of content) ems += character.codePointAt(0)! > 0x2e7f ? 1 : 0.52;
-  const width = ems * size;
-  return width <= room ? size : (size * room) / width;
-}
-
 /** The twelve branches, for the ground of each palace. */
 const HANZI = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'] as const;
 
@@ -392,16 +379,4 @@ function text(
     `<text x="${round(x)}" y="${round(y)}" font-size="${round(size)}" ` +
     `text-anchor="${anchor}"${cls}>${escape(content)}</text>`
   );
-}
-
-function round(value: number): number {
-  return Math.round(value * 100) / 100;
-}
-
-function escape(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
 }

@@ -128,7 +128,11 @@ const YUEJIANG: Record<string, { id: YuejiangId; hanzi: string; pinyin: string; 
  */
 export function yuejiangOf(term: SolarTermDefinition, options: LiurenOptions): Yuejiang {
   if (options.yuejiang !== 'zhongqi') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', { option: 'yuejiang', value: options.yuejiang });
+    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
+      option: 'yuejiang',
+      value: options.yuejiang,
+      implemented: 'zhongqi',
+    });
   }
   const qi =
     term.kind === 'qi'
@@ -340,7 +344,11 @@ export function liurenBoard(
   options: LiurenOptions,
 ): LiurenBoard {
   if (options.zhouye !== 'branch') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', { option: 'zhouye', value: options.zhouye });
+    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
+      option: 'zhouye',
+      value: options.zhouye,
+      implemented: 'branch',
+    });
   }
 
   const yuejiang = yuejiangOf(request.term, options);

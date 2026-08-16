@@ -146,6 +146,42 @@ describe('GET /api/taiyi', () => {
     expect(status).toBe(400);
   });
 
+  it('answers an address that names no year at 立春, as the command does', async () => {
+    const { body } = await call(taiyi, '');
+    const { taiyi: board } = body as { taiyi: { year: number } };
+
+    // The civil year and the counted year part company between New Year and
+    // 立春, and the two surfaces used to part with them: the command cut the
+    // year at 立春 and the endpoints at midnight on the first of January.
+    const now = new Date();
+    const civil = now.getUTCFullYear();
+    const beforeLichun = now.getUTCMonth() === 0 || (now.getUTCMonth() === 1 && now.getUTCDate() <= 4);
+    expect(board.year).toBe(beforeLichun ? civil - 1 : civil);
+  });
+
+  it('keeps a named year for a week and an unnamed one for an hour', async () => {
+    // Both public — a 年計 board holds nobody's data either way. What differs
+    // is the keeping: with no year in the address the answer is a function of
+    // the server's clock, and one cached for a week goes on serving the old
+    // board through the first week of the new year.
+    const named = await call(taiyi, 'year=2026');
+    expect(named.headers['cache-control']).toBe('public, max-age=604800');
+
+    const unnamed = await call(taiyi, '');
+    expect(unnamed.headers['cache-control']).toBe('public, max-age=3600');
+  });
+
+  it('varies on the header only where the address does not say the language', async () => {
+    // `Accept-Language` is very nearly a fingerprint, so keying a shared cache
+    // on it makes a public entry per browser configuration. Every link this
+    // site emits carries `lang`, and there the header decided nothing.
+    const told = await call(taiyiText, 'year=2026&lang=en');
+    expect(told.headers['vary']).toBeUndefined();
+
+    const untold = await call(taiyiText, 'year=2026');
+    expect(untold.headers['vary']).toBe('Accept-Language');
+  });
+
   /**
    * Phase 20 shipped this board without a `/prompt` on the ground that what it
    * would be handed over *for* had not been designed. Phase 21 designed it, and

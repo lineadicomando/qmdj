@@ -45,6 +45,24 @@ async function open(load: Load, address: string, places: Record<string, unknown>
             { status: 404 },
           );
     }
+    // The 太乙 endpoint refuses a year it cannot bound, and answers with the
+    // board's own year otherwise — which is what the page now reads, rather
+    // than deciding for itself what year the address meant.
+    if (url.pathname === '/api/taiyi') {
+      const asked = url.searchParams.get('year');
+      const year = asked === null ? 2025 : Number(asked);
+      return Number.isInteger(year) && year >= 1 && year <= 9999
+        ? Response.json({ taiyi: { year, ju: 49 } })
+        : Response.json(
+            {
+              message: `"${asked}" is not a valid number for year.`,
+              code: 'INVALID_NUMBER',
+              messageKey: 'web.error.INVALID_NUMBER',
+              params: { parameter: 'year', value: asked },
+            },
+            { status: 400 },
+          );
+    }
     return Response.json({ chart: { ju: 'a chart' }, bazi: { pillars: [] }, taiyi: { ju: 49 } });
   };
 
@@ -67,21 +85,39 @@ const BEIJING = { id: 1816670, name: 'Beijing', country: 'China', timezone: 'Asi
  * cached in public.
  */
 describe('the 太乙 page', () => {
-  it('lays the year the address names, and asks for no place', async () => {
+  it('lays the year the address names, and asks for no place and no language', async () => {
     const { data, urls } = await open(taiyi, '/en?year=724');
 
     expect(data.year).toBe(724);
-    expect(urls).toEqual(['/api/taiyi?year=724&lang=en']);
+    // No `lang`: the board comes back as identifiers, hanzi and numbers, and
+    // the endpoint never reads one — sending it split a week-long public cache
+    // into a copy per locale of an identical answer.
+    expect(urls).toEqual(['/api/taiyi?year=724']);
   });
 
-  it('lays the year being stood in when the address says nothing', async () => {
-    const { data } = await open(taiyi, '/en');
-    expect(data.year).toBe(new Date().getFullYear());
+  it('leaves the year being stood in to the endpoint, which cuts it at 立春', async () => {
+    const { data, urls } = await open(taiyi, '/en');
+
+    // The page decides nothing here. Reading its own calendar is how the
+    // section and the endpoint came to lay two different boards for one
+    // instant every January — one cutting the year at 立春 and the other at
+    // midnight on the first, in two different zones.
+    expect(urls).toEqual(['/api/taiyi']);
+    expect(data.year).toBe(2025);
   });
 
-  it('falls back rather than passing a year the endpoint would refuse', async () => {
-    const { data } = await open(taiyi, '/en?year=not-a-year');
-    expect(data.year).toBe(new Date().getFullYear());
+  it('shows the refusal for a year the endpoint bounds, rather than another board', async () => {
+    // A mistyped 1644 used to render the current year's board under an address
+    // still saying 16444, with nothing on the page saying so — on the one
+    // section whose whole claim is that the address is the board.
+    const { data, urls } = await open(taiyi, '/en?year=16444');
+
+    expect(urls).toEqual(['/api/taiyi?year=16444']);
+    expect(data.year).toBeUndefined();
+    expect(data.result).toBeUndefined();
+    expect((data.failure as { code: string }).code).toBe('INVALID_NUMBER');
+    // What was asked stays, so the field can be corrected rather than retyped.
+    expect(data.asked).toBe('16444');
   });
 });
 

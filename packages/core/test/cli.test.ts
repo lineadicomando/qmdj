@@ -168,6 +168,43 @@ describe('taiyi', () => {
     expect(await run(['taiyi', '--year-boundary', 'dongzhi', '--lang', 'en'])).toBe(1);
     expect(err).toContain('not implemented');
     expect(await run(['taiyi', '--year-boundary', 'qiufen', '--lang', 'en'])).toBe(2);
+
+    // 春節 passed validation and was answered by the 立春 rule, on a board that
+    // then recorded the boundary it had not used.
+    expect(await run(['taiyi', '--year-boundary', 'chunjie', '--lang', 'en'])).toBe(1);
+    expect(err).toContain('not implemented');
+  });
+
+  it('carries a matter into the prompt rather than dropping it', async () => {
+    expect(await run(['taiyi', '--year', '2026', '--about', 'a merger', '--lang', 'en'])).toBe(0);
+
+    expect(out).toContain('a merger');
+    expect(out).toContain('主');
+  });
+});
+
+/**
+ * The two flags that name what a board is read for, on the commands that do
+ * not take them.
+ *
+ * Both exist because a question or a matter dropped in silence is worse than
+ * one refused: it was the whole reason for the run. `--about` reached every
+ * command and was read by one, and under `--json` it was dropped even there.
+ */
+describe('--ask and --about where they do not belong', () => {
+  it('refuses a matter on every command but the board of a year', async () => {
+    for (const command of ['chart', 'liuren', 'bazi', 'qizheng']) {
+      expect(await run([command, ...MOMENT, '--about', 'a merger', '--lang', 'en'])).toBe(2);
+      expect(err).toContain('--about');
+    }
+    expect(await run(['terms', '--year', '2026', '--about', 'a merger', '--lang', 'en'])).toBe(2);
+  });
+
+  it('refuses either of them beside --json, which would print neither', async () => {
+    expect(await run(['taiyi', '--year', '2026', '--about', 'a merger', '--json', '--lang', 'en'])).toBe(2);
+    expect(err).toContain('--json');
+    expect(await run(['chart', ...MOMENT, '--ask', 'Will it go well?', '--json', '--lang', 'en'])).toBe(2);
+    expect(err).toContain('--json');
   });
 });
 

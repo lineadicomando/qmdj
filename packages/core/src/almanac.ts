@@ -862,7 +862,11 @@ export function almanacAt(
   context: EphemerisContext,
 ): Almanac {
   if (options.shensha !== 'xieji') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', { option: 'shensha', value: options.shensha });
+    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
+      option: 'shensha',
+      value: options.shensha,
+      implemented: 'xieji',
+    });
   }
 
   const dayNumber = calendarDayNumber(julianDayUT);

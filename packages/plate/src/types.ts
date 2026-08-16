@@ -409,22 +409,25 @@ export interface PlateQizhengOptions {
  * derives a position from a number — it is told the direction — precisely so
  * that a figure which looks like a Qi Men chart cannot quietly be laid out
  * like one.
+ *
+ * The 局, the 計神, the 合神 and the 八門直使 are **not** here, and the board
+ * carries all four: this figure is the placements and the two counts, and the
+ * bookkeeping the year rests on belongs to the transcript beside it, which
+ * prints every one of them. They were declared and never read, which made the
+ * shape a promise the drawing did not keep — and required them of any board
+ * handed to it for fields no line of the drawing consults.
  */
 export interface PlateTaiyi {
   year: number;
   sui: { hanzi: string };
-  ju: number;
   /** 太乙 itself, in one of the eight. It never enters the centre. */
   taiyi: { palace: PlateTaiyiPalace; year: number };
   /** 文昌, the lower eye, which is the host's. */
   wenchang: PlateTaiyiGod;
   /** 始擊, the upper eye, which is the guest's. */
   shiji: PlateTaiyiGod;
-  jishen: { hanzi: string };
-  heshen: { hanzi: string };
   host: PlateTaiyiSide;
   guest: PlateTaiyiSide;
-  gate: { gate: { hanzi: string; id: string }; year: number };
   /** The sixteen, in ring order from 子. The drawing seats them by that order. */
   gods: readonly PlateTaiyiGod[];
   patterns: readonly {
@@ -481,7 +484,6 @@ export interface PlateTaiyiLabels {
   guestCount?: string;
   general?: string;
   assistant?: string;
-  gate?: string;
   /**
    * The line saying these palace numbers are not a Qi Men chart's.
    *

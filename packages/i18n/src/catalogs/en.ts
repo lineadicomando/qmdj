@@ -487,8 +487,8 @@ export const en = {
   // corners and the centre, forty-five years each. The text places each in a
   // region of the empire; the gloss keeps the name.
   'label.taiyiwufu.huangmi': 'the yellow secret',
-  'label.taiyiwufu.huangshi': 'the yellow beginning',
-  'label.taiyiwufu.huangshi2': 'the yellow chamber',
+  'label.taiyiwufu.huangshi3': 'the yellow beginning',
+  'label.taiyiwufu.huangshi4': 'the yellow chamber',
   'label.taiyiwufu.huangting': 'the yellow court',
   'label.taiyiwufu.xuanshi': 'the dark master',
 
@@ -1533,6 +1533,14 @@ export const en = {
   // The same refusal for a third reason. Under 命 the question would name a
   // seat the board already prints; here there is nobody to ask on behalf of —
   // the subject is a year and the reader is not on the board at all.
+  // A matter is `taiyi`'s alone, and the option reached every command. On the
+  // other seven it is not a design decision about the board but a flag that is
+  // simply not theirs — said plainly, and pointed at the one that takes it.
+  'cli.error.notAbout':
+    'The command "{command}" does not take "--about". A matter is the field of view a 太乙 board of a year is read inside — what is being looked at, which is what says who is 主 and who is 客 — and `taiyi` is the command that lays that board. A board of 卜 is cast for a question ("--ask") instead, and a board of 命 is laid on a person and asked nothing.',
+  // The plain refusal, for a command where the flag was never a question about
+  // the board: `terms` prints a table of the sky and `scan` searches hours.
+  'cli.error.notCarried': 'The command "{command}" does not take "{option}".',
   'cli.error.notAskedYear':
     'The command "{command}" lays a board on a year, and nothing is asked of it — so "--ask" has nowhere to go. Nobody is on this board: its subject is the year everybody is standing in, and a question is how a reader ends up in a figure they are not in. What this board does take is "--about": the matter you are looking at, which is a field of view and not a question, and which is what says who is 主 and who is 客. Use that, or ask the question of `chart` or `liuren`, which are cast for one.',
 

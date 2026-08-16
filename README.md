@@ -147,7 +147,10 @@ are commissioned in the prompt itself, and what the reader wants to look at next
 belongs to the conversation that follows. Under 天 there is nobody to ask on
 behalf of at all, and a question is how a reader gets written into a figure of a
 year they are not in — so `taiyi` refuses `--ask` and takes `--about "…"`, the
-matter the year is read for. Neither a question nor a matter ever reaches the
+matter the year is read for. That flag is `taiyi`'s alone and the other commands
+refuse it too, on the same ground: a matter dropped in silence was the whole
+reason for the run. Neither travels with `--json` either, which has nowhere to
+print one. Neither a question nor a matter ever reaches the
 server: over HTTP `asked=true` and `about=true` say one exists, and the browser
 appends the text.
 

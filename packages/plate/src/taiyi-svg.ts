@@ -1,3 +1,4 @@
+import { broken, escape, fitted, folded, round } from './fit.js';
 import { FONT_STACK, styleSheet } from './palette.js';
 import { drawReadings, said, wrapped, type Said } from './readings.js';
 import type {
@@ -450,67 +451,6 @@ function worded(x: number, y: number, word: string | undefined, size: number, ro
   );
 }
 
-function broken(word: string, size: number, room: number): string[] {
-  if (fitted(word, size, room) === size) return [word];
-  const spaces = [...word].flatMap((character, index) => (character === ' ' ? [index] : []));
-  if (spaces.length === 0) return [word];
-
-  // The split that leaves the two halves most nearly equal, so a wrapped word
-  // reads as a block rather than as a line with a crumb under it.
-  const middle = word.length / 2;
-  const at = spaces.reduce((best, index) =>
-    Math.abs(index - middle) < Math.abs(best - middle) ? index : best,
-  );
-  const halves = [word.slice(0, at), word.slice(at + 1)];
-  return halves.every((half) => fitted(half, size, room) === size) ? halves : [word];
-}
-
-/**
- * A font size that keeps a line inside the room it was given.
- *
- * It only ever shrinks: a short word is not blown up to fill a cell.
- */
-function fitted(content: string, size: number, room: number): number {
-  if (!content) return size;
-  const width = measure(content) * size;
-  return width <= room ? size : (size * room) / width;
-}
-
-/**
- * A line broken into as many as it needs, measured in ems.
- *
- * The same crude measure the other drawings use for fitting — a hanzi about
- * one em, a Latin letter about half — applied to breaking rather than to
- * shrinking, because shrinking a sentence to fit a sheet makes it a sentence
- * nobody reads.
- */
-function folded(line: string, ems: number): string[] {
-  const lines: string[] = [];
-  let current = '';
-  let width = 0;
-
-  for (const word of line.split(' ')) {
-    const measured = measure(`${current ? ' ' : ''}${word}`);
-    if (current && width + measured > ems) {
-      lines.push(current);
-      current = word;
-      width = measure(word);
-      continue;
-    }
-    current += `${current ? ' ' : ''}${word}`;
-    width += measured;
-  }
-
-  if (current) lines.push(current);
-  return lines;
-}
-
-function measure(value: string): number {
-  let ems = 0;
-  for (const character of value) ems += (character.codePointAt(0) as number) > 0x2e7f ? 1 : 0.52;
-  return ems;
-}
-
 function saidOnBoard(board: PlateTaiyi): Said[][] {
   return [said(board.gods)].filter((group) => group.length > 0);
 }
@@ -537,16 +477,4 @@ function text(
     `<text x="${round(x)}" y="${round(y)}" font-size="${round(size)}" ` +
     `text-anchor="${anchor}"${cls}>${escape(content)}</text>`
   );
-}
-
-function round(value: number): number {
-  return Math.round(value * 100) / 100;
-}
-
-function escape(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
 }

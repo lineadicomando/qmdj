@@ -426,19 +426,32 @@ export function qizhengBoard(
   context: EphemerisContext,
 ): QizhengBoard {
   if (options.xiudu !== 'juxing') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', { option: 'xiudu', value: options.xiudu });
+    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
+      option: 'xiudu',
+      value: options.xiudu,
+      implemented: 'juxing',
+    });
   }
   if (options.ziqi !== 'off') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', { option: 'ziqi', value: options.ziqi });
+    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
+      option: 'ziqi',
+      value: options.ziqi,
+      implemented: 'off',
+    });
   }
   if (options.minggong !== 'yuejiang') {
     throw new ChartError('OPTION_NOT_IMPLEMENTED', {
       option: 'minggong',
       value: options.minggong,
+      implemented: 'yuejiang',
     });
   }
   if (options.gong !== 'zhongqi') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', { option: 'gong', value: options.gong });
+    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
+      option: 'gong',
+      value: options.gong,
+      implemented: 'zhongqi',
+    });
   }
 
   const { julianDay, hour } = request;

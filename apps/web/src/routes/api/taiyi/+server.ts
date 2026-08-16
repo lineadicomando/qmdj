@@ -1,6 +1,6 @@
 import { DEFAULT_TAIYI_OPTIONS, taiyiBoard } from '@qimendunjia/core';
 import { json } from '@sveltejs/kit';
-import { readInteger } from '$lib/server/params';
+import { readTaiyiYear, taiyiCacheControl } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
@@ -22,14 +22,12 @@ import type { RequestHandler } from './$types';
  */
 export const GET: RequestHandler = ({ url, setHeaders }) => {
   try {
-    // Bounded as `/api/terms` is, and for the same reason: the count runs
-    // one a year in either direction without limit, and a refusal beats a
-    // week of caches holding whatever year 999999 makes of it.
-    const year =
-      readInteger(url.searchParams, 'year', { least: 1, most: 9999 }) ??
-      new Date().getUTCFullYear();
+    // Bounded, and defaulted at 立春 rather than at New Year: see
+    // `readTaiyiYear`, which is where every surface here asks what year is
+    // being lived so that they all answer the same.
+    const { year, named } = readTaiyiYear(url.searchParams);
 
-    setHeaders({ 'cache-control': 'public, max-age=604800' });
+    setHeaders({ 'cache-control': taiyiCacheControl(named) });
     return json({ taiyi: taiyiBoard({ year }, DEFAULT_TAIYI_OPTIONS) });
   } catch (cause) {
     if (isHttpError(cause)) throw cause;

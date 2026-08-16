@@ -9,9 +9,9 @@ import { renderQizhengSvg } from '@qimendunjia/plate';
 import {
   ephemerisContext,
   momentIsFixed,
-  readInteger,
   readLocale,
   readMoment,
+  readPlateOptions,
 } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
@@ -46,9 +46,7 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
       ephemerisContext(),
     );
 
-    const size = Math.min(2048, Math.max(240, readInteger(url.searchParams, 'size') ?? 900));
-    const asked = url.searchParams.get('scheme');
-    const scheme = asked === 'light' || asked === 'dark' ? asked : 'auto';
+    const { size, scheme } = readPlateOptions(url.searchParams);
 
     const svg = renderQizhengSvg(board, {
       size,

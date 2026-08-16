@@ -43,7 +43,16 @@
   let busy = $state(false);
   let drawn = $state('');
 
-  const address = $derived(`year=${data.year}&lang=${t.locale}`);
+  /**
+   * The year the drawing and the transcript are asked for.
+   *
+   * Read off the board rather than off the address, so that the picture beside
+   * the reading is a picture of the reading: where the address names no year,
+   * what «now» means was settled by the endpoint at 立春, and an address
+   * repeated back here would ask the other endpoints the same open question
+   * and could get a different answer across the boundary.
+   */
+  const address = $derived(`year=${board?.year}&lang=${t.locale}`);
   const plate = $derived(`/api/taiyi/plate?${address}&scheme=${appearance.current}`);
 
   /**
@@ -98,7 +107,11 @@
   }
 
   function moved(_unit: Unit, by: number): void {
-    const year = data.year + by;
+    // Stepped from the board on the page, so there is nothing to step from
+    // when the year in the address was refused: the field and the way back to
+    // the year being lived are how that gets corrected.
+    if (board === undefined) return;
+    const year = board.year + by;
     if (year >= 1 && year <= 9999) void show(year);
   }
 
@@ -132,7 +145,7 @@
       inputmode="numeric"
       min="1"
       max="9999"
-      value={data.year}
+      value={data.asked ?? board?.year ?? ''}
       aria-label={t('form.year')}
       disabled={busy}
       onchange={(event) => jump(event.currentTarget.value)}
@@ -142,7 +155,7 @@
       units={['year']}
       nowTitle="step.now.year"
       disabled={busy}
-      values={{ year: String(data.year) }}
+      values={{ year: String(board?.year ?? '') }}
       onstep={moved}
       onnow={now}
     />

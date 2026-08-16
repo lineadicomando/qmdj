@@ -75,7 +75,7 @@ import { solarTermsOfYear } from './solar-terms.js';
 import {
   DEFAULT_TAIYI_OPTIONS,
   taiyiBoard,
-  taiyiYearOf,
+  taiyiYearAt,
   type TaiyiOptions,
 } from './taiyi.js';
 import {
@@ -225,7 +225,10 @@ Narrowing a scan
                                   there, and a board cut elsewhere would be two
                                   calendars in one output
   --lang en|it           default: the environment, then English
-  --json                 the data, unformatted and untranslated
+  --json                 the data, unformatted and untranslated. Not with
+                         --ask or --about: there is nowhere in it for a
+                         question or a matter to be printed, and one handed
+                         to it was silently thrown away
   --help
 
 Handing a board to a model
@@ -239,12 +242,13 @@ Handing a board to a model
                          \`qizheng\` are laid on a birth, \`taiyi\` on a year,
                          all three are asked nothing, and they refuse it
                          rather than dropping it
-  --about "…"            for \`taiyi\`: the matter the year is read for, and
-                         **not** a question — a field of view with two parties
-                         in it, which is what tells a reader which side is 主
-                         and which is 客. Implies --prompt. Without one the
-                         prompt reads the figure and says the assignment was
-                         never made
+  --about "…"            for \`taiyi\` only: the matter the year is read for,
+                         and **not** a question — a field of view with two
+                         parties in it, which is what tells a reader which side
+                         is 主 and which is 客. Implies --prompt, and every
+                         other command refuses it rather than dropping it.
+                         Without one the prompt reads the figure and says the
+                         assignment was never made
   --born, with --prompt  the 年命 travels inside the prompt with the chart,
                          and the prompt says what it is not: not a chart of a
                          birth, and no palace standing for a part of a life
@@ -319,6 +323,10 @@ export async function run(argv: string[]): Promise<number> {
 
 async function execute(command: Command, options: Options, locale: Locale): Promise<string> {
   const t = createTranslator(locale);
+  // Before the ephemeris is opened and before any board is laid: what a
+  // command does not carry it refuses, and it refuses it whatever the output
+  // was going to be. See `refuseUncarried`.
+  refuseUncarried(command, options);
   const context = initEphemeris();
   const timezone = options.timezone ?? systemTimezone();
   const now = currentMoment(timezone);
@@ -360,31 +368,22 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
     }
     const taiyiOptions = taiyiOptionsFrom(options);
     // Without `--year` the board is the one being stood in, which is a
-    // question about where the year was cut — so the pillars answer it rather
-    // than the calendar.
+    // question about where the year was cut — so 立春 answers it rather than
+    // the calendar. Asked of the sky and not of a resolved moment: a moment
+    // brings a place, an hour and four pillars, and this board takes none of
+    // them. See `taiyiYearAt`, which is what every surface here answers «now»
+    // with.
     const year =
       options.year !== undefined
         ? Number(options.year)
-        : taiyiYearOf(
-            {
-              civilYear: fromJulianDay(resolveTime(input).time.julianDayUT, timezone).year,
-              sui: resolveMoment(input, resolvePlace(options, input), resolveOptions(options), context)
-                .pillars.year,
-            },
-            taiyiOptions,
-          );
+        : taiyiYearAt(resolveTime(input).time.julianDayUT, taiyiOptions, context);
     const board = taiyiBoard({ year }, taiyiOptions);
     if (options.json) return JSON.stringify(board, null, 2);
-    // As under `bazi` and `qizheng`, `--ask` does not imply `--prompt` and is
-    // refused outright — for a third reason. There a question names a seat the
-    // board already prints; here there is nobody to ask on behalf of at all,
-    // and a question put to a year is a question about a person who is not on
-    // this board. See `refuseQuestion`.
-    refuseQuestion(command, options, 'cli.error.notAskedYear');
     // `--about` implies `--prompt`, as `--ask` does on the two boards of 卜 and
     // for the same reason: a matter named is a matter meant to be read for, and
     // a flag that printed a bare transcript with it would be a flag that did
-    // nothing.
+    // nothing. It cannot be lost to the line above either — a matter and
+    // `--json` are refused together, before anything is cast.
     if (options.prompt || options.about !== undefined) {
       return taiyiReadingPrompt(board, t, {
         ...(options.about !== undefined ? { matter: options.about } : {}),
@@ -453,8 +452,7 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
     if (options.json) return JSON.stringify({ moment, bazi }, null, 2);
 
     // Unlike `chart` and `liuren`, `--ask` does not imply `--prompt` here: it
-    // is refused outright. See `refuseQuestion`.
-    refuseQuestion(command, options);
+    // was refused before anything was cast. See `refuseUncarried`.
     if (options.prompt) return baziReadingPrompt(moment, bazi, t);
 
     return [
@@ -508,7 +506,6 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
     );
     if (options.json) return JSON.stringify({ moment, qizheng: board }, null, 2);
 
-    refuseQuestion(command, options);
     if (options.prompt) return qizhengReadingPrompt(moment, board, t);
 
     const parts = [formatMoment(moment, t), '', formatQizheng(board, t)];
@@ -622,31 +619,77 @@ function warningsOf(moment: Parameters<typeof formatWarnings>[0], t: Parameters<
 }
 
 /**
- * `--ask` on a board that is asked nothing, which is refused rather than
- * ignored.
+ * Which command carries a question and which a matter.
  *
- * On `chart` and `liuren` a question implies `--prompt`, because a question
- * asked is a question meant to be carried. The other three are laid on
- * something instead of being cast for something, so there is no line for a
- * question to go on — and dropping it silently would be the flag that did
- * nothing, which is the thing `--ask` was given that behaviour to avoid in the
- * first place.
+ * `--ask` names what a board is cast **for** and `--about` what a board is read
+ * **about**, and which of the two a command takes is decided by the kind of
+ * board it lays: an instrument of 卜 is cast for a question, an instrument of
+ * 天 is read about a matter, and an instrument of 命 is laid on a person and
+ * takes neither. On `chart` and `liuren` a question implies `--prompt`, and on
+ * `taiyi` a matter does, because one named is one meant to be carried.
  *
- * It is not squeamishness about the question, and the reason differs by kind,
- * which is why the refusal says two different things. Under a board of 命 a
- * question names one of the seats the board already prints — «what about my
- * career» *is* 官祿宮 — and a reading that starts from it has arrived at a seat
- * without choosing one. Under a board of 天 there is **nobody to ask on behalf
- * of**: the subject is a year, the reader is not on the board, and a question
- * is how they would get put there. See `prompt.ts` and `PLAN.md` § 4 phases 18
- * and 21.
+ * A table rather than a check inside each branch, because the failure this
+ * prevents is a branch that never wrote one: `--about` reached every command
+ * here and was read by exactly one, so on the other seven it was the flag that
+ * did nothing — silent, and silent precisely where it cost most, since the
+ * matter was the whole reason for the run. A flag that some commands take is a
+ * question about the whole table, and it is answered in one place.
  */
-function refuseQuestion(
-  command: string,
-  options: Options,
-  key: 'cli.error.notAsked' | 'cli.error.notAskedYear' = 'cli.error.notAsked',
-): void {
-  if (options.ask !== undefined) throw new UsageError(key, { command });
+const CARRIES: Record<Command, readonly ('ask' | 'about')[]> = {
+  chart: ['ask'],
+  liuren: ['ask'],
+  qizheng: [],
+  taiyi: ['about'],
+  bazi: [],
+  terms: [],
+  calendar: [],
+  scan: [],
+};
+
+/**
+ * Why a question is refused, where the refusal is about the board.
+ *
+ * Under a board of 命 a question names one of the seats the board already
+ * prints — «what about my career» *is* 官祿宮 — and a reading that starts from
+ * it has arrived at a seat without choosing one. Under a board of 天 there is
+ * **nobody to ask on behalf of**: the subject is a year, the reader is not on
+ * the board, and a question is how they would get put there. The rest take the
+ * plain refusal, because there the flag is not a design decision but simply
+ * not that command's. See `prompt.ts` and `PLAN.md` § 4 phases 18 and 21.
+ */
+const NOT_ASKED: Partial<Record<Command, 'cli.error.notAsked' | 'cli.error.notAskedYear'>> = {
+  bazi: 'cli.error.notAsked',
+  qizheng: 'cli.error.notAsked',
+  taiyi: 'cli.error.notAskedYear',
+};
+
+/**
+ * The refusals, made before anything is cast.
+ *
+ * Two of them, and the second is the same failure by a different road. A
+ * command that does not carry the flag refuses it; and **so does `--json`**,
+ * on every command, because a question or a matter handed to a machine-readable
+ * output has nowhere to be printed and was silently thrown away — which is the
+ * one thing these two flags exist to make impossible. `--prompt` beside
+ * `--json` is not that: it loses a choice of rendering rather than a sentence
+ * somebody wrote.
+ */
+function refuseUncarried(command: Command, options: Options): void {
+  if (options.ask !== undefined && !CARRIES[command].includes('ask')) {
+    throw new UsageError(NOT_ASKED[command] ?? 'cli.error.notCarried', {
+      command,
+      option: '--ask',
+    });
+  }
+  if (options.about !== undefined && !CARRIES[command].includes('about')) {
+    throw new UsageError('cli.error.notAbout', { command, option: '--about' });
+  }
+  for (const option of ['--ask', '--about'] as const) {
+    const given = option === '--ask' ? options.ask : options.about;
+    if (options.json && given !== undefined) {
+      throw new UsageError('cli.error.exclusive', { option, other: '--json' });
+    }
+  }
 }
 
 /**

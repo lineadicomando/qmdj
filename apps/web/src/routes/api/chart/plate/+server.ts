@@ -1,7 +1,7 @@
 import { chartLabels, computeQimenChart, sayGanzhi } from '@qimendunjia/core';
 import { createTranslator } from '@qimendunjia/i18n';
 import { renderChartSvg } from '@qimendunjia/plate';
-import { momentIsFixed, readInteger, readLocale, readMoment } from '$lib/server/params';
+import { momentIsFixed, readLocale, readMoment, readPlateOptions } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
@@ -20,9 +20,11 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
     const { moment } = readMoment(url.searchParams);
     const chart = computeQimenChart(moment, moment.options);
 
-    // The intrinsic size, which the page overrides with CSS anyway. It
-    // matters to whoever saves the file or drops it somewhere unstyled.
-    const size = Math.min(2048, Math.max(240, readInteger(url.searchParams, 'size') ?? 900));
+    // The intrinsic size, which the page overrides with CSS anyway, and the
+    // scheme: `auto` emits both behind a media query, which is right for a
+    // drawing dropped into a page nobody controls, while a page that knows
+    // what its reader picked asks for that one. See `readPlateOptions`.
+    const { size, scheme } = readPlateOptions(url.searchParams);
     const labels = chartLabels(t);
     const PILLARS = [
       moment.pillars.year,
@@ -35,12 +37,6 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
       // A visible separator, not spaces: SVG collapses runs of whitespace,
       // so four pillars set three spaces apart arrive as one long phrase.
       .join(' / ');
-
-    // `auto` emits both schemes behind a media query, which is right for a
-    // drawing dropped into a page nobody controls. A page that knows what its
-    // reader picked asks for that one instead.
-    const asked = url.searchParams.get('scheme');
-    const scheme = asked === 'light' || asked === 'dark' ? asked : 'auto';
 
     const svg = renderChartSvg(chart, {
       size,

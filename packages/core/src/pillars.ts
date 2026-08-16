@@ -196,8 +196,13 @@ function deferred<T>(compute: () => T): () => T {
  * The crossing solver only searches forward, so the search starts more than a
  * year back — which guarantees at least one crossing — and steps until the
  * next one would overshoot.
+ *
+ * Exported for `taiyiYearAt`, which asks the same question of 立春 that the
+ * year pillar asks here and must get the same answer: a board of a year and a
+ * chart of an instant disagreeing about which year it is would be two
+ * calendars in one output.
  */
-function lastCrossingBefore(
+export function lastCrossingBefore(
   target: number,
   julianDayUT: number,
   context: EphemerisContext,

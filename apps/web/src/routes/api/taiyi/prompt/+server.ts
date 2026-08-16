@@ -1,6 +1,12 @@
 import { DEFAULT_TAIYI_OPTIONS, taiyiBoard, taiyiReadingPrompt } from '@qimendunjia/core';
 import { createTranslator } from '@qimendunjia/i18n';
-import { pageAddress, readInteger, readLocale } from '$lib/server/params';
+import {
+  localeVary,
+  pageAddress,
+  readLocale,
+  readTaiyiYear,
+  taiyiCacheControl,
+} from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
@@ -43,21 +49,24 @@ import type { RequestHandler } from './$types';
  * board that never says «and so?». The matter is what it was missing. See
  * `prompt.ts` and `PLAN.md` § 4 phase 21.
  *
- * `vary: Accept-Language` because the glosses around the hanzi — and now the
- * whole of the instructions — are what turns with a reader.
+ * `vary: Accept-Language` where the address does not say `lang` — the glosses
+ * around the hanzi, and the whole of the instructions, are what turns with a
+ * reader, but a header that nearly names one is not a key a shared cache can
+ * afford. See `localeVary`.
  */
 export const GET: RequestHandler = ({ url, request, setHeaders }) => {
   try {
     const locale = readLocale(url.searchParams, request.headers.get('accept-language'));
-    // Bounded as the board endpoint bounds it, and for the same reason: the
-    // count runs one a year in either direction without limit, and a refusal
-    // beats a week of caches holding whatever year 999999 makes of it.
-    const year =
-      readInteger(url.searchParams, 'year', { least: 1, most: 9999 }) ??
-      new Date().getUTCFullYear();
+    // Bounded and cut at 立春 as the board endpoint is, and by the same reader:
+    // a prompt built around a different board from the one the section shows
+    // would be the two surfaces disagreeing inside one conversation.
+    const { year, named } = readTaiyiYear(url.searchParams);
 
     const t = createTranslator(locale);
-    setHeaders({ 'cache-control': 'public, max-age=604800', vary: 'Accept-Language' });
+    setHeaders({
+      'cache-control': taiyiCacheControl(named),
+      ...localeVary(url.searchParams),
+    });
     return new Response(
       taiyiReadingPrompt(taiyiBoard({ year }, DEFAULT_TAIYI_OPTIONS), t, {
         // An empty string, never the text: the caller is saying a matter exists

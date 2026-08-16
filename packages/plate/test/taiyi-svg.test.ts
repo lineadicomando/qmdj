@@ -50,12 +50,9 @@ const palace = (number: number, hanzi: string, id: string, direction: string): P
 const BOARD: PlateTaiyi = {
   year: 724,
   sui: { hanzi: '甲子' },
-  ju: 49,
   taiyi: { palace: palace(1, '乾', 'qian', 'nw'), year: 1 },
   wenchang: god('taijiong'),
   shiji: god('taiyang'),
-  jishen: { hanzi: '寅' },
-  heshen: { hanzi: '丑' },
   host: {
     count: 24,
     general: palace(4, '震', 'zhen', 'e'),
@@ -66,7 +63,6 @@ const BOARD: PlateTaiyi = {
     general: palace(6, '兌', 'dui', 'w'),
     assistant: palace(8, '坎', 'kan', 'n'),
   },
-  gate: { gate: { hanzi: '開門', id: 'kaimen' }, year: 1 },
   gods: GODS,
   patterns: [
     { hanzi: '迫', id: 'po', valence: { hanzi: '凶' }, subject: 'shiji', kind: 'houchen' },

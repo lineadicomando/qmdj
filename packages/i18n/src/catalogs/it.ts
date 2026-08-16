@@ -467,8 +467,8 @@ export const it: Record<MessageKey, string> = {
   // numeri: quattro angoli e il centro, quarantacinque anni ciascuno. Il
   // testo colloca ognuna in una regione dell'impero; la glossa tiene il nome.
   'label.taiyiwufu.huangmi': 'il segreto giallo',
-  'label.taiyiwufu.huangshi': 'il principio giallo',
-  'label.taiyiwufu.huangshi2': 'la camera gialla',
+  'label.taiyiwufu.huangshi3': 'il principio giallo',
+  'label.taiyiwufu.huangshi4': 'la camera gialla',
   'label.taiyiwufu.huangting': 'la corte gialla',
   'label.taiyiwufu.xuanshi': 'il maestro oscuro',
 
@@ -1196,6 +1196,9 @@ export const it: Record<MessageKey, string> = {
     'I cicli decennali richiedono --gender, perché la tradizione ne trae la direzione. Senza, i pilastri restano comunque completi.',
   'cli.error.notAsked':
     'Il comando "{command}" stende un quadro su una nascita, e ad esso non si chiede nulla — quindi "--ask" non ha dove andare. Per quale parte di una vita si legga un quadro di 命 lo sceglie il lettore, ad alta voce, dopo che è stato steso. Togli la domanda, oppure ponila a `chart` o a `liuren`, che sono posti per una.',
+  'cli.error.notAbout':
+    'Il comando "{command}" non prende "--about". Una faccenda è il campo visivo dentro cui si legge un quadro 太乙 di un anno — ciò che si sta guardando, che è quanto dice chi è 主 e chi è 客 — e `taiyi` è il comando che stende quel quadro. Un quadro di 卜 si pone invece per una domanda ("--ask"), e un quadro di 命 si stende su una persona e non chiede nulla.',
+  'cli.error.notCarried': 'Il comando "{command}" non prende "{option}".',
   'cli.error.notAskedYear':
     'Il comando "{command}" stende un quadro su un anno, e ad esso non si chiede nulla — quindi "--ask" non ha dove andare. Su questo quadro non c\'è nessuno: il suo soggetto è l\'anno in cui tutti si trovano, e una domanda è il modo in cui chi legge finisce dentro una figura in cui non è. Quello che questo quadro prende è "--about": la faccenda che stai guardando, che è un campo visivo e non una domanda, ed è ciò che dice chi è 主 e chi è 客. Usa quello, oppure poni la domanda a `chart` o a `liuren`, che sono posti per una.',
 

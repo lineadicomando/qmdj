@@ -1811,7 +1811,26 @@ about this one before the reading.
 `yearBoundary` is a genuine divergence and stays one. The text nowhere says
 where its counted year begins; 立春 is the default because the pillars beside
 it turn there, and a board that cut the year elsewhere would be two calendars
-in one output. `dongzhi` and `chunjie` are declared and refused.
+in one output. `dongzhi` and `chunjie` are declared and refused — **both of
+them, and the refusal is now written as one**: for a while only 冬至 threw and
+春節 fell through into the 立春 arithmetic, so a board asked for the lunar
+boundary was answered by the solar rule and then recorded, in its own
+`options`, the boundary it had not been cut at. The guard names the value it
+implements rather than the values it does not, which is what keeps a fourth
+one from arriving quietly answered by this one. It bites in `taiyiYearOf` and
+in `taiyiBoard` alike: the second takes a year already decided and cuts
+nothing, but a board carries the options that produced it, and one that
+recorded a boundary nothing here can compute would be saying it was cut
+somewhere it was not.
+
+**Which year is being lived is the same question and is answered in one
+place.** `taiyiYearAt` reads it off the sky — the civil year of the last time
+the Sun reached 315° — and the CLI, the four endpoints and the section all go
+through it. Read from each surface's own calendar instead, as they were, the
+command cut the year at 立春 while the endpoints cut it at midnight on the
+first of January in UTC and the pages in the browser's zone: three answers,
+disagreeing for the month between New Year and 立春, one of them cached in
+public for a week.
 
 `ji` is the register. 卷二 推太乙用式不同法 sorts the four by subject —
 「王者用嵗計，卿士惟月計，師尹惟日計，故時通上下」 — and this engine computes
@@ -1979,6 +1998,13 @@ come from the text.
 - **呂申 lǚshēn**, whose identifier has to drop the umlaut and becomes
   `lushen`. Nothing else in the engine reads `lu`, so the collision the tone
   marks usually guard against does not arise; the reading keeps the ǚ.
+- **黃始宮 huángshǐgōng and 黃室宮 huángshìgōng**, two of the five 五福 seats,
+  which are the one collision on this board: dropping the tones leaves both
+  `huangshi`. They take the tone number, as 驚門 `jing1men` and 景門 `jing3men`
+  do — `huangshi3` for 始 and `huangshi4` for 室 — and both carry one, since a
+  digit on only the second would say the first is the ordinary one. They were
+  `huangshi` and `huangshi2` at first, which numbers the pair by the order the
+  table happens to list them in and says nothing a reader could use.
 - **太乙 the god of this board and 太乙 the 月將 巳 of a 六壬 board are
   unrelated**, and a reader meeting both is owed the sentence. `liuren.ts:114`
   names the second `label.yuejiang.taiyi`; the catalogs are namespaced and
@@ -2040,6 +2066,28 @@ Three judgements, recorded because they are judgements:
 文昌將與太乙衝而相當者為對」 — and then a 若…皆為… list of events, with nothing
 saying what 對 *is*. Six of the seven are glossed and the seventh is not, which
 is the table telling the truth about its source rather than levelling itself.
+
+### Whose bodies enter each condition
+
+The triggers name their subjects, and the chapter is careful about it in a way
+that is easy to read past. Two readings are recorded here because they decide
+what the engine reports.
+
+- **格 is the guest's alone.** 「客目大小將與太乙對宫為格」: the 客 qualifies
+  the eye *and* the two generals after it. The chapter writes 主客 wherever it
+  means both parties — 「若文昌將并主客大小四將」 at 囚, 「主客大小將同宫數齊
+  皆為闗」 at 關, three lines above and three below — so a 格 marked on the
+  host's 大將 or 參將 would be a condition reported for a configuration the
+  source states for nobody. It was marked on all four until this reading was
+  made; `test/taiyi.test.ts` now holds it to the guest's three.
+- **囚 is reported per body, and 俱 is read as the collective.** 「若文昌將并
+  主客大小四將，俱與太乙同宫，總名曰囚」 can be read strictly — all five in
+  太乙's palace at once — or as 總名曰囚 naming the class of these standings.
+  The second is carried. The first would suppress the condition at nearly
+  every year there has ever been, which is a large claim to found on one
+  particle; and the engine already reports each body separately in 迫, where
+  the same list of bodies is meant one at a time. Recorded as a judgement
+  rather than left to the code, because it is one.
 
 Several of the omitted clauses turn on 筭和 / 不和, which this engine does not
 compute — see 陰陽和不和 below. That is a second reason they could not travel

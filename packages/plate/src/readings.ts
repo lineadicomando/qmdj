@@ -1,3 +1,4 @@
+import { escape, round } from './fit.js';
 /**
  * The band where the board says its names aloud.
  *
@@ -183,16 +184,4 @@ function measure(content: string | Said): number {
   let ems = 0;
   for (const character of text) ems += /[⺀-鿿＀-｠]/.test(character) ? 1 : 0.54;
   return ems;
-}
-
-function round(value: number): number {
-  return Math.round(value * 100) / 100;
-}
-
-function escape(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
 }

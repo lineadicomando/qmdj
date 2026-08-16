@@ -1,6 +1,12 @@
 import { DEFAULT_TAIYI_OPTIONS, taiyiBoard, taiyiTranscript } from '@qimendunjia/core';
 import { createTranslator } from '@qimendunjia/i18n';
-import { pageAddress, readInteger, readLocale } from '$lib/server/params';
+import {
+  localeVary,
+  pageAddress,
+  readLocale,
+  readTaiyiYear,
+  taiyiCacheControl,
+} from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
@@ -16,18 +22,20 @@ import type { RequestHandler } from './$types';
  * board itself wants — and it is what goes inside that prompt's fence, so the
  * two cannot drift.
  *
- * `public` like the board itself, and `vary: Accept-Language` because the
- * glosses around the hanzi are the one thing here that turns with a reader.
+ * `public` like the board itself, and `vary: Accept-Language` only where the
+ * address does not say `lang` — see `localeVary`, since a header nearly unique
+ * to a reader makes a shared cache a private one with extra steps.
  */
 export const GET: RequestHandler = ({ url, request, setHeaders }) => {
   try {
     const locale = readLocale(url.searchParams, request.headers.get('accept-language'));
-    const year =
-      readInteger(url.searchParams, 'year', { least: 1, most: 9999 }) ??
-      new Date().getUTCFullYear();
+    const { year, named } = readTaiyiYear(url.searchParams);
 
     const t = createTranslator(locale);
-    setHeaders({ 'cache-control': 'public, max-age=604800', vary: 'Accept-Language' });
+    setHeaders({
+      'cache-control': taiyiCacheControl(named),
+      ...localeVary(url.searchParams),
+    });
     return new Response(
       taiyiTranscript(taiyiBoard({ year }, DEFAULT_TAIYI_OPTIONS), t, {
         source: pageAddress(url, locale, 'taiyi'),

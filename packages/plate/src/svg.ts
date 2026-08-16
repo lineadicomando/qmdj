@@ -1,3 +1,4 @@
+import { escape, round } from './fit.js';
 import {
   COMPASS_READINGS,
   CORNERS,
@@ -806,16 +807,4 @@ function ariaLabel(chart: PlateChart): string {
   return `${dun}${chart.ju.number}局 — ${chart.palaces
     .map((palace) => `${palace.palace.hanzi}: ${palace.heaven.hanzi}${palace.earth.hanzi}`)
     .join(', ')}`;
-}
-
-function round(value: number): number {
-  return Math.round(value * 100) / 100;
-}
-
-function escape(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
 }

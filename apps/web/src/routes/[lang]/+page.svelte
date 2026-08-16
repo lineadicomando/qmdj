@@ -276,8 +276,22 @@
    * It travels in the setup under 天 and nowhere else, exactly as the birth
    * travels only where a board takes one: a `year=1644` sitting in the address
    * of a Qi Men consultation would be a parameter naming nothing.
+   *
+   * Absent means the year being lived, and **absent is the empty field and
+   * nothing else**. Tested for emptiness rather than for truth because a
+   * number field hands back the number 0 for a typed nought — which `min="1"`
+   * stops the spinner from reaching and stops nobody from typing — and a
+   * falsy test read that as «no year given» and laid the board on the current
+   * one under a form still showing 0. Sent as it stands, it is refused by the
+   * endpoint that bounds the year, which is an answer rather than a
+   * substitution.
    */
-  const sentYear = $derived((laidOnAYear && year) || undefined);
+  const sentYear = $derived.by(() => {
+    if (!laidOnAYear) return undefined;
+    const typed = typeof year === 'string' ? year.trim() : year;
+    if (typed === '' || typed === undefined || typed === null) return undefined;
+    return Number.isNaN(Number(typed)) ? undefined : String(typed);
+  });
 
   /**
    * What is still missing, checked before anything is asked of the server.
@@ -416,8 +430,13 @@
       // setup a reader set once — but a 年計 board is a function of a year, and
       // handing it a `locationId` it would ignore is how a reader comes to
       // believe their city went into it.
+      // No `lang` under 天: the board comes back as identifiers, hanzi and
+      // numbers, and `/api/taiyi` never reads one — sending it only split that
+      // endpoint's shared cache into a copy per locale of an identical answer.
+      // The three addresses that *are* localized — the transcript, the drawing
+      // and the prompt — carry it themselves.
       const query = laidOnAYear
-        ? new URLSearchParams({ ...(year ? { year } : {}), lang: t.locale }).toString()
+        ? new URLSearchParams(sentYear === undefined ? {} : { year: sentYear }).toString()
         : momentQuery(
             input(),
             {
@@ -572,20 +591,6 @@
   );
 
   /**
-   * What the browser adds to the prompt after it arrives — the question under
-   * 卜, the matter under 天, and nothing at all under 命.
-   *
-   * Read off the board on screen and not off the field, as `promptUrl` is. A
-   * board of 命 ends on its own closing and has no line for anything to land
-   * after, so a sentence left in either box from an earlier consultation would
-   * be appended to a reading it was never put to — silently, inside the
-   * clipboard, where nobody sees it until it is already pasted.
-   */
-  const appended = $derived(
-    shown.needs === 'question' ? question.trim() : shown.needs === 'year' ? matter.trim() : '',
-  );
-
-  /**
    * What the board was laid for, for the line that says so.
    *
    * An instant under the two kinds that have one, and a year under the third.
@@ -605,12 +610,24 @@
   is two things to keep in step.
 -->
 {#snippet takeaway()}
+  <!--
+    What the browser adds to the prompt after it arrives — the question under
+    卜, the matter under 天, and nothing at all under 命, which ends on its own
+    closing and has no line for anything to land after.
+
+    `posed` and not the field: it is the sentence the board was cast with,
+    taken at the press and held there. Read off the live box instead, a
+    question edited after the press travelled inside the copied prompt under a
+    board that was never put to it — silently, in the clipboard, where nobody
+    sees it until it is already pasted. It is also the sentence printed over
+    the sheet, so the two cannot say different things.
+  -->
   <Takeaway
     {t}
     lead
     copyLabel="form.copyPrompt"
     copyUrl={promptUrl}
-    copySuffix={appended}
+    copySuffix={posed}
   />
 {/snippet}
 

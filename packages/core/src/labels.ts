@@ -173,6 +173,11 @@ export function qizhengLabels(t: Translator): QizhengLabels {
  * a drawing of it — and `cli.value.taiyiEvidence` is where a surface saying it
  * goes for the words. The transcript says it.
  */
+/*
+ * The words the drawing sets, and only those. The 八門直使 had one here and no
+ * line of the drawing to stand on: the duty gate is in the transcript and in
+ * the table under the board, which is where the year's bookkeeping is read.
+ */
 export interface TaiyiLabels {
   /** The sixteen, glossed under the grid. */
   god: Record<string, string>;
@@ -184,7 +189,6 @@ export interface TaiyiLabels {
   guestCount: string;
   general: string;
   assistant: string;
-  gate: string;
   palaces: string;
 }
 
@@ -202,7 +206,6 @@ export function taiyiLabels(t: Translator): TaiyiLabels {
     guestCount: t('label.taiyi.guestCount'),
     general: t('label.taiyi.general'),
     assistant: t('label.taiyi.assistant'),
-    gate: t('label.taiyi.zhishi'),
     palaces: t('cli.value.taiyiPalaces'),
   };
 }

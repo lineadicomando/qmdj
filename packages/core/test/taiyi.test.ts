@@ -1,11 +1,14 @@
 import { describe, expect, it } from 'vitest';
+import { initEphemeris } from '../src/ephemeris.js';
 import { yearGanzhi } from '../src/ganzhi.js';
+import { resolveTime } from '../src/time.js';
 import {
   DEFAULT_TAIYI_OPTIONS,
   TAIYI_GODS,
   taiyiBoard,
   taiyiJu,
   taiyiPatternName,
+  taiyiYearAt,
   taiyiYearOf,
   type TaiyiOptions,
 } from '../src/taiyi.js';
@@ -567,9 +570,35 @@ describe('the year board', () => {
   it('cuts the year where the pillars cut it', () => {
     expect(taiyiYearOf({ civilYear: 2026, sui: yearGanzhi(2026) }, options)).toBe(2026);
     expect(taiyiYearOf({ civilYear: 2026, sui: yearGanzhi(2025) }, options)).toBe(2025);
-    expect(() =>
-      taiyiYearOf({ civilYear: 2026, sui: yearGanzhi(2026) }, { ...options, yearBoundary: 'dongzhi' }),
-    ).toThrow(/OPTION_NOT_IMPLEMENTED|not implemented/i);
+  });
+
+  it('refuses every boundary it has not implemented, and not only the one', () => {
+    // 春節 was declared beside 冬至 and only 冬至 threw, so a board asked for
+    // the lunar boundary was answered by the 立春 rule and recorded the option
+    // it had not used. The guard is one refusal now, so a fourth boundary
+    // cannot arrive quietly answered by this one.
+    for (const yearBoundary of ['dongzhi', 'chunjie'] as const) {
+      expect(() => taiyiYearOf({ civilYear: 2026, sui: yearGanzhi(2026) }, { ...options, yearBoundary })).toThrow(
+        /OPTION_NOT_IMPLEMENTED|not implemented/i,
+      );
+      expect(() => taiyiBoard({ year: 2026 }, { ...options, yearBoundary })).toThrow(
+        /OPTION_NOT_IMPLEMENTED|not implemented/i,
+      );
+    }
+  });
+
+  it('answers «now» from 立春 and not from the calendar', () => {
+    const context = initEphemeris();
+    // 立春 2026 falls on 4 February. The whole of the divergence this settles
+    // is the month between New Year and it: every surface asked for the year
+    // being lived has to answer 2025 there, and the civil calendar answers
+    // 2026.
+    const at = (date: string) =>
+      taiyiYearAt(resolveTime({ date, time: '12:00', timezone: 'UTC' }).time.julianDayUT, options, context);
+    expect(at('2026-01-15')).toBe(2025);
+    expect(at('2026-02-03')).toBe(2025);
+    expect(at('2026-02-10')).toBe(2026);
+    expect(at('2026-12-31')).toBe(2026);
   });
 });
 
@@ -617,6 +646,25 @@ describe('the named conditions', () => {
         .map((pattern) => pattern.kind),
     );
     expect(kinds).toEqual(new Set(['qianchen', 'houchen', 'qiangong', 'hougong']));
+  });
+
+  it('keeps 格 to the guest, which is the only party 卷三 names in it', () => {
+    // 「客目大小將與太乙對宫為格」. The chapter writes 主客 where it means both
+    // sides — 主客大小四將 at 囚, 主客大小將 at 關 — so the 客 here qualifies
+    // the generals after it. A 格 on the host's would be a condition reported
+    // for a configuration the source states for nobody.
+    const subjects = new Set(
+      (['yang', 'yin'] as const).flatMap((dun) =>
+        [...Array(72).keys()]
+          .flatMap((index) => taiyiJu(index + 1, dun).patterns)
+          .filter((pattern) => pattern.id === 'ge')
+          .map((pattern) => pattern.subject),
+      ),
+    );
+    expect(subjects.size).toBeGreaterThan(0);
+    for (const subject of subjects) {
+      expect(['shiji', 'guestGeneral', 'guestAssistant']).toContain(subject);
+    }
   });
 
   it('weighs every condition, because 卷三 does', () => {

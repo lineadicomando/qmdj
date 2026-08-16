@@ -1,7 +1,13 @@
 import { DEFAULT_TAIYI_OPTIONS, taiyiBoard, taiyiLabels } from '@qimendunjia/core';
 import { createTranslator } from '@qimendunjia/i18n';
 import { renderTaiyiSvg } from '@qimendunjia/plate';
-import { readInteger, readLocale } from '$lib/server/params';
+import {
+  localeVary,
+  readLocale,
+  readPlateOptions,
+  readTaiyiYear,
+  taiyiCacheControl,
+} from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
@@ -34,15 +40,11 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
   try {
     const locale = readLocale(url.searchParams, request.headers.get('accept-language'));
     const t = createTranslator(locale);
-    const year =
-      readInteger(url.searchParams, 'year', { least: 1, most: 9999 }) ??
-      new Date().getUTCFullYear();
+    const { year, named } = readTaiyiYear(url.searchParams);
 
     const board = taiyiBoard({ year }, DEFAULT_TAIYI_OPTIONS);
 
-    const size = Math.min(2048, Math.max(240, readInteger(url.searchParams, 'size') ?? 900));
-    const asked = url.searchParams.get('scheme');
-    const scheme = asked === 'light' || asked === 'dark' ? asked : 'auto';
+    const { size, scheme } = readPlateOptions(url.searchParams);
 
     const svg = renderTaiyiSvg(board, {
       size,
@@ -54,7 +56,10 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
       readings: t('cli.heading.readings'),
     });
 
-    setHeaders({ 'cache-control': 'public, max-age=604800', vary: 'Accept-Language' });
+    setHeaders({
+      'cache-control': taiyiCacheControl(named),
+      ...localeVary(url.searchParams),
+    });
     return new Response(svg, { headers: { 'content-type': 'image/svg+xml; charset=utf-8' } });
   } catch (cause) {
     if (isHttpError(cause)) throw cause;

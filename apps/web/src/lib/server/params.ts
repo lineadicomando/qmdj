@@ -1,5 +1,6 @@
 import {
   ChartError,
+  DEFAULT_TAIYI_OPTIONS,
   GATES,
   PATTERN_IDS,
   SPIRITS_YANG,
@@ -7,8 +8,10 @@ import {
   STEMS,
   currentMoment,
   initEphemeris,
+  julianDayFromMillis,
   resolveMoment,
   systemTimezone,
+  taiyiYearAt,
   yearsLived,
   zoneMeridian,
   DEFAULT_OPTIONS,
@@ -76,6 +79,100 @@ export function readInteger(
     invalidNumber(name, value);
   }
   return parsed;
+}
+
+/**
+ * A year out of the address, bounded, with no default of its own.
+ *
+ * The bounds are here rather than at each caller because they are one
+ * decision: the counts these years drive run one a year in either direction
+ * without limit, and a refusal beats a week of shared caches holding whatever
+ * year 999999 makes of a board. Five endpoints restated them, which is five
+ * places for one of them to be tightened and four to be forgotten.
+ */
+export function readYear(params: URLSearchParams): number | undefined {
+  return readInteger(params, 'year', { least: 1, most: 9999 });
+}
+
+/**
+ * The year a 太乙 board is laid on, and whether the address named it.
+ *
+ * The second half is not bookkeeping: it is what decides whether the answer
+ * may be cached in public. A board of a named year is a pure function of its
+ * URL and keeps for as long as anybody likes; a board of *no* named year is a
+ * function of the server's clock, and a shared cache that kept it would go on
+ * serving last year's board into the new year — which is the one failure the
+ * chart endpoints already guard with `momentIsFixed`.
+ *
+ * The year being lived is asked of the engine and never of the calendar here.
+ * `taiyiYearAt` cuts it at 立春, as the CLI does and as this board's own
+ * `yearBoundary` says it is cut, so the section, the four endpoints and the
+ * command all lay one board for one instant. Read from `new Date()` instead,
+ * they disagreed for the month between New Year and 立春 — and the web half
+ * disagreed with itself, the pages reading a local calendar and the endpoints
+ * a UTC one.
+ */
+export function readTaiyiYear(params: URLSearchParams): { year: number; named: boolean } {
+  const named = readYear(params);
+  if (named !== undefined) return { year: named, named: true };
+  return {
+    year: taiyiYearAt(julianDayFromMillis(Date.now()), DEFAULT_TAIYI_OPTIONS, ephemerisContext()),
+    named: false,
+  };
+}
+
+/**
+ * How long a 太乙 answer may be kept.
+ *
+ * `public` either way, because a 年計 board holds nobody's data — that much is
+ * a property of the board and does not turn on the address. What does turn on
+ * it is the *keeping*: a named year is a pure function of the URL and keeps
+ * for a week, while an address that names none is a function of the server's
+ * clock, and a shared cache holding that one for a week goes on serving last
+ * year's board for the first week of the new one.
+ *
+ * An hour rather than `no-store`, which is what an unfixed chart gets: the
+ * answer here changes once a year and not once an hour, so the window this
+ * leaves is one hour of a wrong board at 立春 against a whole year of hits on
+ * the most-visited address on the site.
+ */
+export function taiyiCacheControl(named: boolean): string {
+  return named ? 'public, max-age=604800' : 'public, max-age=3600';
+}
+
+/**
+ * Whether the glosses have to vary with a header.
+ *
+ * A localized answer turns with the reader, so it must not be served from one
+ * cache key to all of them — but `Accept-Language` is very nearly a
+ * fingerprint (q-values, ordering, the whole list a system sends), so keying
+ * on it fragments a public cache into one entry per browser configuration.
+ * Where the address says `lang` the answer is a pure function of the URL and
+ * the header decided nothing, which is every link this site emits.
+ */
+export function localeVary(params: URLSearchParams): Record<string, string> {
+  return params.get('lang') ? {} : { vary: 'Accept-Language' };
+}
+
+/**
+ * How big a drawing is asked for, and in which colours.
+ *
+ * The four plate endpoints draw four different boards and take the same two
+ * parameters, so the bounds and the list of schemes are one decision each. The
+ * size is clamped rather than refused — it is the intrinsic size of a picture
+ * a stylesheet overrides anyway, and it matters only to whoever saves the file
+ * — while a scheme nobody knows falls back to `auto`, which is what an
+ * unstyled reader gets in any case.
+ */
+export function readPlateOptions(params: URLSearchParams): {
+  size: number;
+  scheme: 'light' | 'dark' | 'auto';
+} {
+  const asked = params.get('scheme');
+  return {
+    size: Math.min(2048, Math.max(240, readInteger(params, 'size') ?? 900)),
+    scheme: asked === 'light' || asked === 'dark' ? asked : 'auto',
+  };
 }
 
 /** The refusal `readInteger` and the coordinates share: a code, never prose. */

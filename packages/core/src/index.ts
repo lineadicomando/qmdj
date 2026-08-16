@@ -39,6 +39,7 @@ export {
 export {
   currentMoment,
   fromJulianDay,
+  julianDayFromMillis,
   julianDayToMillis,
   resolveTime,
   systemTimezone,
@@ -199,6 +200,7 @@ export {
   taiyiJu,
   taiyiPalace,
   taiyiPatternName,
+  taiyiYearAt,
   taiyiYearOf,
   type TaiyiBoard,
   type TaiyiFief,

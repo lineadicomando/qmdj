@@ -1,8 +1,11 @@
 import { GATES, type Gate } from './dunjia/plates.js';
-import type { Direction, PalaceId } from './dunjia/palaces.js';
+import { PALACES, type Direction, type Palace, type PalaceId } from './dunjia/palaces.js';
 import { VALENCE, type Valence } from './dunjia/patterns.js';
 import { ChartError } from './errors.js';
+import type { EphemerisContext } from './ephemeris.js';
 import { BRANCHES, ganzhiOf, yearGanzhi, type Branch, type Ganzhi } from './ganzhi.js';
+import { lastCrossingBefore } from './pillars.js';
+import { fromJulianDay } from './time.js';
 import type { Element } from './types.js';
 
 /**
@@ -133,17 +136,22 @@ export interface TaiyiPalace {
   direction: Direction | null;
 }
 
-export const TAIYI_PALACES: readonly TaiyiPalace[] = [
-  { number: 1, id: 'qian', hanzi: '乾', pinyin: 'qián', direction: 'nw' },
-  { number: 2, id: 'li', hanzi: '離', pinyin: 'lí', direction: 's' },
-  { number: 3, id: 'gen', hanzi: '艮', pinyin: 'gèn', direction: 'ne' },
-  { number: 4, id: 'zhen', hanzi: '震', pinyin: 'zhèn', direction: 'e' },
-  { number: 5, id: 'zhong', hanzi: '中', pinyin: 'zhōng', direction: null },
-  { number: 6, id: 'dui', hanzi: '兌', pinyin: 'duì', direction: 'w' },
-  { number: 7, id: 'kun', hanzi: '坤', pinyin: 'kūn', direction: 'sw' },
-  { number: 8, id: 'kan', hanzi: '坎', pinyin: 'kǎn', direction: 'n' },
-  { number: 9, id: 'xun', hanzi: '巽', pinyin: 'xùn', direction: 'se' },
+/**
+ * The map 卷二 gives, and the whole of what this board changes: which trigram
+ * each number reaches. What 乾 is called, how it is said and which way it
+ * faces are the same facts a chart reads, so they are taken from `PALACES`
+ * rather than written down a second time — the number is the difference, and
+ * a second copy of the other three would be three ways to drift apart from a
+ * table that is not in dispute.
+ */
+const TAIYI_TRIGRAMS: readonly PalaceId[] = [
+  'qian', 'li', 'gen', 'zhen', 'zhong', 'dui', 'kun', 'kan', 'xun',
 ];
+
+export const TAIYI_PALACES: readonly TaiyiPalace[] = TAIYI_TRIGRAMS.map((id, index) => {
+  const { hanzi, pinyin, direction } = PALACES.find((one) => one.id === id) as Palace;
+  return { number: index + 1, id, hanzi, pinyin, direction };
+});
 
 export function taiyiPalace(number: number): TaiyiPalace {
   const found = TAIYI_PALACES.find((candidate) => candidate.number === number);
@@ -249,10 +257,23 @@ const SEATS: readonly {
 /** Which seat a branch takes on the ring of sixteen. */
 const BRANCH_SEAT: readonly number[] = [0, 1, 3, 4, 5, 7, 8, 9, 11, 12, 13, 15];
 
-export const TAIYI_GODS: readonly TaiyiGod[] = SEATS.map((_, index) => godAt(index));
+export const TAIYI_GODS: readonly TaiyiGod[] = SEATS.map((_, index) => buildGod(index));
 
+/**
+ * The god on a seat, which is the ring counted in either direction.
+ *
+ * Every walk on this board overshoots sixteen or steps back past nought, so
+ * the modulo is here rather than at each of them. The sixteen themselves are
+ * built once: a god is a name and a seat, identical at every year, and one
+ * that arrived freshly allocated could not be compared by identity with the
+ * one the board is carrying.
+ */
 function godAt(index: number): TaiyiGod {
-  const seat = SEATS[((index % 16) + 16) % 16] as (typeof SEATS)[number];
+  return TAIYI_GODS[((index % 16) + 16) % 16] as TaiyiGod;
+}
+
+function buildGod(index: number): TaiyiGod {
+  const seat = SEATS[index] as (typeof SEATS)[number];
   const { id, hanzi, pinyin, element, palace } = seat;
   const where =
     seat.branch === undefined
@@ -263,15 +284,24 @@ function godAt(index: number): TaiyiGod {
     : { id, hanzi, pinyin, seat: where, palace, element };
 }
 
+/** Where each of the sixteen sits, and which of the nine sits where. */
+const GOD_SEAT = Object.fromEntries(SEATS.map((seat, index) => [seat.id, index])) as Record<
+  TaiyiGodId,
+  number
+>;
+const PALACE_SEAT = new Map(
+  SEATS.flatMap((seat, index) => (seat.palace === undefined ? [] : [[seat.palace, index] as const])),
+);
+
 /** The seat a god occupies, which is its index in the ring of sixteen. */
 function seatOf(god: TaiyiGod): number {
-  return SEATS.findIndex((seat) => seat.id === god.id);
+  return GOD_SEAT[god.id];
 }
 
 /** The seat a palace occupies on the same ring. Eight of the sixteen are these. */
 function seatOfPalace(palace: number): number {
-  const seat = SEATS.findIndex((one) => one.palace === palace);
-  if (seat < 0) throw new Error(`palace ${palace} has no seat on the ring of sixteen`);
+  const seat = PALACE_SEAT.get(palace);
+  if (seat === undefined) throw new Error(`palace ${palace} has no seat on the ring of sixteen`);
   return seat;
 }
 
@@ -439,7 +469,7 @@ export interface TaiyiBoard {
  * each, two hundred and twenty-five to the circuit.
  */
 export interface TaiyiWufuPalace {
-  id: 'huangmi' | 'huangshi' | 'huangshi2' | 'huangting' | 'xuanshi';
+  id: 'huangmi' | 'huangshi3' | 'huangshi4' | 'huangting' | 'xuanshi';
   hanzi: string;
   pinyin: string;
   palace: TaiyiPalace;
@@ -447,8 +477,8 @@ export interface TaiyiWufuPalace {
 
 export const TAIYI_WUFU_PALACES: readonly TaiyiWufuPalace[] = [
   { id: 'huangmi', hanzi: '黃祕宮', pinyin: 'huángmìgōng', palace: taiyiPalace(1) },
-  { id: 'huangshi', hanzi: '黃始宮', pinyin: 'huángshǐgōng', palace: taiyiPalace(3) },
-  { id: 'huangshi2', hanzi: '黃室宮', pinyin: 'huángshìgōng', palace: taiyiPalace(9) },
+  { id: 'huangshi3', hanzi: '黃始宮', pinyin: 'huángshǐgōng', palace: taiyiPalace(3) },
+  { id: 'huangshi4', hanzi: '黃室宮', pinyin: 'huángshìgōng', palace: taiyiPalace(9) },
   { id: 'huangting', hanzi: '黃庭宮', pinyin: 'huángtínggōng', palace: taiyiPalace(7) },
   { id: 'xuanshi', hanzi: '玄師宮', pinyin: 'xuánshīgōng', palace: taiyiPalace(5) },
 ];
@@ -476,10 +506,29 @@ const GATE_ORDER: readonly Gate[] = (
  */
 export function taiyiBoard(request: { year: number }, options: TaiyiOptions): TaiyiBoard {
   if (options.epoch !== 'jinjing') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', { option: 'epoch', value: options.epoch });
+    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
+      option: 'epoch',
+      value: options.epoch,
+      implemented: 'jinjing',
+    });
   }
   if (options.ji !== 'nianji') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', { option: 'ji', value: options.ji });
+    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
+      option: 'ji',
+      value: options.ji,
+      implemented: 'nianji',
+    });
+  }
+  // Refused here as well as in `taiyiYearOf`, though the year arrives already
+  // decided and this function never cuts one: a board carries the options that
+  // produced it, and one that recorded a boundary nothing here can compute
+  // would be a board saying it was cut somewhere it was not.
+  if (options.yearBoundary !== 'lichun') {
+    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
+      option: 'yearBoundary',
+      value: options.yearBoundary,
+      implemented: 'lichun',
+    });
   }
 
   const { year } = request;
@@ -581,15 +630,33 @@ export function taiyiJu(
  * which are the gate of wind and the gate of ghosts.
  */
 function tianmuOf(ju: number, dun: 'yang' | 'yin'): TaiyiGod {
-  const start = dun === 'yang' ? 11 : 3;
-  const held = dun === 'yang' ? [14, 10] : [6, 2];
-  let remaining = inclusive(ju, 18);
+  return godAt(
+    eyeSeat(inclusive(ju, 18), dun === 'yang' ? 11 : 3, dun === 'yang' ? YANG_HELD : YIN_HELD),
+  );
+}
+
+/** The two corners each eye pauses at, which is why the period is eighteen. */
+const YANG_HELD: readonly number[] = [14, 10];
+const YIN_HELD: readonly number[] = [6, 2];
+
+/**
+ * Where a count of years leaves an eye on the ring of sixteen.
+ *
+ * 「遇隂徳、大武重留一」 — two seats take two years each, so sixteen seats
+ * spend eighteen. Two eyes walk this: 天目 from 武德 or 呂申 by the year's own
+ * count, and the eye of the 大遊 from 天道 by its own. They differ in where
+ * they open and in nothing else, which is why the walk is written once — the
+ * pause is the subtle part of this board, and two hand-kept copies of it are
+ * two places for it to be corrected in one.
+ */
+function eyeSeat(count: number, start: number, held: readonly number[]): number {
+  let remaining = count;
   for (let step = 0; step < 16; step += 1) {
     const seat = (start + step) % 16;
     remaining -= held.includes(seat) ? 2 : 1;
-    if (remaining <= 0) return godAt(seat);
+    if (remaining <= 0) return seat;
   }
-  throw new Error(`the eye left the ring at ju ${ju}`);
+  throw new Error(`the eye left the ring after ${count}`);
 }
 
 /**
@@ -735,20 +802,14 @@ function dayouOf(accumulated: number): TaiyiBoard['dayou'] {
   const steps = Math.floor((intoCircuit - 1) / 36);
   const from = WALK.indexOf(7);
 
-  let remaining = inclusive(inclusive(intoEra, 72), 18);
-  let seat = 9;
-  for (let step = 0; step < 16; step += 1) {
-    seat = (9 + step) % 16;
-    remaining -= [14, 10].includes(seat) ? 2 : 1;
-    if (remaining <= 0) break;
-  }
-
   return {
     station: {
       palace: taiyiPalace(WALK[(from + steps) % 8] as number),
       year: inclusive(intoCircuit, 36),
     },
-    wenchang: godAt(seat),
+    // The same walk 天目 makes, opening on 天道 rather than on 武德 and
+    // pausing at the same two corners. See `eyeSeat`.
+    wenchang: godAt(eyeSeat(inclusive(inclusive(intoEra, 72), 18), 9, YANG_HELD)),
   };
 }
 
@@ -858,26 +919,39 @@ function findTaiyiPatterns(input: {
   // A general that reduced to the centre stands off the ring of eight and
   // enters none of these conditions: every one of them is a distance measured
   // on that ring, and the centre is at no distance from anything.
-  const generals: { subject: TaiyiPatternSubject; palace: number | undefined }[] = [
+  //
+  // Kept as two sides rather than four bodies because 卷三 keeps them so: it
+  // writes 主客 wherever both parties are meant — 主客大小四將 at 囚,
+  // 主客大小將 at 關 — and names one party where one is meant, which is what
+  // decides who enters 格.
+  const hostGenerals: { subject: TaiyiPatternSubject; palace: number | undefined }[] = [
     { subject: 'hostGeneral', palace: onRing(host.general.number) },
     { subject: 'hostAssistant', palace: host.assistant?.number },
+  ];
+  const guestGenerals: { subject: TaiyiPatternSubject; palace: number | undefined }[] = [
     { subject: 'guestGeneral', palace: onRing(guest.general.number) },
     { subject: 'guestAssistant', palace: guest.assistant?.number },
   ];
+  const generals = [...hostGenerals, ...guestGenerals];
+
+  // The two eyes, seated once: every condition below is a distance from one of
+  // them, and the ring does not turn between them.
+  const lower = seatOf(wenchang);
+  const upper = seatOf(shiji);
 
   // 掩 — 「始擊將臨太乙宫謂之掩」. The guest's eye standing where 太乙 stands.
-  if (seatOf(shiji) === seat) {
+  if (upper === seat) {
     found.push(mark('yan', 'shiji', { palace }));
   }
 
   // 擊 — 「客目在太乙前一辰為前擊，在太乙後一辰為後撃，在太乙前一宫為外宫
   // 擊，在太乙後一宫為内宫撃」. 前 is ahead of 太乙 on the ring.
-  const struck = adjacency(seatOf(shiji), seat);
+  const struck = adjacency(upper, seat);
   if (struck) found.push(mark('ji', 'shiji', { kind: struck }));
 
   // 迫 — the same four distances, but 「上目無迫」: only the lower eye and the
   // four generals can press. 「宫迫災㣲緩，辰迫災急疾」.
-  const pressed = adjacency(seatOf(wenchang), seat);
+  const pressed = adjacency(lower, seat);
   if (pressed) found.push(mark('po', 'wenchang', { kind: pressed }));
   for (const { subject, palace: at } of generals) {
     if (at === undefined) continue;
@@ -885,8 +959,12 @@ function findTaiyiPatterns(input: {
     if (kind) found.push(mark('po', subject, { kind }));
   }
 
-  // 囚 — 「若文昌將并主客大小四將，俱與太乙同宫，總名曰囚」.
-  if (seatOf(wenchang) === seat) found.push(mark('qiu', 'wenchang', { palace }));
+  // 囚 — 「若文昌將并主客大小四將，俱與太乙同宫，總名曰囚」. Reported for each
+  // body that stands there rather than only when all five do: 總名曰囚 reads as
+  // the collective name for these standings, and the stricter reading of 俱
+  // would suppress the condition at almost every year there has ever been. The
+  // judgement is recorded in `docs/sources.md`, since it is one.
+  if (lower === seat) found.push(mark('qiu', 'wenchang', { palace }));
   for (const { subject, palace: at } of generals) {
     if (at === palace) found.push(mark('qiu', subject, { palace }));
   }
@@ -894,23 +972,29 @@ function findTaiyiPatterns(input: {
   // 關 — 「主客大小將同宫數齊皆為闗」. A general of one party standing where a
   // general of the other does. It is the one condition here that is a meeting
   // rather than a distance, so both sides of it travel.
-  for (const mine of generals.slice(0, 2)) {
-    for (const theirs of generals.slice(2)) {
+  for (const mine of hostGenerals) {
+    for (const theirs of guestGenerals) {
       if (mine.palace === undefined || mine.palace !== theirs.palace) continue;
       found.push(mark('guan', mine.subject, { partner: theirs.subject, palace: mine.palace }));
     }
   }
 
-  // 格 — 「客目大小將與太乙對宫為格」. The palace facing 太乙 across the board.
-  if (seatOf(shiji) === seatOfPalace(facing)) {
+  // 格 — 「客目大小將與太乙對宫為格」. The palace facing 太乙 across the board,
+  // and **the guest's bodies alone**: the 客 qualifies the eye and the two
+  // generals after it, which is how the chapter writes a one-party condition.
+  // It says 主客 in the two places it means all four, three lines above and
+  // three below, so a 格 marked on the host's generals would be this engine
+  // stating a condition where its source names none.
+  const facingSeat = seatOfPalace(facing);
+  if (upper === facingSeat) {
     found.push(mark('ge', 'shiji', { palace: facing }));
   }
-  for (const { subject, palace: at } of generals) {
+  for (const { subject, palace: at } of guestGenerals) {
     if (at === facing) found.push(mark('ge', subject, { palace: facing }));
   }
 
   // 對 — 「下目文昌將與太乙衝而相當者為對」. The lower eye alone, facing.
-  if (seatOf(wenchang) === seatOfPalace(facing)) {
+  if (lower === facingSeat) {
     found.push(mark('dui', 'wenchang', { palace: facing }));
   }
 
@@ -968,19 +1052,60 @@ function inclusive(count: number, modulus: number): number {
  * against exactly that boundary — under `lichun` the counted year is the civil
  * year when the two pillars agree and the one before it when they do not.
  *
- * `dongzhi` would move the boundary into December and the arithmetic here with
- * it, which is why it throws rather than quietly answering by the wrong rule.
+ * `dongzhi` would move the boundary into December and `chunjie` onto a lunar
+ * date that falls either side of 立春, and the arithmetic here with them —
+ * which is why anything but `lichun` throws rather than quietly answering by
+ * the wrong rule. The guard is stated as one refusal and not as a list of the
+ * two: a boundary added to the option later would otherwise be a boundary
+ * silently answered by this one until somebody remembered a third throw.
  */
 export function taiyiYearOf(
   moment: { civilYear: number; sui: Ganzhi },
   options: TaiyiOptions,
 ): number {
-  if (options.yearBoundary === 'dongzhi') {
+  if (options.yearBoundary !== 'lichun') {
     throw new ChartError('OPTION_NOT_IMPLEMENTED', {
       option: 'yearBoundary',
       value: options.yearBoundary,
+      implemented: 'lichun',
     });
   }
   const { civilYear, sui } = moment;
   return sui.index === yearGanzhi(civilYear).index ? civilYear : civilYear - 1;
+}
+
+/**
+ * The year being lived, for a caller holding an instant rather than a year.
+ *
+ * This is the ordinary case — nobody named a year — and it is a question about
+ * the sky rather than about a calendar: the counted year is the one whose 立春
+ * the instant is standing after, so the answer is the year of the last time the
+ * Sun reached 315°. Which is what `taiyiYearOf` says through the pillar that
+ * was resolved against that same crossing; this asks the crossing directly,
+ * because the pillar arrives with a place, an hour and three other pillars
+ * attached and none of them are on this board.
+ *
+ * **Every surface has to answer «now» with this and not with its own clock.**
+ * A 年計 board is a function of the year and of nothing else, so a page reading
+ * the browser's calendar year and a command reading the pillars would lay two
+ * different boards for one instant every January — and the one served in
+ * public would be cached that way for a week.
+ *
+ * The crossing is dated in UTC, and the zone is not a choice being made here:
+ * 立春 falls on the third, fourth or fifth of February in every zone there is,
+ * so no zone disagrees about which civil year contains it.
+ */
+export function taiyiYearAt(
+  julianDayUT: number,
+  options: TaiyiOptions,
+  context: EphemerisContext,
+): number {
+  if (options.yearBoundary !== 'lichun') {
+    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
+      option: 'yearBoundary',
+      value: options.yearBoundary,
+      implemented: 'lichun',
+    });
+  }
+  return fromJulianDay(lastCrossingBefore(315, julianDayUT, context), 'UTC').year;
 }
