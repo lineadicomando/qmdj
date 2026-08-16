@@ -249,11 +249,13 @@ export {
   liurenTranscript,
   qizhengReadingPrompt,
   qizhengTranscript,
+  taiyiReadingPrompt,
   taiyiTranscript,
   readingPrompt,
   type LiurenReadingRequest,
   type MingReadingRequest,
   type ReadingRequest,
+  type TaiyiReadingRequest,
 } from './prompt.js';
 
 export {

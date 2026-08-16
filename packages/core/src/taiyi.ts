@@ -308,6 +308,19 @@ export interface TaiyiFief {
   branch: Branch;
   /** Years elapsed in this fief, counted inclusively. */
   year: number;
+  /**
+   * How many years a fief lasts for this base — thirty, three, or one.
+   *
+   * Carried beside the count rather than left to the reader, because the count
+   * alone is unreadable and reads as though it were readable. 卷五 gives the
+   * three bases three different periods over the same ring of twelve, so 民基
+   * standing at 1 is not a base that has just begun: it is a base that moves
+   * every year and can never say anything else. Printed as `1/1`, the figure
+   * says so; printed as `1` beside a sovereign at `23`, it was read as two
+   * structures newly started under an old one, which is a fact nobody
+   * computed.
+   */
+  period: number;
 }
 
 export type TaiyiPatternId = 'yan' | 'ji' | 'po' | 'qiu' | 'guan' | 'ge' | 'dui';
@@ -331,6 +344,15 @@ export interface TaiyiPattern {
   pinyin: string;
   /** 吉 or 凶, as 卷三 hands it down. All seven of these are 凶. */
   valence: Valence;
+  /**
+   * What 卷三 says the condition **is**, in its own words — where it says it.
+   *
+   * Quoted, never paraphrased and never this engine's. It travels for the
+   * reason `valence` travels and is the sentence that earns it: 掩 *is*
+   * 掩襲刼殺之義. The omens the chapter puts around it stay out, and 對 has no
+   * such sentence at all and so has no `meaning`. See `PATTERNS`.
+   */
+  meaning?: string;
   /** Which body fell into it. */
   subject: TaiyiPatternSubject;
   /** The other body, where the condition is a meeting of two — only 關 is. */
@@ -670,19 +692,19 @@ function sanjiOf(accumulated: number): TaiyiBoard['sanji'] {
   const intoMinister = inclusive(into, 36);
   return {
     // 「以三十除之為邦數，不滿為入邦以來年數，其邦數命起戍邦，順行十二邦」.
-    jun: fief(Math.floor((into - 1) / 30), inclusive(into, 30)),
+    jun: fief(Math.floor((into - 1) / 30), inclusive(into, 30), 30),
     // 「以小周法三十六除之…又以三約之為邦數」 — twelve fiefs, three years each.
-    chen: fief(Math.floor((intoMinister - 1) / 3), inclusive(intoMinister, 3)),
+    chen: fief(Math.floor((intoMinister - 1) / 3), inclusive(intoMinister, 3), 3),
     // 「又以小周十二去之…命起戌邦，順行十二邦，筭外」 — a fief a year, so the
     // remainder is the seat itself and the people are never more than one year
-    // into anywhere.
-    min: fief(inclusive(into, 12) - 1, 1),
+    // into anywhere. Which is why the period travels: this one is always 1/1.
+    min: fief(inclusive(into, 12) - 1, 1, 1),
   };
 }
 
 /** A seat on the twelve fiefs, which start at 戌 and run forward. */
-function fief(steps: number, year: number): TaiyiFief {
-  return { branch: BRANCHES[(10 + steps) % 12] as Branch, year };
+function fief(steps: number, year: number, period: number): TaiyiFief {
+  return { branch: BRANCHES[(10 + steps) % 12] as Branch, year, period };
 }
 
 /**
@@ -732,13 +754,71 @@ function dayouOf(accumulated: number): TaiyiBoard['dayou'] {
 
 /* ── The named conditions ─────────────────────────────────────────────── */
 
-const PATTERNS: Record<TaiyiPatternId, { hanzi: string; pinyin: string; valence: Valence }> = {
-  yan: { hanzi: '掩', pinyin: 'yǎn', valence: VALENCE.xiong },
-  ji: { hanzi: '擊', pinyin: 'jī', valence: VALENCE.xiong },
-  po: { hanzi: '迫', pinyin: 'pò', valence: VALENCE.xiong },
-  qiu: { hanzi: '囚', pinyin: 'qiú', valence: VALENCE.xiong },
-  guan: { hanzi: '關', pinyin: 'guān', valence: VALENCE.xiong },
-  ge: { hanzi: '格', pinyin: 'gé', valence: VALENCE.xiong },
+/**
+ * The seven, each with what 卷三 says it **is** — where the chapter says it.
+ *
+ * `meaning` is the source's own characterisation, quoted, and it travels for
+ * the reason `valence` travels: 掩 *is* 掩襲刼殺之義, named and weighed in one
+ * line of one chapter, and it belongs to the configuration rather than to
+ * anybody's situation. It is not this engine interpreting. Half of it was
+ * already written down in the comment below this table, as the justification
+ * for carrying the fortune; carrying the fortune and dropping the sentence that
+ * earns it left a reader with 凶 and a glyph, which is an invitation to read the
+ * character instead — and a model handed 囚 alone glosses it «a person in an
+ * enclosure» with complete fluency.
+ *
+ * **What is quoted and what is not**, because the chapter gives both and they
+ * are not the same kind of sentence. It states each condition three times over:
+ * an 經曰 that gives the trigger, a 之義 or 者…也 that says what the shape is,
+ * and then 若… and 嵗計遇之… clauses that say what will befall the realm. Only
+ * the middle one is here. 「嵗計遇之，王綱失序，臣張君弱，宜修徳以禳之」 is a
+ * dated omen with a remedy attached and is exactly the class this engine
+ * declines; so is 「嵗計遇迫，人君慎之」. See the 太乙 section of
+ * `docs/sources.md`, where both kinds are quoted side by side.
+ *
+ * Three judgements were made and are recorded rather than buried:
+ *
+ * - **迫 has no 之義.** What it has is a paired characterisation of the two
+ *   distances — 「宫迫災㣲緩，辰迫災急疾」 — which says what each *is* rather
+ *   than what will happen, and which the engine already distinguishes in
+ *   `kind`. Carried on that ground.
+ * - **關's line is 王希明's own**, not the 經's: 「王希明曰，闗之為義…」. The
+ *   register says so; the transcript does not, because a name in every row
+ *   would be provenance printed as content.
+ * - **格 has a second clause**, 「若格太乙者，盜侮其君」, describing the
+ *   sub-case where 太乙 itself is the body blocked. It is left out:
+ *   `TaiyiPatternSubject` admits no 太乙, so the engine cannot tell that
+ *   sub-case apart, and a sentence about it would attach to configurations
+ *   that are not it.
+ *
+ * **對 has none, and the absence is the entry.** The chapter gives it a trigger
+ * and then 「若下目相對之時，皆為大臣懐二心，君逐良將，兇奸生，下臣欺上」 — a
+ * 若…皆為… list of events and nothing else. There is no sentence saying what 對
+ * *is*, so it carries its fortune and stops. Where the sources say nothing, the
+ * silence travels; inventing a line for the seventh so the table looked even is
+ * the one thing this table must not do.
+ */
+const PATTERNS: Record<
+  TaiyiPatternId,
+  { hanzi: string; pinyin: string; valence: Valence; meaning?: string }
+> = {
+  yan: { hanzi: '掩', pinyin: 'yǎn', valence: VALENCE.xiong, meaning: '掩襲刼殺之義' },
+  ji: {
+    hanzi: '擊',
+    pinyin: 'jī',
+    valence: VALENCE.xiong,
+    meaning: '所為撃者，臣凌君，卑凌尊，下凌上，僭也',
+  },
+  po: { hanzi: '迫', pinyin: 'pò', valence: VALENCE.xiong, meaning: '宫迫災㣲緩，辰迫災急疾' },
+  qiu: { hanzi: '囚', pinyin: 'qiú', valence: VALENCE.xiong, meaning: '囚者，簒戮之義也' },
+  guan: {
+    hanzi: '關',
+    pinyin: 'guān',
+    valence: VALENCE.xiong,
+    meaning: '闗之為義，但將相怕忌之事，不及於君也',
+  },
+  ge: { hanzi: '格', pinyin: 'gé', valence: VALENCE.xiong, meaning: '言政事上下格也' },
+  // No 之義 in 卷三 — only an omen list. See above.
   dui: { hanzi: '對', pinyin: 'duì', valence: VALENCE.xiong },
 };
 
@@ -749,6 +829,7 @@ export function taiyiPatternName(id: TaiyiPatternId): {
   hanzi: string;
   pinyin: string;
   valence: Valence;
+  meaning?: string;
 } {
   return PATTERNS[id];
 }

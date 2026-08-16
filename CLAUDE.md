@@ -14,7 +14,7 @@ anything.
 | `packages/core` | calculation engine and the `qimen` CLI: solar terms, lunar calendar, sexagenary cycles, Four Pillars, Qi Men charts, Liu Ren boards, 太乙 boards, scanning an interval |
 | `packages/plate` | the drawings: the nine palaces of a chart, the ring of twelve a 六壬 board and a 七政四餘 board share, the 太乙 grid with its empty middle and sixteen border seats, glyphs, SVG and PNG |
 | `packages/mcp` | MCP server: eleven tools, four resources, stdio transport |
-| `apps/web` | SvelteKit: seven sections at `/en` and `/it`, plus twenty-one GET endpoints under `/api` |
+| `apps/web` | SvelteKit: seven sections at `/en` and `/it`, plus twenty-two GET endpoints under `/api` |
 
 npm workspaces monorepo, Node ≥ 22, ESM, TypeScript.
 
@@ -137,36 +137,79 @@ the engine falls back to Moshier, which needs no files.
   the line would leave an instruction a model could follow confidently and
   wrongly. A general account of how this engine knows things fails that test
   and stays where it was.
-- **太乙 is computed, drawn, and handed to nobody.** It has a section, three
-  endpoints, a drawing and an MCP tool, and **no prompt** — `/[lang]` is the
-  only surface that builds one and this board is not one of its instruments.
-  Nothing is asked of it and its subject is a year, so what such a board would
-  be handed over *for* has not been designed. Two things it refuses and both
-  are load-bearing: it **never says who is 主 and who is 客**, which is the
-  first interpretive act the system asks for and is the reader's exactly as the
-  用神 is; and the received doctrine — dynastic, dated, falsifiable by nobody —
-  stays out. One thing every surface printing it must say, and it is the
+- **太乙 is a board of 天, and its subject is a year.** It has a section, four
+  endpoints, a drawing, an MCP tool and — since phase 21 — a prompt and a seat
+  in the consultation. Phase 20 withheld both, and not out of caution about the
+  board: the ground was that what such a board would be handed over *for* had
+  not been designed, its subject being neither a question nor a person. Phase
+  21 designed it, and the register is the whole of the answer: a reading here
+  is **descriptive and never predictive**, its sections are titled for parts of
+  a figure rather than for anything in the world, and two refusals bound it.
+  **A reading is for a matter, and the matter is not a question.** That is what
+  the first cut of the register got wrong and what the first output showed: with
+  the doctrine refused and nobody on the board, a prompt made of bounds alone
+  produced a precise account of a figure that never says «and so?». A **matter**
+  — `--about`, `about=true`, a required field in the consultation — names what
+  is being *looked at*: a field of view with two sides in it, which is what the
+  two counts are counts of. A question asks what will happen and puts the reader
+  inside a figure they are not in; a matter is the frame that makes the figure
+  readable and is what the assignment of 主 and 客 has to be made **for** — the
+  prompt had always said «chosen for the matter being looked at» while every
+  caller was structurally unable to supply one. It travels as `asked` does:
+  a boolean to the server, the text appended by the browser, never in a query
+  string. Without one the prompt reads the figure and **says the assignment was
+  never made**, rather than sending a model to invent a pair of parties.
+  The received doctrine — dynastic, dated, falsifiable by nobody — stays out.
+  **What each condition *is* travels; what it foretells does not.** 卷三 states
+  each of the seven three times over — a trigger, a 之義 saying what the shape
+  is, then 若… and 嵗計遇之… saying what will befall the realm — and only the
+  middle one is carried, as `PATTERNS[id].meaning`, for the reason
+  `Pattern.valence` is carried. 對 has no such sentence and carries none: where
+  the sources say nothing the silence travels, and a seventh line invented so
+  the table looked even would be this engine founding a school. **The per-palace
+  readings of 卷二 are declined entirely**, because they are a Tang province and
+  a dynastic omen and there is no third thing behind them — there is no
+  non-dynastic interpretive layer in this text to extract, and `docs/sources.md`
+  now says so as a refusal rather than by omission. The clauses ride **inside
+  the fence**, out of `formatTaiyi`, which is also why «a name carries its
+  reading» needs no exemption for them: a quoted classical clause is not a name,
+  and in a transcript that distinction never has to be drawn.
+  And **nobody is on this board**: the reader is not in it, no seat here stands
+  for a part of their life, and a forecast for them is the natal-Qimen error
+  arriving in a new register. Which is why nothing is asked of it anywhere —
+  no question box in the consultation, no `asked` on `/api/taiyi/prompt`, and
+  `--ask` refused by the CLI with a message of its own.
+  **The engine still never says who is 主 and who is 客.** That is the first
+  interpretive act the system asks for and it is the reader's exactly as the
+  用神 is; what the prompt does is commission it and require it signed, which
+  is what `prompt.yongshen` already does for a chart. Assigning it upstream
+  would be answering the question this project does not ask.
+  One thing every surface printing this board must say, and it is the
   numbering: its **nine palaces are numbered one seat off the 洛書** (卷二:
   九宮皆差一位), so 一宮 is the north-west here and the north in a chart — a
   reader holding a chart beside this board reads all eight one seat wrong
-  otherwise, and the line is what stops them. **That this board is checked
-  against the text that states it and against nothing that runs** is the other
-  thing that has to be said, and it is said once rather than on every sheet:
-  it is a fact about the figure and not a caption to one year's board, so it
-  belongs in the notes, and the section stopped printing it under a picture
-  where it read as a disclaimer on that picture. The transcript keeps it —
-  `cli.value.taiyiEvidence`, printed by `format.ts` — because a transcript
-  travels to where no notes page follows it, and the MCP tool says it in its
-  own description for the same reason. **Until the notes section is written
-  the account is only in the transcript and in `docs/sources.md`**, which is a
-  debt and not an arrangement. See `PLAN.md` § 4 phase 20 and the 太乙 section
-  of `docs/sources.md`.
+  otherwise, and the line is what stops them. It is inside the transcript, so
+  every surface carries it without remembering to; the prompt states it a
+  second time among its rules, because there it is not a caption on the data
+  but an instruction governing every position below it.
+  **That this board is checked against the text that states it and against
+  nothing that runs** is the other thing that has to be said, and it is said
+  once rather than on every sheet: it is a fact about the figure and not a
+  caption to one year's board, so it belongs in the notes, and the section
+  stopped printing it under a picture where it read as a disclaimer on that
+  picture. The transcript keeps it — `cli.value.taiyiEvidence`, printed by
+  `format.ts` — because a transcript travels to where no notes page follows it,
+  and it reaches the prompt inside the fence for the same reason. The MCP tool
+  says it in its own description. **Until the notes section is written the
+  account is only in the transcript and in `docs/sources.md`**, which is a debt
+  and not an arrangement. See `PLAN.md` § 4 phases 20 and 21 and the 太乙
+  section of `docs/sources.md`.
 - **One board goes into a prompt, never two of one instant.** A consultation
   takes one instrument, chosen before the press and at no point after it — a
   control that switched boards over a standing answer would either cast again,
   at an instant nobody asked at, or show one laid for a moment nobody asked
   at. The reason is not tidiness, and **it does more work now that there are
-  four boards rather than less**: a Qi Men chart and a 六壬 board share the day
+  five boards rather than less**: a Qi Men chart and a 六壬 board share the day
   pillar, the 旬, the 空亡, the 遁干 and seven of the eight 八神; the twelve 宮
   of a 七政四餘 board *are* the ring a 六壬 board's 月將 is seated on; and a
   八字 is the substrate the other three are built from, so beside any of them
@@ -175,18 +218,26 @@ the engine falls back to Moshier, which needs no files.
   corroboration counts one datum as two with complete confidence. No
   transmitted rule combines the 三式 — they were read separately and compared.
   That comparison is still available, in the sections that are addresses,
-  where nothing is being asked. See `PLAN.md` § 4 phases 14 and 18.
+  where nothing is being asked. **太乙 overlaps none of the other four and the
+  rule holds for it anyway**, on the first half rather than the second: a model
+  handed a board of a year beside a board of a person reads the year onto the
+  person, which is the one thing that board's prompt spends a paragraph
+  refusing. See `PLAN.md` § 4 phases 14, 18 and 21.
 - **The question never reaches the server.** A prompt endpoint is told
   `asked=true` and nothing more, and the prompt ends on the line that
   introduces a question for the browser to append. What somebody asks a chart
   is theirs, and a query string is written into every log along the way. Under
-  an instrument of 命 there is no question to withhold — nothing is asked of
-  that board — and the line the prompt ends on is not there either.
+  an instrument of 命 or of 天 there is no question to withhold — nothing is
+  asked of those boards — and the line the prompt ends on is not there either.
+  Under 天 that is what makes `/api/taiyi/prompt` the one prompt endpoint
+  cacheable `public`: with nothing withheld there is nothing to keep out of a
+  shared key, because a 年計 board and its instructions are a pure function of
+  a year and hold nobody's data.
 - **A consultation is where a board is handed over, and it is the only surface
   that builds a prompt.** `/[lang]` — the root of a language, and the section
   the nav lists first — is the one place where the answer is not in the URL:
   the board is cast by `fetch` and held in the component, and only the setup
-  travels in the address. It carries every instrument, in two kinds, and
+  travels in the address. It carries every instrument, in **three** kinds, and
   **the kind decides what the reader is asked for**. Under an instrument of 卜
   — a Qi Men chart, a 六壬 board — the reader is asked a question, and the
   instant of asking is the instant that is cast: the question comes before the
@@ -194,7 +245,17 @@ the engine falls back to Moshier, which needs no files.
   the date and the time sit under the options and empty, and empty is the
   press. Under an instrument of 命 — 八字, 七政四餘 — there is no question and
   the instant is not now: the board is laid on a birth, and the fields ask for
-  that instead. What does not turn with the kind is the rest of the rule — one
+  that instead. Under an instrument of 天 — 太乙, and it is the only one —
+  there is no question and no person: the board is laid on a **year**, no place
+  and no hour enter it, so `MomentForm` is absent altogether and the whole of
+  the form is one number. Empty there is the year being lived, which is where
+  this section's original instinct survives into a kind that asks nothing and
+  for the reason it always had: an empty year is everybody's answer where an
+  empty birth is nobody's. The three values live in `needs`, in
+  `instruments.ts`, which also settles the address and whether a moment comes
+  back at all — a 年計 board has none, and reading `castMoment` unguarded is an
+  exception in the middle of a successful cast. What does not turn with the
+  kind is the rest of the rule — one
   instrument to a consultation, chosen before the press, and the prompt built
   here and nowhere else. The sections that are addresses show boards and their
   transcripts, and asking there is navigating: the chart is `/[lang]/chart`,

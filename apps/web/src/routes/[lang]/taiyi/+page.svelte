@@ -26,9 +26,13 @@
    * year being lived, and what can be done with the answer. A disclosure over
    * a single field is a door in front of a doorway.
    *
-   * There is no prompt here and the absence is decided rather than deferred:
-   * `/[lang]` is the only surface that builds one, and this board is not one
-   * of its instruments. See `PLAN.md` § 4 phase 20.
+   * There is no prompt **here**, and that is now the ordinary rule rather than
+   * a decision about this board. `/[lang]` is the only surface that builds one,
+   * and since phase 21 this board is one of its instruments: a reader who wants
+   * to hand a year to a model goes there, as they do for the other four. What
+   * this section keeps is what every section that is an address keeps — the
+   * board, its transcript, and the two ways out that do not involve asking
+   * anything. See `PLAN.md` § 4 phases 20 and 21.
    */
   let { data } = $props();
   const t = $derived(data.t);

@@ -173,12 +173,32 @@ rather than advises. Do not supply it from memory.
   reader's — the same refusal as the 用神. The board gives both counts and both
   pairs of generals, weighted alike, and calls neither party. Do not assign
   them from the numbers: a larger 算 is not a winner, and the tradition's own
-  rules for reading them turn on knowing which party is which first.
+  rules for reading them turn on knowing which party is which first. The
+  assignment is made from **what is being looked at** — a matter, a field of
+  view with two sides in it — and it is made out loud. That is what
+  `taiyi/prompt` commissions of a model told what is being looked at; told
+  nothing, it says the assignment was not made. The engine's silence is not a
+  gap to be closed by arithmetic, and it is not closed by inventing a pair of
+  parties in order to have one either.
+- **What each 太乙 condition *is* is printed; what it foretells is not.** 卷三
+  states each of the seven three times — a trigger, a clause saying what the
+  configuration is, then clauses saying what will befall the realm. The middle
+  one travels beside the fortune (掩 is 掩襲刼殺之義, 囚 is 簒戮之義) and is the
+  source's own words, not this engine's. Read it as a characterisation of the
+  shape and never as a forecast. **對 is printed without one** because 卷三 gives
+  it none — that is the text being quoted faithfully, not a field left empty.
 - **The received doctrine of 太乙 is dynastic and is not here.** What the
   manuals hang on this board is epochal — which state falls, which year an army
   breaks, 陽九之災 and 百六之厄 — dated, falsifiable by nobody, and read as
   commentary on real events. The engine names positions and numbers and stops.
   Do not supply the layer it declines.
+- **The per-palace readings of 卷二 are not here either.** That chapter gives
+  each of the eight palaces a Tang province (分野) and a political omen —
+  「三宮在艮，主青州。若始擊臨之，嬖寵進中宮，兵起」 — and neither is computed.
+  The doctrine exists and is specific; it is declined, not missing. Do not
+  supply it, and do not substitute the trigram's 易經 meaning, 奇門's 鬼門, or
+  general five-phase reasoning for it: those are other systems and saying what
+  a palace means here from them is the likeliest way to be fluent and wrong.
 - **月計, 日計 and 時計 are not computed.** The text states all four registers
   and the engine computes the 年計. `ji` is the parameter that waits for the
   others; a board for a month or a day is not available and must not be
@@ -390,6 +410,7 @@ GET /api/liuren/prompt?date=2024-06-15&time=14:00&locationId=1816670&asked=true
 GET /api/taiyi?year=2026
 GET /api/taiyi/text?year=2026&lang=en
 GET /api/taiyi/plate?year=2026
+GET /api/taiyi/prompt?year=2026&lang=en&about=true
 GET /api/qizheng?date=1968-03-12&time=14:30&locationId=3169070
 GET /api/qizheng/text?date=1968-03-12&time=14:30&locationId=3169070
 GET /api/qizheng/prompt?date=1968-03-12&time=14:30&locationId=3169070
@@ -412,23 +433,43 @@ straight now that there is a prompt for each board. Each is written for the
 board it carries and says what that board in particular invites a reader to
 get wrong: a chart withholds the 用神, a 六壬 board hands over transmissions
 that were drawn by procedure, a 七政四餘 board arrives with its twelve seats
-already named, a 八字 withholds the favourable element. **You do not need any
-of them**: you are holding the data, and you have read this. They exist for
-the model that is not.
+already named, a 八字 withholds the favourable element, and a 太乙 board is a
+figure of a year that a reader will otherwise read as a forecast of their own.
+**You do not need any of them**: you are holding the data, and you have read
+this. They exist for the model that is not.
 
 `asked` is a yes or a no and never the question itself. With it the answer
 ends on the line that introduces a question, for the caller to append; without
 it the prompt says plainly that none was asked. A question is somebody's own,
 and one in a query string is one written into every log along the way.
 
-**Only the two boards of 卜 answer to it.** `bazi/prompt` and `qizheng/prompt`
-have no `asked`, and it is not an omission: they are laid on a birth and
-nothing is asked of them, so there is no line for a question to go on. The
-themes a reading traverses are commissioned in the prompt itself, and what
-the person wants to look at next belongs to the conversation that follows.
-The CLI refuses `--ask` on those two commands rather than dropping it; over
+**Only the two boards of 卜 answer to it.** `bazi/prompt`, `qizheng/prompt`
+and `taiyi/prompt` have no `asked`, and it is not an omission. The two boards of
+命 are laid on a birth and nothing is asked of them, so there is no line for a
+question to go on: the themes a reading traverses are commissioned in the prompt
+itself, and what the person wants to look at next belongs to the conversation
+that follows. The board of 天 is laid on a year and there is **nobody to ask on
+behalf of** — the reader is not on that board, and a question is how they get
+written into a figure they are not in. The CLI refuses `--ask` on all three
+commands rather than dropping it, with a message of its own for the year; over
 HTTP the parameter simply has nothing to reach, and the answer is the same
 either way.
+
+**`about` is what a question is not, and only `taiyi/prompt` takes it.** A
+matter names what is being *looked at* — a field of view with two sides in it —
+where a question asks what will happen. It is the frame the assignment of 主 and
+客 has to be made for, and without it a reading of this board can only describe
+the figure. It obeys the same rule as `asked`: a yes or a no, never the text, the
+prompt ending on the line that introduces it and the caller appending what must
+not travel.
+
+`taiyi/prompt` is also the one prompt endpoint that answers
+`cache-control: public`, and that follows from the same fact rather than
+excepting it: with no question and no birth in the query, and the matter
+withheld by the caller exactly as a question is, nothing in that response is
+anybody's — so there is nothing to keep out of a shared key. A boolean varies the
+response; the matter would have varied the key. The board endpoint under it is
+`public` for the same reason.
 
 ## 年命 — where a person stands in a chart of a moment
 

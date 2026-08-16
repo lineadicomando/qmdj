@@ -67,6 +67,7 @@ import {
   liurenReadingPrompt,
   qizhengReadingPrompt,
   readingPrompt,
+  taiyiReadingPrompt,
 } from './prompt.js';
 import { PURPOSES, purposeCriteria, type PurposeId } from './purposes.js';
 import { matchRuns, scanCharts, type ScanCriteria } from './scan.js';
@@ -133,6 +134,17 @@ interface Options {
   help: boolean;
   prompt: boolean;
   ask?: string;
+  /**
+   * The matter a 太乙 board is read for — a field of view, never a question.
+   *
+   * Its own flag rather than a second meaning for `--ask`, because the whole
+   * of this board's admission to a prompt rests on the two being different
+   * things: a question asks what will happen and puts the person asking inside
+   * a figure they are not in; a matter names what is being looked at and is
+   * what the assignment of 主 and 客 has to be made for. Folding them would
+   * put one word on the distinction the design stands on.
+   */
+  about?: string;
   trueSolar?: boolean;
   dayBoundary?: string;
   method?: string;
@@ -217,15 +229,22 @@ Narrowing a scan
   --help
 
 Handing a board to a model
-  --prompt               for any of the four boards: it wrapped in the
+  --prompt               for any of the five boards: it wrapped in the
                          instructions for reading it, to paste into an
                          assistant that has no connection to this engine
   --ask "…"              the question it is to be read for; implies --prompt.
                          Without one the prompt says none was asked, which is
                          not the same as choosing a 用神 on nobody's behalf.
                          For \`chart\` and \`liuren\` only: \`bazi\` and
-                         \`qizheng\` are laid on a birth and asked nothing,
-                         and refuse it rather than dropping it
+                         \`qizheng\` are laid on a birth, \`taiyi\` on a year,
+                         all three are asked nothing, and they refuse it
+                         rather than dropping it
+  --about "…"            for \`taiyi\`: the matter the year is read for, and
+                         **not** a question — a field of view with two parties
+                         in it, which is what tells a reader which side is 主
+                         and which is 客. Implies --prompt. Without one the
+                         prompt reads the figure and says the assignment was
+                         never made
   --born, with --prompt  the 年命 travels inside the prompt with the chart,
                          and the prompt says what it is not: not a chart of a
                          birth, and no palace standing for a part of a life
@@ -356,6 +375,21 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
           );
     const board = taiyiBoard({ year }, taiyiOptions);
     if (options.json) return JSON.stringify(board, null, 2);
+    // As under `bazi` and `qizheng`, `--ask` does not imply `--prompt` and is
+    // refused outright — for a third reason. There a question names a seat the
+    // board already prints; here there is nobody to ask on behalf of at all,
+    // and a question put to a year is a question about a person who is not on
+    // this board. See `refuseQuestion`.
+    refuseQuestion(command, options, 'cli.error.notAskedYear');
+    // `--about` implies `--prompt`, as `--ask` does on the two boards of 卜 and
+    // for the same reason: a matter named is a matter meant to be read for, and
+    // a flag that printed a bare transcript with it would be a flag that did
+    // nothing.
+    if (options.prompt || options.about !== undefined) {
+      return taiyiReadingPrompt(board, t, {
+        ...(options.about !== undefined ? { matter: options.about } : {}),
+      });
+    }
     return formatTaiyi(board, t);
   }
 
@@ -588,21 +622,31 @@ function warningsOf(moment: Parameters<typeof formatWarnings>[0], t: Parameters<
 }
 
 /**
- * `--ask` on a board of 命, which is refused rather than ignored.
+ * `--ask` on a board that is asked nothing, which is refused rather than
+ * ignored.
  *
  * On `chart` and `liuren` a question implies `--prompt`, because a question
- * asked is a question meant to be carried. These two are laid on a birth and
- * nothing is asked of them, so there is no line for a question to go on — and
- * dropping it silently would be the flag that did nothing, which is the thing
- * `--ask` was given that behaviour to avoid in the first place.
+ * asked is a question meant to be carried. The other three are laid on
+ * something instead of being cast for something, so there is no line for a
+ * question to go on — and dropping it silently would be the flag that did
+ * nothing, which is the thing `--ask` was given that behaviour to avoid in the
+ * first place.
  *
- * It is not squeamishness about the question. A question here names one of the
- * seats the board already prints — «what about my career» *is* 官祿宮 — and a
- * reading that starts from it has arrived at a seat without choosing one. See
- * `prompt.ts` and `PLAN.md` § 4 phase 18.
+ * It is not squeamishness about the question, and the reason differs by kind,
+ * which is why the refusal says two different things. Under a board of 命 a
+ * question names one of the seats the board already prints — «what about my
+ * career» *is* 官祿宮 — and a reading that starts from it has arrived at a seat
+ * without choosing one. Under a board of 天 there is **nobody to ask on behalf
+ * of**: the subject is a year, the reader is not on the board, and a question
+ * is how they would get put there. See `prompt.ts` and `PLAN.md` § 4 phases 18
+ * and 21.
  */
-function refuseQuestion(command: string, options: Options): void {
-  if (options.ask !== undefined) throw new UsageError('cli.error.notAsked', { command });
+function refuseQuestion(
+  command: string,
+  options: Options,
+  key: 'cli.error.notAsked' | 'cli.error.notAskedYear' = 'cli.error.notAsked',
+): void {
+  if (options.ask !== undefined) throw new UsageError(key, { command });
 }
 
 /**
@@ -852,6 +896,7 @@ const FLAGS: Record<string, keyof Options> = {
   '--without': 'without',
   '--for': 'for',
   '--ask': 'ask',
+  '--about': 'about',
   '--born': 'born',
   '--born-time': 'bornTime',
   '--born-tz': 'bornTz',

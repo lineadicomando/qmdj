@@ -104,7 +104,7 @@ it, that the fortunes do not add up to a score, that a 凶 is not advice. It is
 [`docs/agent-prompt.md`](docs/agent-prompt.md) said to a model that will never
 read it.
 
-**All four boards, and the two kinds part.** A chart withholds the 用神:
+**All five boards, and the three kinds part.** A chart withholds the 用神:
 which palace bears on the question is chosen by the reader for the question
 asked, and without one the board is a map with no pin. A 六壬 board hands its
 三傳 over already drawn, by procedure, and the prompt says not to re-derive
@@ -118,24 +118,38 @@ uncomputed: the schools divide on how it is chosen, so choosing it is a step
 the reading names together with the method. What no reading gives: dated
 predictions, medical, legal or financial counsel, lucky numbers, scores.
 
-**There is a fifth board and it is handed to nobody.** 太乙 has a section, an
-endpoint, a drawing and an MCP tool, and it has **no prompt**. That is decided
-rather than deferred: a prompt is built where a question is asked, this board
-is asked nothing, and its subject is neither a question nor a person but a
-year — so what such a board would be handed over *for* has not been designed,
-and designing it is not the same problem as the four above. What the board
-does instead is refuse the thing its own tradition is mostly made of: the
-received readings of 太乙 are dynastic — which state falls, which year an army
-breaks — dated, falsifiable by nobody, and travelling as commentary on real
-events. It names positions and numbers and stops. It does not say who is 主 and
-who is 客 either, which is the first interpretive act the system asks for and
-is the reader's, exactly as the 用神 is.
+**The fifth board is laid on a year, and nobody is on it.** 太乙 is the third
+kind — 太乙主天, and its subject is neither a question nor a person but the year
+the world is standing in. What it asks for instead of a question is a **matter**:
+what you are *looking at* this year — a situation with two sides in it, two
+organisations, two parties to a negotiation. That is not a formality. The board
+gives two counts and never says which side is which, so a matter is what lets
+them be counts of anything; and it is the difference between a reading and a
+caption, because a figure with no subject can only be described. A question
+would be the other thing entirely — it asks what will happen and puts you inside
+a figure you are not in. Its prompt is **descriptive and never predictive**:
+the sections it commissions are titled for parts of the figure — where 太乙
+stands, the two eyes, the two counts, the conditions, the longer circuits — and
+never for anything in the world. Two refusals bound it and both are the point.
+The received readings of 太乙 are dynastic — which state falls, which year an
+army breaks — dated, falsifiable by nobody, travelling as commentary on real
+events, and they stay out. And the reader is **not on this board**: no seat
+here stands for a part of their life, so a forecast for them is not a gentler
+version of the first refusal but the same error wearing a friendlier face. As
+for who is 主 and who is 客 — the first interpretive act the system asks for —
+the engine names two counts and stops. The prompt commissions the choice and
+requires it declared, exactly as a chart's 用神 is the reader's and said aloud.
 
-**And nothing is asked of a board of 命.** `--ask` works on `chart` and
-`liuren`, which are cast for a question, and is refused on `bazi` and
-`qizheng` rather than quietly dropped: the themes a reading traverses are
-commissioned in the prompt itself, and what the reader wants to look at next
-belongs to the conversation that follows.
+**And nothing is asked of a board of 命 or of 天.** `--ask` works on `chart` and
+`liuren`, which are cast for a question, and is refused on `bazi`, `qizheng`
+and `taiyi` rather than quietly dropped. Under 命 the themes a reading traverses
+are commissioned in the prompt itself, and what the reader wants to look at next
+belongs to the conversation that follows. Under 天 there is nobody to ask on
+behalf of at all, and a question is how a reader gets written into a figure of a
+year they are not in — so `taiyi` refuses `--ask` and takes `--about "…"`, the
+matter the year is read for. Neither a question nor a matter ever reaches the
+server: over HTTP `asked=true` and `about=true` say one exists, and the browser
+appends the text.
 
 **A birth enters a chart the way the classics put it there.** `--born` adds a
 年命: 本命, the year pillar of the birth, and — with `--gender`, which is read

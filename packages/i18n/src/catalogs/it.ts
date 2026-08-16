@@ -483,6 +483,15 @@ export const it: Record<MessageKey, string> = {
   'label.taiyipattern.guan': 'serratura',
   'label.taiyipattern.ge': 'sbarramento',
   'label.taiyipattern.dui': 'fronteggiare',
+  'label.taiyimeaning.yan': 'il senso dell\'agguato e della rapina violenta',
+  'label.taiyimeaning.ji':
+    'che cosa sia colpire: l\'inferiore che scavalca il superiore — un ministro sopra il suo sovrano, il basso sopra ciò che è onorato — ed è usurpazione',
+  'label.taiyimeaning.po':
+    'incalzare di palazzo, il danno lieve e lento; incalzare di ramo, il danno urgente e rapido',
+  'label.taiyimeaning.qiu': 'prigionia: il senso dell\'usurpazione e del massacro',
+  'label.taiyimeaning.guan':
+    'che cosa significhi la serratura: cosa temuta da generali e ministri, e non arriva fino al sovrano',
+  'label.taiyimeaning.ge': 'parla del governo sbarrato fra ciò che sta sopra e ciò che sta sotto',
 
   // 前 e 後 sono davanti e dietro a 太乙 sull'anello; 辰 e 宮 sono le due
   // distanze che il 卷三 separa — 「宫迫災㣲緩，辰迫災急疾」.
@@ -736,6 +745,8 @@ export const it: Record<MessageKey, string> = {
     'Manca ancora una domanda: il prompt è costruito perché la carta sia letta alla luce di una domanda.',
   'form.needed.birth':
     'Manca ancora una data di nascita. Questo quadro è steso su una nascita, e una data vuota sarebbe oggi.',
+  'form.needed.matter':
+    'Manca ancora ciò che stai guardando. Su questo quadro non c\'è nessuno e ad esso non si chiede nulla, quindi senza una faccenda la lettura può solo descrivere la figura.',
   'form.needed.gender':
     'I cicli decennali richiedono il sesso, perché la tradizione ne trae la direzione. Senza, i pilastri restano comunque completi.',
   'form.jumpDate': 'Il giorno per cui la carta è posta',
@@ -764,10 +775,14 @@ export const it: Record<MessageKey, string> = {
   'consult.birthNote':
     'La carta resta posta per l\'istante in cui chiedi. Quello che la nascita aggiunge è dove cade dentro di essa — 本命 běnmìng, l\'anno in cui sei nato, e 行年 xíngnián, l\'anno che stai vivendo.',
   'consult.lead':
-    'Poni una domanda, oppure dai una nascita, e ottieni un prompt pronto — da incollare in ChatGPT, Claude o un altro assistente.',
+    'Poni una domanda, dai una nascita, oppure indica un anno, e ottieni un prompt pronto — da incollare in ChatGPT, Claude o un altro assistente.',
   'consult.cast': 'Poni la domanda',
   'consult.lay': 'Stendi il quadro',
+  'consult.year': 'L\'anno su cui il quadro è steso',
+  'consult.yearNote': 'Lascialo vuoto per l\'anno in cui siamo.',
   'consult.changeBirth': 'Cambia la nascita',
+  'consult.changeYear': 'Cambia l\'anno',
+  'consult.changeMatter': 'Cambia ciò che stai guardando',
   'consult.change': 'Cambia la domanda',
   'consult.castAt': 'Posto per il {when}',
   'consult.castFailed': 'Non è stato possibile porre il quadro.',
@@ -776,6 +791,8 @@ export const it: Record<MessageKey, string> = {
 
   'form.promptPrivacy': 'I dati inseriti verranno inclusi nel prompt.',
   'form.question': 'La tua domanda',
+  'form.matter': 'Che cosa stai guardando quest\'anno',
+  'form.matterPlaceholder': 'Una situazione con due parti — due organizzazioni, due parti di una trattativa, due forze in un campo',
   'form.questionPlaceholder': 'Che cosa stai chiedendo?',
 
   'step.shichen': 'doppia ora',
@@ -928,6 +945,46 @@ export const it: Record<MessageKey, string> = {
     'Poi situa la nascita, in una o due frasi tue: che cosa ha davanti — una nascita scritta in un calendario, il suo anno, il suo mese, il suo giorno e la sua ora come otto caratteri 八字 bāzì — e quando è stata stesa. Situa e prosegui: nessun paragrafo su che cosa sia l\'arte, che cosa sia il destino, o che cosa stai per fare.',
   'prompt.bazi.read':
     'Dove guardare per tutto questo — l\'ordine in cui guardi, mai l\'ordine in cui scrivi: procedi all\'infuori dal padrone del giorno; quali dei dieci dèi stanno nei quattro pilastri e quali non stanno da nessuna parte; che cosa i rami celano contro ciò che gli steli mostrano; quali rami sono vuoti e se qualcosa della nascita cade in uno di essi; dove il padrone del giorno si trovi nel ciclo dei dodici a ciascun pilastro; le quattro immagini 納音 nàyīn; il conteggio dei cinque elementi; e i decenni, dove sono stampati, come la direzione in cui i pilastri camminano. Di\' che cosa la tradizione ritiene che sia ciascuna cosa che usi, e usala dove porta un tema.',
+  'prompt.taiyi.heading': 'Leggere un quadro Tai Yi',
+  'prompt.taiyi.role':
+    'Qui sotto è disposto un quadro 太乙神數 tàiyǐshénshù, nel registro dell\'anno — 年計 niánjì. Colloca 太乙 tàiyǐ stesso, che cammina otto palazzi e mai il centro; i due occhi, 文昌 wénchāng in basso e 始擊 shǐjī in alto; 計神 jìshén e 合神 héshén; i due conti e i generali che insediano; la porta di turno; e i circuiti più lunghi. È stato calcolato dal 太乙金鏡式經 tàiyǐ jīnjìngshìjīng (王希明 Wáng Xīmíng, 唐 Táng, c. 730), non da te: leggilo esattamente come sta e non aggiungere nulla. Nessuna posizione, nessun conto, nessuna condizione che non sia scritta lì. Se manca qualcosa che ti serve, di\' che manca.',
+  'prompt.taiyi.subject':
+    'Ciò che hai davanti è **un anno**, non una persona e non una domanda. 太乙主天 tàiyǐ zhǔ tiān: questo quadro è steso sull\'anno in cui il mondo si trova, e nessuna nascita, ora o luogo di qualcuno vi è entrato — è una pura funzione di un numero. Non c\'è dunque nessun consultante qui e nessun nativo. Leggi la figura: di\' come sta quest\'anno, attorno a che cosa è organizzato, dove è equilibrato e dove è sotto sforzo. I significati sono trasmessi, e le fonti dicono che cosa sia per 太乙 stare in un dato palazzo, per un occhio cadere dove cade, per un conto essere un dato numero. Leggerli su quest\'anno è la lettura.',
+  'prompt.taiyi.hostguest':
+    'Chi sia 主 zhǔ, l\'ospitante, e chi 客 kè, l\'ospite, **non** è qui sotto e non lo sarà mai: identificare le due parti è il primo atto interpretativo che questo sistema richiede, e lo si sceglie **per la faccenda che si sta guardando**, esattamente come si sceglie un 用神 yòngshén per una domanda. Il software che ha prodotto tutto questo non conosce la faccenda — sta in fondo a questo messaggio, scritta da chi legge e mai inviata ad alcun server — quindi nomina due conti e si ferma. La scelta spetta a te e devi compierla prima che i conti significhino qualcosa: di\' quale lato della faccenda prendi come ospitante e quale come ospite, perché in quel verso, e leggi 主算 zhǔsuàn e 客算 kèsuàn di conseguenza. Dillo come un passo tuo, non come qualcosa che il quadro ti ha consegnato, e di\' come sarebbe la lettura nel verso opposto se l\'assegnazione è incerta. Dove la faccenda non nomina affatto due parti, dillo e chiedile, invece di inventarne un paio: un\'assegnazione inventata per averne una è tutta la lettura che poggia sul nulla.',
+  'prompt.taiyi.hostguestNoMatter':
+    'Chi sia 主 zhǔ, l\'ospitante, e chi 客 kè, l\'ospite, **non** è qui sotto e non lo sarà mai: identificare le due parti è il primo atto interpretativo che questo sistema richiede, e lo si sceglie per la faccenda che si sta guardando, esattamente come si sceglie un 用神 yòngshén per una domanda. **Qui non è stata data alcuna faccenda**, quindi non c\'è nulla per cui sceglierle: non inventare un paio di parti pur di averlo. Leggi i due conti come due quantità di una sola configurazione, di\' apertamente che l\'assegnazione spetta a chi legge e non è stata fatta, e di\' che cosa significherebbe la figura in ciascuno dei due versi. 主算 zhǔsuàn e 客算 kèsuàn sono numeri di una procedura di conteggio in entrambi i casi.',
+  'prompt.taiyi.matter':
+    'Ciò che chi legge sta guardando quest\'anno sta in fondo a questo messaggio, e tutta la lettura è **per quello**. Non è una domanda e non va risposta come tale: non dire che cosa accadrà, non datare nulla, non dire chi la spunta. È la cornice che rende leggibile la figura — ti dice di quali due parti parlano i conti, e quali parti del quadro pesano su che cosa. Leggi l\'anno attraverso di essa: dove la faccenda incontra un palazzo affollato, una condizione, un\'asimmetria fra i conti, di\' che cosa la configurazione **è** in quel punto e lascia che chi legge prosegua da lì. Se la faccenda è esile — una parola, un campo senza parti dentro — di\' ciò che puoi e chiedi ciò che ti serve, invece di leggere quello che la parola suggeriva.',
+  'prompt.taiyi.palaces':
+    'I nove palazzi di questo quadro **non sono numerati come li numera una carta Qi Men**. Il 卷二 juàn èr dice 九宮皆差一位 jiǔgōng jiē chā yī wèi — ogni numero si è spostato di un seggio perché 一 yī raggiunga 乾 qián — quindi 一宮 yīgōng è il nord-ovest qui e il nord là, e tutti e otto sono a un seggio di distanza dal 洛書 luòshū. Leggi i numeri come quelli propri di questo quadro. Se conosci la disposizione del Luoshu, non trasportarla qui, e non «correggere» nulla di ciò che segue su di essa.',
+  'prompt.taiyi.counts':
+    '主算 zhǔsuàn e 客算 kèsuàn sono il risultato di una procedura di conteggio — seggi contati lungo l\'anello a partire dai due occhi — e non punteggi di bene e di male. Un conto più grande non è un conto migliore. Non sommarli, non sottrarre l\'uno dall\'altro chiamando la differenza un esito, e non ordinare i palazzi né i sedici seggi. Ciò che i conti portano davvero sono le condizioni nominate qui sotto, ed è lì che le fonti mettono il peso.',
+  'prompt.taiyi.conditions':
+    'Le condizioni nominate qui sotto — 掩 yǎn, 迫 pò, 囚 qiú, 擊 jī, 關 guān, 格 gé, 對 duì — sono attributi della configurazione nelle parole del 卷三 juàn sān, ciascuna con la fortuna che quel capitolo le assegna. Appartengono alla figura e non alla situazione di qualcuno, e la fortuna è della fonte e non un verdetto tuo. **Ciascuna è stampata con la frase del capitolo che dice che cosa sia** — leggi quella, usala, e fermati lì. Ciò che il capitolo dice inoltre che *accadrà al regno* quando una condizione cade non è stampato, e di proposito: è lo strato dinastico, e la sua assenza non è un invito a ricostruirlo.',
+  'prompt.taiyi.noDoctrine':
+    'Le letture ricevute di questo quadro sono **dinastiche** — quale stato cade, in che anno un esercito si rompe, quale regno cambia mano — e non sono qui e non devono essere fornite. Non predire eventi, e non datare nulla: nessuna guerra, nessuna elezione, nessuna epidemia, nessuna carestia, nessun mercato, nessun disastro, nessun destino di alcun paese, azienda o persona pubblica. Una lettura epocale non è falsificabile da nessuno e viaggia come commento su fatti reali, il che la rende la cosa più pericolosa in cui questo quadro possa essere trasformato. Descrivi la configurazione; non dire nulla su ciò che vi accadrà.',
+  'prompt.taiyi.notPersonal':
+    'E non è l\'anno di chi legge. Nulla in questo quadro riguarda la persona che lo sta leggendo — non è dentro, nessun seggio qui sta per una parte della sua vita, e non c\'è posto dove metterla. Non trasformarlo in una previsione per lei, non dirle che cosa l\'anno riserva al suo lavoro, alla sua salute, ai suoi soldi o alle sue relazioni, e non offrirglielo come una carta personale sotto un altro nome. Se vuole un quadro steso su di sé, quello è un altro strumento. **Questo vale anche quando la faccenda che ha nominato è sua**, come spesso sarà: «l\'azienda per cui lavoro», «la città in cui vivo». Leggi la faccenda, mai la persona che vi sta dentro: la figura descrive come sta l\'anno attorno a una cosa, e il fatto che chi legge si trovi dentro quella cosa non la mette sul quadro.',
+  'prompt.taiyi.register':
+    'Scrivi per essere pensato. Chi legge non è un praticante e non ha posto alcuna domanda tecnica: rivolgiti a lui, tieni le frasi abbastanza brevi da seguire, e offri ciò che trovi come qualcosa da soppesare e non come un responso da accettare. Profondità senza oracolo: nessun tono iniziatico, nessuna maiuscola solenne, nessun registro profetico, e nulla che suoni come un bollettino sul mondo. Simbolico e descrittivo, mai deterministico — «la figura mostra», «la tradizione legge questo come», mai «quest\'anno porterà». Una configurazione descrive una forma, non un evento.',
+  'prompt.taiyi.board': 'Il quadro',
+  'prompt.taiyi.forMatter':
+    'Leggi la figura per la faccenda in fondo, e leggila per qualcuno che è venuto qui per scoprire che cosa dice — non per un collega che controlla il tuo lavoro. Non ne ha mai vista una ed è la ragione per cui è stata calcolata. La tua risposta va in quest\'ordine: la riga d\'apertura, poi una o due frasi che situano l\'anno e la faccenda dentro di esso, poi l\'insieme del quadro letto da un centro, poi brevi sezioni sulle parti della figura per come pesano sulla faccenda, poi che cosa si potrebbe guardare dopo.',
+  'prompt.taiyi.noQuestion':
+    'Nessuna domanda è stata posta, e non ne serve nessuna: questo è steso su un anno e sta come sta. Quindi leggilo. E leggilo per qualcuno che è venuto qui per scoprire che cosa dice questa figura, non per un collega che controlla il tuo lavoro — non ne ha mai vista una ed è la ragione per cui è stata calcolata. La tua risposta va in quest\'ordine: la riga d\'apertura, poi una o due frasi che situano l\'anno, poi l\'insieme letto da un centro, poi brevi sezioni sulle parti della figura, poi che cosa si potrebbe guardare dopo.',
+  'prompt.taiyi.opening':
+    'Poi situa l\'anno, in una o due frasi tue: che cosa ha davanti — un anno scritto come figura, 太乙 e altri quindici dèi seduti su un anello di sedici attorno a otto palazzi, da un testo Tang che conta a partire da un\'epoca — e di quale anno si tratta, nel suo calendario e in quello sessagesimale. Situa e prosegui: nessun paragrafo su che cosa sia l\'arte, che cosa sia il destino, o che cosa stai per fare.',
+  'prompt.taiyi.panorama':
+    'Poi leggi il quadro intero, prima di ogni sua parte. **L\'ordine in cui le regole qui sopra lo percorrono è l\'ordine in cui guardi, non l\'ordine in cui scrivi.** Copiato nella risposta dà un manuale — corretto, morto, un inventario di posizioni che nessuno riconosce. Scrivi invece da un centro: trova le due o tre cose attorno a cui questa figura è organizzata, e la tensione principale fra esse. È di questo che parla la lettura, e tutto il resto le sta attorno come prova. I dati sostengono ciò che dici invece di aprire i paragrafi. Quali cose prendi come centrali è una tua scelta e non c\'è modo che non lo sia: di\' che hai scelto, e di\' che cosa hai lasciato da parte. Prosa, non elenco.',
+  'prompt.taiyi.about': 'Ciò che si sta guardando quest\'anno è:',
+  'prompt.taiyi.sections':
+    'Poi la figura in brevi sezioni, ciascuna sotto un titolo che nomina una sua parte — «Dove sta Tai Yi quest\'anno», «I due occhi» — con prosa continua dentro. Che cosa percorrere: il palazzo che 太乙 tàiyǐ occupa e a che punto dei suoi tre anni è; i due occhi, 文昌 wénchāng e 始擊 shǐjī, e che cosa le fonti leggono da dove ciascuno è caduto; i due conti sotto l\'assegnazione che hai dichiarato, e l\'equilibrio o lo squilibrio fra essi; le condizioni che il quadro ha nominato, ciascuna detta per ciò che è; e i circuiti più lunghi — i 三基 sānjī, i 五福 wǔfú, il 大遊 dàyóu, la porta di turno — che si muovono su scale di decenni e sono ciò che colloca quest\'anno dentro una figura più lunga. Ogni sezione dice che cosa la configurazione **è**. Nessuna dice che cosa accadrà.',
+  'prompt.taiyi.read':
+    'Dove guardare per tutto questo — l\'ordine in cui guardi, mai l\'ordine in cui scrivi: il palazzo in cui sta 太乙 tàiyǐ e l\'anno a cui è dentro di esso; il 局 jú e il 紀 jì a cui il conteggio è arrivato; dove sono caduti i due occhi e che cosa sta con loro; i due conti e i generali che ciascuno insedia; ogni condizione che il quadro nomina; il 計神 jìshén e il 合神 héshén; e i circuiti più lunghi con l\'anno a cui ciascuno sta nel proprio periodo. Che cosa significhi una **posizione** — un palazzo, un seggio, un occhio dove è caduto — non è stampato qui e questo motore non ne fornisce nulla: dove una sezione attinge alla tradizione per un significato, nomina ciò a cui attingi e, dove è la lettura di una scuola e non del testo, di\' di chi è. Le **condizioni** sono l\'eccezione, e l\'unica: ciascuna è stampata con la frase che il 卷三 juàn sān usa per dire che cosa sia, quindi lì usa le parole che ci sono e non andare oltre.',
+  'prompt.taiyi.invite':
+    'Chiudi aprendo, non chiudendo. Di\' brevemente che cosa si potrebbe guardare dopo e che cosa ti servirebbe sapere per guardarlo — una parte della figura che hai lasciato da parte, l\'assegnazione di ospitante e ospite che hai fatto e che cosa la cambierebbe, un circuito che hai rinunciato a leggere. Non porre più di due domande, e non mettere domande al posto della lettura. È un invito, non un modulo.',
+
   'prompt.source': 'Il quadro è all\'indirizzo {url}',
   'prompt.chart': 'La carta',
   'prompt.asked': 'La domanda posta è:',
@@ -971,6 +1028,7 @@ export const it: Record<MessageKey, string> = {
   'form.instrument.liuren': 'Cosa sta succedendo, e con chi — 大六壬 dàliùrén',
   'form.instrument.qizheng': 'Il cielo sotto cui una vita è cominciata — 七政四餘 qīzhèngsìyú',
   'form.instrument.bazi': "Di che cosa è fatta una vita, all'ora di una nascita — 八字 bāzì",
+  'form.instrument.taiyi': 'Come sta un anno, per tutti quelli che ci stanno dentro — 太乙神數 tàiyǐshénshù',
   'form.guiren': 'Quale verso insedia il nobile (貴人)',
   'form.guiren.chou': '甲 con 戊 e 庚, a 丑 e 未',
   'form.guiren.wei': '甲 da solo, a 未 e 丑',
@@ -1138,6 +1196,8 @@ export const it: Record<MessageKey, string> = {
     'I cicli decennali richiedono --gender, perché la tradizione ne trae la direzione. Senza, i pilastri restano comunque completi.',
   'cli.error.notAsked':
     'Il comando "{command}" stende un quadro su una nascita, e ad esso non si chiede nulla — quindi "--ask" non ha dove andare. Per quale parte di una vita si legga un quadro di 命 lo sceglie il lettore, ad alta voce, dopo che è stato steso. Togli la domanda, oppure ponila a `chart` o a `liuren`, che sono posti per una.',
+  'cli.error.notAskedYear':
+    'Il comando "{command}" stende un quadro su un anno, e ad esso non si chiede nulla — quindi "--ask" non ha dove andare. Su questo quadro non c\'è nessuno: il suo soggetto è l\'anno in cui tutti si trovano, e una domanda è il modo in cui chi legge finisce dentro una figura in cui non è. Quello che questo quadro prende è "--about": la faccenda che stai guardando, che è un campo visivo e non una domanda, ed è ciò che dice chi è 主 e chi è 客. Usa quello, oppure poni la domanda a `chart` o a `liuren`, che sono posti per una.',
 
   'search.none': 'Nessun luogo trovato per "{query}".',
   'search.coverage':

@@ -5,6 +5,7 @@ import {
   TAIYI_GODS,
   taiyiBoard,
   taiyiJu,
+  taiyiPatternName,
   taiyiYearOf,
   type TaiyiOptions,
 } from '../src/taiyi.js';
@@ -440,6 +441,75 @@ describe('開元十二年 (724)', () => {
     // 「今從晉穆帝永和十年甲寅為上元，至今開元十二年甲子計三百七十一年也，
     // 不足以紀法除之，即為入上元第一紀三百七十一年」.
     expect(board.accumulated.wufu % 4320).toBe(371);
+  });
+
+  /**
+   * 卷五 gives the three bases three different periods over the same ring of
+   * twelve, and the period travels beside the count because the count alone is
+   * unreadable in a way that does not look unreadable.
+   *
+   * 民基 is the one that shows why. It moves a fief every year, so its count is
+   * the constant 1 and can never say anything else — and printed as a bare `1`
+   * beside a sovereign at `23` it was read as a base newly begun, which is a
+   * reading of something nobody computed. The invariant is the point: whatever
+   * the year, the people are 1 of 1.
+   */
+  /**
+   * The sentence that earns the fortune, carried beside it.
+   *
+   * 卷三 states each condition three times over — an 經曰 giving the trigger, a
+   * 之義 or 者…也 saying what the shape *is*, and 若… / 嵗計遇之… clauses saying
+   * what will befall the realm. Only the middle kind travels, for the reason
+   * `Pattern.valence` travels. What is asserted here is the line between the
+   * two: the characterisation is in, the omen is out, and neither is this
+   * engine's words.
+   */
+  it('carries what 卷三 says each condition is, and none of what it foretells', () => {
+    const clauses = new Map(
+      (['yan', 'ji', 'po', 'qiu', 'guan', 'ge'] as const).map((id) => [
+        id,
+        taiyiPatternName(id).meaning,
+      ]),
+    );
+
+    expect(clauses.get('yan')).toBe('掩襲刼殺之義');
+    expect(clauses.get('qiu')).toBe('囚者，簒戮之義也');
+    expect(clauses.get('ge')).toBe('言政事上下格也');
+
+    for (const [id, clause] of clauses) {
+      expect(clause, id).toBeDefined();
+      // The omens the chapter puts around each one. A clause that grew to
+      // include any of these would be the dynastic layer arriving inside the
+      // quantity that was admitted precisely because it is not that.
+      for (const omen of ['嵗計遇', '王綱失序', '人君慎之', '大凶', '必敗', '禳']) {
+        expect(clause, `${id} carries the omen ${omen}`).not.toContain(omen);
+      }
+    }
+  });
+
+  /**
+   * 對 has no such sentence, and the absence is the entry rather than a gap
+   * somebody forgot to fill. 卷三 gives it a trigger and then a 若…皆為… list of
+   * events — 「大臣懐二心，君逐良將…」 — and nothing that says what 對 *is*.
+   * Where the sources say nothing, the silence travels; a seventh line invented
+   * so the table looked even would be this engine founding a school.
+   */
+  it('leaves 對 without one, because 卷三 gives it none', () => {
+    expect(taiyiPatternName('dui').meaning).toBeUndefined();
+    expect(taiyiPatternName('dui').valence).toBeDefined();
+  });
+
+  it('carries the period of each base, so a constant cannot read as news', () => {
+    expect(board.sanji.jun.period).toBe(30);
+    expect(board.sanji.chen.period).toBe(3);
+    expect(board.sanji.min.period).toBe(1);
+
+    for (const year of [1, 724, 1644, 2026, 9999]) {
+      const other = taiyiBoard({ year }, DEFAULT_TAIYI_OPTIONS);
+      expect(other.sanji.min.year).toBe(1);
+      expect(other.sanji.jun.year).toBeLessThanOrEqual(other.sanji.jun.period);
+      expect(other.sanji.chen.year).toBeLessThanOrEqual(other.sanji.chen.period);
+    }
   });
 });
 

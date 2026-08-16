@@ -503,6 +503,21 @@ export const en = {
   'label.taiyipattern.guan': 'locking',
   'label.taiyipattern.ge': 'blocking',
   'label.taiyipattern.dui': 'facing',
+  // What 卷三 says each condition **is**, glossing the clause the engine quotes
+  // beside it. The chapter's omens — what will befall the realm — are not here
+  // and are not glossed; see `PATTERNS` in `taiyi.ts` for the line between the
+  // two kinds of sentence. 對 has no such clause and so has no gloss: the
+  // chapter gives it a trigger and a list of events, and nothing that says what
+  // it is.
+  'label.taiyimeaning.yan': 'the sense of ambush and violent seizure',
+  'label.taiyimeaning.ji':
+    'what striking is: the inferior overstepping the superior — a minister over his ruler, the low over the honoured — and this is usurpation',
+  'label.taiyimeaning.po':
+    'pressing by palace, the harm slight and slow; pressing by branch, the harm urgent and swift',
+  'label.taiyimeaning.qiu': 'imprisonment: the sense of usurpation and slaughter',
+  'label.taiyimeaning.guan':
+    'what the bar means: a matter of dread for the generals and the ministers, and it does not reach the ruler',
+  'label.taiyimeaning.ge': 'it speaks of governance blocked between above and below',
 
   // 前 and 後 are ahead of and behind 太乙 on the ring; 辰 and 宮 are the two
   // distances 卷三 separates — 「宫迫災㣲緩，辰迫災急疾」.
@@ -815,6 +830,12 @@ export const en = {
   // the instant is now; here now is nobody's birth.
   'form.needed.birth':
     'A date of birth is still needed. This board is laid on one, and an empty date would be today.',
+  // The counterpart under 天, and the field that turned this instrument from a
+  // caption into a reading. Not a question: a question about a year is how a
+  // reader gets written into a figure they are not in. A matter is what is
+  // being *looked at*, and it is what says which side is 主 and which is 客.
+  'form.needed.matter':
+    'What you are looking at is still needed. Nobody is on this board and nothing is asked of it, so without a matter the reading can only describe the figure.',
   // The hour, and not only the day. A Qi Men chart turns on the hour pillar,
   // so a birth without a time is not a rougher chart — it is a different one.
   // The same thing `cli.error.genderRequired` says, without naming a command
@@ -877,13 +898,24 @@ export const en = {
   // the footer, in the privacy note and in the notes — and not this, which is
   // the only thing a newcomer needs before they start typing.
   'consult.lead':
-    'Ask a question, or give a birth, and get a prompt ready to paste into ChatGPT, Claude or another assistant.',
+    'Ask a question, give a birth, or name a year, and get a prompt ready to paste into ChatGPT, Claude or another assistant.',
   'consult.cast': 'Put the question',
   // The press under a board of 命, where there is no question to put. It says
   // the act the way `consult.cast` does, and it is a different act: one is
   // asked at an instant, the other is laid on one.
   'consult.lay': 'Lay the board',
+  // The whole of the form under an instrument of 天, which is one number.
+  // No place and no hour enter this board: it is a function of the year, so
+  // there is nothing else here to ask for and nothing to put under a
+  // disclosure.
+  'consult.year': 'The year the board is laid on',
+  // Empty is the year being stood in, which is this kind's version of the
+  // rule that empty is the press — and unlike a birth left empty, a year left
+  // empty is somebody's answer rather than nobody's.
+  'consult.yearNote': 'Leave it empty for the year we are in.',
   'consult.changeBirth': 'Change the birth',
+  'consult.changeYear': 'Change the year',
+  'consult.changeMatter': 'Change what you are looking at',
   // What reopening the panel offers, which is the question and not the
   // moment: a second consultation begins by rewriting the question, and
   // everything else in there is setup somebody set once. It is also the only
@@ -909,6 +941,16 @@ export const en = {
   // a prompt built without one asks a model to read towards nothing.
   'form.question': 'Your question',
   'form.questionPlaceholder': 'What are you asking?',
+  // Deliberately not «your question». What goes here is a field of view with
+  // two parties in it, because that is what the board's two counts are counts
+  // *of* — and the placeholder does the teaching, since «matter» alone would
+  // be answered with a question by most people.
+  //
+  // The teaching is all in the placeholder, and a note under the field saying
+  // the same three things again was taken out: it sat where nobody is looking
+  // once they have started typing, and the field it explained is two lines long.
+  'form.matter': 'What you are looking at this year',
+  'form.matterPlaceholder': 'A situation with two sides — two organisations, two parties to a negotiation, two forces in one field',
 
   // The face of each step is the word, in the reader's language: these are
   // controls, and a control nobody can read is a control nobody can press.
@@ -1169,20 +1211,86 @@ export const en = {
   // The inspection list, working outward from the day master.
   'prompt.bazi.read':
     'Where to look for all of that — the order you look, never the order you write: work outward from the day master; which of the ten gods stand in the four pillars and which are nowhere in them; what the branches conceal against what the stems show; which branches are void and whether anything of the birth falls in one; where the day master finds itself in the cycle of twelve at each pillar; the four images 納音 nàyīn; the count of the five elements; and the decades, where they are printed, as the direction the pillars walk. Say what the tradition holds each thing you use to be, and use it where it carries a theme.',
+  // 太乙 — the one board here whose subject is neither a question nor a
+  // person, and the one prompt whose register had to be designed rather than
+  // adapted. Phase 20 shipped the board without one on exactly that ground.
+  // What settles it is that the reading is **descriptive and never
+  // predictive**: the subject is the figure of a year, and the received
+  // doctrine — which state falls, which year an army breaks — stays out.
+  'prompt.taiyi.heading': 'Reading a Tai Yi board',
+  'prompt.taiyi.role':
+    'A 太乙神數 tàiyǐshénshù board is set out below, in the register of the year — 年計 niánjì. It places 太乙 tàiyǐ itself, which walks eight palaces and never the centre; the two eyes, 文昌 wénchāng below and 始擊 shǐjī above; 計神 jìshén and 合神 héshén; the two counts and the generals they seat; the gate on duty; and the longer circuits. It was computed from the 太乙金鏡式經 tàiyǐ jīnjìngshìjīng (王希明 Wáng Xīmíng, 唐 Táng, c. 730), not by you: read it exactly as it stands and add nothing. No position, no count, no condition that is not written there. If something you need is missing, say it is missing.',
+  // The subject first, as it is first under both boards of 命: a list of
+  // bounds with nothing above it reads as an instruction to say nothing.
+  'prompt.taiyi.subject':
+    'What is in front of you is **a year**, not a person and not a question. 太乙主天 tàiyǐ zhǔ tiān: this board is laid on the year the world is standing in, and nobody\'s birth, hour or place went into it — it is a pure function of a number. So there is no querent here and no native. Read the figure: say how this year stands, what it is organised around, where it is even and where it is under strain. The meanings are transmitted, and the sources say what it is for 太乙 to stand in a given palace, for an eye to fall where it falls, for a count to be a given number. Reading those onto this year is the reading.',
+  // The 用神 rule, arriving on the board that needs it most. The engine
+  // assigns neither party and will not; the model does, and says so.
+  'prompt.taiyi.hostguest':
+    'Who is 主 zhǔ, the host, and who is 客 kè, the guest, is **not** below and never will be: identifying the two parties is the first interpretive act this system asks for, and it is chosen **for the matter being looked at**, exactly as a 用神 yòngshén is chosen for a question. The software that produced this does not know the matter — it is at the end of this message, written by the reader and never sent to any server — so it names two counts and stops. The choice is yours to make and you must make it before the counts mean anything: say which side of the matter you are taking as host and which as guest, why that way round, and read 主算 zhǔsuàn and 客算 kèsuàn accordingly. Say it as a step of yours, not as something the board handed you, and say what the reading would look like the other way round if the assignment is a close call. Where the matter names no two parties at all, say so and ask for them rather than inventing a pair: an assignment made up to have one is the whole reading resting on nothing.',
+  // The same rule where no matter was given — which the CLI and the endpoint
+  // still allow, and which is the honest «just the figure» reading. The
+  // difference is one clause and it matters: the version above points at a
+  // matter at the end of the message, and pointing at something that is not
+  // there is exactly the defect this pair was split to fix.
+  'prompt.taiyi.hostguestNoMatter':
+    'Who is 主 zhǔ, the host, and who is 客 kè, the guest, is **not** below and never will be: identifying the two parties is the first interpretive act this system asks for, and it is chosen for the matter being looked at, exactly as a 用神 yòngshén is chosen for a question. **No matter was given here**, so there is nothing to choose it for: do not invent a pair in order to have one. Read the two counts as two quantities of one configuration, say plainly that the assignment is the reader\'s and has not been made, and say what each way round would mean for the figure. 主算 zhǔsuàn and 客算 kèsuàn are numbers from a counting procedure either way.',
+  // The matter, which is what turned this prompt from a caption into a reading.
+  // It is **not** a question and the difference is load-bearing: a question
+  // asks what will happen and puts the person asking inside a figure they are
+  // not in, which is what `notPersonal` refuses. A matter is a field of view —
+  // two parties, a situation, a domain — and it is what the assignment above
+  // has to be made *for*. Without one the reading has a subject only in the
+  // sense that a map has a subject.
+  'prompt.taiyi.matter':
+    'What the reader is looking at this year is at the end of this message, and the whole reading is **for that**. It is not a question and must not be answered as one: do not say what will happen in it, do not date anything in it, do not say who prevails. It is the frame that makes the figure readable — it tells you which two parties the counts are about, and which parts of the board bear on what. Read the year through it: where the matter meets a dense palace, a condition, an asymmetry of counts, say what the configuration *is* at that point and let the reader take it from there. If the matter is thin — a word, a field with no parties in it — say what you can and ask for what you need, rather than reading whatever the word suggested.',
+  // Required of every surface that prints this board, and it earns its place
+  // among the instructions rather than beside them: the rules above and below
+  // tell a model how to read positions it would otherwise read one seat out.
+  'prompt.taiyi.palaces':
+    'The nine palaces of this board are **not numbered as a Qi Men chart numbers them**. 卷二 juàn èr says 九宮皆差一位 jiǔgōng jiē chā yī wèi — every number has moved one seat so that 一 yī reaches 乾 qián — so 一宮 yīgōng is the north-west here and the north there, and all eight are one seat off the 洛書 luòshū. Read the numbers as this board\'s own. If you know the Luoshu arrangement, do not carry it across, and do not "correct" anything below to it.',
+  'prompt.taiyi.counts':
+    '主算 zhǔsuàn and 客算 kèsuàn are the output of a counting procedure — seats told off around the ring from the two eyes — and not scores of good and bad. A larger count is not a better one. Do not add them, do not subtract one from the other and call the difference an outcome, and do not rank the palaces or the sixteen seats. What the counts do carry is the named conditions below, which is where the sources put the weight.',
+  'prompt.taiyi.conditions':
+    'The conditions named below — 掩 yǎn, 迫 pò, 囚 qiú, 擊 jī, 關 guān, 格 gé, 對 duì — are attributes of the configuration in the words of 卷三 juàn sān, each with the fortune that chapter gives it. They belong to the figure and not to anybody\'s situation, and the fortune is the source\'s and not a verdict of yours. **Each is printed with the chapter\'s own sentence saying what it is** — read that, use it, and leave it there. What the chapter also says will *befall the realm* when a condition falls is not printed, deliberately: it is the dynastic layer, and its absence is not an invitation to reconstruct it.',
+  // The load-bearing refusal, and the reason this board waited for a designed
+  // register rather than an adapted one.
+  'prompt.taiyi.noDoctrine':
+    'The received readings of this board are **dynastic** — which state falls, which year an army breaks, which reign changes hands — and they are not here and must not be supplied. Do not predict events, and do not date anything: no war, no election, no epidemic, no famine, no market, no disaster, no fate of any country, company or public person. An epochal reading is falsifiable by nobody and travels as commentary on real events, which makes it the most dangerous thing this board could be turned into. Describe the configuration; say nothing about what will happen in it.',
+  'prompt.taiyi.notPersonal':
+    'And it is not the reader\'s year. Nothing on this board is about the person reading it — they are not in it, no seat here stands for a part of their life, and there is no place to put them. Do not turn it into a forecast for them, do not tell them what the year holds for their work, their health, their money or their relations, and do not offer it as a personal chart under another name. If they want a board laid on themselves, that is a different instrument. **This holds when the matter they named is their own**, which it often will be — «the company I work for», «the town I live in». Read the matter, never the person inside it: the figure describes how the year stands around a thing, and the reader standing in that thing does not put them on the board.',
+  // A sibling of `prompt.ming.register` rather than a reuse: that one is
+  // written at a person throughout, and there is no person here.
+  'prompt.taiyi.register':
+    'Write to be thought with. The reader is not a practitioner and has asked no technical question: address them, keep the sentences short enough to follow, and offer what you find as something to weigh rather than as a finding to accept. Depth without oracle: no initiatic tone, no solemn capitals, no prophetic register, and nothing that reads as a bulletin about the world. Symbolic and descriptive, never deterministic — "the figure shows", "the tradition reads this as", never "this year will bring". A configuration describes a shape, not an event.',
+  'prompt.taiyi.board': 'The board',
+  'prompt.taiyi.forMatter':
+    'Read the figure for the matter at the end, and read it for somebody who came here to find out what it says — not for a colleague checking your work. They have never seen one of these and they are the reason it was computed. Your reply goes in this order: the opening line, then a sentence or two situating the year and the matter in it, then the whole board read from its centre, then short sections on the parts of the figure as they bear on the matter, then what could be looked at next.',
+  'prompt.taiyi.noQuestion':
+    'No question was asked, and none is needed: this is laid on a year and it stands as it stands. So read it. And read it for somebody who came here to find out what this figure says, not for a colleague checking your work — they have never seen one of these and they are the reason it was computed. Your reply goes in this order: the opening line, then a sentence or two situating the year, then the whole read from its centre, then short sections on the parts of the figure, then what could be looked at next.',
+  // In the model's own words, situating and nothing else.
+  'prompt.taiyi.opening':
+    'Then situate the year, in a sentence or two of your own: what is in front of them — a year written as a figure, 太乙 and fifteen other gods seated on a ring of sixteen around eight palaces, from a Tang text that reckons the count from an epoch — and which year it is, in their calendar and in the sexagenary one. Situate and move on: no paragraph on what the art is, what fate is, or what you are about to do.',
+  'prompt.taiyi.panorama':
+    'Then read the board whole, before any part of it. **The order the rules above walk it in is the order you look, not the order you write.** Copied into the reply it gives a manual — correct, dead, an inventory of positions nobody recognises. Write from a centre instead: find the two or three things this figure is organised around, and the main tension between them. That is what the reading is about, and everything else stands around it as evidence. The data supports what you say rather than opening the paragraphs. Which things you take as central is your choice and there is no way for it not to be: say that you chose, and say what you passed over. Prose, not a list.',
+  // The themes, and here they are parts of a figure rather than themes of a
+  // life — the difference between this closing and `mingClosing`'s. A section
+  // titled for a part of the world would be the dynastic reading arriving
+  // under a heading.
+  'prompt.taiyi.about': 'What is being looked at this year is:',
+  'prompt.taiyi.sections':
+    'Then the figure in short sections, each under a title that names a part of it — "Where Tai Yi stands this year", "The two eyes" — with continuous prose inside. What to traverse: the palace 太乙 tàiyǐ occupies and how far through its three years it is; the two eyes, 文昌 wénchāng and 始擊 shǐjī, and what the sources read from where each fell; the two counts under the assignment you declared, and the balance or imbalance between them; the conditions the board named, each said as what it is; and the longer circuits — the 三基 sānjī, the 五福 wǔfú, the 大遊 dàyóu, the gate on duty — which move on scales of decades and are what places this year inside a longer figure. Each section says what the configuration **is**. None of them says what will happen.',
+  'prompt.taiyi.read':
+    'Where to look for all of that — the order you look, never the order you write: the palace 太乙 tàiyǐ stands in and the year it is at within it; the 局 jú and the 紀 jì the count has reached; where the two eyes fell and what stands with them; the two counts and the generals each seats; every condition the board names; the 計神 jìshén and 合神 héshén; and the longer circuits with the year each is at in its own period. What a **position** means — a palace, a seat, an eye where it fell — is not printed here and this engine ships none of it: where a section draws on the tradition for one, name what you are drawing on and, where it is a school\'s reading rather than the text\'s, say whose. The **conditions** are the exception and the only one: each is printed with the sentence 卷三 juàn sān uses to say what it is, so there use the words that are there and do not reach past them.',
+  'prompt.taiyi.invite':
+    'End by opening rather than by closing. Say briefly what could be looked at next and what you would need to be told in order to look at it — a part of the figure you set aside, the host and guest assignment you made and what would change it, a circuit you declined to read. Do not ask more than two questions, and do not put questions in place of the reading. This is an invitation, not a form.',
+
   'prompt.source': 'The board is at {url}',
   'prompt.chart': 'The chart',
   'prompt.asked': 'The question asked is:',
   'prompt.noQuestion':
     'No question was asked. Describe how the chart stands — what lies and what stands in each palace, and the configurations it fell into — and stop there. Do not choose a palace, do not read a fortune for anybody, and do not advise.',
 
-  // Examples of a question, to show how one is put. Grouped by the eight
-  // errands of `purposes.ts`, which is a table the engine already carries:
-  // the alternative was a combinatorial one, and a grammar that assembles a
-  // question from parts writes nonsense in two languages instead of one.
-  //
-  // These are not questions to ask. A question nobody has asked has no 用神,
-  // which is why the interface offers them as a way of learning the shape of
-  // one and says so beside the button.
 
   'cli.heading.moment': 'Moment',
   'cli.heading.pillars': 'Four Pillars',
@@ -1237,6 +1345,11 @@ export const en = {
   'form.instrument.liuren': 'What is going on, and with whom — 大六壬 dàliùrén',
   'form.instrument.qizheng': 'The sky a life began under — 七政四餘 qīzhèngsìyú',
   'form.instrument.bazi': 'What a life is built from, at the hour of a birth — 八字 bāzì',
+  // The fifth, and the one whose errand is nobody's. Said in the same register
+  // as the other four — what it is for — and what it is for is a year rather
+  // than a person or a matter, which the line has to make unmistakable or a
+  // reader picks it expecting a forecast of their own.
+  'form.instrument.taiyi': 'How a year stands, for everybody in it — 太乙神數 tàiyǐshénshù',
   'form.guiren': 'Which verse seats the noble (貴人)',
   'form.guiren.chou': '甲 with 戊 and 庚, at 丑 and 未',
   'form.guiren.wei': '甲 apart, at 未 and 丑',
@@ -1417,6 +1530,11 @@ export const en = {
   // having chosen it.
   'cli.error.notAsked':
     'The command "{command}" lays a board on a birth, and nothing is asked of it — so "--ask" has nowhere to go. Which part of a life a board of 命 is read for is chosen by the reader, out loud, after it is laid. Drop the question, or ask it of `chart` or `liuren`, which are cast for one.',
+  // The same refusal for a third reason. Under 命 the question would name a
+  // seat the board already prints; here there is nobody to ask on behalf of —
+  // the subject is a year and the reader is not on the board at all.
+  'cli.error.notAskedYear':
+    'The command "{command}" lays a board on a year, and nothing is asked of it — so "--ask" has nowhere to go. Nobody is on this board: its subject is the year everybody is standing in, and a question is how a reader ends up in a figure they are not in. What this board does take is "--about": the matter you are looking at, which is a field of view and not a question, and which is what says who is 主 and who is 客. Use that, or ask the question of `chart` or `liuren`, which are cast for one.',
 
   // The place search, as the MCP server words it. The reader here is a model
   // relaying an answer to somebody, so `lang` has to reach the prose too: a

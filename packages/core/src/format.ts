@@ -734,7 +734,12 @@ export function formatTaiyi(board: TaiyiBoard, t: Translator): string {
         ] as const
       ).map(([id, fief]) => [
         t(`label.taiyi.${id}` as MessageKey),
-        `${glyph(fief.branch)} · ${fief.year}`,
+        // The period beside the count, as every other circuit here prints one.
+        // The three bases are the only ones that ran without it, and the count
+        // alone is unreadable in a way that does not look unreadable: 民基
+        // moves a fief a year, so its `1` is a constant and was read as a base
+        // that had just begun. `1/1` cannot be read that way.
+        `${glyph(fief.branch)} · ${fief.year}/${fief.period}`,
       ]),
       2,
     ).map((line) => `  ${line}`),
@@ -747,8 +752,22 @@ export function formatTaiyi(board: TaiyiBoard, t: Translator): string {
     lines.push(
       '',
       `  ${t('cli.field.taiyiConditions')}`,
-      ...table(board.patterns.map((pattern) => taiyiPattern(pattern, t)), 2).map(
-        (line) => `  ${line}`,
+      // The row, and under it what 卷三 says the condition is — where the
+      // chapter says it. Indented under its own row rather than made a column,
+      // because a sentence in a table cell is a sentence nobody reads, and
+      // because 對 has none: a column would print an empty cell where the
+      // absence is the entry. See `PATTERNS` in `taiyi.ts`.
+      ...table(board.patterns.map((pattern) => taiyiPattern(pattern, t)), 2).flatMap(
+        (line, index) => {
+          const meaning = board.patterns[index]?.meaning;
+          const said = board.patterns[index]?.id;
+          return meaning === undefined
+            ? [`  ${line}`]
+            : [
+                `  ${line}`,
+                `      ${meaning} — ${t(`label.taiyimeaning.${said}` as MessageKey)}`,
+              ];
+        },
       ),
     );
   }

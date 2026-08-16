@@ -1998,11 +1998,74 @@ palaces rather than eight — the nine plus 絳宮, 明堂 and 玉堂, which 卷
 
 **掩, 擊, 迫, 囚, 關, 格 and 對 are computed; 四郭固, 四郭杜, 執提 and 提挾 are
 not.** The first seven are stated in 卷三 as relations between bodies this
-engine places, and each is named and weighed in one line — 掩 *is*
-掩襲刼殺之義, 囚 *is* 簒戮之義 — so the valence travels as `Pattern`'s does.
+engine places, and each is named and weighed there, so the valence travels as
+`Pattern`'s does — and, since phase 21, so does the sentence that earns it.
 The last four need the three gates and the five generals read together, and
 卷三's account of them turns on which party is 主 and which 客, which is the
 question this board does not ask.
+
+### What 卷三 says each condition is, and what it says will happen
+
+The chapter states each one **three times over**, and the three are not the
+same kind of sentence. An 經曰 gives the trigger; a 之義 or 者…也 says what the
+configuration *is*; then 若… and 嵗計遇之… say what will befall the realm. The
+middle kind travels in the output, quoted, for the reason `Pattern.valence`
+travels — it belongs to the configuration rather than to anybody's situation.
+The third kind does not, and is the dynastic layer this engine declines.
+
+| | carried — what it **is** | left out — what it **foretells** |
+|---|---|---|
+| 掩 | 掩襲刼殺之義 | 嵗計遇之，王綱失序，臣張君弱，宜修徳以禳之 · 若掩太乙在陽絶之地君凶，隂絶之地臣誅 |
+| 擊 | 所為撃者，臣凌君，卑凌尊，下凌上，僭也 | 嵗計遇之，將相相伐之義也 |
+| 迫 | 宫迫災㣲緩，辰迫災急疾 | 嵗計遇迫，人君慎之 |
+| 囚 | 囚者，簒戮之義也 | 若在陽氣絶氣之地大凶 · 若在絶陽絶隂之地自敗臣受誅 |
+| 關 | 闗之為義，但將相怕忌之事，不及於君也 | — |
+| 格 | 言政事上下格也 | 若在陽絶之地又與嵗計遇，格不利 · 主客筭不和者必敗 |
+| 對 | **none — see below** | 若下目相對之時，皆為大臣懐二心，君逐良將，兇奸生，下臣欺上 |
+
+Three judgements, recorded because they are judgements:
+
+- **迫 has no 之義.** What it has is a paired characterisation of the two
+  distances, which says what each *is* rather than what will happen, and which
+  the engine already distinguishes in `kind`. Carried on that ground.
+- **關's clause is 王希明's own voice**, not the 經's: 「王希明曰，闗之為義…」.
+  The transcript does not say so, because a name in every row is provenance
+  printed as content; this table is where it is said.
+- **格 has a second clause**, 「若格太乙者，盜侮其君」, for the sub-case where
+  太乙 itself is blocked. Left out: `TaiyiPatternSubject` admits no 太乙, so the
+  engine cannot tell that sub-case apart and the sentence would attach to
+  configurations that are not it.
+
+**對 has no such sentence and carries none.** 卷三 gives it a trigger — 「下目
+文昌將與太乙衝而相當者為對」 — and then a 若…皆為… list of events, with nothing
+saying what 對 *is*. Six of the seven are glossed and the seventh is not, which
+is the table telling the truth about its source rather than levelling itself.
+
+Several of the omitted clauses turn on 筭和 / 不和, which this engine does not
+compute — see 陰陽和不和 below. That is a second reason they could not travel
+even if the first did not hold: they are conditional on a quantity that is not
+in the output.
+
+### The per-palace readings of 卷二 — declined
+
+卷二 gives each of the eight palaces a province and an omen, in the same breath
+as the numbering quoted above: 「一宫在乾主兾州并州…若文昌將闗囚，必有迫脇君父
+之象矣」, 「二宫在離主荆州…若太乙臨之，君誅大臣將相矣」, 「三宫在艮主青州…若
+始撃臨之，嬖寵進中宫，兵起」, 「八宫在坎主兖州…若太乙臨之，臣欺君也」.
+
+Neither layer is computed. The 分野 is the geography of the Tang empire and
+answers a question nobody here is asking; the omens are dynastic prediction,
+which is the class declined throughout. **This is written down because the
+readings exist and are specific** — 三宮在艮 with 始擊臨之 is an ordinary
+configuration that boards of many years fall into, and the text says exactly
+what it portends. A reader who finds this engine silent about it is owed the
+reason, which is not that the doctrine is missing.
+
+It is also the answer to a question worth stating plainly: **there is no
+non-dynastic interpretive layer in this text to extract.** What 太乙 hands down
+for a palace is a province and a political omen. The 之義 clauses of 卷三 are
+the whole of what can be carried under the standard this project holds, which
+is why the conditions have them and the palaces have nothing.
 
 **陰陽和不和.** 卷二 gives two accounts of it, 張良經's and 王希明's, and they
 do not line up: one reads the parity of the 算 against the polarity of the eye's
@@ -2020,6 +2083,32 @@ which state falls, which year an army breaks, 陽九之災 and 百六之厄 — 
 this engine already declines, arriving in a register where it is more dangerous
 rather than less, because an epochal reading is falsifiable by nobody and
 travels as commentary on real events.
+
+Both of those stayed exactly where they were when the board gained a prompt in
+phase 21, and the distinction is worth stating because the two refusals are not
+the same shape. The dynastic layer is **refused outright** and the prompt
+refuses it a second time in its own words. The assignment of 主 and 客 is
+**withheld by the engine and commissioned in the prompt**, which is what already
+happens to the 用神: nothing computed chooses it, the reading cannot proceed
+without it, and whoever reads says which they took and why. It is made from what
+is being looked at and never from the counts — a larger 算 is not a winner — and
+this engine still names two numbers and stops.
+
+«What is being looked at» is a **matter**, and it reaches the prompt as one: a
+field of view with two sides in it, supplied by the reader, never computed and
+never sent to any server. Where none is given the prompt says the assignment was
+not made rather than having a model invent a pair of parties, which would be the
+whole reading resting on nothing. A matter is not a question, and the difference
+is what lets this board be handed over at all: a question about a year puts the
+reader inside a figure they are not in. See `prompt.taiyi.hostguest`,
+`prompt.taiyi.matter` and `PLAN.md` § 4 phase 21.
+
+**三基 print their period beside their count**, and the reason is a defect this
+board produced. 卷五 gives the sovereign thirty years to a fief, the minister
+three and the people one, so 民基 stands at 1 on every board ever laid. Printed
+as a bare `1` beside a sovereign at `23` it was read as a base newly begun — a
+fact nobody computed, produced by a right number without the thing that makes it
+legible. `TaiyiFief` carries `period`; the transcript prints `1/1`.
 
 **三基 is computed and unchecked.** 君基, 臣基 and 民基 run on 卷五's opening
 count, 「自上元甲寅之嵗至大唐開元十二年甲子嵗積得二十八萬五千一十一筭」, with

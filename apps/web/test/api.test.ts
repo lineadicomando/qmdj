@@ -12,6 +12,7 @@ import { GET as qizhengPrompt } from '../src/routes/api/qizheng/prompt/+server';
 import { GET as qizhengText } from '../src/routes/api/qizheng/text/+server';
 import { GET as taiyi } from '../src/routes/api/taiyi/+server';
 import { GET as taiyiPlate } from '../src/routes/api/taiyi/plate/+server';
+import { GET as taiyiPrompt } from '../src/routes/api/taiyi/prompt/+server';
 import { GET as taiyiText } from '../src/routes/api/taiyi/text/+server';
 import { GET as terms } from '../src/routes/api/terms/+server';
 import { GET as locations } from '../src/routes/api/locations/+server';
@@ -112,6 +113,21 @@ describe('GET /api/taiyi', () => {
     expect(text).toContain('no independent implementation');
   });
 
+  /**
+   * Every circuit prints how far into its period it stands, and the three bases
+   * are the ones that did not. The count alone is unreadable in a way that does
+   * not look unreadable: 民基 moves a fief a year, so its number is always 1 —
+   * and read beside a sovereign at 23 it was taken for a base newly begun,
+   * which is a fact nobody computed. `1/1` cannot be read that way.
+   */
+  it('prints the period of each base beside its count', async () => {
+    const { text } = await call(taiyiText, 'year=2026&lang=en');
+
+    expect(text).toContain('23/30');
+    expect(text).toContain('2/3');
+    expect(text).toContain('1/1');
+  });
+
   it('draws a grid with an empty middle and sixteen seats round it', async () => {
     const { status, headers, text } = await call(taiyiPlate, 'year=724&lang=en');
 
@@ -128,6 +144,74 @@ describe('GET /api/taiyi', () => {
   it('refuses a year outside what an address here can write', async () => {
     const { status } = await call(taiyi, 'year=999999');
     expect(status).toBe(400);
+  });
+
+  /**
+   * Phase 20 shipped this board without a `/prompt` on the ground that what it
+   * would be handed over *for* had not been designed. Phase 21 designed it, and
+   * what is asserted here is the shape of the endpoint rather than the wording:
+   * the transcript is inside the fence, there is no question anywhere, and the
+   * whole thing can be cached in public because none of it is anybody's.
+   */
+  it('hands the board over with the conditions for reading it', async () => {
+    const { status, headers, text } = await call(taiyiPrompt, 'year=2026&lang=en');
+    const { text: transcript } = await call(taiyiText, 'year=2026&lang=en');
+
+    expect(status).toBe(200);
+    expect(headers['content-type']).toContain('text/plain');
+    // The same rendering the CLI prints and the section shows, inside a fence.
+    expect(text).toContain(transcript.slice(0, transcript.indexOf('The board is at')).trimEnd());
+    expect(text).toContain('```');
+    // The two things a reading of this board is wrong without.
+    expect(text).toContain('is **not** below and never will be');
+    expect(text).toContain('dynastic');
+  });
+
+  it('takes no question, and can be cached in public because of it', async () => {
+    const { text, headers } = await call(taiyiPrompt, 'year=2026&lang=en&asked=true');
+
+    // `asked` is not a parameter here and naming it changes nothing: there is
+    // no line for a browser to append a question to, because nobody is on this
+    // board to ask on behalf of. Which is also why there is nothing to keep out
+    // of a shared cache — the first prompt on this site that is `public`.
+    expect(text).not.toContain('The question asked is:');
+    expect(headers['cache-control']).toContain('public');
+    expect(headers['cache-control']).not.toContain('private');
+  });
+
+  /**
+   * `about` is what a question is not. A matter names what is being looked at,
+   * which is what tells a reader which side is 主 and which is 客 — the
+   * assignment the prompt has always asked for and, until this parameter, named
+   * without any caller being able to supply.
+   *
+   * It is a boolean and never the text, exactly as `asked` is: a matter is
+   * somebody's own, and one in a query string is one written into every log
+   * along the way. Which is also what keeps this response cacheable — a boolean
+   * varies it, a matter would have varied the key.
+   */
+  it('ends on the line a matter lands on, and never carries the matter', async () => {
+    const { text, headers } = await call(taiyiPrompt, 'year=2026&lang=en&about=true');
+
+    expect(text.trimEnd().endsWith('What is being looked at this year is:')).toBe(true);
+    expect(text).toContain('it is at the end of this message');
+    expect(headers['cache-control']).toContain('public');
+
+    // Without it the prompt refuses to invent the pair rather than pointing at
+    // a matter that is not in the message.
+    const { text: alone } = await call(taiyiPrompt, 'year=2026&lang=en');
+    expect(alone).not.toContain('What is being looked at this year is:');
+    expect(alone).toContain('**No matter was given here**');
+  });
+
+  it('keeps the boolean out of the link back to the board', async () => {
+    const { text } = await call(taiyiPrompt, 'year=2026&lang=en&about=true');
+
+    // The link exists so the board can be seen again. A section address
+    // carrying `about=true` would say the section knows what somebody was
+    // looking at, which it does not and must not. See `pageAddress`.
+    expect(text).toContain('/en/taiyi?year=2026');
+    expect(text).not.toContain('about=true');
   });
 });
 

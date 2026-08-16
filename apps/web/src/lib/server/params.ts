@@ -127,7 +127,11 @@ export function pageAddress(url: URL, locale: Locale, section = ''): string {
   // is there so the chart can be cast again and checked, and the chart is the
   // chart of its moment. The 年命 is already written out in the transcript
   // this address travels inside.
-  for (const only of ['lang', 'asked', 'born', 'bornTime', 'bornTz', 'gender', 'years']) {
+  // `about` joins `asked` here: both are booleans the prompt endpoints read and
+  // neither is a parameter of a board. A link back to a section carrying one
+  // would say the section knows what somebody was looking at, which it does not
+  // and must not.
+  for (const only of ['lang', 'asked', 'about', 'born', 'bornTime', 'bornTz', 'gender', 'years']) {
     page.searchParams.delete(only);
   }
   return page.toString();

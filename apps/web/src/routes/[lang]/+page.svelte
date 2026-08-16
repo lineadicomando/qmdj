@@ -21,6 +21,20 @@
   of the press: a field nine readers out of ten have no business filling in
   belongs where the tenth can find it, not in front of all of them.
 
+  **Three kinds of instrument stand in that select and the kind decides what
+  is asked for.** The paragraph above is a board of 卜. A board of 命 is laid
+  on a birth: nothing is asked of it, the moment *is* the input, and empty
+  stops being the press because a birth left empty would be today's. A board
+  of 天 — 太乙, and it is the only one — is laid on a **year**, which is
+  neither a question nor a person: nobody is on it, no place and no hour enter
+  it, so the whole of the form is one number, and empty is the year being
+  lived. That last is the one place this page's original instinct survives
+  into a kind that asks nothing, and for the reason it always had: an empty
+  year is everybody's answer where an empty birth is nobody's. What does not
+  turn with the kind is the rest of it — one instrument to a consultation,
+  chosen before the press, and the prompt built here and nowhere else. See
+  `instruments.ts`, and `PLAN.md` § 4 phases 18 and 21.
+
   A birth may be given with it, and then the chart carries a 年命 — 本命, the
   year pillar of that birth, and 行年, the year being lived, both looked up
   *inside* the chart of the moment. That is the classical direction and the
@@ -60,6 +74,7 @@
   import PillarPlate from '$lib/components/PillarPlate.svelte';
   import QizhengReading from '$lib/components/QizhengReading.svelte';
   import StrengthLegend from '$lib/components/StrengthLegend.svelte';
+  import TaiyiReading from '$lib/components/TaiyiReading.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
   import type { MessageKey } from '@qimendunjia/i18n';
 
@@ -102,6 +117,17 @@
   );
   let question = $state('');
   /**
+   * The matter a board of 天 is read for, held apart from the question above.
+   *
+   * The two are not the same field wearing different labels, and merging them
+   * would put one word on the distinction this instrument stands on. A question
+   * asks what will happen and puts the person asking inside a figure they are
+   * not in; a matter names what is being *looked at*, and is what the two
+   * counts are counts of. Kept in this component and never in the address, as
+   * the question is and for the same reason.
+   */
+  let matter = $state('');
+  /**
    * The birth, which is optional and stays optional.
    *
    * A date alone places the 本命. The 行年 needs the direction its count runs
@@ -113,6 +139,17 @@
   let born = $state(data.born);
   // svelte-ignore state_referenced_locally
   let gender = $state<string>(data.gender);
+  /**
+   * The year a board of 天 is laid on, a third slot beside the other two.
+   *
+   * Held apart for the reason the birth is held apart from the moment of
+   * asking: three quantities, and one of them resurfacing under another
+   * instrument would mean something nobody said. It is a string because empty
+   * is a value here — the year being lived — and a number field that coerced it
+   * to zero would lay the board on year nought.
+   */
+  // svelte-ignore state_referenced_locally
+  let year = $state(data.year);
   /**
    * Which board the question is put to.
    *
@@ -182,6 +219,18 @@
 
   /** Whether the board is laid on a birth rather than cast for a question. */
   const laidOnABirth = $derived(instrument.needs === 'birth');
+  /**
+   * Whether the board is laid on a year — an instrument of 天, which is 太乙
+   * and nothing else.
+   *
+   * Not the negation of `laidOnABirth` and never to be written as one: what the
+   * two share is that nothing is asked of them, and everything else about them
+   * differs. A birth is somebody's and needs a place and an hour; a year is
+   * nobody's and needs neither. See `instruments.ts`.
+   */
+  const laidOnAYear = $derived(instrument.needs === 'year');
+  /** Whether a question is being put at all — the one kind that asks for one. */
+  const asking = $derived(instrument.needs === 'question');
 
   /**
    * The pair the form is editing, by the kind of the instrument.
@@ -222,6 +271,15 @@
   );
 
   /**
+   * The year, where it is the input rather than a field left over.
+   *
+   * It travels in the setup under 天 and nowhere else, exactly as the birth
+   * travels only where a board takes one: a `year=1644` sitting in the address
+   * of a Qi Men consultation would be a parameter naming nothing.
+   */
+  const sentYear = $derived((laidOnAYear && year) || undefined);
+
+  /**
    * What is still missing, checked before anything is asked of the server.
    *
    * Under a board of 卜 it is the question, and only the question: the birth
@@ -234,15 +292,28 @@
    * on an empty date would be laid on today, look like an answer, and be
    * nobody's. So the one field this section is proudest of leaving blank is
    * the one field the other kind of instrument insists on.
+   *
+   * Under a board of 天 it is the **matter**, and the year is the field that
+   * may be left empty: a year left empty is the year being lived, which is an
+   * answer and everybody's, so this section's original instinct survives into a
+   * kind that asks no question — one field over. What cannot be left empty is
+   * what the figure is read *for*. Without it the reading can only describe the
+   * board, which is exactly what the first cut of this instrument produced: a
+   * precise account of a figure that never says «and so?». See
+   * `prompt.taiyi.matter`.
    */
   const missing = $derived<MessageKey | undefined>(
-    laidOnABirth
-      ? birth.date === ''
-        ? 'form.needed.birth'
+    laidOnAYear
+      ? matter.trim() === ''
+        ? 'form.needed.matter'
         : undefined
-      : question.trim() === ''
-        ? 'form.needed.question'
-        : undefined,
+      : laidOnABirth
+        ? birth.date === ''
+          ? 'form.needed.birth'
+          : undefined
+        : question.trim() === ''
+          ? 'form.needed.question'
+          : undefined,
   );
 
   /**
@@ -281,7 +352,8 @@
    * button to copy is simply not there, and the button to cast is.
    */
   const fields = $derived(
-    `${momentQuery(input())}|${instrumentId}|${born}|${gender}|${question.trim()}`,
+    `${momentQuery(input())}|${instrumentId}|${born}|${gender}|${year}` +
+      `|${question.trim()}|${matter.trim()}`,
   );
   let castFrom = $state('');
   const spent = $derived(chart !== undefined && castFrom !== fields);
@@ -308,6 +380,11 @@
         instrument: instrumentId,
         born: sentBirth,
         gender: sentGender,
+        // Setup like the rest, and the whole of it under 天. The place and the
+        // options still travel beside it, unused by this board: they are what
+        // a reader set once, and switching instruments and back should find
+        // them rather than ask again.
+        year: sentYear,
       },
     );
     replaceState(next, page.state);
@@ -333,18 +410,26 @@
       // would be an hour out for a chart cast in Beijing and asked for in
       // Rome. The fields are under the options, empty, for the reader who
       // means another instant and says so.
-      const query = momentQuery(
-        input(),
-        {
-          lang: t.locale,
-          // No birth reaches a Liu Ren board, and not by oversight: the person
-          // asking is already in it, standing on the day stem. Which boards
-          // take one is `takesBirth`, where the reason is written down. See
-          // the page's own note, and `PLAN.md` § 4 phase 14.
-          born: sentBirth,
-          gender: sentGender,
-        },
-      );
+      //
+      // Under 天 none of that applies and none of it is sent. The place and
+      // the options are still standing in this page's state, because they are
+      // setup a reader set once — but a 年計 board is a function of a year, and
+      // handing it a `locationId` it would ignore is how a reader comes to
+      // believe their city went into it.
+      const query = laidOnAYear
+        ? new URLSearchParams({ ...(year ? { year } : {}), lang: t.locale }).toString()
+        : momentQuery(
+            input(),
+            {
+              lang: t.locale,
+              // No birth reaches a Liu Ren board, and not by oversight: the person
+              // asking is already in it, standing on the day stem. Which boards
+              // take one is `takesBirth`, where the reason is written down. See
+              // the page's own note, and `PLAN.md` § 4 phase 14.
+              born: sentBirth,
+              gender: sentGender,
+            },
+          );
       const response = await fetch(`/api/${instrument.api}?${query}`);
       const body = await response.json();
 
@@ -372,22 +457,48 @@
        * outage rather than as a bug, and the other instrument worked.
        */
       castMoment = body.moment ?? body[instrument.api]?.moment ?? null;
-      // Pinned to what the engine actually cast for. Under a question that is
-      // the instant of the press, and it is the whole point of the mode: the
-      // consultation belongs to that minute and not to whenever this is read.
-      const cast = { date: castMoment.input.date, time: castMoment.input.time };
-      address = momentQuery(
-        { ...input(), ...cast },
-        {
-          lang: t.locale,
-          born: sentBirth,
-          gender: sentGender,
-        },
-      );
+      /**
+       * The address of what was laid, and under 天 there is no moment in it.
+       *
+       * The two branches are not a convenience. A 年計 board has no instant, no
+       * place and no pillars under it, so `castMoment` is legitimately null
+       * here — and the line below this one used to read `castMoment.input.date`
+       * unconditionally, which on this board is an exception thrown in the
+       * middle of a successful cast.
+       *
+       * Either way it is pinned to what the engine actually laid rather than to
+       * the field: under a question that is the instant of the press, and under
+       * a year it is `chart.year`, which is the year the server settled on when
+       * the field said nothing.
+       */
+      if (laidOnAYear) {
+        at = String(chart.year);
+        address = `year=${at}&lang=${t.locale}`;
+      } else {
+        const cast = { date: castMoment.input.date, time: castMoment.input.time };
+        address = momentQuery(
+          { ...input(), ...cast },
+          {
+            lang: t.locale,
+            born: sentBirth,
+            gender: sentGender,
+          },
+        );
+        at = `${cast.date} ${cast.time.slice(0, 5)}`;
+      }
       castFrom = fields;
       castInstrument = instrument;
-      posed = question.trim();
-      at = `${cast.date} ${cast.time.slice(0, 5)}`;
+      // Only where one was put. The field is merely *hidden* under the kinds
+      // that ask nothing, so a question typed under Qi Men and never cast is
+      // still in this component's state when a 八字 or a 太乙 board comes back —
+      // and read unconditionally it printed that sentence over a board it was
+      // never put to, in the ink, at the top of the sheet somebody prints.
+      //
+      // Under 天 what stands there is the matter, for the reason the question
+      // stands there under 卜: a sheet handed to somebody who was not here when
+      // it was typed has to say what the figure was read for, or it is a board
+      // about nothing.
+      posed = asking ? question.trim() : laidOnAYear ? matter.trim() : '';
     } catch {
       chart = undefined;
       castInstrument = undefined;
@@ -451,10 +562,37 @@
    * from — and the question does not.
    */
   const promptUrl = $derived(
-    `/api/${shown.api}/prompt?${address}` + (shown.needs === 'birth' ? '' : '&asked=true'),
+    `/api/${shown.api}/prompt?${address}` +
+      (shown.needs === 'question' ? '&asked=true' : '') +
+      // The same shape as `asked`, and never the text. A matter is somebody's
+      // own — the merger they are watching, the dispute they are in — so a
+      // boolean says one exists, the prompt ends on the line that introduces
+      // it, and the browser appends what must not travel.
+      (shown.needs === 'year' ? '&about=true' : ''),
   );
 
-  /** The instant the board was actually laid for, for the line that says so. */
+  /**
+   * What the browser adds to the prompt after it arrives — the question under
+   * 卜, the matter under 天, and nothing at all under 命.
+   *
+   * Read off the board on screen and not off the field, as `promptUrl` is. A
+   * board of 命 ends on its own closing and has no line for anything to land
+   * after, so a sentence left in either box from an earlier consultation would
+   * be appended to a reading it was never put to — silently, inside the
+   * clipboard, where nobody sees it until it is already pasted.
+   */
+  const appended = $derived(
+    shown.needs === 'question' ? question.trim() : shown.needs === 'year' ? matter.trim() : '',
+  );
+
+  /**
+   * What the board was laid for, for the line that says so.
+   *
+   * An instant under the two kinds that have one, and a year under the third.
+   * One field rather than two because it is one sentence — `consult.castAt`
+   * says «laid for {when}», and what fills the blank is whatever the board is
+   * a function of.
+   */
   let at = $state('');
 </script>
 
@@ -472,7 +610,7 @@
     lead
     copyLabel="form.copyPrompt"
     copyUrl={promptUrl}
-    copySuffix={question.trim()}
+    copySuffix={appended}
   />
 {/snippet}
 
@@ -495,12 +633,21 @@
     A consultation is asked once and then read, at length — a form that stayed
     open through the reading would be a form claiming the reader is still
     filling it in.
+
+    `reopenLabel` names what a second consultation begins by rewriting, which
+    is different under each kind. Under 天 it is the matter and not the year:
+    the year is setup somebody set once, and what changes between two readings
+    of one year is what they are looking at.
   -->
   <FormPanel
     {t}
     bind:this={panel}
     legend={null}
-    reopenLabel={laidOnABirth ? 'consult.changeBirth' : 'consult.change'}
+    reopenLabel={laidOnAYear
+      ? 'consult.changeMatter'
+      : laidOnABirth
+        ? 'consult.changeBirth'
+        : 'consult.change'}
     closable={chart !== undefined}
     onsubmit={consult}
   >
@@ -519,15 +666,49 @@
         different kind of thing and reads as the step it is.
       -->
       <!--
-        Absent under a board of 命, rather than disabled or ignored.
+        Absent under a board of 命 or of 天, rather than disabled or ignored.
 
-        Nothing is asked of those two, and a box standing empty over them would
-        be the page inviting exactly the thing the prompt refuses: a topic
-        names one of the seats the board prints — «my career» *is* 官祿宮 — and
-        a reading that started from it would have reached a seat without ever
-        choosing one. See `prompt.ts` and `PLAN.md` § 4 phase 18.
+        Nothing is asked of those three, and a box standing empty over them
+        would be the page inviting exactly the thing the prompt refuses. Under
+        命 a topic names one of the seats the board prints — «my career» *is*
+        官祿宮 — and a reading that started from it would have reached a seat
+        without ever choosing one. Under 天 it is worse rather than milder:
+        there is nobody on that board at all, and a question typed over it is
+        how a reader gets written into a figure of a year they are not in. See
+        `prompt.ts` and `PLAN.md` § 4 phases 18 and 21.
       -->
-      {#if !laidOnABirth}
+      <!--
+        The matter, under 天 and where the question stands under 卜.
+
+        It is **not** the question field relabelled, and the two are kept apart
+        in the state for the same reason they are kept apart here: a question
+        asks what will happen and puts the person asking inside a figure they
+        are not in, which is the one thing this board refuses outright. A matter
+        names what is being *looked at* — and naming two sides of it is what
+        lets the board's two counts be counts of anything at all.
+
+        Required, unlike the year beneath it. That looks like this page
+        contradicting itself and is the same rule one field over: what may be
+        empty is what has an honest default, and the year has one — the year
+        being lived. What the figure is read *for* has none, and a board of 天
+        laid on nothing produces a precise description of a figure that never
+        says «and so?». Which is what it produced before this field existed.
+
+        A label and a placeholder and nothing else. There was a note under it
+        saying the same three things a third time — not a question, not about
+        you, name two sides — and the placeholder already carries the shape
+        where the reader is looking when they start typing. Three ways of
+        saying one thing is what the panel's own heading was taken off for.
+      -->
+      {#if laidOnAYear}
+        <label class="question">
+          {t('form.matter')}
+          <textarea bind:value={matter} rows="3" placeholder={t('form.matterPlaceholder')}
+          ></textarea>
+        </label>
+      {/if}
+
+      {#if asking}
         <label class="question">
           {t('form.question')}
           <!-- Five lines rather than two. What is typed here is the one thing
@@ -550,12 +731,12 @@
         two words they have no way to weigh.
       -->
       <!--
-        Four of them, and no longer a `select`.
+        Five of them, and no longer a `select`.
 
         A `select` gives one line to an option and shows one at a time, which
-        held while there were two and stops holding at four: a reader who knows
+        held while there were two and stops holding at five: a reader who knows
         none of these arts is choosing between descriptions, and descriptions
-        have to be read side by side to be weighed. Radios show all four at
+        have to be read side by side to be weighed. Radios show all five at
         once, and the fieldset carries the same label the `select` did.
       -->
       <fieldset class="instrument">
@@ -586,7 +767,32 @@
         The pair binds through `moment`, which is the slot the kind names —
         a birth and an instant-of-asking are different quantities, and a date
         typed as one must never resurface meaning the other.
+
+        Under a board of 天 the whole component is **absent**, which is the one
+        thing `when` could not express. There is no instant here to put in the
+        open or under a disclosure, and no place either: a 年計 board is a
+        function of a year, and a field asking where you are standing would be
+        the page collecting a datum the board cannot use and the reader would
+        assume it had. What stands in its place is the one number below.
       -->
+      {#if laidOnAYear}
+        <!--
+          The whole of the form under 天, and it is one field.
+
+          The section at `/[lang]/taiyi` says why a disclosure in front of a
+          single field is a door in front of a doorway; here the disclosure is
+          already the panel around everything, so what is left is the field, in
+          the open beside the instrument that asked for it. Empty is allowed and
+          means the year being lived — the note under it says so, because an
+          empty field that quietly means *now* is only obvious to whoever wrote
+          it.
+        -->
+        <label class="birthField date">
+          {t('consult.year')}
+          <input type="number" inputmode="numeric" min="1" max="9999" bind:value={year} />
+        </label>
+        <p class="note">{t('consult.yearNote')}</p>
+      {:else}
       <MomentForm
         {t}
         when={laidOnABirth ? 'fields' : 'options'}
@@ -635,6 +841,7 @@
           {/if}
         {/snippet}
       </MomentForm>
+      {/if}
 
       <!--
         The sex, in the open beside the birth and under one instrument only.
@@ -669,7 +876,7 @@
       <div class="actions">
         <SubmitButton
           {t}
-          label={laidOnABirth ? 'consult.lay' : 'consult.cast'}
+          label={asking ? 'consult.cast' : 'consult.lay'}
           {busy}
           needed={needed ?? undefined}
           quiet={chart !== undefined && !spent}
@@ -680,10 +887,15 @@
 
     <!-- With the fields shut, the bar says which instant answered and where
          it stood. Not the question: that is set in full over the board, where
-         it is read with the answer rather than beside a button. -->
+         it is read with the answer rather than beside a button.
+
+         The place is left off under 天, and not for tidiness: it never reached
+         the board. A bar reading «2026 · Roma» would say a 年計 board had been
+         laid somewhere, which is the one thing about this instrument a reader
+         has to not believe. -->
     {#snippet summary()}
       {at || '—'}
-      {asked.place ? `· ${asked.place.name}` : ''}
+      {shown.needs !== 'year' && asked.place ? `· ${asked.place.name}` : ''}
     {/snippet}
 
     <!--
@@ -719,8 +931,13 @@
              still says which instant it was laid for, which on paper is the
              only answer there is to *which* board this is. -->
         {#if posed}<p class="asked">{posed}</p>{/if}
+        <!-- The place is off under 天 for the reason it is off the bar: it
+             never entered the board, and on a printed sheet a place beside a
+             year is a claim nobody can walk back. -->
         <p class="note">
-          {t('consult.castAt', { when: at })}{asked.place ? ` · ${asked.place.name}` : ''}
+          {t('consult.castAt', { when: at })}{shown.needs !== 'year' && asked.place
+            ? ` · ${asked.place.name}`
+            : ''}
         </p>
       </header>
 
@@ -780,6 +997,8 @@
           <QizhengReading board={chart} {t} />
         {:else if shown.id === 'bazi'}
           <BaziReading bazi={chart} {t} />
+        {:else if shown.id === 'taiyi'}
+          <TaiyiReading board={chart} {t} />
         {:else}
           <ChartReading {chart} {t} wide />
         {/if}

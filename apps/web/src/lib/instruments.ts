@@ -26,8 +26,15 @@ import type { MessageKey } from '@qimendunjia/i18n';
  * birth, cast at the birth. It was left undeclared while both rows would have
  * held the same value, because a column with one value across every row
  * carries no information and no test can hold it to anything.
+ *
+ * **The fifth board was a row and a third value.** Phase 21 admits 太乙, whose
+ * subject is a year — neither a question nor a person — so `needs` gained
+ * `'year'` rather than the table gaining a branch. That the widening cost one
+ * value in one column is the whole of the argument for the descriptor: at the
+ * fourteen conditionals it replaced, a board that is neither of the two kinds
+ * would have been fourteen edits and a page nobody could read afterwards.
  */
-export type InstrumentId = 'qimen' | 'liuren' | 'qizheng' | 'bazi';
+export type InstrumentId = 'qimen' | 'liuren' | 'qizheng' | 'bazi' | 'taiyi';
 
 export interface Instrument {
   readonly id: InstrumentId;
@@ -41,14 +48,14 @@ export interface Instrument {
    * `/api/bazi` likewise. It also addresses `/plate` and `/prompt` beneath it.
    *
    * The one thing it does not settle is the moment: a chart carries its own
-   * inside it, where the other boards are handed it alongside. The
-   * consultation reads `body.moment` and accepts its absence, which is why
-   * that is not a field here.
+   * inside it, where the other boards are handed it alongside — and 太乙 has
+   * none at all. The consultation reads `body.moment` and accepts its absence,
+   * which is why that is not a field here.
    */
   readonly api: string;
   /**
    * What the reader is asked for, which is the whole of the difference between
-   * the two kinds.
+   * the kinds — and now there are three.
    *
    * `question` — a board of 卜. The reader writes what they are asking and the
    * board is cast at the instant of the press: the question comes before the
@@ -58,8 +65,21 @@ export interface Instrument {
    * `birth` — a board of 命. Nothing is asked of it. The date, the time and
    * the place *are* the input, so they stand in the open and a date is
    * required: a birth left empty would be the present, which is nobody's.
+   *
+   * `year` — a board of 天, which is 太乙 and nothing else here. Nothing is
+   * asked of it either, and the difference from 命 is that there is nobody in
+   * it: its subject is the year everybody is standing in. No place and no hour
+   * enter it, so the whole of the form is one number, and empty is the year
+   * being lived — which is the one place this section's «empty is the press»
+   * rule survives into the other kinds, because a year left empty is
+   * everybody's answer where a birth left empty is nobody's.
+   *
+   * **It also settles the address and whether a moment comes back**, and that
+   * is one reason rather than two folded together: this is the column that says
+   * what the board is a function of. A 年計 board is a function of `year=N`, and
+   * `/api/taiyi` returns no moment because there is no instant under it.
    */
-  readonly needs: 'question' | 'birth';
+  readonly needs: 'question' | 'birth' | 'year';
   /**
    * Whether a birth may be given **beside** what was asked.
    *
@@ -159,6 +179,19 @@ export const INSTRUMENTS: readonly Instrument[] = [
     takesGender: true,
     strengths: false,
     option: 'form.instrument.bazi',
+  },
+  // Last, and not by seniority: it is the one instrument here whose errand is
+  // nobody's, so a reader scanning the five for the shape of their own finds
+  // the four that could be theirs first.
+  {
+    id: 'taiyi',
+    api: 'taiyi',
+    needs: 'year',
+    takesBirth: false,
+    takesGender: false,
+    strengths: false,
+    plate: { width: 900, height: 1360 },
+    option: 'form.instrument.taiyi',
   },
 ];
 

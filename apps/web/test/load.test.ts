@@ -187,15 +187,30 @@ describe('the consult page', () => {
     const { data: ofMing } = await open(consult, '/en?instrument=qizheng');
     expect(ofMing.instrument).toBe('qizheng');
 
-    // 太乙 is computed and drawn and has a section of its own, and it is still
-    // outside — so this line's reason has changed and the line has not. What
-    // is outside is no longer «a board this engine does not compute»: it is a
-    // board that is not an instrument *of a consultation*. Nothing is asked of
-    // it, its subject is a year rather than a question or a person, and what
-    // such a board would be handed to a model *for* has not been designed. The
-    // sentinel below is therefore not written to fail on the day the board
-    // lands, unlike the one above it, which was. See `PLAN.md` § 4 phase 20.
-    const { data: outside } = await open(consult, '/en?instrument=taiyi');
+    // 太乙 was the outside case twice over, for two different reasons, and is
+    // neither now. Phase 20 kept it out on the ground that what such a board
+    // would be handed to a model *for* had not been designed; phase 21
+    // designed it, and the line has moved across. It is the third **kind** and
+    // not merely the fifth row — nothing is asked of it and nobody is on it,
+    // its subject being a year — so what this asserts is that `needs: 'year'`
+    // survives a reload like the other two.
+    const { data: ofTian } = await open(consult, '/en?instrument=taiyi&year=1644');
+    expect(ofTian.instrument).toBe('taiyi');
+    // The whole of that kind's input, and setup like the place: it comes back
+    // on a reload. A year the endpoint would refuse never reaches the field —
+    // it falls back to empty, which under this kind means the year being lived
+    // and is an answer rather than a gap.
+    expect(ofTian.year).toBe('1644');
+    expect((await open(consult, '/en?instrument=taiyi&year=99999')).data.year).toBe('');
+    // Nothing is cast at load here either, third kind or not.
+    expect(ofTian.failure).toBeUndefined();
+
+    // What is left outside, and it is not a board. The 曆注 are computed and
+    // are not an instrument of anything: the almanac layer is a page of a
+    // published book, a pure function of the date, and there is nothing to lay
+    // it on. So the fallback is still exercised, and by the case that will
+    // still be outside when every board is in.
+    const { data: outside } = await open(consult, '/en?instrument=almanac');
     expect(outside.instrument).toBe('qimen');
   });
 });

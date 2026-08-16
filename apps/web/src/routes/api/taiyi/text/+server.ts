@@ -11,9 +11,10 @@ import type { RequestHandler } from './$types';
  * rendering: `taiyiTranscript` is the one the terminal uses, so what is copied
  * here cannot drift from what the engine's own surfaces show.
  *
- * There is no `/prompt` beside it, and the absence is deliberate: `/[lang]` is
- * the only surface that builds a prompt, and this board is not one of its
- * instruments. See `PLAN.md` § 4 phase 20.
+ * `/prompt` beside it is the same board with the instructions for reading it
+ * around it. This is the bare transcript, which is what somebody copying the
+ * board itself wants — and it is what goes inside that prompt's fence, so the
+ * two cannot drift.
  *
  * `public` like the board itself, and `vary: Accept-Language` because the
  * glosses around the hanzi are the one thing here that turns with a reader.

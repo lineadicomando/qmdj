@@ -12,9 +12,12 @@ import {
   qizhengReadingPrompt,
   qizhengTranscript,
   readingPrompt,
+  taiyiReadingPrompt,
+  taiyiTranscript,
 } from '../src/prompt.js';
 import { computeBazi } from '../src/bazi/index.js';
 import { qizhengBoard, DEFAULT_QIZHENG_OPTIONS } from '../src/qizheng.js';
+import { taiyiBoard, DEFAULT_TAIYI_OPTIONS } from '../src/taiyi.js';
 import { DEFAULT_OPTIONS, type Place } from '../src/types.js';
 
 /**
@@ -542,6 +545,204 @@ describe('the prompt for a board of 命', () => {
     expect(baziTranscript(at, pillars(), en)).not.toContain('http');
     expect(baziTranscript(at, pillars(), en, { source: 'https://example.org/b' })).toContain(
       'https://example.org/b',
+    );
+  });
+});
+
+/**
+ * The third kind, and the one whose register had to be designed rather than
+ * adapted. What is asserted is not the wording but the five things this prompt
+ * is wrong without: the board is in it; nothing is asked of it and no line
+ * invites a question; the two parties are commissioned rather than assigned;
+ * the numbering that makes every position on it readable is stated among the
+ * instructions and not only inside the fence; and the two refusals that bound
+ * it — the dynastic doctrine, and the reader who is not on this board.
+ *
+ * See `PLAN.md` § 4 phase 21.
+ */
+describe('the prompt for a board of 天', () => {
+  const board = () => taiyiBoard({ year: 2026 }, DEFAULT_TAIYI_OPTIONS);
+
+  it('puts the 太乙 board inside a fence and its bounds outside', () => {
+    const text = taiyiReadingPrompt(board(), en);
+    const fenced = text.slice(text.indexOf('```'), text.lastIndexOf('```'));
+    const instructions = text.slice(0, text.indexOf('```'));
+
+    // The transcript verbatim, so what is pasted is what the CLI prints and
+    // what the section shows.
+    expect(fenced).toContain(taiyiTranscript(board(), en));
+    expect(fenced).toContain('2026');
+    expect(instructions).toContain('a year');
+  });
+
+  /**
+   * It takes no `Moment`, which no other prompt here can say. A 年計 board is a
+   * function of a year: there is no instant, no place and no set of pillars
+   * under it, and nobody's data is in it — which is what lets the endpoint that
+   * serves it be cached in public.
+   */
+  it('carries no instant, no place and no pillars', () => {
+    const text = taiyiReadingPrompt(board(), en);
+
+    expect(text).not.toContain('2024-06-15T14:00:00+08:00');
+    expect(text).not.toContain('Beijing');
+    expect(text).not.toContain('Four Pillars');
+  });
+
+  /**
+   * Nothing is asked of this board and there is no line for a question to land
+   * after — which is not the same reason a board of 命 has none. There the
+   * question would name a seat the board prints; here there is nobody to ask on
+   * behalf of at all.
+   */
+  it('ends on its closing and never on a question', () => {
+    for (const t of [en, createTranslator('it')]) {
+      const text = taiyiReadingPrompt(board(), t);
+
+      expect(text).not.toContain(t('prompt.asked'));
+      expect(text).not.toContain(t('prompt.noQuestion'));
+      expect(text.trimEnd().endsWith(t('prompt.taiyi.invite'))).toBe(true);
+    }
+  });
+
+  /**
+   * The matter is what turned this prompt from a caption into a reading, and
+   * the three cases are the ones `ReadingRequest.question` has. The third is
+   * the one that matters in practice: the web surface passes `''`, so the
+   * prompt ends on the line that introduces the matter and the browser adds
+   * the text — which never leaves it, because a matter is somebody's own and a
+   * query string is written into every log along the way.
+   */
+  it('ends on the line the matter lands on, and never carries it for the caller', () => {
+    for (const t of [en, createTranslator('it')]) {
+      const held = taiyiReadingPrompt(board(), t, { matter: '' });
+      expect(held.trimEnd().endsWith(t('prompt.taiyi.about'))).toBe(true);
+
+      const written = taiyiReadingPrompt(board(), t, { matter: 'two firms merging' });
+      expect(written.trimEnd().endsWith('two firms merging')).toBe(true);
+      // Outside the fence: it is the one thing here that is not data.
+      expect(written.indexOf('two firms merging')).toBeGreaterThan(written.lastIndexOf('```'));
+
+      // And none of it appears when none was given.
+      expect(taiyiReadingPrompt(board(), t)).not.toContain(t('prompt.taiyi.about'));
+    }
+  });
+
+  /**
+   * A matter is a field of view and a question asks what will happen, and the
+   * whole of this board's admission to the consultation rests on the two being
+   * different things. A matter that arrived and was answered as a question
+   * would put the reader inside a figure they are not in.
+   */
+  it('takes the matter as a frame and refuses to answer it', () => {
+    const text = taiyiReadingPrompt(board(), en, { matter: 'two firms merging' });
+    const instructions = text.slice(0, text.indexOf('```'));
+
+    expect(instructions).toContain('It is not a question and must not be answered as one');
+    expect(instructions).toContain('do not say who prevails');
+    // The reader is still not on the board, and the rule says so about the
+    // case a matter creates: a matter that is the reader's own.
+    expect(instructions).toContain('when the matter they named is their own');
+  });
+
+  /**
+   * The 用神 rule arriving on the board that needs it most. The engine names
+   * two counts and stops; the choice is the model's and has to travel signed,
+   * exactly as the palace a chart is read for does.
+   *
+   * It is also the one rule that turns on whether a matter arrived, and the two
+   * arms are not decoration. With a matter there is something to make the
+   * assignment *for*, so it is commissioned. Without one there is not, and the
+   * prompt has to say so — a rule that pointed at a matter which is not in the
+   * message is how the first cut of this prompt sent a model to invent a pair
+   * of parties and then read a whole figure onto them.
+   */
+  it('commissions 主 and 客 where there is a matter to choose them for', () => {
+    const text = taiyiReadingPrompt(board(), en, { matter: 'two firms merging' });
+    const instructions = text.slice(0, text.indexOf('```'));
+
+    expect(instructions).toContain('is **not** below and never will be');
+    expect(instructions).toContain('The choice is yours to make');
+    // The counts are named, and named as the output of a procedure rather than
+    // as a score anybody can compare.
+    expect(instructions).toContain('not scores of good and bad');
+  });
+
+  it('refuses to invent the pair where there is no matter', () => {
+    const text = taiyiReadingPrompt(board(), en);
+    const instructions = text.slice(0, text.indexOf('```'));
+
+    expect(instructions).toContain('**No matter was given here**');
+    expect(instructions).toContain('do not invent a pair in order to have one');
+    // And the rule that would have pointed at an absent matter is not there.
+    expect(instructions).not.toContain('it is at the end of this message');
+  });
+
+  /**
+   * The numbering, said twice on purpose. Inside the fence it comes out of
+   * `formatTaiyi` and is a caption on the data; among the instructions it is a
+   * rule governing how every position below is read — and a model that carries
+   * a chart's numbering across reads all eight one seat wrong with nothing
+   * anywhere to contradict it.
+   */
+  it('states the numbering among the rules and not only in the fence', () => {
+    const text = taiyiReadingPrompt(board(), en);
+    const instructions = text.slice(0, text.indexOf('```'));
+
+    expect(instructions).toContain('九宮皆差一位');
+    expect(instructions).toContain('do not carry it across');
+    expect(taiyiTranscript(board(), en)).toContain('one seat from the Luoshu');
+  });
+
+  /** The two refusals, and they are why this board waited for a register. */
+  it('keeps the dynastic doctrine out and the reader off the board', () => {
+    const instructions = taiyiReadingPrompt(board(), en).slice(
+      0,
+      taiyiReadingPrompt(board(), en).indexOf('```'),
+    );
+
+    expect(instructions).toContain('dynastic');
+    expect(instructions).toContain('Do not predict events');
+    expect(instructions).toContain('it is not the reader');
+    expect(instructions).toContain('no seat here stands for a part of their life');
+  });
+
+  it('carries the bounds every prompt has, in either locale', () => {
+    for (const [t, opening] of [
+      [en, 'food for thought and entertainment'],
+      [createTranslator('it'), 'spunto di riflessione'],
+    ] as const) {
+      const text = taiyiReadingPrompt(board(), t);
+
+      expect(text).toContain(opening);
+      expect(text).toContain(t('prompt.yours'));
+      expect(text).toContain(t('prompt.language'));
+    }
+  });
+
+  /**
+   * The rule the two boards of 命 are held to, and this board is denser in
+   * glyphs than either: its instructions name a Tang text, a line of it, two
+   * eyes, seven conditions and four circuits, and every one of them is a name
+   * the reader is being told how to weigh. A name somebody cannot say is a name
+   * they cannot look up to check that.
+   */
+  it('carries a reading beside every glyph it writes', () => {
+    for (const t of [en, createTranslator('it')]) {
+      const text = taiyiReadingPrompt(board(), t);
+      const instructions = text.slice(0, text.indexOf('```'));
+
+      for (const glyphs of instructions.matchAll(/[一-鿿]+/gu)) {
+        const beside = instructions.slice(glyphs.index, glyphs.index + glyphs[0].length + 2);
+        expect(beside).toMatch(/[一-鿿] \p{Script=Latin}/u);
+      }
+    }
+  });
+
+  it('names where the board can be seen again, and only when told', () => {
+    expect(taiyiTranscript(board(), en)).not.toContain('http');
+    expect(taiyiReadingPrompt(board(), en, { source: 'https://example.org/t' })).toContain(
+      'https://example.org/t',
     );
   });
 });

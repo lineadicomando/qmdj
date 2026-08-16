@@ -32,6 +32,14 @@ export const load: PageLoad = async ({ url, fetch, parent }) => {
     // still cast for the instant of the press.
     born: url.searchParams.get('born') ?? '',
     gender: gender === 'male' || gender === 'female' ? gender : '',
+    // The whole of the input under an instrument of 天, and setup like the
+    // rest: a year typed here comes back on a reload, and an address naming
+    // none opens on the year being lived — which under this kind is an answer
+    // rather than an omission. Read as the section at `/[lang]/taiyi` reads it,
+    // so the two agree on what a year is.
+    year: /^\d{1,4}$/.test(url.searchParams.get('year') ?? '')
+      ? (url.searchParams.get('year') as string)
+      : '',
     // Which board the question is put to. Setup exactly as `trueSolarTime` is:
     // chosen before the press, and nothing is laid until then. An address
     // naming no instrument, or one that is not an instrument, opens on the

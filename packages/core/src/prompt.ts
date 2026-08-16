@@ -38,24 +38,34 @@ import type { TaiyiBoard } from './taiyi.js';
  * and for the same reason: the surface chooses the language, the engine holds
  * no catalog and decides nothing about who is reading.
  *
- * **There are four boards and there is one in a prompt.** Not because a reader
+ * **There are five boards and there is one in a prompt.** Not because a reader
  * could not hold two, but because a model given two will merge them into a
  * verdict no text licenses, and — worse — will read their agreement as
- * corroboration when they overlap. And they overlap everywhere: the chart and
- * the 六壬 board share the day pillar, the decade, the void branches and seven
- * of the eight spirits; the twelve palaces of a 七政四餘 board *are* the ring
- * the 六壬 generals are seated on; and a 八字 is the four pillars every one of
- * the other three is laid from. Where two agree it is frequently one fact
- * printed twice. So the functions below never meet: a consultation takes one
- * instrument, and comparing instruments happens where nothing is being asked.
- * See `PLAN.md` § 4 phases 14 and 18.
+ * corroboration when they overlap. And four of the five overlap everywhere:
+ * the chart and the 六壬 board share the day pillar, the decade, the void
+ * branches and seven of the eight spirits; the twelve palaces of a 七政四餘
+ * board *are* the ring the 六壬 generals are seated on; and a 八字 is the four
+ * pillars every one of the other three is laid from. Where two agree it is
+ * frequently one fact printed twice. So the functions below never meet: a
+ * consultation takes one instrument, and comparing instruments happens where
+ * nothing is being asked. See `PLAN.md` § 4 phases 14 and 18.
  *
- * **Two of the four are boards of 卜 and two are boards of 命**, and the
- * difference reaches into the shape of the prompt rather than only its
- * contents. A board of 卜 is cast for a question and the prompt ends on the
- * line that introduces one. A board of 命 is laid on a birth, nothing is asked
- * of it, and the prompt ends on what to do with it instead — which is also why
- * `MingReadingRequest` has no `question` field to leave empty.
+ * **太乙 overlaps none of them, and the rule holds for it anyway.** Its subject
+ * is a year and it shares not one quantity with the other four, so the
+ * duplicate-fact argument does not reach it — what does reach it is the first
+ * half: a model handed a board of a year beside a board of a person will read
+ * the year onto the person, which is the whole of what `prompt.taiyi.notPersonal`
+ * exists to forbid, and putting the two in one fence would be this file
+ * inviting it.
+ *
+ * **Three kinds, not two.** A board of 卜 is cast for a question and the prompt
+ * ends on the line that introduces one. A board of 命 is laid on a birth,
+ * nothing is asked of it, and the prompt ends on what to do with it instead —
+ * which is also why `MingReadingRequest` has no `question` field to leave
+ * empty. A board of 天 — 太乙, and it is the only one — is laid on a year,
+ * nothing is asked of it either, and its subject is nobody: it ends on its own
+ * closing, and the thing it has to be stopped from becoming is not a verdict
+ * but a forecast. See `PLAN.md` § 4 phase 21.
  */
 
 /**
@@ -339,11 +349,16 @@ export function qizhengTranscript(
  *
  * The shortest transcript here, and it takes no `Moment`: this board is a
  * function of a year and there is no instant, no place and no set of pillars
- * under it. **There is no reading prompt beside it either**, and that is
- * decided rather than deferred — `/[lang]` is the only surface that builds a
- * prompt and this board is not one of its instruments, so what such a board
- * would be handed over *for* has not been designed. See `PLAN.md` § 4 phase
- * 20.
+ * under it. Phase 20 shipped it without a prompt beside it, on the ground that
+ * what such a board would be handed over *for* had not been designed; phase 21
+ * designed it, and `taiyiReadingPrompt` is below.
+ *
+ * **The two standing lines are inside this fence and not around it.** The
+ * numbering one seat off the 洛書 and the account of how this board is checked
+ * both come out of `formatTaiyi`, so every surface that prints the transcript
+ * carries them without having to remember to. The prompt states the numbering
+ * a second time among its rules, because there it is not a caption on the data
+ * but an instruction governing how every position below is read.
  */
 export function taiyiTranscript(
   board: TaiyiBoard,
@@ -354,6 +369,171 @@ export function taiyiTranscript(
     formatTaiyi(board, t),
     ...(extra.source ? ['', `  ${t('prompt.source', { url: extra.source })}`] : []),
   ].join('\n');
+}
+
+/**
+ * What is being asked of a 太乙 board, which is nothing and for a third reason.
+ *
+ * Not `MingReadingRequest`, although the two fields are identical today. A
+ * board of 命 has no question because it is laid on a person and stands whether
+ * anybody asks anything or not; this one has no question because **there is
+ * nobody to ask on behalf of**. Its subject is a year and the reader is not in
+ * it. Folding the two types together would put one name on two reasons, and the
+ * day either grows a field it would grow the wrong one.
+ */
+export interface TaiyiReadingRequest {
+  /** Where the board can be seen again, if the caller knows an address. */
+  source?: string;
+  /**
+   * **The matter being looked at** — and it is not a question.
+   *
+   * The distinction is the whole of why this board can be handed over at all.
+   * A question asks what will happen and puts the person asking inside a figure
+   * they are not in, which is what `prompt.taiyi.notPersonal` refuses. A matter
+   * names a *field of view* — two organisations, two sides of a negotiation, a
+   * domain with parties in it — and it is what the assignment of 主 and 客 has
+   * to be made **for**. `prompt.taiyi.hostguest` has always said the choice is
+   * made «for the matter being looked at»; until this field existed it named
+   * something the callers structurally could not supply, and the reading came
+   * back a description of a figure with no subject.
+   *
+   * Three cases, as `ReadingRequest.question` has three and for the same
+   * reason:
+   *
+   * - `undefined` — none was given. The prompt reads the figure and says so.
+   * - a string — the matter, written where it belongs.
+   * - `''` — a matter exists and the caller is keeping it. The prompt ends on
+   *   the line that introduces it, for the caller to append.
+   *
+   * The empty string is what the web surface passes. A matter is somebody's own
+   * — the merger they are watching, the dispute they are in — and one in a query
+   * string is one written into every access log between the browser and the
+   * server. Same rule as the question, same reason.
+   */
+  matter?: string;
+}
+
+/**
+ * The board, the instructions for reading it, and the year it is laid on.
+ *
+ * **The only prompt here without a `Moment`**, matching `taiyiTranscript`: a
+ * 年計 board is a function of a year and there is no instant, no place and no
+ * set of pillars under it. Nobody's data enters it, which is what lets the
+ * endpoint that serves this be cached in public — the first prompt on this site
+ * that can be.
+ *
+ * The register it commissions is **descriptive and never predictive**, and that
+ * is the design phase 20 said was missing rather than a bound bolted onto one
+ * that already existed. Two things it has to stop, and they pull in opposite
+ * directions: the received doctrine, which is dynastic and dated and would
+ * arrive as commentary on real events that nobody can falsify
+ * (`prompt.taiyi.noDoctrine`); and the reader, who is not on this board at all
+ * and whom a model will otherwise put there (`prompt.taiyi.notPersonal`) — the
+ * natal-Qimen error arriving in a new register. What is left between them is the
+ * figure of a year, said as a figure.
+ *
+ * **主 and 客 are chosen here and nowhere upstream.** The engine names two
+ * counts and stops, exactly as it names nine palaces and chooses no 用神; the
+ * prompt says so, commissions the choice, and requires it signed. That is the
+ * one interpretive act this board cannot be read without, and moving it into
+ * the engine would be answering the question this project does not ask.
+ */
+export function taiyiReadingPrompt(
+  board: TaiyiBoard,
+  t: Translator,
+  request: TaiyiReadingRequest = {},
+): string {
+  /** Whether there is something for the figure to be read *about*. */
+  const about = request.matter !== undefined;
+
+  return [
+    `# ${t('prompt.taiyi.heading')}`,
+    '',
+    t('prompt.taiyi.role'),
+    '',
+    t('prompt.language'),
+    '',
+    // The subject first, as under both boards of 命 and for the same reason:
+    // bounds with nothing above them read as an instruction to say nothing.
+    // Here it does a second job — it says what the subject is *not*, which on
+    // this board is where a reader is likeliest to be put wrongly.
+    `- ${t('prompt.taiyi.subject')}`,
+    // The matter, straight after the subject and before the assignment it is
+    // the ground of. Only where there is one: a rule naming a thing that is not
+    // in the message is how this prompt read as a caption in the first place.
+    ...(about ? [`- ${t('prompt.taiyi.matter')}`] : []),
+    // Nothing below means anything until the two parties are named. It is this
+    // board's 用神, and it is the one rule here that turns on whether a matter
+    // arrived: with one the assignment is commissioned, without one there is
+    // nothing to make it *for*, and the prompt says so rather than sending a
+    // model to invent a pair of parties.
+    `- ${t(about ? 'prompt.taiyi.hostguest' : 'prompt.taiyi.hostguestNoMatter')}`,
+    // Before the counts and the conditions, since both are read off positions
+    // and a model carrying a chart's numbering across reads all eight one seat
+    // wrong with nothing anywhere to contradict it.
+    `- ${t('prompt.taiyi.palaces')}`,
+    `- ${t('prompt.taiyi.counts')}`,
+    `- ${t('prompt.taiyi.conditions')}`,
+    // The two refusals, and they are the load-bearing pair.
+    `- ${t('prompt.taiyi.noDoctrine')}`,
+    `- ${t('prompt.taiyi.notPersonal')}`,
+    `- ${t('prompt.ming.noRecital')}`,
+    `- ${t('prompt.ming.explain')}`,
+    `- ${t('prompt.taiyi.register')}`,
+    // Last of the bounds and about all of them, as under the boards of 命: a
+    // rule kept by being obeyed never has to be announced.
+    `- ${t('prompt.ming.rulesStayOut')}`,
+    `- ${t('prompt.yours')}`,
+    '',
+    t('prompt.names'),
+    '',
+    t('prompt.disclaimer'),
+    '',
+    `## ${t('prompt.taiyi.board')}`,
+    '',
+    '```',
+    taiyiTranscript(board, t, request.source ? { source: request.source } : {}),
+    '```',
+    '',
+    ...taiyiClosing(t, about),
+    // The matter last, where a board of 卜 puts the question and for the same
+    // reason: a newline and nothing after it is the caller saying it will
+    // append. It is outside the fence, because it is the one thing here that is
+    // not data.
+    ...(about ? ['', `${t('prompt.taiyi.about')}\n${request.matter}`] : []),
+  ].join('\n');
+}
+
+/**
+ * How a reading of a board of 天 is laid out, said after the fence.
+ *
+ * The shape `mingClosing` has and not the contents, and the difference is the
+ * fourth step. There the themes are **themes of a life** and are titled for one;
+ * here they are **parts of a figure** and are titled for one, because a section
+ * titled for a part of the world — the economy, a war, a country — is the
+ * dynastic reading arriving under a heading, which is precisely what the rule
+ * above the fence spent a paragraph refusing.
+ *
+ * **The first step turns on whether there is a matter**, and that is the one
+ * place the two readings genuinely part. With one, the sections bear on it and
+ * the reply is *about* something. Without one, they describe a figure — which
+ * is honest and is what the first cut of this prompt produced throughout: a
+ * precise account of a board that never answers «and so?».
+ */
+function taiyiClosing(t: Translator, about: boolean): string[] {
+  return [
+    t(about ? 'prompt.taiyi.forMatter' : 'prompt.taiyi.noQuestion'),
+    '',
+    t('prompt.taiyi.opening'),
+    '',
+    t('prompt.taiyi.panorama'),
+    '',
+    t('prompt.taiyi.sections'),
+    '',
+    t('prompt.taiyi.read'),
+    '',
+    t('prompt.taiyi.invite'),
+  ];
 }
 
 /** The board, the instructions for reading it, and what it is laid on. */
