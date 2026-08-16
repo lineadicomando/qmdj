@@ -860,6 +860,10 @@ export const en = {
   // plain text unreachable to whoever wants nothing to do with a model.
   'form.copyChart': 'Copy the chart as text',
   'form.copyBoard': 'Copy the board as text',
+  // Named for what is on the page rather than for the board: what the pillars
+  // section shows is four columns, and «the chart» over them would send a
+  // reader looking for the nine palaces.
+  'form.copyPillars': 'Copy the pillars as text',
   'form.copyPrompt': 'Copy the prompt',
   // The other way out of a cast chart, and the one that needs no account
   // anywhere: the sheet carries the question, the board, the four pillars and

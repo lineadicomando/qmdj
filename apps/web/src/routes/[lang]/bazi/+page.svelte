@@ -8,6 +8,7 @@
   import MomentForm from '$lib/components/MomentForm.svelte';
   import PillarPlate from '$lib/components/PillarPlate.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
+  import Takeaway from '$lib/components/Takeaway.svelte';
 
   let { data } = $props();
   const t = $derived(data.t);
@@ -37,6 +38,27 @@
    * wrong. Without a date there is no reading at all — see `+page.ts`.
    */
   const needed = $derived(asked.date ? undefined : ('form.needed.date' as const));
+
+  /**
+   * The same pillars, for whatever is asked of them in words.
+   *
+   * Pinned to the instant the answer was cast for rather than to the fields,
+   * as on every other section: the hour the transcript is fetched for has to
+   * be the hour the columns on screen were cut from. The sex travels with it,
+   * because the decade cycles are in the transcript and their direction is
+   * read off it — an address that dropped it would copy a shorter reading
+   * than the page is showing.
+   */
+  const address = $derived(
+    momentQuery(
+      {
+        ...data.moment,
+        date: result?.moment.input.date ?? data.moment.date,
+        time: result?.moment.input.time ?? data.moment.time,
+      },
+      { gender: data.gender, lang: t.locale },
+    ),
+  );
 
   /** Reading is navigating: the address holds the moment, here and on the chart. */
   async function submit(event: SubmitEvent): Promise<void> {
@@ -84,6 +106,13 @@
       </select>
     </label>
     <SubmitButton {t} label="cli.heading.reading" {busy} {needed} />
+  {/snippet}
+  {#snippet controls()}
+    {#if result}
+      <!-- The same corner the other sections keep them in: nothing here is
+           worth stepping, but a cast board is worth taking away. -->
+      <Takeaway {t} copyLabel="form.copyPillars" copyUrl="/api/bazi/text?{address}" />
+    {/if}
   {/snippet}
   {#snippet summary()}
     {data.moment.date || '—'}

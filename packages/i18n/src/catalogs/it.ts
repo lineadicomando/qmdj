@@ -755,6 +755,7 @@ export const it: Record<MessageKey, string> = {
 
   'form.copyChart': 'Copia la carta come testo',
   'form.copyBoard': 'Copia il quadro come testo',
+  'form.copyPillars': 'Copia i pilastri come testo',
   'form.copyPrompt': 'Copia il prompt',
   'form.print': 'Stampa',
   'form.copied': 'Copiato',

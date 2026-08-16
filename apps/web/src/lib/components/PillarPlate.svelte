@@ -331,9 +331,61 @@
   /* Along the foot, where the board writes what fell in a palace. */
   .stage { margin-top: auto; font-size: 8cqw; color: var(--faint); }
 
-  /* Four squares are one figure: a page break through the middle of them
-     leaves two pairs on two sheets and a pillar cut in half. */
+  /*
+   * Paper, where the square comes off.
+   *
+   * Four squares are one figure, so a page break may not pass through them:
+   * broken, they leave two pairs on two sheets and a pillar cut in half. That
+   * much was here from the start. The rest is what a sheet does to the way
+   * the square is built — three devices, each of them screen furniture, and
+   * each read differently once the layout is paginated. The **`aspect-ratio`**
+   * reserves a box whose height no longer answers to what is in it. The
+   * **registers are absolutely placed** to fill that box, so they cannot grow
+   * with it. And the type is set in **`cqw`**, which is a question put to a
+   * container that printing has just re-measured — one engine answers it with
+   * the cell on the sheet, another with the cell as it stood on screen. Where
+   * the answers differ the content is taller than the box, and `overflow:
+   * hidden` under it takes the difference away without a mark: Firefox prints
+   * four tinted squares holding a name apiece and drops every stem, branch,
+   * god and stage in them. A board that lost its pillars and gives no sign of
+   * it is the failure `.scroller` is unpicked for in `app.css`, and the answer
+   * is the same one — nothing on a sheet may clip, because nothing on a sheet
+   * can be scrolled to.
+   *
+   * So on paper the cell is as tall as what it holds, the registers are back
+   * in the flow, nothing is hidden, and the type is set from the page's own
+   * size rather than from a container. What is given up is the square, which
+   * is a shape; what is kept is every name in it. The three arrangements keep
+   * their proportions to one another — a caption stays small, and under a
+   * board the name still leads over the word.
+   */
   @media print {
     .plate { break-inside: avoid; }
+    /* `--board` is measured against the window's height, which is not a
+       quantity a sheet has. The plate takes the measure it is handed. */
+    .plate:not(.bare):not(.wide) { inline-size: 100%; }
+    .cell { aspect-ratio: auto; }
+    .registers,
+    .wide .registers {
+      position: static;
+      justify-content: flex-start;
+      padding: 0.5rem 0.35rem;
+      gap: 0.2rem;
+      overflow: visible;
+    }
+    .corner,
+    .bare .corner,
+    .wide .corner { position: static; align-self: start; font-size: 0.7rem; }
+    .god { font-size: 0.72rem; }
+    /* The Four Pillars' own plate, where the word leads. */
+    .word { font-size: 0.95rem; }
+    .glyph { font-size: 0.8rem; }
+    .stage { font-size: 0.7rem; }
+    /* The caption to a board, which stays a caption. */
+    .bare .word { font-size: 0.85rem; }
+    .bare .glyph { font-size: 0.72rem; }
+    /* Under a board, where the name leads and the word is quiet beneath it. */
+    .wide .glyph { font-size: 1.25rem; }
+    .wide .word { font-size: 0.72rem; }
   }
 </style>

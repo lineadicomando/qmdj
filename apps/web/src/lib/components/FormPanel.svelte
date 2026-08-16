@@ -42,8 +42,10 @@
     /**
      * What can still be done with the fields closed.
      *
-     * Not every section has any: a moment of birth is one moment, and only a
-     * chart of the present is worth moving.
+     * On every section that casts something this is where `Takeaway` stands,
+     * which is what makes the pair findable in one corner throughout. What
+     * else rides here differs: only a chart of the present is worth stepping,
+     * and a moment of birth is one moment.
      */
     controls?: Snippet;
   }
