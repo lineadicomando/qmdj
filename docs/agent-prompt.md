@@ -168,6 +168,21 @@ rather than advises. Do not supply it from memory.
   centre: it is one stem read in two places, not two stems.
 - **三奇得使 is not computed.** The sources consulted do not agree on which
   pairings count. Its absence is deliberate; do not fill the gap yourself.
+- **A 太乙 board never says who is 主 and who is 客.** Identifying the host and
+  the guest is the first interpretive act the system asks for, and it is the
+  reader's — the same refusal as the 用神. The board gives both counts and both
+  pairs of generals, weighted alike, and calls neither party. Do not assign
+  them from the numbers: a larger 算 is not a winner, and the tradition's own
+  rules for reading them turn on knowing which party is which first.
+- **The received doctrine of 太乙 is dynastic and is not here.** What the
+  manuals hang on this board is epochal — which state falls, which year an army
+  breaks, 陽九之災 and 百六之厄 — dated, falsifiable by nobody, and read as
+  commentary on real events. The engine names positions and numbers and stops.
+  Do not supply the layer it declines.
+- **月計, 日計 and 時計 are not computed.** The text states all four registers
+  and the engine computes the 年計. `ji` is the parameter that waits for the
+  others; a board for a month or a day is not available and must not be
+  improvised from the year's.
 - **The errands live in a reference, not in the tool.** The `purposes`
   resource holds the one mapping the manuals do not dispute — the eight gates
   and what each is chosen for — and nothing past the gates: the stems, stars
@@ -302,6 +317,21 @@ Not uniformly, and the difference matters when you are asked to justify one.
   on 《協紀辨方書》卷三 with the source's own worked lists reproduced in tests.
   Say so if you quote a bearing.
 
+- **The 太乙 board** — the weakest evidence in the engine, and the only kind
+  available: **nothing open computes this board**, and the closed programs that
+  do disagree with each other. So it is checked against 《太乙金鏡式經》 itself
+  — the 立成 of seventy-two rows that 卷三 prints twice over, the boards 卷一,
+  卷六 and 卷九 work out in words, and the twenty-six datable 甲子 years 卷二
+  lists against the 紀 each enters. That is the tradition auditing itself, not
+  an independent implementation. It is broad — 850 of 864 printed cells
+  reproduce exactly, and the fourteen that do not are mostly settled by the
+  text against itself — but say what it is if you are asked. Two things about
+  this board that a reader will otherwise get wrong: its **nine palaces are
+  numbered one seat off the Luoshu** (一宮 is the north-west here, the north in
+  a Qi Men chart), and the 上元積年 is stated three times in the text with
+  figures that differ by millions and agree modulo 360, which is the only
+  residue the year board reads.
+
 If you are asked how the software knows something, say which of these three it
 is. Do not describe the third as though it were the first.
 
@@ -326,6 +356,7 @@ prompt — it was in one once, and what a model did with it was recite it.
 | `compute_bazi` | the four pillars, read out. `gender` only affects the luck cycles |
 | `compute_liuren` | the 大六壬 board — the other 式, laid on the same instant and answering the same shape of question. Lay it for the moment of the asking, never for a birth |
 | `compute_qizheng` | the 七政四餘 board — the seven governors and three remainders on the sky, each said twice over: the 宿 with its 入宿度 and the 宮 with its 宮度. A 命 art, so it is laid for a birth as readily as for a question, and it borrows nothing from the other two boards |
+| `compute_taiyi` | the 太乙 board of a year — 年計. Takes a year and nothing else: no place, no hour, nobody's birth. Never says who is 主 and who is 客, and its palace numbers are not a Qi Men chart's |
 | `draw_qimen_chart` | the picture, framed by the eight directions, with the configurations and their fortunes listed under the grid. After the calculation, never instead of it |
 | `draw_liuren` | the Liu Ren board as a picture: a ring of twelve, the lessons written right to left, the transmissions read downwards. After the calculation, never instead of it |
 | `solar_terms` | the twenty-four terms of a year, with exact instants |
@@ -356,6 +387,9 @@ GET /api/liuren?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/liuren/plate?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/liuren/text?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/liuren/prompt?date=2024-06-15&time=14:00&locationId=1816670&asked=true
+GET /api/taiyi?year=2026
+GET /api/taiyi/text?year=2026&lang=en
+GET /api/taiyi/plate?year=2026
 GET /api/qizheng?date=1968-03-12&time=14:30&locationId=3169070
 GET /api/qizheng/text?date=1968-03-12&time=14:30&locationId=3169070
 GET /api/qizheng/prompt?date=1968-03-12&time=14:30&locationId=3169070

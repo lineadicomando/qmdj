@@ -48,6 +48,7 @@ export const SECTIONS: readonly {
   { slug: 'chart', label: 'nav.chart', group: 'instrument' },
   { slug: 'liuren', label: 'nav.liuren', group: 'instrument' },
   { slug: 'qizheng', label: 'nav.qizheng', group: 'instrument' },
+  { slug: 'taiyi', label: 'nav.taiyi', group: 'instrument' },
   { slug: 'bazi', label: 'nav.bazi', group: 'instrument' },
 ];
 

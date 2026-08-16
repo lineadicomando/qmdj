@@ -8,12 +8,14 @@ import {
   formatNianming,
   formatQimenChart,
   formatQizheng,
+  formatTaiyi,
   formatWarnings,
 } from './format.js';
 import type { LiurenBoard } from './liuren.js';
 import type { Nianming } from './nianming.js';
 import type { Moment } from './pillars.js';
 import type { QizhengBoard } from './qizheng.js';
+import type { TaiyiBoard } from './taiyi.js';
 
 /**
  * The chart handed to somebody who will read it, with what they have to know.
@@ -328,6 +330,28 @@ export function qizhengTranscript(
     '',
     formatQizheng(board, t),
     ...(warnings ? ['', warnings] : []),
+    ...(extra.source ? ['', `  ${t('prompt.source', { url: extra.source })}`] : []),
+  ].join('\n');
+}
+
+/**
+ * The 太乙 board of a year said in full.
+ *
+ * The shortest transcript here, and it takes no `Moment`: this board is a
+ * function of a year and there is no instant, no place and no set of pillars
+ * under it. **There is no reading prompt beside it either**, and that is
+ * decided rather than deferred — `/[lang]` is the only surface that builds a
+ * prompt and this board is not one of its instruments, so what such a board
+ * would be handed over *for* has not been designed. See `PLAN.md` § 4 phase
+ * 20.
+ */
+export function taiyiTranscript(
+  board: TaiyiBoard,
+  t: Translator,
+  extra: { source?: string } = {},
+): string {
+  return [
+    formatTaiyi(board, t),
     ...(extra.source ? ['', `  ${t('prompt.source', { url: extra.source })}`] : []),
   ].join('\n');
 }

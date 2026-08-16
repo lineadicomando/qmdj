@@ -60,6 +60,7 @@ compatible with it. The GeoNames data is CC BY 4.0.
 | Qi Men charts | 時家 by the 拆補 or 置閏 method: four plates, configurations, seasonal states, 門宮 and 星宮 relations, the post horse of the day and of the hour |
 | Liu Ren boards | 大六壬: the 天地盤 by 月將加時, the 四課, the 三傳 by the 九宗門, the 十二天將, the 遁干 and the 空亡 |
 | 七政四餘 boards | the seven governors and three of the four remainders, placed by ephemeris: the 宿 and the 入宿度 with the boundaries taken from the 距星 themselves, the twelve 次 and the 宮度, 順 and 逆, the 命宮 by 加時 and the 人事十二宮 numbered from it |
+| 太乙 boards | 太乙神數 in the 年計: 太乙 walking the eight palaces and never the centre, the 十六神, 文昌 and 始擊, the 主算 and 客算 with the 大將 and 參將 each seats, the 八門直使, the 三基, 五福 and 大遊, and the conditions 掩 擊 迫 囚 關 格 對 |
 | Almanac | 曆注: 建除十二神, 二十八宿值日, the 十二神, twenty-six 年神, the four 德 of the month and twenty-eight 神煞 — the officer, the lodge and the god of the day, and the bearings the year holds, reckoned on 120°E beside the chart rather than inside it |
 | Choosing a time | 擇時擇方: every chart over an interval, narrowed to the palaces answering stated criteria |
 
@@ -116,6 +117,19 @@ board and every choice said as it is made. A 八字's favourable element stays
 uncomputed: the schools divide on how it is chosen, so choosing it is a step
 the reading names together with the method. What no reading gives: dated
 predictions, medical, legal or financial counsel, lucky numbers, scores.
+
+**There is a fifth board and it is handed to nobody.** 太乙 has a section, an
+endpoint, a drawing and an MCP tool, and it has **no prompt**. That is decided
+rather than deferred: a prompt is built where a question is asked, this board
+is asked nothing, and its subject is neither a question nor a person but a
+year — so what such a board would be handed over *for* has not been designed,
+and designing it is not the same problem as the four above. What the board
+does instead is refuse the thing its own tradition is mostly made of: the
+received readings of 太乙 are dynastic — which state falls, which year an army
+breaks — dated, falsifiable by nobody, and travelling as commentary on real
+events. It names positions and numbers and stops. It does not say who is 主 and
+who is 客 either, which is the first interpretive act the system asks for and
+is the reader's, exactly as the 用神 is.
 
 **And nothing is asked of a board of 命.** `--ask` works on `chart` and
 `liuren`, which are cast for a question, and is refused on `bazi` and
@@ -175,9 +189,9 @@ longer there.
 | `packages/i18n` | message catalogs and locale negotiation. A leaf: depends on nothing |
 | `packages/geo` | location lookup over a local GeoNames dataset (SQLite) |
 | `packages/core` | the engine, and the `qimen` command |
-| `packages/plate` | the drawings: the nine palaces framed by the compass with the configurations under them, and the ring of twelve a 六壬 board and a 七政四餘 board share, SVG and PNG |
-| `packages/mcp` | MCP server, ten tools, stdio |
-| `apps/web` | SvelteKit: six sections at `/en` and `/it`, eighteen endpoints under `/api` |
+| `packages/plate` | the drawings: the nine palaces framed by the compass with the configurations under them, the ring of twelve a 六壬 board and a 七政四餘 board share, and the 太乙 grid with its empty middle and sixteen seats, SVG and PNG |
+| `packages/mcp` | MCP server, eleven tools, stdio |
+| `apps/web` | SvelteKit: seven sections at `/en` and `/it`, twenty-one endpoints under `/api` |
 
 npm workspaces, Node ≥ 22, ESM, TypeScript.
 
@@ -207,6 +221,7 @@ qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lang en
 qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --method zhirun
 qimen liuren --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lang en
 qimen qizheng --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lang en
+qimen taiyi --year 2026 --lang en
 qimen bazi  --date 1968-03-12 --time 14:30 --tz Europe/Rome --gender male
 qimen terms --year 2024 --tz Asia/Shanghai
 qimen calendar --date 2023-04-01

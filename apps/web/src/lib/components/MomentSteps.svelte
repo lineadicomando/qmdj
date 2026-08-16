@@ -23,6 +23,11 @@
   does. 時辰 keeps its hanzi beside the word because it is the one unit here
   that names something Chinese — a day, a month and a year are the civil
   calendar's, and each already has a word in every language this speaks.
+
+  Which units there are is the section's to say, because what a board is a
+  function of is. A 太乙 board of a year is a function of the year and of
+  nothing else, and a row that offered to step its month would be offering to
+  move something that does not move.
 -->
 <script lang="ts">
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
@@ -33,6 +38,10 @@
     onstep: (unit: Unit, by: number) => void;
     /** Back to the present, which the address says by saying nothing. */
     onnow: () => void;
+    /** Which units this section moves, largest first. */
+    units?: readonly Unit[];
+    /** What "now" means here: the present instant unless a section says otherwise. */
+    nowTitle?: MessageKey;
     /**
      * Where each unit stands, as it is written.
      *
@@ -43,18 +52,24 @@
     disabled?: boolean;
   }
 
-  let { t, onstep, onnow, values, disabled = false }: Props = $props();
+  let {
+    t,
+    onstep,
+    onnow,
+    units = ['year', 'month', 'day', 'shichen'],
+    nowTitle = 'step.now.title',
+    values,
+    disabled = false,
+  }: Props = $props();
 
-  const UNITS: readonly { unit: Unit; hanzi?: string }[] = [
-    { unit: 'year' },
-    { unit: 'month' },
-    { unit: 'day' },
-    { unit: 'shichen', hanzi: '時辰 shíchén' },
-  ];
+  /** The hanzi a unit carries, for the one unit here that names a Chinese thing. */
+  const HANZI: Partial<Record<Unit, string>> = { shichen: '時辰 shíchén' };
+
+  const shown = $derived(units.map((unit) => ({ unit, hanzi: HANZI[unit] })));
 </script>
 
 <div class="steps">
-  {#each UNITS as { unit, hanzi } (unit)}
+  {#each shown as { unit, hanzi } (unit)}
     <span class="unit">
       <button
         type="button"
@@ -80,7 +95,7 @@
     </span>
   {/each}
 
-  <button type="button" class="now" {disabled} title={t('step.now.title')} onclick={onnow}>
+  <button type="button" class="now" {disabled} title={t(nowTitle)} onclick={onnow}>
     {t('step.now')}
   </button>
 </div>

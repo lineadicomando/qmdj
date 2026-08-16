@@ -3,6 +3,7 @@ import { load as consult } from '../src/routes/[lang]/+page';
 import { load as bazi } from '../src/routes/[lang]/bazi/+page';
 import { load as chart } from '../src/routes/[lang]/chart/+page';
 import { load as moments } from '../src/routes/[lang]/moments/+page';
+import { load as taiyi } from '../src/routes/[lang]/taiyi/+page';
 
 /**
  * What the pages ask for, given an address.
@@ -44,7 +45,7 @@ async function open(load: Load, address: string, places: Record<string, unknown>
             { status: 404 },
           );
     }
-    return Response.json({ chart: { ju: 'a chart' }, bazi: { pillars: [] } });
+    return Response.json({ chart: { ju: 'a chart' }, bazi: { pillars: [] }, taiyi: { ju: 49 } });
   };
 
   const data = (await load({
@@ -57,6 +58,32 @@ async function open(load: Load, address: string, places: Record<string, unknown>
 }
 
 const BEIJING = { id: 1816670, name: 'Beijing', country: 'China', timezone: 'Asia/Shanghai' };
+
+/**
+ * The one section whose whole address is a number.
+ *
+ * No place is looked up and none can be: this board is a function of a year,
+ * which is why nothing here asks `/api/locations` and why the page can be
+ * cached in public.
+ */
+describe('the 太乙 page', () => {
+  it('lays the year the address names, and asks for no place', async () => {
+    const { data, urls } = await open(taiyi, '/en?year=724');
+
+    expect(data.year).toBe(724);
+    expect(urls).toEqual(['/api/taiyi?year=724&lang=en']);
+  });
+
+  it('lays the year being stood in when the address says nothing', async () => {
+    const { data } = await open(taiyi, '/en');
+    expect(data.year).toBe(new Date().getFullYear());
+  });
+
+  it('falls back rather than passing a year the endpoint would refuse', async () => {
+    const { data } = await open(taiyi, '/en?year=not-a-year');
+    expect(data.year).toBe(new Date().getFullYear());
+  });
+});
 
 describe('the chart page', () => {
   it('casts for the present when the address says nothing', async () => {
@@ -156,10 +183,18 @@ describe('the consult page', () => {
 
     // All four are instruments now — this line named `qizheng` as the outside
     // case and was written to fail on the day phase 18 moved it across, which
-    // it did. What is outside is a board this engine does not compute.
+    // it did.
     const { data: ofMing } = await open(consult, '/en?instrument=qizheng');
     expect(ofMing.instrument).toBe('qizheng');
 
+    // 太乙 is computed and drawn and has a section of its own, and it is still
+    // outside — so this line's reason has changed and the line has not. What
+    // is outside is no longer «a board this engine does not compute»: it is a
+    // board that is not an instrument *of a consultation*. Nothing is asked of
+    // it, its subject is a year rather than a question or a person, and what
+    // such a board would be handed to a model *for* has not been designed. The
+    // sentinel below is therefore not written to fail on the day the board
+    // lands, unlike the one above it, which was. See `PLAN.md` § 4 phase 20.
     const { data: outside } = await open(consult, '/en?instrument=taiyi');
     expect(outside.instrument).toBe('qimen');
   });

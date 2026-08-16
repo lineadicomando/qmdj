@@ -45,6 +45,7 @@ import {
   formatNianming,
   formatScan,
   formatSolarTerms,
+  formatTaiyi,
   formatWarnings,
 } from './format.js';
 import { lunarDate } from './lunar.js';
@@ -70,6 +71,12 @@ import {
 import { PURPOSES, purposeCriteria, type PurposeId } from './purposes.js';
 import { matchRuns, scanCharts, type ScanCriteria } from './scan.js';
 import { solarTermsOfYear } from './solar-terms.js';
+import {
+  DEFAULT_TAIYI_OPTIONS,
+  taiyiBoard,
+  taiyiYearOf,
+  type TaiyiOptions,
+} from './taiyi.js';
 import {
   currentMoment,
   fromJulianDay,
@@ -101,7 +108,16 @@ class UsageError extends Error {
   }
 }
 
-const COMMANDS = ['chart', 'liuren', 'qizheng', 'bazi', 'terms', 'calendar', 'scan'] as const;
+const COMMANDS = [
+  'chart',
+  'liuren',
+  'qizheng',
+  'taiyi',
+  'bazi',
+  'terms',
+  'calendar',
+  'scan',
+] as const;
 type Command = (typeof COMMANDS)[number];
 
 interface Options {
@@ -137,6 +153,7 @@ interface Options {
   years?: string;
   guiren?: string;
   luohou?: string;
+  yearBoundary?: string;
 }
 
 const HELP = `qimen — Qi Men Dun Jia charts and Four Pillars
@@ -145,6 +162,7 @@ Usage
   qimen chart     [options]     the nine palaces for a moment
   qimen liuren    [options]     the 大六壬 board for a moment
   qimen qizheng   [options]     the 七政四餘 board for a moment
+  qimen taiyi     [--year N]    the 太乙 board of a year — 年計
   qimen bazi      [options]     the four pillars, read out
   qimen terms     [options]     the twenty-four solar terms of a year
   qimen calendar  [options]     the lunar date of a moment
@@ -155,7 +173,10 @@ Options
   --time HH:mm[:ss]      default: now
   --tz  IANA-zone        default: the system zone
   --lat, --lon degrees   default: the meridian the zone is named for
-  --year N               for \`terms\`; default: the year of --date
+  --year N               for \`terms\` and \`taiyi\`; default: the year of
+                         --date. Under \`taiyi\` that year is the whole input:
+                         the board is a function of a year and takes no place
+                         and no hour
   --gender male|female   for \`bazi\`, where the luck cycles need it, and for
                          the 行年 of \`chart --born\`. In both it is read for
                          the traditional rule and for nothing else
@@ -185,6 +206,12 @@ Narrowing a scan
                                   羅睺, the other taking 計都. The default is
                                   the astrologers' law and not the 時憲曆's,
                                   which is the reverse of the Indian one
+  --year-boundary lichun|dongzhi|chunjie
+                                  for \`taiyi\`: where the counted year begins.
+                                  It is upstream of the whole board, and only
+                                  lichun is implemented — the pillars turn
+                                  there, and a board cut elsewhere would be two
+                                  calendars in one output
   --lang en|it           default: the environment, then English
   --json                 the data, unformatted and untranslated
   --help
@@ -302,6 +329,34 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
       return JSON.stringify({ year, timezone, terms }, null, 2);
     }
     return formatSolarTerms(terms, year, timezone, t);
+  }
+
+  if (command === 'taiyi') {
+    // Beside `terms`, and for the same reason: this board is a function of a
+    // year and of nothing else. No place is resolved, no hour is read, and
+    // nobody's date of birth can enter it — which is what makes the section
+    // that shows it the one page here that can be cached in public.
+    if (options.year !== undefined && !/^-?\d+$/.test(options.year)) {
+      throw new UsageError('cli.error.numberRequired', { option: '--year', value: options.year });
+    }
+    const taiyiOptions = taiyiOptionsFrom(options);
+    // Without `--year` the board is the one being stood in, which is a
+    // question about where the year was cut — so the pillars answer it rather
+    // than the calendar.
+    const year =
+      options.year !== undefined
+        ? Number(options.year)
+        : taiyiYearOf(
+            {
+              civilYear: fromJulianDay(resolveTime(input).time.julianDayUT, timezone).year,
+              sui: resolveMoment(input, resolvePlace(options, input), resolveOptions(options), context)
+                .pillars.year,
+            },
+            taiyiOptions,
+          );
+    const board = taiyiBoard({ year }, taiyiOptions);
+    if (options.json) return JSON.stringify(board, null, 2);
+    return formatTaiyi(board, t);
   }
 
   const place = resolvePlace(options, input);
@@ -741,6 +796,24 @@ function liurenOptionsFrom(options: Options): LiurenOptions {
  * `xiudu`, `ziqi`, `minggong`, `gong` — have one implemented value each, so a
  * flag for them could only offer a refusal.
  */
+function taiyiOptionsFrom(options: Options): TaiyiOptions {
+  const taiyi: TaiyiOptions = { ...DEFAULT_TAIYI_OPTIONS };
+  if (options.yearBoundary !== undefined) {
+    if (
+      options.yearBoundary !== 'lichun' &&
+      options.yearBoundary !== 'dongzhi' &&
+      options.yearBoundary !== 'chunjie'
+    ) {
+      throw new UsageError('cli.error.unknownValue', {
+        option: '--year-boundary',
+        value: options.yearBoundary,
+      });
+    }
+    taiyi.yearBoundary = options.yearBoundary;
+  }
+  return taiyi;
+}
+
 function qizhengOptionsFrom(options: Options): QizhengOptions {
   const qizheng: QizhengOptions = { ...DEFAULT_QIZHENG_OPTIONS };
   if (options.luohou !== undefined) {
@@ -785,6 +858,7 @@ const FLAGS: Record<string, keyof Options> = {
   '--years': 'years',
   '--guiren': 'guiren',
   '--luohou': 'luohou',
+  '--year-boundary': 'yearBoundary',
 };
 
 function parse(argv: string[]): { command?: Command; options: Options } {

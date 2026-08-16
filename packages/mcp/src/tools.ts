@@ -2,6 +2,7 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import {
   DEFAULT_LIUREN_OPTIONS,
   DEFAULT_QIZHENG_OPTIONS,
+  DEFAULT_TAIYI_OPTIONS,
   GATES,
   PATTERN_IDS,
   SPIRIT_IDS,
@@ -18,6 +19,7 @@ import {
   formatQizheng,
   formatScan,
   formatSolarTerms,
+  formatTaiyi,
   formatWarnings,
   liurenBoard,
   liurenLabels,
@@ -28,6 +30,7 @@ import {
   scanCharts,
   solarTermsOfYear,
   systemTimezone,
+  taiyiBoard,
   type LiurenOptions,
   type QizhengOptions,
   type ScanCriteria,
@@ -377,6 +380,56 @@ export function registerComputeQizheng(server: McpServer, context: ToolContext):
             .filter((part) => part !== '')
             .join('\n'),
         );
+      } catch (error) {
+        return fail(describeError(error, t));
+      }
+    },
+  );
+}
+
+export function registerComputeTaiyi(server: McpServer): void {
+  server.registerTool(
+    'compute_taiyi',
+    {
+      title: 'Lay the 太乙 board of a year',
+      description:
+        'Lays the 太乙神數 board of a year in the 年計, the register of the year, from ' +
+        '《太乙金鏡式經》 (王希明, 唐, c. 730). It places 太乙 itself, which walks eight ' +
+        'palaces and never the centre (太乙不入中宮) at three years a palace; the two eyes — ' +
+        '文昌 the lower, 始擊 the upper; 計神 and 合神; the 主算 and 客算 counted from the ' +
+        'two eyes; the 大將 and 參將 each count seats; the 八門直使; the 三基 (君基 臣基 ' +
+        '民基), 五福, and 大遊. It also names the conditions 卷三 states — 掩 擊 迫 囚 關 ' +
+        '格 對 — each with the fortune that chapter gives it. ' +
+        'The input is a year and nothing else: no place, no hour, nobody’s birth. This board ' +
+        'is 太乙主天 and its subject is the year the world is standing in, which is why it is ' +
+        'the one board here that holds nobody’s data. ' +
+        'Three things to state when reporting it. **The nine palaces are not numbered as a Qi ' +
+        'Men chart numbers them**: 卷二 says 九宮皆差一位, so 一宮 is the north-west here ' +
+        'and the north there, and every number is one seat off the 洛書. **It never says who ' +
+        'is 主 and who is 客** — identifying host and guest is the first interpretive act the ' +
+        'system asks for, and it is the reader’s, exactly as choosing a 用神 is. **It is ' +
+        'checked against the text itself and not against any independent implementation**, ' +
+        'because none exists: 卷三 prints a 立成 of seventy-two rows twice over and 卷一, 卷 ' +
+        '六 and 卷九 work individual boards, which is the tradition auditing itself and is ' +
+        'weaker evidence than a second program would be. ' +
+        'The received readings of this board are dynastic — which state falls, which year an ' +
+        'army breaks — and are not here. It names positions and numbers and stops.',
+      inputSchema: {
+        year: z
+          .number()
+          .int()
+          .describe(
+            'The year the board is laid on, counted from 立春 as the pillars are. ' +
+              'Astronomical numbering, so 1 BCE is 0.',
+          ),
+        lang: langSchema,
+      },
+    },
+    async (args) => {
+      const t = translatorFor(args.lang);
+      try {
+        const board = taiyiBoard({ year: args.year }, DEFAULT_TAIYI_OPTIONS);
+        return ok(formatTaiyi(board, t));
       } catch (error) {
         return fail(describeError(error, t));
       }

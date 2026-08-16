@@ -130,6 +130,47 @@ describe('chart', () => {
   });
 });
 
+describe('taiyi', () => {
+  it('lays the board of a year and takes no place and no hour', async () => {
+    expect(await run(['taiyi', '--year', '724', '--lang', 'en'])).toBe(0);
+
+    // 開元十二年甲子, the year the whole epoch is anchored on, and the four
+    // things 《太乙金鏡式經》 states about it in its own words.
+    expect(out).toContain('甲子');
+    expect(out).toContain('乾 qián');
+    expect(out).toContain('開門');
+    expect(out).toContain('黃始宮');
+  });
+
+  it('says on the page that its palaces are not a chart\u2019s', async () => {
+    expect(await run(['taiyi', '--year', '2026', '--lang', 'en'])).toBe(0);
+
+    expect(out).toContain('one seat from the Luoshu');
+    expect(out).toContain('no independent implementation');
+  });
+
+  it('never says which party is host and which is guest', async () => {
+    expect(await run(['taiyi', '--year', '2026', '--lang', 'en'])).toBe(0);
+
+    // Both counts are printed and neither is preferred: naming the parties is
+    // the reader's first act, for the reason choosing a 用神 is.
+    expect(out).toContain('the host\u2019s count');
+    expect(out).toContain('the guest\u2019s count');
+    expect(out).not.toMatch(/favou?rs|advantage|wins/i);
+  });
+
+  it('refuses an epoch and a boundary it has not read', async () => {
+    expect(await run(['taiyi', '--year', 'MMXXVI', '--lang', 'en'])).toBe(2);
+    expect(err).toContain('--year');
+
+    // A declared value that is not implemented is the engine refusing, not
+    // the caller mistyping: it comes back as a ChartError and says so.
+    expect(await run(['taiyi', '--year-boundary', 'dongzhi', '--lang', 'en'])).toBe(1);
+    expect(err).toContain('not implemented');
+    expect(await run(['taiyi', '--year-boundary', 'qiufen', '--lang', 'en'])).toBe(2);
+  });
+});
+
 describe('qizheng', () => {
   it('prints the eleven names and places the seven', async () => {
     expect(await run(['qizheng', ...MOMENT, '--lang', 'en'])).toBe(0);

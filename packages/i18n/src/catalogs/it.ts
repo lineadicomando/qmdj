@@ -409,6 +409,88 @@ export const it: Record<MessageKey, string> = {
   'label.house.fude': 'fortuna e virtù',
   'label.house.xiangmao': 'l\'aspetto',
 
+  // 十六神 — l'anello su cui si legge una tavola di 太乙: dodici rami e i
+  // quattro trigrammi d'angolo, ciascuno con un nome proprio. Il 卷二 del
+  // 《太乙金鏡式經》 dà la ragione di ognuno, e le glosse seguono quelle
+  // ragioni più che i caratteri soli — 呂申 è 陽氣大申, il soffio che si
+  // distende, non un cognome.
+  //
+  // 太乙, il dio che dà il nome alla tavola, non è uno dei sedici, e non è
+  // nemmeno il 太乙 che nomina il 月將 巳 di una tavola di 六壬. I tre non
+  // hanno rapporto fra loro; si veda docs/sources.md.
+  'label.taiyishen.dizhu': 'il signore della terra',
+  'label.taiyishen.yangde': 'la virtù yang',
+  'label.taiyishen.hede': 'la virtù della concordia',
+  'label.taiyishen.lushen': 'il soffio disteso',
+  'label.taiyishen.gaocong': 'il folto alto',
+  'label.taiyishen.taiyang': 'il grande yang',
+  'label.taiyishen.taijiong': 'la grande vampa',
+  'label.taiyishen.taishen': 'il grande spirito',
+  'label.taiyishen.dawei': 'il grande timore',
+  'label.taiyishen.tiandao': 'la via del cielo',
+  'label.taiyishen.dawu': 'le grandi armi',
+  'label.taiyishen.wude': 'la virtù marziale',
+  'label.taiyishen.taicu': 'la grande adunata',
+  'label.taiyishen.yinzhu': 'il signore dello yin',
+  'label.taiyishen.yinde': 'la virtù yin',
+  'label.taiyishen.dayi': 'la grande giustizia',
+
+  // Ciò che una tavola di 太乙 colloca. I due occhi sono il tutto: 文昌,
+  // l'inferiore, appartiene all'ospite che riceve e 始擊, il superiore, a
+  // quello che arriva, e i due conteggi che se ne traggono sono ciò per cui
+  // la tavola esiste. **Quale parte sia quale non viene mai detto qui**: è il
+  // primo atto del lettore, per la ragione per cui lo è lo 用神.
+  'label.taiyi.taiyi': 'Tai Yi',
+  'label.taiyi.wenchang': 'l\'occhio inferiore, chi riceve',
+  'label.taiyi.shiji': 'l\'occhio superiore, chi arriva',
+  'label.taiyi.jishen': 'il computista',
+  'label.taiyi.heshen': 'il compagno dell\'anno',
+  'label.taiyi.hostCount': 'il conto di chi riceve',
+  'label.taiyi.guestCount': 'il conto di chi arriva',
+  'label.taiyi.general': 'gran generale',
+  'label.taiyi.assistant': 'aiutante',
+  'label.taiyi.hostGeneral': 'il gran generale di chi riceve',
+  'label.taiyi.hostAssistant': 'l\'aiutante di chi riceve',
+  'label.taiyi.guestGeneral': 'il gran generale di chi arriva',
+  'label.taiyi.guestAssistant': 'l\'aiutante di chi arriva',
+  'label.taiyi.zhishi': 'la porta di turno',
+  'label.taiyi.junji': 'la base del sovrano',
+  'label.taiyi.chenji': 'la base del ministro',
+  'label.taiyi.minji': 'la base del popolo',
+  'label.taiyi.wufu': 'le cinque felicità',
+  'label.taiyi.dayou': 'il grande giro',
+  'label.taiyi.liuji': 'le sei ere',
+  'label.taiyi.ju': 'disposizione',
+  'label.taiyi.accumulated': 'anni accumulati',
+
+  // Le cinque stazioni di 五福太乙, che sono palazzi con un nome e non
+  // numeri: quattro angoli e il centro, quarantacinque anni ciascuno. Il
+  // testo colloca ognuna in una regione dell'impero; la glossa tiene il nome.
+  'label.taiyiwufu.huangmi': 'il segreto giallo',
+  'label.taiyiwufu.huangshi': 'il principio giallo',
+  'label.taiyiwufu.huangshi2': 'la camera gialla',
+  'label.taiyiwufu.huangting': 'la corte gialla',
+  'label.taiyiwufu.xuanshi': 'il maestro oscuro',
+
+  // Le condizioni che il 卷三 nomina e pesa in una riga ciascuna. Sono
+  // verificabili sulle collocazioni — che l'occhio superiore stia dove sta
+  // 太乙 chiunque può controllarlo — e ognuna è 凶 nelle parole stesse del
+  // testo, ed è per questo che la sorte viaggia accanto al nome.
+  'label.taiyipattern.yan': 'coprire',
+  'label.taiyipattern.ji': 'colpire',
+  'label.taiyipattern.po': 'incalzare',
+  'label.taiyipattern.qiu': 'prigionia',
+  'label.taiyipattern.guan': 'serratura',
+  'label.taiyipattern.ge': 'sbarramento',
+  'label.taiyipattern.dui': 'fronteggiare',
+
+  // 前 e 後 sono davanti e dietro a 太乙 sull'anello; 辰 e 宮 sono le due
+  // distanze che il 卷三 separa — 「宫迫災㣲緩，辰迫災急疾」.
+  'label.taiyikind.qianchen': 'un seggio avanti',
+  'label.taiyikind.houchen': 'un seggio indietro',
+  'label.taiyikind.qiangong': 'un palazzo avanti',
+  'label.taiyikind.hougong': 'un palazzo indietro',
+
   // 十二神 — il dio sotto cui sta il giorno. 《協紀辨方書》卷七 li deriva per
   // 天罡加建 dopo aver respinto le due spiegazioni ricevute. Sei portano 吉 e
   // sei 凶, che è tutto ciò che 黃道/黑道 ha mai significato secondo lo stesso
@@ -552,6 +634,7 @@ export const it: Record<MessageKey, string> = {
   'nav.bazi': 'Ba Zi',
   'nav.liuren': 'Liu Ren',
   'nav.qizheng': 'Qi Zheng Si Yu',
+  'nav.taiyi': 'Tai Yi',
   'nav.moments': 'Scegliere il momento',
   'nav.consult': 'Consultazione',
   'nav.sections': 'Sezioni',
@@ -559,6 +642,16 @@ export const it: Record<MessageKey, string> = {
   // La sezione che percorre carte Qi Men, nominata con l'arte che percorre.
   // L'etichetta della nav non può portarlo — un'intestazione dice dove stanno
   // le cose, non di cosa sono fatte — e qui serve a chi legge i risultati.
+  // La sezione di 太乙. Il titolo glossa il nome che la barra può solo
+  // stampare, e va al tab e a chi legge con uno screen reader anziché sopra la
+  // tavola: quale sia la sezione lo dice già la nav, come per ogni altra
+  // tavola. Il paragrafo che stava sotto — di che cosa questa tavola è
+  // funzione, e che cosa si rifiuta di dire — era una prefazione davanti a
+  // un'immagine che si è venuti a guardare, e il suo posto sono le note.
+  'taiyi.title': 'Tai Yi — la tavola di un anno',
+  'form.year': 'Anno',
+  'form.copyTaiyi': 'Copia la tavola come testo',
+
   'moments.title': 'Scegliere il momento — Qi Men',
   'moments.lead':
     'Ogni ora fra due date viene posta come carta Qi Men, e sono elencate quelle che rispondono a ciò che indichi qui sotto. Criteri, non raccomandazioni: cosa renda un\'ora buona per agire è una lettura, ed è tua.',
@@ -692,6 +785,7 @@ export const it: Record<MessageKey, string> = {
   'step.now': 'adesso',
 
   'step.now.title': 'Torna all\'istante presente',
+  'step.now.year': 'Torna all\'anno in corso',
   'step.shichen.back': 'La doppia ora precedente',
   'step.shichen.forward': 'La doppia ora successiva',
   'step.day.back': 'Il giorno prima',
@@ -923,6 +1017,24 @@ export const it: Record<MessageKey, string> = {
   // contro cui essere verificato. Vedi PLAN.md § 4 fase 16.
   'cli.value.qizhengFrame':
     'le dimore cominciano alle loro stelle di riferimento, collocate a questo istante; nessuna tavola di 宿度 e nessuna epoca vi entra',
+
+  'cli.heading.taiyi': 'La tavola di Tai Yi del {year}',
+  'cli.field.taiyiSui': 'anno',
+  'cli.field.taiyiJu': 'disposizione',
+  'cli.field.taiyiEyes': 'i due occhi',
+  'cli.field.taiyiCounts': 'i due conti',
+  'cli.field.taiyiGenerals': 'i generali',
+  'cli.field.taiyiBases': 'le tre basi',
+  'cli.field.taiyiCircuits': 'i giri lunghi',
+  'cli.field.taiyiGate': 'porta di turno',
+  'cli.field.taiyiConditions': 'condizioni',
+  // Due righe che ogni tavola di 太乙 porta con sé, perché su entrambe un
+  // lettore che le tenga accanto a una carta di Qi Men sbaglierebbe in
+  // silenzio.
+  'cli.value.taiyiPalaces':
+    'i palazzi sono numerati come li numera 太乙, a un seggio dal 洛書: qui 一宮 è il nord-ovest, in una carta di Qi Men il nord',
+  'cli.value.taiyiEvidence':
+    'verificata sulle tavole e sulle carte svolte del 《太乙金鏡式經》 stesso; di questa tavola non esiste alcuna implementazione indipendente su cui controllarla',
 
   'cli.heading.scan': 'Carte dal {from} al {to}',
   'cli.heading.criteria': 'Richiesto',

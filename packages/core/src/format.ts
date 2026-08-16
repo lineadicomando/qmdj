@@ -21,6 +21,13 @@ import {
   type QizhengBoard,
 } from './qizheng.js';
 import type { ScanMatch } from './scan.js';
+import {
+  taiyiPalace,
+  type TaiyiBoard,
+  type TaiyiGod,
+  type TaiyiPattern,
+  type TaiyiSide,
+} from './taiyi.js';
 import type { SolarTerm } from './solar-terms.js';
 import { sayGanzhi } from './labels.js';
 import { fromJulianDay } from './time.js';
@@ -641,6 +648,148 @@ export function formatQizheng(board: QizhengBoard, t: Translator): string {
   lines.push('', `  ${t('cli.value.threeRemainders')}`, `  ${t('cli.value.qizhengFrame')}`);
 
   return lines.join('\n');
+}
+
+/**
+ * The 太乙 board of a year, printed.
+ *
+ * Two lines close it and neither is decoration. The palaces of this board are
+ * numbered one seat off the Luoshu, so a reader who has just looked at a Qi
+ * Men chart will read every one of them wrong unless told; and the board is
+ * checked against the text that states it rather than against anything that
+ * runs, which is weaker evidence and is said where the numbers are.
+ */
+export function formatTaiyi(board: TaiyiBoard, t: Translator): string {
+  const lines = [t('cli.heading.taiyi', { year: String(board.year) })];
+
+  lines.push(
+    '',
+    ...table([
+      [t('cli.field.taiyiSui'), ganzhi(board.sui, t)],
+      [
+        t('cli.field.taiyiJu'),
+        `${board.ju} · ${t('label.taiyi.liuji')} ${board.liuji.number}/${board.liuji.year}`,
+      ],
+      [
+        t('label.taiyi.taiyi'),
+        `${glyph(board.taiyi.palace)} ${board.taiyi.palace.number} · ${board.taiyi.year}/3`,
+      ],
+      [t('label.taiyi.jishen'), glyph(board.jishen)],
+      [t('label.taiyi.heshen'), glyph(board.heshen)],
+    ]),
+  );
+
+  lines.push(
+    '',
+    `  ${t('cli.field.taiyiEyes')}`,
+    ...table(
+      [
+        [t('label.taiyi.wenchang'), taiyiGod(board.wenchang, t)],
+        [t('label.taiyi.shiji'), taiyiGod(board.shiji, t)],
+      ],
+      2,
+    ).map((line) => `  ${line}`),
+  );
+
+  lines.push(
+    '',
+    `  ${t('cli.field.taiyiCounts')}`,
+    ...table(
+      [
+        [t('label.taiyi.hostCount'), ...taiyiSide(board.host, t)],
+        [t('label.taiyi.guestCount'), ...taiyiSide(board.guest, t)],
+      ],
+      2,
+    ).map((line) => `  ${line}`),
+  );
+
+  lines.push(
+    '',
+    ...table([
+      [
+        t('cli.field.taiyiGate'),
+        `${glyph(board.gate.gate)} · ${board.gate.year}/30`,
+      ],
+      [
+        t('label.taiyi.wufu'),
+        `${glyph(board.wufu.palace)} ${glyph(board.wufu.palace.palace)} · ${board.wufu.year}/45`,
+      ],
+      [
+        t('label.taiyi.dayou'),
+        `${glyph(board.dayou.station.palace)} ${board.dayou.station.palace.number} · ` +
+          `${board.dayou.station.year}/36 · ${taiyiGod(board.dayou.wenchang, t)}`,
+      ],
+    ]),
+  );
+
+  lines.push(
+    '',
+    `  ${t('cli.field.taiyiBases')}`,
+    ...table(
+      (
+        [
+          ['junji', board.sanji.jun],
+          ['chenji', board.sanji.chen],
+          ['minji', board.sanji.min],
+        ] as const
+      ).map(([id, fief]) => [
+        t(`label.taiyi.${id}` as MessageKey),
+        `${glyph(fief.branch)} · ${fief.year}`,
+      ]),
+      2,
+    ).map((line) => `  ${line}`),
+  );
+
+  // In the order the engine found them, never sorted by fortune: a board with
+  // six adverse conditions is not a worse board, because worse is a word about
+  // somebody's undertaking and no undertaking is known here.
+  if (board.patterns.length > 0) {
+    lines.push(
+      '',
+      `  ${t('cli.field.taiyiConditions')}`,
+      ...table(board.patterns.map((pattern) => taiyiPattern(pattern, t)), 2).map(
+        (line) => `  ${line}`,
+      ),
+    );
+  }
+
+  lines.push('', `  ${t('cli.value.taiyiPalaces')}`, `  ${t('cli.value.taiyiEvidence')}`);
+
+  return lines.join('\n');
+}
+
+/** A god of the sixteen, with the seat it stands on and the palace if it is one. */
+function taiyiGod(god: TaiyiGod, t: Translator): string {
+  const seat =
+    god.seat.kind === 'branch' ? glyph(god.seat.branch) : glyph(god.seat.palace);
+  const at = god.palace === undefined ? '' : ` ${god.palace}`;
+  return `${named(god, `label.taiyishen.${god.id}` as MessageKey, t)} — ${seat}${at}`;
+}
+
+/** A count and the two generals it seats. The adjutant can be absent. */
+function taiyiSide(side: TaiyiSide, t: Translator): string[] {
+  const general = `${t('label.taiyi.general')} ${glyph(side.general)} ${side.general.number}`;
+  const assistant =
+    side.assistant === undefined
+      ? ''
+      : `${t('label.taiyi.assistant')} ${glyph(side.assistant)} ${side.assistant.number}`;
+  return [String(side.count), general, assistant];
+}
+
+function taiyiPattern(pattern: TaiyiPattern, t: Translator): string[] {
+  const where =
+    pattern.kind !== undefined
+      ? t(`label.taiyikind.${pattern.kind}` as MessageKey)
+      : pattern.palace === undefined
+        ? ''
+        : `${glyph(taiyiPalace(pattern.palace))} ${pattern.palace}`;
+  return [
+    named(pattern, `label.taiyipattern.${pattern.id}` as MessageKey, t),
+    glyph(pattern.valence),
+    t(`label.taiyi.${pattern.subject}` as MessageKey),
+    pattern.partner === undefined ? '' : t(`label.taiyi.${pattern.partner}` as MessageKey),
+    where,
+  ];
 }
 
 function placementRow(placement: QizhengPlacement, t: Translator): string[] {

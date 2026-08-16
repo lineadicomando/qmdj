@@ -57,6 +57,7 @@ describe('what the server offers', () => {
       'compute_liuren',
       'compute_qimen_chart',
       'compute_qizheng',
+      'compute_taiyi',
       'draw_liuren',
       'draw_qimen_chart',
       'lunar_date',
@@ -77,6 +78,11 @@ describe('what the server offers', () => {
     expect(byName.get('draw_qimen_chart')).toMatch(/not instead of it/);
     expect(byName.get('draw_liuren')).toMatch(/not instead of it/);
     expect(byName.get('compute_bazi')).toMatch(/do not guess/i);
+    // The two ways a model reading a 太乙 board goes plausibly wrong: carrying
+    // a Qi Men chart's palace numbers across, and deciding for the reader
+    // which party is which.
+    expect(byName.get('compute_taiyi')).toMatch(/九宮皆差一位/);
+    expect(byName.get('compute_taiyi')).toMatch(/never says who is 主 and who is 客/);
     // The board of the other 式 answers a question asked now, and the mistake
     // worth heading off is laying it for a birth as if it were a natal chart.
     expect(byName.get('compute_liuren')).toMatch(/not for a birth/i);

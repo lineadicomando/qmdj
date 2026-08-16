@@ -11,10 +11,10 @@ anything.
 |---|---|
 | `packages/i18n` | message catalogs and locale negotiation. A leaf: depends on nothing |
 | `packages/geo` | location lookup over a local GeoNames dataset (SQLite) |
-| `packages/core` | calculation engine and the `qimen` CLI: solar terms, lunar calendar, sexagenary cycles, Four Pillars, Qi Men charts, Liu Ren boards, scanning an interval |
-| `packages/plate` | the drawings: the nine palaces of a chart, the ring of twelve a 六壬 board and a 七政四餘 board share, glyphs, SVG and PNG |
-| `packages/mcp` | MCP server: ten tools, four resources, stdio transport |
-| `apps/web` | SvelteKit: six sections at `/en` and `/it`, plus eighteen GET endpoints under `/api` |
+| `packages/core` | calculation engine and the `qimen` CLI: solar terms, lunar calendar, sexagenary cycles, Four Pillars, Qi Men charts, Liu Ren boards, 太乙 boards, scanning an interval |
+| `packages/plate` | the drawings: the nine palaces of a chart, the ring of twelve a 六壬 board and a 七政四餘 board share, the 太乙 grid with its empty middle and sixteen border seats, glyphs, SVG and PNG |
+| `packages/mcp` | MCP server: eleven tools, four resources, stdio transport |
+| `apps/web` | SvelteKit: seven sections at `/en` and `/it`, plus twenty-one GET endpoints under `/api` |
 
 npm workspaces monorepo, Node ≥ 22, ESM, TypeScript.
 
@@ -111,7 +111,10 @@ the engine falls back to Moshier, which needs no files.
   ephemerides and a native module into the browser bundle.
 - **A chart is cacheable `private`, never `public`.** It is a pure function of
   its URL, but the key of a shared cache would hold somebody's date, time and
-  place of birth. The solar terms are `public`; they are about the sky.
+  place of birth. The solar terms are `public`; they are about the sky. **So is
+  a 太乙 board**, and for the same reason rather than by exception: a 年計 board
+  is a function of the year and holds nobody's data, which makes `/[lang]/taiyi`
+  the one section here that can be linked, shared and indexed as it stands.
 - **Errors cross HTTP as `code` + `messageKey` + `params`.** The surface
   translates; nobody parses prose. See `lib/server/errors.ts`.
 - **A chart handed to a model travels computed, and never as a date.** A model
@@ -134,6 +137,30 @@ the engine falls back to Moshier, which needs no files.
   the line would leave an instruction a model could follow confidently and
   wrongly. A general account of how this engine knows things fails that test
   and stays where it was.
+- **太乙 is computed, drawn, and handed to nobody.** It has a section, three
+  endpoints, a drawing and an MCP tool, and **no prompt** — `/[lang]` is the
+  only surface that builds one and this board is not one of its instruments.
+  Nothing is asked of it and its subject is a year, so what such a board would
+  be handed over *for* has not been designed. Two things it refuses and both
+  are load-bearing: it **never says who is 主 and who is 客**, which is the
+  first interpretive act the system asks for and is the reader's exactly as the
+  用神 is; and the received doctrine — dynastic, dated, falsifiable by nobody —
+  stays out. One thing every surface printing it must say, and it is the
+  numbering: its **nine palaces are numbered one seat off the 洛書** (卷二:
+  九宮皆差一位), so 一宮 is the north-west here and the north in a chart — a
+  reader holding a chart beside this board reads all eight one seat wrong
+  otherwise, and the line is what stops them. **That this board is checked
+  against the text that states it and against nothing that runs** is the other
+  thing that has to be said, and it is said once rather than on every sheet:
+  it is a fact about the figure and not a caption to one year's board, so it
+  belongs in the notes, and the section stopped printing it under a picture
+  where it read as a disclaimer on that picture. The transcript keeps it —
+  `cli.value.taiyiEvidence`, printed by `format.ts` — because a transcript
+  travels to where no notes page follows it, and the MCP tool says it in its
+  own description for the same reason. **Until the notes section is written
+  the account is only in the transcript and in `docs/sources.md`**, which is a
+  debt and not an arrangement. See `PLAN.md` § 4 phase 20 and the 太乙 section
+  of `docs/sources.md`.
 - **One board goes into a prompt, never two of one instant.** A consultation
   takes one instrument, chosen before the press and at no point after it — a
   control that switched boards over a standing answer would either cast again,

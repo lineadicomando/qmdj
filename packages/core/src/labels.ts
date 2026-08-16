@@ -2,6 +2,7 @@ import type { MessageKey, Translator } from '@qimendunjia/i18n';
 import { BRANCHES, STEMS, type Ganzhi } from './ganzhi.js';
 import { GENERALS, KETI, LIUREN_RULES } from './liuren.js';
 import { CI, HOUSES, MOTIONS, QIZHENG_BODIES } from './qizheng.js';
+import { TAIYI_GODS, TAIYI_PATTERN_IDS } from './taiyi.js';
 import {
   DIRECTIONS,
   GATES,
@@ -158,6 +159,51 @@ export function qizhengLabels(t: Translator): QizhengLabels {
     minggong: t('cli.field.minggong'),
     remainders: t('cli.value.threeRemainders'),
     frame: t('cli.value.qizhengFrame'),
+  };
+}
+
+/**
+ * What a drawing of a 太乙 board needs said in a language.
+ *
+ * One standing line travels on its face, for the same reason the 七政四餘
+ * board's do: this picture will be looked at beside a Qi Men chart, and a
+ * reader carrying that chart's palace numbers across gets every one of the
+ * eight wrong by a seat with nothing to warn them. What the board was checked
+ * against is not here — it is a fact about the figure rather than a caption to
+ * a drawing of it — and `cli.value.taiyiEvidence` is where a surface saying it
+ * goes for the words. The transcript says it.
+ */
+export interface TaiyiLabels {
+  /** The sixteen, glossed under the grid. */
+  god: Record<string, string>;
+  /** The conditions 卷三 names, listed under it. */
+  pattern: Record<string, string>;
+  wenchang: string;
+  shiji: string;
+  hostCount: string;
+  guestCount: string;
+  general: string;
+  assistant: string;
+  gate: string;
+  palaces: string;
+}
+
+export function taiyiLabels(t: Translator): TaiyiLabels {
+  return {
+    god: Object.fromEntries(
+      TAIYI_GODS.map((god) => [god.id, t(`label.taiyishen.${god.id}` as MessageKey)]),
+    ),
+    pattern: Object.fromEntries(
+      TAIYI_PATTERN_IDS.map((id) => [id, t(`label.taiyipattern.${id}` as MessageKey)]),
+    ),
+    wenchang: t('label.taiyi.wenchang'),
+    shiji: t('label.taiyi.shiji'),
+    hostCount: t('label.taiyi.hostCount'),
+    guestCount: t('label.taiyi.guestCount'),
+    general: t('label.taiyi.general'),
+    assistant: t('label.taiyi.assistant'),
+    gate: t('label.taiyi.zhishi'),
+    palaces: t('cli.value.taiyiPalaces'),
   };
 }
 

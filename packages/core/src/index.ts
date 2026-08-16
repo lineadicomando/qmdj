@@ -190,14 +190,41 @@ export {
 } from './qizheng.js';
 
 export {
+  DEFAULT_TAIYI_OPTIONS,
+  TAIYI_GODS,
+  TAIYI_PALACES,
+  TAIYI_PATTERN_IDS,
+  TAIYI_WUFU_PALACES,
+  taiyiBoard,
+  taiyiJu,
+  taiyiPalace,
+  taiyiPatternName,
+  taiyiYearOf,
+  type TaiyiBoard,
+  type TaiyiFief,
+  type TaiyiGod,
+  type TaiyiGodId,
+  type TaiyiOptions,
+  type TaiyiPalace,
+  type TaiyiPattern,
+  type TaiyiPatternId,
+  type TaiyiPatternSubject,
+  type TaiyiSide,
+  type TaiyiStation,
+  type TaiyiWufuPalace,
+} from './taiyi.js';
+
+export {
   chartLabels,
   liurenLabels,
   qizhengLabels,
+  taiyiLabels,
   sayBranch,
   sayGanzhi,
   type ChartLabels,
   type LiurenLabels,
   type QizhengLabels,
+  type TaiyiLabels,
 } from './labels.js';
 
 export {
@@ -210,6 +237,7 @@ export {
   formatQizheng,
   formatScan,
   formatSolarTerms,
+  formatTaiyi,
   formatWarnings,
 } from './format.js';
 
@@ -221,6 +249,7 @@ export {
   liurenTranscript,
   qizhengReadingPrompt,
   qizhengTranscript,
+  taiyiTranscript,
   readingPrompt,
   type LiurenReadingRequest,
   type MingReadingRequest,

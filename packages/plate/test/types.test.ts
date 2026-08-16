@@ -7,10 +7,12 @@ import {
   DEFAULT_LIUREN_OPTIONS,
   DEFAULT_OPTIONS,
   DEFAULT_QIZHENG_OPTIONS,
+  DEFAULT_TAIYI_OPTIONS,
+  taiyiBoard,
 } from '@qimendunjia/core';
-import type { LiurenBoard, QimenChart, QizhengBoard } from '@qimendunjia/core';
+import type { LiurenBoard, QimenChart, QizhengBoard, TaiyiBoard } from '@qimendunjia/core';
 import { describe, expect, it } from 'vitest';
-import type { PlateChart, PlateLiuren, PlateQizheng } from '../src/types.js';
+import type { PlateChart, PlateLiuren, PlateQizheng, PlateTaiyi } from '../src/types.js';
 
 /**
  * The guard on the one rule this package exists to keep.
@@ -197,5 +199,35 @@ describe('the redeclared 七政四餘 board', () => {
     // rather than inventing one.
     expect(plate.governors[0]?.body.element).toBeUndefined();
     expect(plate.governors[2]?.body.element).toBe('shui');
+  });
+});
+
+const taiyi: TaiyiBoard = taiyiBoard({ year: 2026 }, DEFAULT_TAIYI_OPTIONS);
+
+describe('the redeclared 太乙 board', () => {
+  it('accepts a real board without a cast', () => {
+    const asPlate: PlateTaiyi = taiyi;
+
+    expect(asPlate.gods).toHaveLength(16);
+    expect(asPlate.taiyi.palace.number).toBeGreaterThan(0);
+  });
+
+  it('finds every field the drawing reads', () => {
+    const plate: PlateTaiyi = taiyi;
+
+    // Eight of the sixteen carry a palace and eight do not, which is what the
+    // drawing seats the grid from — so a board that stopped saying which is
+    // which would lay out as an empty figure rather than fail.
+    expect(plate.gods.filter((god) => god.palace !== undefined)).toHaveLength(8);
+    for (const god of plate.gods) {
+      expect(god.hanzi).toMatch(/^.{2}$/);
+      expect(god.pinyin).toMatch(/\S/);
+      expect(god.element).toMatch(/^(mu|huo|tu|jin|shui)$/);
+    }
+
+    // The direction is what the palace is; the number is this board's own and
+    // places nothing.
+    expect(plate.taiyi.palace.direction).toMatch(/^(n|ne|e|se|s|sw|w|nw)$/);
+    for (const pattern of plate.patterns) expect(pattern.valence.hanzi).toMatch(/^.$/);
   });
 });

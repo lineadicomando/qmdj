@@ -10,6 +10,9 @@ import { GET as baziText } from '../src/routes/api/bazi/text/+server';
 import { GET as qizheng } from '../src/routes/api/qizheng/+server';
 import { GET as qizhengPrompt } from '../src/routes/api/qizheng/prompt/+server';
 import { GET as qizhengText } from '../src/routes/api/qizheng/text/+server';
+import { GET as taiyi } from '../src/routes/api/taiyi/+server';
+import { GET as taiyiPlate } from '../src/routes/api/taiyi/plate/+server';
+import { GET as taiyiText } from '../src/routes/api/taiyi/text/+server';
 import { GET as terms } from '../src/routes/api/terms/+server';
 import { GET as locations } from '../src/routes/api/locations/+server';
 import { GET as moments } from '../src/routes/api/moments/+server';
@@ -54,6 +57,79 @@ async function call(handler: Handler, query: string, accept = 'en'): Promise<Cal
 }
 
 const MOMENT = 'date=2024-06-15&time=14:00&timezone=Asia/Shanghai&trueSolarTime=false&dayBoundary=midnight';
+
+describe('GET /api/taiyi', () => {
+  it('lays the board of a year and takes nothing else', async () => {
+    const { status, body } = await call(taiyi, 'year=724');
+    const answer = body as {
+      taiyi: {
+        year: number;
+        sui: { hanzi: string };
+        ju: number;
+        taiyi: { palace: { number: number; hanzi: string }; year: number };
+        gods: unknown[];
+        host: { count: number };
+        guest: { count: number };
+      };
+    };
+
+    // 開元十二年甲子, the year 《太乙金鏡式經》 anchors its own epoch on and
+    // checks itself against four times over.
+    expect(status).toBe(200);
+    expect(answer.taiyi.year).toBe(724);
+    expect(answer.taiyi.sui.hanzi).toBe('甲子');
+    expect(answer.taiyi.ju).toBe(49);
+    expect(answer.taiyi.taiyi.palace.hanzi).toBe('乾');
+    expect(answer.taiyi.taiyi.palace.number).toBe(1);
+    expect(answer.taiyi.gods).toHaveLength(16);
+    expect(answer.taiyi.host.count).toBe(24);
+    expect(answer.taiyi.guest.count).toBe(25);
+  });
+
+  it('is the one board here that may be cached in public', async () => {
+    // Every other endpoint is a pure function of its URL too, and every other
+    // one is `private`, because the key of a shared cache would hold somebody's
+    // date, time and place of birth. A 年計 board holds nobody's data: it is a
+    // function of the year, like the solar terms and for the same reason.
+    const { headers } = await call(taiyi, 'year=2026');
+    expect(headers['cache-control']).toContain('public');
+    expect(headers['cache-control']).not.toContain('private');
+  });
+
+  it('never says which party is host and which is guest', async () => {
+    const { text } = await call(taiyiText, 'year=2026&lang=en');
+
+    expect(text).toContain('the host’s count');
+    expect(text).toContain('the guest’s count');
+    // Naming the two parties is the reader's first act, for the reason
+    // choosing a 用神 is, and nothing here does it for them.
+    expect(text).not.toMatch(/favou?rs|advantage|wins/i);
+  });
+
+  it('says on its own face that its palaces are not a chart’s', async () => {
+    const { text } = await call(taiyiText, 'year=2026&lang=en');
+    expect(text).toContain('one seat from the Luoshu');
+    expect(text).toContain('no independent implementation');
+  });
+
+  it('draws a grid with an empty middle and sixteen seats round it', async () => {
+    const { status, headers, text } = await call(taiyiPlate, 'year=724&lang=en');
+
+    expect(status).toBe(200);
+    expect(headers['content-type']).toContain('image/svg+xml');
+    // Twenty-five cells: nine palaces and the sixteen of the border.
+    expect([...text.matchAll(/class="cell"/g)]).toHaveLength(25);
+    // 太乙不入中宮 — the middle is drawn and left empty, and the emptiness is
+    // content rather than a gap.
+    expect(text).toContain('>中<');
+    expect(text).toContain('one seat from the Luoshu');
+  });
+
+  it('refuses a year outside what an address here can write', async () => {
+    const { status } = await call(taiyi, 'year=999999');
+    expect(status).toBe(400);
+  });
+});
 
 describe('GET /api/qizheng', () => {
   it('places the eleven and numbers the twelve', async () => {

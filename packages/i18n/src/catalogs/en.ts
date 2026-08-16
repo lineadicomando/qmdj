@@ -429,6 +429,88 @@ export const en = {
   'label.house.fude': 'fortune and virtue',
   'label.house.xiangmao': 'countenance',
 
+  // 十六神 — the ring a 太乙 board is read on: twelve branches and the four
+  // corner trigrams, each under a name of its own. 卷二 of 《太乙金鏡式經》
+  // gives the reason for every one of them, and the glosses follow those
+  // reasons rather than the characters alone — 呂申 is 陽氣大申, the breath
+  // stretching out, and not a surname.
+  //
+  // 太乙, the god this board is named for, is not one of the sixteen and is
+  // not the 太乙 that names the 月將 巳 of a 六壬 board either. The three are
+  // unrelated; see docs/sources.md, which owes the reader the sentence.
+  'label.taiyishen.dizhu': 'the lord of earth',
+  'label.taiyishen.yangde': 'the yang virtue',
+  'label.taiyishen.hede': 'the virtue of concord',
+  'label.taiyishen.lushen': 'the stretching breath',
+  'label.taiyishen.gaocong': 'the high thicket',
+  'label.taiyishen.taiyang': 'the great yang',
+  'label.taiyishen.taijiong': 'the great blaze',
+  'label.taiyishen.taishen': 'the great spirit',
+  'label.taiyishen.dawei': 'the great awe',
+  'label.taiyishen.tiandao': 'the way of heaven',
+  'label.taiyishen.dawu': 'the great arms',
+  'label.taiyishen.wude': 'the martial virtue',
+  'label.taiyishen.taicu': 'the great gathering',
+  'label.taiyishen.yinzhu': 'the lord of yin',
+  'label.taiyishen.yinde': 'the yin virtue',
+  'label.taiyishen.dayi': 'the great right',
+
+  // What a 太乙 board places. The two eyes are the whole of it: 文昌, the
+  // lower, belongs to the host and 始擊, the upper, to the guest, and the two
+  // counts taken from them are what the board exists to produce. **Which
+  // party is which is never said here** — that is the reader's first act, for
+  // the reason the 用神 is.
+  'label.taiyi.taiyi': 'Tai Yi',
+  'label.taiyi.wenchang': 'the lower eye, the host',
+  'label.taiyi.shiji': 'the upper eye, the guest',
+  'label.taiyi.jishen': 'the reckoner',
+  'label.taiyi.heshen': 'the year’s companion',
+  'label.taiyi.hostCount': 'the host’s count',
+  'label.taiyi.guestCount': 'the guest’s count',
+  'label.taiyi.general': 'great general',
+  'label.taiyi.assistant': 'adjutant',
+  'label.taiyi.hostGeneral': 'the host’s great general',
+  'label.taiyi.hostAssistant': 'the host’s adjutant',
+  'label.taiyi.guestGeneral': 'the guest’s great general',
+  'label.taiyi.guestAssistant': 'the guest’s adjutant',
+  'label.taiyi.zhishi': 'the gate on duty',
+  'label.taiyi.junji': 'the sovereign’s base',
+  'label.taiyi.chenji': 'the minister’s base',
+  'label.taiyi.minji': 'the people’s base',
+  'label.taiyi.wufu': 'the five blessings',
+  'label.taiyi.dayou': 'the great circuit',
+  'label.taiyi.liuji': 'the six eras',
+  'label.taiyi.ju': 'arrangement',
+  'label.taiyi.accumulated': 'years accumulated',
+
+  // 五福太乙's five stations, which are named palaces and not numbers: four
+  // corners and the centre, forty-five years each. The text places each in a
+  // region of the empire; the gloss keeps the name.
+  'label.taiyiwufu.huangmi': 'the yellow secret',
+  'label.taiyiwufu.huangshi': 'the yellow beginning',
+  'label.taiyiwufu.huangshi2': 'the yellow chamber',
+  'label.taiyiwufu.huangting': 'the yellow court',
+  'label.taiyiwufu.xuanshi': 'the dark master',
+
+  // The conditions 卷三 names and weighs in one line each. They are checkable
+  // off the placements — that the upper eye stands where 太乙 stands is
+  // something anyone can verify — and every one of them is 凶 in the text's
+  // own words, which is why the fortune travels beside the name.
+  'label.taiyipattern.yan': 'covering',
+  'label.taiyipattern.ji': 'striking',
+  'label.taiyipattern.po': 'pressing',
+  'label.taiyipattern.qiu': 'imprisonment',
+  'label.taiyipattern.guan': 'locking',
+  'label.taiyipattern.ge': 'blocking',
+  'label.taiyipattern.dui': 'facing',
+
+  // 前 and 後 are ahead of and behind 太乙 on the ring; 辰 and 宮 are the two
+  // distances 卷三 separates — 「宫迫災㣲緩，辰迫災急疾」.
+  'label.taiyikind.qianchen': 'one seat ahead',
+  'label.taiyikind.houchen': 'one seat behind',
+  'label.taiyikind.qiangong': 'one palace ahead',
+  'label.taiyikind.hougong': 'one palace behind',
+
   // 十二神 — the god a day stands under. 《協紀辨方書》卷七 derives them by
   // 天罡加建 after rejecting the two accounts it inherited. Six carry 吉 and
   // six 凶, which the same passage says is all 黃道/黑道 ever meant; what the
@@ -576,6 +658,7 @@ export const en = {
   'nav.bazi': 'Ba Zi',
   'nav.liuren': 'Liu Ren',
   'nav.qizheng': 'Qi Zheng Si Yu',
+  'nav.taiyi': 'Tai Yi',
   'nav.moments': 'Choosing a time',
   // Named by the act, which is the one this section is built around: a
   // question put at an instant, and the chart cast for that instant. It was
@@ -594,6 +677,18 @@ export const en = {
   // The section that walks Qi Men charts, named with the art it walks. The nav
   // label cannot carry it — a header says where things are, not what they are
   // made of — and this is where somebody reading results needs to know.
+  // The 太乙 section. The title glosses the name the nav can only print, and
+  // it is said to a tab and to a screen reader rather than set over the
+  // board: the nav already says which section this is, as it does for every
+  // other board here. The paragraph that stood under it — what this board is
+  // a function of, and what it refuses to name — was a preface over a picture
+  // somebody came to look at, and where that account belongs is the notes.
+  'taiyi.title': 'Tai Yi — the board of a year',
+  // On the bar under the board, which is the whole of the form: a 年計 board
+  // is a function of the year and of nothing else.
+  'form.year': 'Year',
+  'form.copyTaiyi': 'Copy the board as text',
+
   'moments.title': 'Choosing a time — Qi Men',
   'moments.lead':
     'Every hour between two dates is cast as a Qi Men chart, and the ones answering what you name below are listed. Criteria, not recommendations: what makes an hour worth acting in is a reading, and it is yours.',
@@ -827,6 +922,10 @@ export const en = {
 
   // What a screen reader says, and what the arrows would say if they could.
   'step.now.title': 'Back to the present moment',
+  // The same button on a board whose whole subject is a year: there is no
+  // instant to come back to there, and saying there is would promise a board
+  // finer than the one being laid.
+  'step.now.year': 'Back to the year being lived',
   'step.shichen.back': 'The previous double hour',
   'step.shichen.forward': 'The next double hour',
   'step.day.back': 'The day before',
@@ -1186,6 +1285,23 @@ export const en = {
   // against. See PLAN.md § 4 phase 16.
   'cli.value.qizhengFrame':
     'the lodges begin at their determinative stars, placed at this instant; no table of 宿度 and no epoch enters',
+
+  'cli.heading.taiyi': 'The Tai Yi board of {year}',
+  'cli.field.taiyiSui': 'year',
+  'cli.field.taiyiJu': 'arrangement',
+  'cli.field.taiyiEyes': 'the two eyes',
+  'cli.field.taiyiCounts': 'the two counts',
+  'cli.field.taiyiGenerals': 'the generals',
+  'cli.field.taiyiBases': 'the three bases',
+  'cli.field.taiyiCircuits': 'the longer circuits',
+  'cli.field.taiyiGate': 'gate on duty',
+  'cli.field.taiyiConditions': 'conditions',
+  // Two lines every 太乙 board carries, because both are things a reader
+  // holding a Qi Men chart beside it will otherwise get wrong in silence.
+  'cli.value.taiyiPalaces':
+    'the palaces are numbered as 太乙 numbers them, one seat from the Luoshu: 一宮 is the north-west here and the north in a Qi Men chart',
+  'cli.value.taiyiEvidence':
+    'checked against the tables and worked boards of 《太乙金鏡式經》 itself; no independent implementation of this board exists to check it against',
 
   'cli.heading.scan': 'Charts from {from} to {to}',
   'cli.heading.criteria': 'Asked for',

@@ -399,3 +399,106 @@ export interface PlateQizhengOptions {
    */
   readings?: string;
 }
+
+/**
+ * A 太乙 board, as the drawing needs it.
+ *
+ * The numbers here are **this board's own**, not the Luoshu's: 卷二 of
+ * 《太乙金鏡式經》 shifts every palace one seat so that 一 reaches 乾, so
+ * `number` 1 is the north-west and 9 is the south-east. The drawing never
+ * derives a position from a number — it is told the direction — precisely so
+ * that a figure which looks like a Qi Men chart cannot quietly be laid out
+ * like one.
+ */
+export interface PlateTaiyi {
+  year: number;
+  sui: { hanzi: string };
+  ju: number;
+  /** 太乙 itself, in one of the eight. It never enters the centre. */
+  taiyi: { palace: PlateTaiyiPalace; year: number };
+  /** 文昌, the lower eye, which is the host's. */
+  wenchang: PlateTaiyiGod;
+  /** 始擊, the upper eye, which is the guest's. */
+  shiji: PlateTaiyiGod;
+  jishen: { hanzi: string };
+  heshen: { hanzi: string };
+  host: PlateTaiyiSide;
+  guest: PlateTaiyiSide;
+  gate: { gate: { hanzi: string; id: string }; year: number };
+  /** The sixteen, in ring order from 子. The drawing seats them by that order. */
+  gods: readonly PlateTaiyiGod[];
+  patterns: readonly {
+    hanzi: string;
+    id: string;
+    valence: { hanzi: string };
+    subject: string;
+    palace?: number | undefined;
+    kind?: string | undefined;
+  }[];
+}
+
+export interface PlateTaiyiPalace {
+  /** 太乙's own numbering, 1 to 9. */
+  number: number;
+  hanzi: string;
+  id: string;
+  /**
+   * The compass direction, which is what the palace *is*.
+   *
+   * Read for the record rather than for the layout: the drawing seats the
+   * eight from the gods of the ring, so nothing on the sheet is placed by a
+   * number that a reader might take for the Luoshu's.
+   */
+  direction: string | null;
+}
+
+export interface PlateTaiyiGod {
+  hanzi: string;
+  id: string;
+  /** How the name is said, for the band under the grid. */
+  pinyin?: string | undefined;
+  element: string;
+  /** The palace it stands at, absent for the eight 間神. */
+  palace?: number | undefined;
+}
+
+export interface PlateTaiyiSide {
+  count: number;
+  general: PlateTaiyiPalace;
+  /** Absent where the count reduced to the centre, which is on no ring. */
+  assistant?: PlateTaiyiPalace | undefined;
+}
+
+export interface PlateTaiyiLabels {
+  /** The sixteen, glossed in the cell each of them sits in. */
+  god?: Record<string, string>;
+  /** The conditions, under the grid. */
+  pattern?: Record<string, string>;
+  /** Words for the parts: the two eyes, the two counts, the generals. */
+  wenchang?: string;
+  shiji?: string;
+  hostCount?: string;
+  guestCount?: string;
+  general?: string;
+  assistant?: string;
+  gate?: string;
+  /**
+   * The line saying these palace numbers are not a Qi Men chart's.
+   *
+   * The one standing line the picture carries. What this board was checked
+   * against — the text itself, nothing that runs — used to stand beside it and
+   * is said where the section says what it is made of instead: it is a fact
+   * about the whole of this figure, not a caption to one drawing of it, and
+   * the transcript still carries it wherever the drawing cannot follow.
+   */
+  palaces?: string;
+}
+
+export interface PlateTaiyiOptions {
+  size?: number;
+  scheme?: 'light' | 'dark' | 'auto';
+  labels?: PlateTaiyiLabels;
+  heading?: string;
+  /** The heading over the band where the sixteen are said aloud. */
+  readings?: string;
+}

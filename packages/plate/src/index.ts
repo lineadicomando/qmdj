@@ -34,6 +34,7 @@ export { FONT_STACK, PALETTES, styleSheet, type Palette, type Scheme } from './p
 export { renderChartSvg, STRENGTH_MARKS } from './svg.js';
 export { renderLiurenSvg, DEFAULT_LIUREN_SIZE } from './liuren-svg.js';
 export { renderQizhengSvg, DEFAULT_QIZHENG_SIZE } from './qizheng-svg.js';
+export { renderTaiyiSvg, DEFAULT_TAIYI_SIZE } from './taiyi-svg.js';
 export type {
   Named,
   PlateCaptions,
@@ -45,6 +46,12 @@ export type {
   PlateQizheng,
   PlateQizhengLabels,
   PlateQizhengOptions,
+  PlateTaiyi,
+  PlateTaiyiGod,
+  PlateTaiyiLabels,
+  PlateTaiyiOptions,
+  PlateTaiyiPalace,
+  PlateTaiyiSide,
   PlateTransmission,
   PlateChart,
   PlateDirections,
