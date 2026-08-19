@@ -13,7 +13,7 @@
     <!-- The wordmark is not the page's title: each section carries its own
          `h1`, so the mark can stay the same on all of them. -->
     <a class="mark" href="/{t.locale}" aria-label="queru 闕如 quērú">
-      <img src="/seal.svg" alt="" width="34" height="34" />
+      <img src="/seal.svg" alt="" />
       <span class="name">
         <span class="word">queru</span>
         <!-- A name carries its reading, on the mark as everywhere else. -->
@@ -102,7 +102,10 @@
     text-decoration: none;
     color: var(--ink);
   }
-  .mark img { display: block; width: 34px; height: 34px; }
+  /* Height, never width: a seal is as wide as the name in it. One character
+     stands upright at about 1:1.6 and two side by side run wider than tall,
+     so a square box here would squash whichever the project ends up called. */
+  .mark img { display: block; height: 34px; width: auto; }
   .name { display: flex; flex-direction: column; line-height: 1.15; }
   .reading { font-size: 0.68rem; color: var(--faint); letter-spacing: 0.01em; }
 
@@ -131,7 +134,7 @@
       gap: 0.5rem;
       text-align: center;
     }
-    .mark img { width: 76px; height: 76px; }
+    .mark img { height: 76px; }
     .name { align-items: center; }
   }
 
@@ -139,7 +142,7 @@
      every page or lands off it. */
   @media print {
     .mark { position: static; width: fit-content; flex-direction: row; margin: 0 auto 0.6rem; }
-    .mark img { width: 34px; height: 34px; }
+    .mark img { height: 34px; }
   }
   .controls { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
 

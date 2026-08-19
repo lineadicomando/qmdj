@@ -13,6 +13,29 @@ three-part shape every named thing in the engine has.
 `studies/` keeps the rejected drafts, including the one that read as a
 Christian cross and the one that split the seal in half.
 
+## Cutting another name
+
+`make-marks.py` generates every mark from a name, so trying an alternative
+costs a command. It needs fontTools and the font (see below); pass `--font` if
+that lives elsewhere.
+
+```sh
+python3 design/logo/make-marks.py --hanzi 闕如 --seal 闕 --name queru --pinyin quērú
+python3 design/logo/make-marks.py --hanzi 遁甲 --name dunjia --pinyin dùnjiǎ --favicon 甲
+```
+
+`--seal` cuts fewer characters than the name has, `--favicon` cuts a single one
+for the small mark where it holds up at 24px, and several characters read right
+to left as seals do unless `--ltr` says otherwise.
+
+**The field follows the name, and the name decides the shape.** A single 小篆
+character runs about 1:1.6 and gets an upright 2:3 companion; two side by side
+run wider than tall and get a 3:2 one — 闕 measures 606×966 of ink where 遁甲
+measures 1600×992, and a two-character name in a square field stands half as
+tall as a one-character name does. The square is what a favicon and a header
+need, so it is always written, but it is not always what the name wants. The
+header sizes the seal by height and lets the width follow, for the same reason.
+
 ## The glyph
 
 `seal.svg`, `seal-vertical.svg` and `lockup.svg` carry 闕 in **崇羲篆體**
