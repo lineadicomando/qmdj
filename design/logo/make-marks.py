@@ -80,14 +80,20 @@ def compose(font: TTFont, text: str, rtl: bool) -> tuple[str, tuple[float, ...]]
 
 
 def block(vb: tuple[float, ...], paths: str, x: float, y: float,
-          w: float, h: float, fill: str) -> str:
+          w: float, h: float, fill: str, weight: float = 0.0) -> str:
     box = ' '.join(f'{v:.2f}' for v in vb)
+    # A stroke of the fill colour dilates the glyph evenly. It changes how heavy
+    # the cutting reads, not what shape the character is — but it is still a
+    # modification, and --weight is where that decision is made and licensed.
+    fat = (f' stroke="{fill}" stroke-width="{weight:.1f}" stroke-linejoin="round"'
+           f' stroke-linecap="round"') if weight else ''
     return (f'  <svg x="{x:.2f}" y="{y:.2f}" width="{w:.2f}" height="{h:.2f}" '
             f'viewBox="{box}" preserveAspectRatio="xMidYMid meet">\n'
-            f'    <g transform="scale(1,-1)" fill="{fill}">{paths}</g>\n  </svg>')
+            f'    <g transform="scale(1,-1)" fill="{fill}"{fat}>{paths}</g>\n  </svg>')
 
 
-def seal(vb, paths, credit, side=256, margin=16, fill=0.87) -> str:
+def seal(vb, paths, credit, side=256, margin=16, fill=0.87,
+         zhuwen=False, weight=0.0, bites=True) -> str:
     """A square 白文 seal: the name cut in white out of a cinnabar field.
 
     The glyphs keep their own proportions and the field is not asked to be
@@ -102,16 +108,32 @@ def seal(vb, paths, credit, side=256, margin=16, fill=0.87) -> str:
     if w > field * 0.9:
         w = field * 0.9
         h = w * aspect
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {side} {side}" '
+    head = (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {side} {side}" '
             f'width="{side}" height="{side}">\n'
-            f'  <title>{credit["title"]}</title>\n  <desc>{credit["desc"]}</desc>\n'
-            f'{BITES}\n'
-            f'  <g mask="url(#bite)"><rect x="{margin}" y="{margin}" '
-            f'width="{side - 2 * margin}" height="{side - 2 * margin}" fill="{CINNABAR}"/></g>\n'
-            f'{block(vb, paths, (side - w) / 2, (side - h) / 2, w, h, PAPER)}\n</svg>\n')
+            f'  <title>{credit["title"]}</title>\n  <desc>{credit["desc"]}</desc>\n')
+    if zhuwen:
+        # 朱文: the strokes are the ink and the field is left open, so the mark
+        # sits on whatever ground the page has instead of carrying its own.
+        edge = margin - 6
+        field = (f'  <rect x="{edge}" y="{edge}" width="{side - 2 * edge}" '
+                 f'height="{side - 2 * edge}" fill="none" stroke="{CINNABAR}" '
+                 f'stroke-width="6"/>\n')
+        return head + field + block(vb, paths, (side - w) / 2, (side - h) / 2,
+                                    w, h, CINNABAR, weight) + '\n</svg>\n'
+    # The bites are cut for margin=16 and would land inside a tighter field,
+    # reading as chips in the cinnabar rather than wear at its edge.
+    field = (f'  <g mask="url(#bite)"><rect x="{margin}" y="{margin}" '
+             f'width="{side - 2 * margin}" height="{side - 2 * margin}" '
+             f'fill="{CINNABAR}"/></g>\n') if bites else (
+             f'  <rect x="{margin}" y="{margin}" width="{side - 2 * margin}" '
+             f'height="{side - 2 * margin}" fill="{CINNABAR}"/>\n')
+    return (head + (f'{BITES}\n' if bites else '') + field
+            + block(vb, paths, (side - w) / 2, (side - h) / 2, w, h, PAPER, weight)
+            + '\n</svg>\n')
 
 
-def oblong(vb, paths, credit, w=200, h=300, margin=12) -> str:
+def oblong(vb, paths, credit, w=200, h=300, margin=12,
+           zhuwen=False, weight=0.0) -> str:
     """A field cut to the name rather than the other way round.
 
     One character wants 2:3 upright; two side by side want 3:2 across. The
@@ -124,16 +146,25 @@ def oblong(vb, paths, credit, w=200, h=300, margin=12) -> str:
     if gw > (w - 2 * margin) * 0.92:
         gw = (w - 2 * margin) * 0.92
         gh = gw * aspect
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" '
+    head = (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" '
             f'width="{w}" height="{h}">\n'
-            f'  <title>{credit["title"]} — vertical</title>\n  <desc>{credit["desc"]}</desc>\n'
-            f'{BITES.replace("width=\"256\" height=\"256\"", f"width=\"{w}\" height=\"{h}\"")}\n'
-            f'  <g><rect x="{margin}" y="{margin}" width="{w - 2 * margin}" '
+            f'  <title>{credit["title"]} — {"wide" if w > h else "vertical"}</title>\n'
+            f'  <desc>{credit["desc"]}</desc>\n')
+    if zhuwen:
+        e = margin - 4
+        return (head + f'  <rect x="{e}" y="{e}" width="{w - 2 * e}" height="{h - 2 * e}" '
+                f'fill="none" stroke="{CINNABAR}" stroke-width="6"/>\n'
+                + block(vb, paths, (w - gw) / 2, (h - gh) / 2, gw, gh, CINNABAR, weight)
+                + '\n</svg>\n')
+    return (head
+            + BITES.replace('width="256" height="256"', f'width="{w}" height="{h}"') + '\n'
+            + f'  <g><rect x="{margin}" y="{margin}" width="{w - 2 * margin}" '
             f'height="{h - 2 * margin}" fill="{CINNABAR}"/></g>\n'
-            f'{block(vb, paths, (w - gw) / 2, (h - gh) / 2, gw, gh, PAPER)}\n</svg>\n')
+            + block(vb, paths, (w - gw) / 2, (h - gh) / 2, gw, gh, PAPER, weight)
+            + '\n</svg>\n')
 
 
-def lockup(vb, paths, credit, name, hanzi, pinyin) -> str:
+def lockup(vb, paths, credit, name, hanzi, pinyin, zhuwen=False, weight=0.0) -> str:
     """Seal, wordmark and reading. The text inherits the page's colour."""
     aspect = vb[3] / vb[2]
     h = min(196.0, 224 * 0.87); w = h / aspect
@@ -166,7 +197,21 @@ def main() -> None:
     p.add_argument('--out', default=str(pathlib.Path(__file__).parent))
     p.add_argument('--ltr', action='store_true',
                    help='lay several characters left to right; seals read right to left')
+    p.add_argument('--zhuwen', action='store_true',
+                   help='cut 朱文 — the strokes in cinnabar inside a frame — instead of '
+                        '白文. What a hairline face needs: in white on a full field its '
+                        'strokes disappear.')
+    p.add_argument('--weight', type=float, default=0.0,
+                   help='dilate the strokes by this many font units, for a face too fine '
+                        'to hold at small sizes. THIS MODIFIES THE GLYPH: only lawful '
+                        'under a licence that permits derivative works (OFL does, the '
+                        'CC BY-ND of 崇羲篆體 does not). Leave at 0 unless you have checked.')
+    p.add_argument('--favicon-weight', type=float, default=None,
+                   help='dilation for the small mark alone, which needs more of it than '
+                        'the seal does (defaults to --weight)')
     a = p.parse_args()
+    if a.favicon_weight is None:
+        a.favicon_weight = a.weight
 
     font = TTFont(a.font)
     cut = a.seal or a.hanzi
@@ -178,13 +223,16 @@ def main() -> None:
     paths, vb = compose(font, cut, rtl=not a.ltr and len(cut) > 1)
 
     out = pathlib.Path(a.out); out.mkdir(parents=True, exist_ok=True)
-    (out / 'seal.svg').write_text(seal(vb, paths, credit))
+    (out / 'seal.svg').write_text(seal(vb, paths, credit,
+                                       zhuwen=a.zhuwen, weight=a.weight))
     # Upright for a single character, across for a name that runs wide.
     wide = vb[3] < vb[2]
     second = 'seal-wide.svg' if wide else 'seal-vertical.svg'
     (out / second).write_text(
-        oblong(vb, paths, credit, *((300, 200) if wide else (200, 300))))
-    (out / 'lockup.svg').write_text(lockup(vb, paths, credit, a.name, a.hanzi, a.pinyin))
+        oblong(vb, paths, credit, *((300, 200) if wide else (200, 300)),
+               zhuwen=a.zhuwen, weight=a.weight))
+    (out / 'lockup.svg').write_text(lockup(vb, paths, credit, a.name, a.hanzi,
+                                          a.pinyin, a.zhuwen, a.weight))
     written = ['seal.svg', second, 'lockup.svg']
 
     if a.favicon:
@@ -193,7 +241,12 @@ def main() -> None:
         # A tighter field and a narrower border than the seal proper. At 24px
         # every pixel spent on margin is a pixel the strokes do not get, and
         # the bitten edges stop reading as wear long before that size anyway.
-        (out / 'mark.svg').write_text(seal(fvb, fpaths, fcredit, margin=8, fill=0.94))
+        # The small mark stays 白文 whatever the seal is: a frame and hairline
+        # strokes have nothing left at 24px, where a filled field still reads.
+        # No bitten edges: worn stone stops reading as worn stone well above
+        # this size, and every pixel of margin is one the strokes do not get.
+        (out / 'mark.svg').write_text(seal(fvb, fpaths, fcredit, margin=8, fill=0.94,
+                                           weight=a.favicon_weight, bites=False))
         written.append('mark.svg')
 
     print(f"{a.name} {a.hanzi} {a.pinyin} — cut {cut}, ink {vb[2]:.0f}x{vb[3]:.0f}"
