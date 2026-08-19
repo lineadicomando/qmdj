@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { page } from '$app/state';
   import ColorSchemeToggle from '$lib/components/ColorSchemeToggle.svelte';
   import LanguageSwitch from '$lib/components/LanguageSwitch.svelte';
-  import { SECTIONS, carriedSearch, href, isCurrent } from '$lib/navigation';
+  import SectionsNav from '$lib/components/SectionsNav.svelte';
 
   let { data, children } = $props();
   const t = $derived(data.t);
@@ -24,27 +23,11 @@
     <!-- One line for both: where the reader can go, and the two settings that
          say how they are reading it. The switches earn the end of that line
          rather than a row of their own, now that they are two letters and a
-         circle. -->
+         circle — and they keep it on a phone, where the sections fold and they
+         do not: two letters and a circle cost the line almost nothing, and an
+         appearance buried behind a press is harder to reach than it is now. -->
     <div class="bar">
-      <nav aria-label={t('nav.sections')}>
-        <ul>
-          {#each SECTIONS as section, index (section.slug)}
-            {@const current = isCurrent(t.locale, section.slug, page.url.pathname)}
-            <!-- Space, not a rule and not a dropdown: the break between what a
-                 reader does and what they look at is set in the one device this
-                 page has for it. Nothing is hidden behind an interaction. -->
-            <li class:opens={index > 0 && SECTIONS[index - 1].group !== section.group}>
-              <a
-                href={href(t.locale, section.slug, carriedSearch(page.url.search))}
-                aria-current={current ? 'page' : undefined}
-                class:current
-              >
-                {t(section.label)}
-              </a>
-            </li>
-          {/each}
-        </ul>
-      </nav>
+      <SectionsNav {t} />
 
       <div class="controls">
         <LanguageSwitch {t} />
@@ -83,12 +66,20 @@
    */
   .mark { margin: 0 auto 1.1rem; width: fit-content; }
 
-  /* Where the reader can go, and how they are reading it, on one line.
-     Aligned at the foot so the switches sit on the nav's own baseline rather
-     than floating above its underline. */
+  /*
+   * Where the reader can go, and how they are reading it, on one line.
+   *
+   * On the nav's own baseline rather than floating above its underline — and
+   * said as the baseline rather than as the foot, which is what it used to
+   * say. A foot is the same thing as a baseline only while the nav is one
+   * line: folded open on a phone the nav is eight, its foot is under `Ba Zi`,
+   * and the two switches went down there with it. The baseline is the first
+   * one either way, which is the button when there is a button and the first
+   * section when there is not.
+   */
   .bar {
     display: flex;
-    align-items: flex-end;
+    align-items: baseline;
     justify-content: space-between;
     gap: 0.5rem 1.5rem;
     flex-wrap: wrap;
@@ -150,23 +141,6 @@
   }
   .controls { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
 
-  /* Three sections and two words apiece: on a narrow screen they wrap rather
-     than scroll off the edge. */
-  nav ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem 1.4rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  /* Twice the gap the list already sets, which reads as a division where
-     a wider gap of the same kind would read as an accident. */
-  nav li.opens { margin-inline-start: 1.6rem; }
-  nav a { color: var(--faint); text-decoration: none; padding-bottom: 0.35rem; }
-  nav a:hover { color: var(--ink); }
-  nav a.current { color: var(--ink); border-bottom: 2px solid var(--ink); }
-
   /*
    * Centred, and across the whole shell.
    *
@@ -205,7 +179,9 @@
    */
   @media print {
     .shell { max-width: none; padding: 0; }
-    nav, .controls { display: none; }
+    /* The nav hides itself: a scoped selector here no longer reaches a
+       `<nav>` that is rendered in a component of its own. */
+    .controls { display: none; }
     .mark { text-decoration: none; }
     header { margin-bottom: 1rem; }
     /* Close under what it qualifies, and never split: the disclaimer is two

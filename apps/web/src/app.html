@@ -16,6 +16,17 @@
       attribute are the ones in `lib/color-scheme.ts`.
     -->
     <script>
+      /*
+       * That scripts run at all, said before the paint and to the stylesheet.
+       *
+       * The header folds its sections behind a button, and a button nobody
+       * can press is a nav nobody can reach — so the list stays open and the
+       * button undrawn until this attribute says there is something to answer
+       * the press. Written here for the same reason the appearance is, and
+       * not from a component: after hydration is a flash too late.
+       */
+      document.documentElement.setAttribute('data-js', '');
+
       try {
         const chosen = localStorage.getItem('qimendunjia:color-scheme');
         if (chosen === 'light' || chosen === 'dark') {
