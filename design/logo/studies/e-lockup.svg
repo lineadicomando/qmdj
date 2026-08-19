@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 180" width="640" height="180">
+  <title>queru — horizontal lockup, the name with its reading</title>
+  <g transform="translate(20,10) scale(0.625)">
+    <mask id="bite3">
+      <rect x="0" y="0" width="256" height="256" fill="#fff"/>
+      <path d="M16 16 L31 16 L23 21 L16 26 Z" fill="#000"/>
+      <path d="M240 240 L240 227 L232 233 L225 240 Z" fill="#000"/>
+      <path d="M16 150 L21 154 L17 162 L22 170 L16 176 Z" fill="#000"/>
+      <path d="M104 240 L110 235 L120 239 L129 234 L134 240 Z" fill="#000"/>
+      <path d="M162 16 L168 21 L180 17 L191 22 L197 16 Z" fill="#000"/>
+    </mask>
+    <g mask="url(#bite3)"><rect x="16" y="16" width="224" height="224" fill="#B4322B"/></g>
+    <text x="128" y="130" fill="#FAF7F2" font-family="Noto Serif CJK TC" font-size="150"
+          text-anchor="middle" dominant-baseline="central">闕</text>
+  </g>
+  <text x="200" y="88" font-family="Noto Serif CJK TC" font-size="62" fill="currentColor">queru</text>
+  <text x="202" y="126" font-family="Noto Serif CJK TC" font-size="27" fill="currentColor" opacity="0.62">闕如 · quērú</text>
+</svg>

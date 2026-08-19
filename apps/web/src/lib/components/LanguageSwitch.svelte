@@ -19,9 +19,11 @@
 </script>
 
 <!--
-  A flag names a country and not a language, which is why the name is here in
-  words as well: the flag is the thing the eye finds, the word is the thing
-  that is true.
+  A flag names a country and not a language. The code beside it names the
+  language and nothing else — `it` is Italian wherever it is spoken, and no
+  flag can say that. So the flag is the thing the eye finds and the code is
+  the thing that is true, and the language's own name, which is what a reader
+  would say out loud, stays on the label for anyone not reading by sight.
 -->
 <ul>
   {#each LOCALES as locale (locale)}
@@ -33,6 +35,7 @@
         aria-current={current ? 'true' : undefined}
         class:current
         title={t('lang.switch', { language: t(`lang.${locale}` as MessageKey) })}
+        aria-label={t('lang.switch', { language: t(`lang.${locale}` as MessageKey) })}
       >
         <svg viewBox="0 0 9 6" aria-hidden="true">
           {#if locale === 'it'}
@@ -47,7 +50,7 @@
             <path d="M4.5 0v6M0 3h9" stroke="#c8102e" stroke-width="1.2" />
           {/if}
         </svg>
-        <span>{t(`lang.${locale}` as MessageKey)}</span>
+        <span>{locale}</span>
       </a>
     </li>
   {/each}
@@ -65,6 +68,9 @@
   }
   a.current { color: var(--ink); }
   a:hover { color: var(--ink); }
+  /* The code, not a word: two letters carry the same fact in a quarter of the
+     room, which is what lets the switch sit on the nav's own line. */
+  span { font-variant: all-small-caps; letter-spacing: 0.06em; font-size: 1.05em; }
   svg {
     width: 1.1rem;
     height: 0.74rem;
