@@ -125,8 +125,12 @@
   @media (min-width: 88rem) {
     .mark {
       position: fixed;
-      top: 1.6rem;
-      left: calc(50% - 36rem - 7.5rem);
+      /* The shell's own top padding: the seal starts where the nav's line
+         starts, rather than hanging below it. */
+      top: 1rem;
+      /* 6.5rem wide, half a rem clear of the shell's edge — which also leaves
+         a rem of air outside it at exactly 88rem, where the margin is 8. */
+      left: calc(50% - 36rem - 7rem);
       margin: 0;
       width: 6.5rem;
       flex-direction: column;
