@@ -26,18 +26,20 @@ from fontTools.ttLib import TTFont
 CINNABAR = '#B4322B'
 PAPER = '#FAF7F2'
 
-# The bites a worn stone loses. Small, irregular, and never circular: a
-# circle reads as a hole punched in the field rather than as wear.
+# The bites a worn stone loses.
+#
+# Fewer and smaller than the first cut of them, because a seal is worn at its
+# corners and along an edge or two, not all the way round: six even nicks read
+# as a decorative border, and a dense character hides that while an open one
+# shows it. Never circular — a circle is a hole punched in the field, not wear.
 BITES = """  <mask id="bite">
     <rect width="256" height="256" fill="#fff"/>
-    <path d="M16 16 L31 16 L23 21 L16 26 Z" fill="#000"/>
-    <path d="M240 240 L240 227 L232 233 L225 240 Z" fill="#000"/>
-    <path d="M16 150 L21 154 L17 162 L22 170 L16 176 Z" fill="#000"/>
-    <path d="M240 78 L235 83 L239 91 L234 99 L240 104 Z" fill="#000"/>
-    <path d="M104 240 L110 235 L120 239 L129 234 L134 240 Z" fill="#000"/>
-    <path d="M162 16 L168 21 L180 17 L191 22 L197 16 Z" fill="#000"/>
-    <rect x="16" y="62" width="3" height="22" fill="#000"/>
-    <rect x="237" y="166" width="3" height="18" fill="#000"/>
+    <path d="M16 16 L27 16 L20 20 L16 24 Z" fill="#000"/>
+    <path d="M240 240 L240 229 L233 234 L227 240 Z" fill="#000"/>
+    <path d="M16 154 L20 158 L17 166 L21 173 L16 178 Z" fill="#000"/>
+    <path d="M176 16 L182 20 L193 17 L200 21 L205 16 Z" fill="#000"/>
+    <rect x="237" y="104" width="3" height="26" fill="#000"/>
+    <rect x="118" y="237" width="24" height="3" fill="#000"/>
   </mask>"""
 
 
@@ -188,7 +190,10 @@ def main() -> None:
     if a.favicon:
         fpaths, fvb = compose(font, a.favicon, rtl=False)
         fcredit = dict(credit, title=f'{a.name} {a.favicon} — small mark')
-        (out / 'mark.svg').write_text(seal(fvb, fpaths, fcredit, fill=0.82))
+        # A tighter field and a narrower border than the seal proper. At 24px
+        # every pixel spent on margin is a pixel the strokes do not get, and
+        # the bitten edges stop reading as wear long before that size anyway.
+        (out / 'mark.svg').write_text(seal(fvb, fpaths, fcredit, margin=8, fill=0.94))
         written.append('mark.svg')
 
     print(f"{a.name} {a.hanzi} {a.pinyin} — cut {cut}, ink {vb[2]:.0f}x{vb[3]:.0f}"

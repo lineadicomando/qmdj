@@ -1,17 +1,33 @@
-# queru — marks
+# shipan — marks
 
-`queru` is the identifier, 闕如 is the name, quērú is the reading — the same
+`shipan` is the identifier, 式盤 is the name, shìpán is the reading — the same
 three-part shape every named thing in the engine has.
+
+式盤 is the diviner's board itself: the round heaven turning on the square
+earth, and the ancestor the three 式 have in common — 奇門, 六壬 and 太乙 are
+counted as «the three 式». The seal carries 式, the first character of the
+name, as the queru seal carried 闕.
+
+**This branch is a candidate.** `queru-mark` carries 闕如 and `dunjia-mark`
+carries 遁甲.
 
 | file | what it is | use it |
 |---|---|---|
 | `seal.svg` | 白文 seal: the name cut in white out of a cinnabar field | 64px and up — header, README, social card, print |
-| `mark.svg` | abstract gate: lintel and two jambs | below 64px — favicon, app icon, anywhere the glyph turns to mush |
+| `mark.svg` | 式 in a tighter field, narrower border | below 64px — favicon, app icon |
 | `seal-vertical.svg` | 2:3 field, glyph unweighted at native size | print, colophon, anywhere unconstrained |
 | `lockup.svg` | seal, wordmark, and the reading | the primary lockup |
 
-`studies/` keeps the rejected drafts, including the one that read as a
-Christian cross and the one that split the seal in half.
+**The small mark is a character here, not a device.** 闕 had 18 strokes and
+turned to mush below 64px, which is why queru needed an abstract gate; 式 has
+six and holds at 24px, and at 32px — what a tab actually uses on a HiDPI
+screen — it is crisp. It gets a tighter field and a narrower border than the
+seal proper, because at that size every pixel spent on margin is one the
+strokes do not get.
+
+`studies/` keeps the rejected drafts from the 闕如 round, including the one that
+read as a Christian cross and the one that split the seal in half. The abstract
+gate they arrived at was the etymology of 闕 and does not carry over.
 
 ## Cutting another name
 
@@ -28,6 +44,11 @@ python3 design/logo/make-marks.py --hanzi 遁甲 --name dunjia --pinyin dùnjiǎ
 for the small mark where it holds up at 24px, and several characters read right
 to left as seals do unless `--ltr` says otherwise.
 
+**The bitten edges are quiet.** A stone wears at its corners and along an edge
+or two, not evenly all the way round: six even nicks read as a decorative
+border. A dense character hides that and an open one shows it, which is how the
+first cut of them — set against 闕 — turned to noise around 式.
+
 **The field follows the name, and the name decides the shape.** A single 小篆
 character runs about 1:1.6 and gets an upright 2:3 companion; two side by side
 run wider than tall and get a 3:2 one — 闕 measures 606×966 of ink where 遁甲
@@ -38,7 +59,7 @@ header sizes the seal by height and lets the width follow, for the same reason.
 
 ## The glyph
 
-`seal.svg`, `seal-vertical.svg` and `lockup.svg` carry 闕 in **崇羲篆體**
+`seal.svg`, `seal-vertical.svg` and `lockup.svg` carry 式 in **崇羲篆體**
 (Chong Xi Small Seal), the small-seal face built on the 說文解字 by 王心怡,
 謝清俊 and 莊德明 at Academia Sinica, 2022 — 11,608 glyphs, released
 free of charge to everyone.
@@ -59,8 +80,8 @@ The licence says nothing about extracting outlines into a logo. Embedding one
 unmodified glyph is the most defensible reading of it, but if the mark ever
 becomes a registered thing, ask Academia Sinica in writing.
 
-**The fallback, if that answer is ever no:** `studies/seal-shuowen-pd.svg` keeps
-the same character in the 說文 form from
+**The fallback, if that answer is ever no** covers 闕 only, and would have to be
+redone for 式: `studies/seal-shuowen-pd.svg` keeps that character in the 說文 form from
 [`File:闕-seal.svg`](https://commons.wikimedia.org/wiki/File:%E9%97%95-seal.svg)
 on Wikimedia Commons — **public domain**, no conditions at all. It is flatter
 and heavier than 崇羲, and it was the only source available before this font:

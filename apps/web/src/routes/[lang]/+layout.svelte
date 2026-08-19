@@ -12,12 +12,12 @@
   <header>
     <!-- The wordmark is not the page's title: each section carries its own
          `h1`, so the mark can stay the same on all of them. -->
-    <a class="mark" href="/{t.locale}" aria-label="queru 闕如 quērú">
+    <a class="mark" href="/{t.locale}" aria-label="shipan 式盤 shìpán">
       <img src="/seal.svg" alt="" />
       <span class="name">
-        <span class="word">queru</span>
+        <span class="word">shipan</span>
         <!-- A name carries its reading, on the mark as everywhere else. -->
-        <span class="reading">闕如 · quērú</span>
+        <span class="reading">式盤 · shìpán</span>
       </span>
     </a>
 
