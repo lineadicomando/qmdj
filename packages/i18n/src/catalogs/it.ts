@@ -1170,21 +1170,21 @@ export const it: Record<MessageKey, string> = {
   // una che nessuno può scegliere di proposito.
   // A quale quadro si pone la domanda. Le opzioni guidano con ciò a cui
   // servono, perché chi arriva con una domanda ne riconosce la forma e non ha
-  // modo di pesare due nomi cinesi. Il nome dell'arte segue le parole invece
-  // di sostituirle: un metodo è una cosa cinese, ed è l'unico punto della
-  // pagina in cui è quello a essere nominato.
+  // modo di pesare due nomi cinesi. Qui c'è solo la faccenda: il nome dell'arte
+  // sta sotto queste parole e non dentro, perché 奇門遁甲 è qíméndùnjiǎ in ogni
+  // lingua e un nome non si traduce. Vive in `instruments.ts`.
   // Ciò che la consultazione nomina in chiaro. Solo la circostanza prende un
   // nome: i campi sopra sono quelli che la riga d'apertura già annuncia, e un
   // titolo su di essi direbbe una terza volta ciò che dicono due etichette.
   'form.group.standing': 'Da dove chiedi',
   'form.group.birth': 'La nascita su cui il quadro è steso',
   'form.instrument': 'Che tipo di lettura è',
-  'form.instrument.qimen': 'Quando muovermi, e da che parte — 奇門遁甲 qíméndùnjiǎ',
-  'form.instrument.liuren': 'Cosa sta succedendo, e con chi — 大六壬 dàliùrén',
-  'form.instrument.qizheng': 'Il cielo sotto cui una vita è cominciata — 七政四餘 qīzhèngsìyú',
-  'form.instrument.ziwei': 'I seggi in cui una vita è contata — 紫微斗數 zǐwēidǒushù',
-  'form.instrument.bazi': "Di che cosa è fatta una vita, all'ora di una nascita — 八字 bāzì",
-  'form.instrument.taiyi': 'Come sta un anno, per tutti quelli che ci stanno dentro — 太乙神數 tàiyǐshénshù',
+  'form.instrument.qimen': 'Quando muovermi, e da che parte',
+  'form.instrument.liuren': 'Cosa sta succedendo, e con chi',
+  'form.instrument.qizheng': 'Il cielo sotto cui una vita è cominciata',
+  'form.instrument.ziwei': 'I seggi in cui una vita è contata',
+  'form.instrument.bazi': "Di che cosa è fatta una vita, all'ora di una nascita",
+  'form.instrument.taiyi': 'Come sta un anno, per tutti quelli che ci stanno dentro',
   'form.guiren': 'Quale verso insedia il nobile (貴人)',
   'form.guiren.chou': '甲 con 戊 e 庚, a 丑 e 未',
   'form.guiren.wei': '甲 da solo, a 未 e 丑',

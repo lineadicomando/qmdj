@@ -135,8 +135,39 @@ export interface Instrument {
    * Somebody arriving with a question recognises the shape of their own, where
    * `Qi Men` and `Liu Ren` are two words they have no way to weigh. The same
    * rule that makes an option reading `zishi` unusable.
+   *
+   * The errand alone: what the art is *called* stands beside it in `name` and
+   * is no longer on the tail of this string.
    */
   readonly option: MessageKey;
+  /**
+   * The name of the art, in its script and said aloud.
+   *
+   * Not a `MessageKey`, and that is the rule rather than an economy — 奇門遁甲
+   * is Qí Mén Dùn Jiǎ on `/it` as on `/en`, so a name kept in the catalogs is
+   * one fact filed twice in the one place built for what differs between them.
+   *
+   * **Said in syllables and capitalised, where the engine's readings are one
+   * lowercase word.** Not a drift from `docs/sources.md` § The transliteration:
+   * that rule is about the reading of a *term* — 休門 is xiūmén, one name of
+   * one thing in a table of them — and this is the title of an art. The header
+   * has been writing those titles apart and in capitals since there was a
+   * header, `Qi Men Dun Jia` and `Zi Wei Dou Shu`, and a reader who meets
+   * `qíméndùnjiǎ` on a card below has no way to tell it is the same thing
+   * they just read in the nav. So the syllables are the nav's, with the tones
+   * put back: the site says one name one way, and says it sayably — a person
+   * who has to read a title aloud reads Qí Mén Dùn Jiǎ, and nobody reads
+   * fourteen letters run together.
+   *
+   * It used to ride on the tail of `option`, behind an em dash, because an
+   * option in a list gets one line and one line had to carry the errand and
+   * the name at once. A card has two. Set apart, they fall into the order this
+   * interface is held to everywhere else: the description leads, in the
+   * reader's own language, and the name stands under it — beside the words and
+   * never instead of them, since a method is a Chinese thing and this is the
+   * one place on the page where that is what is being named.
+   */
+  readonly name: { readonly hanzi: string; readonly pinyin: string };
 }
 
 /** The instruments, in the order the consultation offers them. */
@@ -150,6 +181,7 @@ export const INSTRUMENTS: readonly Instrument[] = [
     strengths: true,
     plate: { width: 900, height: 1280 },
     option: 'form.instrument.qimen',
+    name: { hanzi: '奇門遁甲', pinyin: 'Qí Mén Dùn Jiǎ' },
   },
   {
     id: 'liuren',
@@ -160,6 +192,7 @@ export const INSTRUMENTS: readonly Instrument[] = [
     strengths: false,
     plate: { width: 900, height: 1379 },
     option: 'form.instrument.liuren',
+    name: { hanzi: '大六壬', pinyin: 'Dà Liù Rén' },
   },
   {
     id: 'qizheng',
@@ -170,6 +203,7 @@ export const INSTRUMENTS: readonly Instrument[] = [
     strengths: false,
     plate: { width: 900, height: 1450 },
     option: 'form.instrument.qizheng',
+    name: { hanzi: '七政四餘', pinyin: 'Qī Zhèng Sì Yú' },
   },
   {
     id: 'bazi',
@@ -179,6 +213,7 @@ export const INSTRUMENTS: readonly Instrument[] = [
     takesGender: true,
     strengths: false,
     option: 'form.instrument.bazi',
+    name: { hanzi: '八字', pinyin: 'Bā Zì' },
   },
   // The sixth board, and it cost the table nothing: 紫微斗數 is 命 laid on a
   // birth, so it is a row with the values 八字 already had. That the widening
@@ -194,6 +229,7 @@ export const INSTRUMENTS: readonly Instrument[] = [
     // this art names forty things and every one of them has to be sayable.
     plate: { width: 900, height: 1150 },
     option: 'form.instrument.ziwei',
+    name: { hanzi: '紫微斗數', pinyin: 'Zǐ Wēi Dǒu Shù' },
   },
   // Last, and not by seniority: it is the one instrument here whose errand is
   // nobody's, so a reader scanning the five for the shape of their own finds
@@ -207,6 +243,7 @@ export const INSTRUMENTS: readonly Instrument[] = [
     strengths: false,
     plate: { width: 900, height: 1360 },
     option: 'form.instrument.taiyi',
+    name: { hanzi: '太乙神數', pinyin: 'Tài Yǐ Shén Shù' },
   },
 ];
 

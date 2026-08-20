@@ -760,22 +760,56 @@
         two words they have no way to weigh.
       -->
       <!--
-        Five of them, and no longer a `select`.
+        Six of them, and no longer a `select` nor a column of lines.
 
-        A `select` gives one line to an option and shows one at a time, which
-        held while there were two and stops holding at five: a reader who knows
-        none of these arts is choosing between descriptions, and descriptions
-        have to be read side by side to be weighed. Radios show all five at
-        once, and the fieldset carries the same label the `select` did.
+        A `select` gave one line to an option and showed one at a time, which
+        held while there were two and stopped holding at five: a reader who
+        knows none of these arts is choosing between descriptions, and
+        descriptions have to be read side by side to be weighed. Radios in a
+        column showed all six at once and only half solved it — six sentences
+        stacked one under the other are still read *down*, and each of them had
+        to carry the errand and the name of the art on the same line, behind an
+        em dash, wrapping wherever the width happened to fall.
+
+        A card holds two lines, so the two things stop competing for one: the
+        name at the head of it — 奇門遁甲 Qí Mén Dùn Jiǎ, which is not a locale
+        and now lives in `instruments.ts` rather than twice in the catalogs —
+        and the errand under it.
+
+        **The name is first in the order and second in the weight, and that is
+        what keeps it inside the rule it looks like it breaks.** CLAUDE.md holds
+        that what a reader operates leads in their own language, and an option
+        whose face is a glyph is one nobody can choose on purpose. What that
+        rule is written against is a card that says 太乙神數 and stops. Here the
+        name is set where a kicker goes and in the quiet register, and the line
+        in ink — the one the eye lands on and the one somebody is actually
+        deciding between — is «come sta un anno, per tutti quelli che ci stanno
+        dentro». Reading order says which thing this is; ink says which thing to
+        read. A reader with no Chinese still chooses on the errand, and one who
+        knows the six arts finds them where a list of six names is scanned,
+        which is down the left edge and at the top of each card.
+
+        **They are cards and not buttons, and the radio stays drawn on them.**
+        This page has exactly one press and it is the one that casts the board;
+        the instrument is chosen *before* it and never after. Six things with
+        the air of the pressable, sitting above the one control that actually
+        does something, would be six ways to wonder which of the seven casts.
+        A visible radio says «one of these, then press» in the one vocabulary
+        every reader already has — and it costs nothing, since the ring the
+        keyboard leaves is then the browser's own on a control that is really
+        there, rather than something reconstructed on a box that hides it.
       -->
       <fieldset class="instrument">
         <legend>{t('form.instrument')}</legend>
-        {#each INSTRUMENTS as choice (choice.id)}
-          <label>
-            <input type="radio" name="instrument" value={choice.id} bind:group={instrumentId} />
-            <span>{t(choice.option)}</span>
-          </label>
-        {/each}
+        <div class="choices">
+          {#each INSTRUMENTS as choice (choice.id)}
+            <label class="choice" class:chosen={instrumentId === choice.id}>
+              <input type="radio" name="instrument" value={choice.id} bind:group={instrumentId} />
+              <span class="glyph named">{choice.name.hanzi} {choice.name.pinyin}</span>
+              <span class="errand">{t(choice.option)}</span>
+            </label>
+          {/each}
+        </div>
       </fieldset>
 
       <!--
@@ -1060,26 +1094,53 @@
   .wide { max-width: none; }
 
   .question { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 46rem; }
-  /* Four descriptions, read side by side rather than one at a time. Bounded
-     at the same measure the `select` had: the lines are sentences, and a
-     sentence set the width of the panel is one the eye loses the start of. */
-  .instrument { display: grid; gap: 0.35rem; border: 0; padding: 0; margin: 0; max-width: 34rem; }
+  /* Six descriptions, read side by side rather than one at a time. Wider than
+     the column of lines it replaces, because two columns of half the measure
+     are still two sentences the eye holds — where six sentences down a single
+     column are a list, and a list is read in order rather than compared. */
+  .instrument { display: grid; gap: 0.4rem; border: 0; padding: 0; margin: 0; max-width: 46rem; }
   .instrument legend { padding: 0; font-size: 0.9em; color: var(--faint); }
-  /* The control and its words on one line, with the words carrying the hang:
-     a description that wrapped under its own radio would read as a paragraph
-     with a bullet, not as one option among four. */
-  .instrument label {
+  /* `auto-fit` and not a media query: what decides how many columns fit is the
+     panel, which is narrower than the window by its own padding and narrower
+     again beside anything the page ever puts next to it. A breakpoint on the
+     window would go on promising two columns after the room for the second one
+     was gone. Below the floor the six fall into one column, which is where they
+     started. */
+  .choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 0.5rem; }
+  /* The radio, then the two lines beside it, and the lines hang together: a
+     description that wrapped under its own control would read as a paragraph
+     with a bullet rather than as one option among six. */
+  .choice {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 0.5rem;
-    align-items: baseline;
+    gap: 0.1rem 0.5rem;
+    align-content: start;
+    padding: 0.5rem 0.65rem;
+    border-radius: 4px;
     font-size: 0.9em;
     cursor: pointer;
+    /* `--edge` and not `--rule`: this is the boundary of something the reader
+       is expected to click into, and app.css says which of the two borders that
+       takes. On the panel's own tint the card holds the ground, the same way
+       every field around it does. */
+    border: 1px solid var(--edge);
+    background: var(--ground);
   }
-  .instrument input { margin: 0; }
-  /* Full ink: the legend above them is the faint thing, and four options a
-     reader is choosing between are not an aside. */
-  .instrument span { color: var(--ink); }
+  .choice input { margin: 0; align-self: baseline; }
+  /* The name, at the head of the card and quieter than the line under it: it
+     says which of the six this is, and the reader who does not know the six is
+     not choosing on it. Set apart in syllables and capitalised, which is how
+     the header has always written these titles — see `instruments.ts`. */
+  .named { grid-column: 2; color: var(--faint); }
+  /* Full ink, and second: the legend above them is the faint thing, and six
+     errands a reader is choosing between are not an aside. */
+  .errand { grid-column: 2; color: var(--ink); }
+  /* Hover names the card under the pointer; the chosen one is ringed, which is
+     a second pixel of the same ink and not a second colour. Two states that
+     never have to be told apart at rest: hovering ends when the pointer moves
+     and the choice does not. */
+  .choice:hover { border-color: var(--ink); }
+  .chosen { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
   /* The ring used to be held to 34rem and pushed to the left margin, on the
      grounds that it is drawn narrower than the grid of nine and that the
      reading under it starts at the margin. This is the one page where the four

@@ -1505,9 +1505,10 @@ export const en = {
   // on purpose.
   // Which board the question is put to. The options lead with what they are
   // for, because somebody arriving with a question recognises the shape of
-  // their own and has no way to weigh two Chinese names. The name of the art
-  // follows the words rather than replacing them: a method is a Chinese
-  // thing, and this is the one place on the page where that is what is named.
+  // their own and has no way to weigh two Chinese names. What stands here is
+  // the errand alone: the name of the art sits under these words rather than
+  // inside them, since 奇門遁甲 is qíméndùnjiǎ in either language and a name
+  // does not translate. It lives in `instruments.ts`.
   // What the consultation names in the open. Only the circumstance takes a
   // name: the fields above it are what the page's lead line already announces,
   // and a heading over them would say a third time what two labels say.
@@ -1523,16 +1524,16 @@ export const en = {
   // to weigh, and the whole point of these four lines is that somebody arriving
   // recognises the shape of their own errand.
   'form.instrument': 'What kind of reading is it',
-  'form.instrument.qimen': 'When to move, and which way — 奇門遁甲 qíméndùnjiǎ',
-  'form.instrument.liuren': 'What is going on, and with whom — 大六壬 dàliùrén',
-  'form.instrument.qizheng': 'The sky a life began under — 七政四餘 qīzhèngsìyú',
-  'form.instrument.ziwei': 'The seats a life is counted into — 紫微斗數 zǐwēidǒushù',
-  'form.instrument.bazi': 'What a life is built from, at the hour of a birth — 八字 bāzì',
+  'form.instrument.qimen': 'When to move, and which way',
+  'form.instrument.liuren': 'What is going on, and with whom',
+  'form.instrument.qizheng': 'The sky a life began under',
+  'form.instrument.ziwei': 'The seats a life is counted into',
+  'form.instrument.bazi': 'What a life is built from, at the hour of a birth',
   // The fifth, and the one whose errand is nobody's. Said in the same register
   // as the other four — what it is for — and what it is for is a year rather
   // than a person or a matter, which the line has to make unmistakable or a
   // reader picks it expecting a forecast of their own.
-  'form.instrument.taiyi': 'How a year stands, for everybody in it — 太乙神數 tàiyǐshénshù',
+  'form.instrument.taiyi': 'How a year stands, for everybody in it',
   'form.guiren': 'Which verse seats the noble (貴人)',
   'form.guiren.chou': '甲 with 戊 and 庚, at 丑 and 未',
   'form.guiren.wei': '甲 apart, at 未 and 丑',
