@@ -343,6 +343,40 @@ the engine falls back to Moshier, which needs no files.
 - **Verify against an independent implementation, not against memory.** Every
   pillar in the tests was checked against `lunar-javascript` over two
   centuries. Recalled almanac values were wrong more often than not.
+- **A place is an identifier, or coordinates, or an identifier refined by
+  coordinates — and never a name.** Nothing here turns a name into a place:
+  there are dozens of towns called Rome, and picking the most populous for
+  somebody produces a chart that looks right and is wrong. What the surfaces
+  take is a `locationId` out of `/api/locations`, or a `latitude` and a
+  `longitude` with a `timezone`, or both together. **The third is a
+  refinement and not a contradiction**: the coordinates replace the pair
+  GeoNames holds, the zone stays the named place's, and a `timezone` sent
+  beside an identifier is ignored, because the identifier already answered it
+  — a search knows the town and not the hamlet three valleys up, and the
+  longitude is what the correction to true solar time is made of. Half a pair
+  is refused rather than half-read: a latitude alone would be answered on the
+  meridian of Greenwich and look exactly like the chart that was asked for.
+  The answer then **says both halves** — `Rome, Lazio, Italy · 41.8919,
+  13.5113` — since a sheet naming a town for a board laid fifty kilometres
+  away is untrue and nothing downstream could tell. One rule reads the same on
+  every surface: `readPlace` in `lib/server/params.ts`, `resolvePlace` in
+  `mcp/src/shared.ts`, and `LocationSearch.svelte` for the two forms that ask.
+  **In the forms a chosen place fills those fields with its own, and what is
+  filled is not what is asked for.** A refinement is a nudge, and nobody
+  nudges an empty box whose starting point they would have to go and look up;
+  but «filled» then stops saying anything, so what travels is what *departs* —
+  `refines` in `lib/moment.ts`, the same rule by which `chaibu` is never
+  written into an address. An untouched pair is the place said twice: carried,
+  it would put a doorstep in every link and print «Roma · 41.8919, 12.5113»
+  under every chart of Rome as a refinement nobody made.
+  In this engine **the longitude is what moves a board**; the latitude is
+  carried and printed and enters no calculation — 七政四餘's 宮 division by
+  houses is the one method that would read it, and `qizheng.ts` declares and
+  refuses it. That bound is stated here and in the README, and **not in the
+  form**: nothing under that fold explains itself, on the ground that a
+  control somebody opens on purpose to type a longitude into is opened by
+  somebody who knows what one is. Keep it that way — the place to widen is
+  the documentation, not a paragraph over three fields.
 - **Location search matches by range, never with `LIKE`.** SQLite cannot use
   an index for `LIKE 'prefix%'` under the default collation and falls back to
   scanning every name in the table. See `prefixUpperBound` in `geo/search.ts`

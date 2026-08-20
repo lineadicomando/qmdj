@@ -420,7 +420,18 @@ GET /api/moments?from=2026-09-01&to=2026-09-08&locationId=3169070&gate=kaimen&to
 GET /api/chart/text?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/chart/prompt?date=2024-06-15&time=14:00&locationId=1816670&asked=true
 GET /api/chart?date=2024-06-15&time=14:00&locationId=1816670&born=1968-03-12&gender=female
+GET /api/chart?date=2024-06-15&time=14:00&latitude=39.9075&longitude=116.3972&timezone=Asia/Shanghai
+GET /api/chart?date=2024-06-15&time=14:00&locationId=1816670&latitude=39.8000&longitude=116.6000
 ```
+
+A place is a `locationId`, or a `latitude` and a `longitude` with a
+`timezone`, or a `locationId` **refined by** coordinates — the last of those
+replaces the pair GeoNames holds and keeps the named place's zone, which is
+what somebody who knows the hamlet and not the town is saying. Half a pair is
+refused rather than half-read, and `timezone` beside a `locationId` is ignored,
+since the place already answered it. Refine only with coordinates you were
+given: a pair invented to sharpen a town you were told the name of is a chart
+of somewhere nobody named.
 
 `chart/text` and `chart/prompt` answer `text/plain` rather than JSON. `text`
 is the chart said in words, exactly as the CLI prints it. `prompt` is that

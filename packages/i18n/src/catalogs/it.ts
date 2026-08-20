@@ -680,6 +680,13 @@ export const it: Record<MessageKey, string> = {
   'form.placeRemove': 'Togli {place}',
   'form.legend': 'L\'istante e il luogo',
 
+  'form.coordinates': 'Coordinate',
+  'form.coordinatesLatitude': 'Latitudine — gradi, positiva a nord',
+  'form.coordinatesLongitude': 'Longitudine — gradi, positiva a est',
+  'form.coordinatesRemove': 'Togli le coordinate',
+  'form.coordinatesReset': 'Torna a quelle del luogo',
+  'form.timezone': 'Fuso orario',
+
   'form.options': 'Opzioni',
   'form.optionsSet': 'Opzioni modificate: {count}',
   'form.moment': 'L\'istante',
@@ -826,7 +833,7 @@ export const it: Record<MessageKey, string> = {
   'privacy.nothing':
     'Nulla di ciò che digiti viene conservato. Date, ore e luoghi — compresa una data di nascita, se ne indichi una perché una carta dica dove cade — viaggiano nell\'indirizzo della pagina, servono a calcolare una risposta, e non vengono scritti in alcuna base di dati né in alcun registro tenuto da questo sito.',
   'privacy.address':
-    'Poiché i parametri stanno nell\'indirizzo, il collegamento a una carta si porta dietro una data, un\'ora e un luogo. Condividilo solo con qualcuno a cui diresti quelle cose.',
+    'Poiché i parametri stanno nell\'indirizzo, il collegamento a una carta si porta dietro una data, un\'ora e un luogo — e se hai dato delle coordinate si porta dietro quelle, che nominano una soglia di casa e non una città. Condividilo solo con qualcuno a cui diresti quelle cose.',
   'privacy.prompt':
     'La domanda che scrivi per un prompt non esce dal tuo browser. Al server viene detto che una domanda esiste — perché il prompt possa finire sulla riga che la introduce — e mai quale sia; la frase la aggiunge il browser prima di mettere il tutto negli appunti. Questo sito non parla con nessuna AI e non le manda niente — dove lo incolli poi è cosa fra te e chi lo riceve.',
   'privacy.storage':

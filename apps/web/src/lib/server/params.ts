@@ -235,10 +235,53 @@ export function pageAddress(url: URL, locale: Locale, section = ''): string {
 }
 
 /**
+ * The coordinates the address gives, if it gives them at all.
+ *
+ * Both or neither. One of the two is refused rather than half-read: a
+ * latitude with no longitude would otherwise be answered on the meridian of
+ * Greenwich, and a longitude with no latitude on the equator, and both look
+ * exactly like the chart that was asked for.
+ */
+function readCoordinates(params: URLSearchParams): { latitude: number; longitude: number } | undefined {
+  const latitude = params.get('latitude');
+  const longitude = params.get('longitude');
+
+  if (latitude !== null && longitude !== null) {
+    return {
+      latitude: readCoordinate('latitude', latitude),
+      longitude: readCoordinate('longitude', longitude),
+    };
+  }
+  if (latitude !== null || longitude !== null) {
+    throw new ChartError('INVALID_COORDINATES', { longitude: longitude ?? '—' });
+  }
+  return undefined;
+}
+
+/** A pair of coordinates said the way `search_location` says them. */
+function sayCoordinates(place: Place): string {
+  return `${place.latitude.toFixed(4)}, ${place.longitude.toFixed(4)}`;
+}
+
+/**
  * Where the chart is cast from.
  *
  * A place is never inferred from a name here either: the API takes an
- * identifier from `/api/locations` or an explicit triple, and nothing else.
+ * identifier from `/api/locations`, or a pair of coordinates, or an
+ * identifier **refined by** a pair of coordinates — and nothing else.
+ *
+ * The third is the one worth explaining. GeoNames knows the town and not the
+ * hamlet three valleys up, and the longitude is what the correction to true
+ * solar time is made of, so a reader who knows where they were born to the
+ * minute must be able to say so without losing the zone and the name that
+ * only the identifier carries. Given both, the coordinates win and the zone
+ * does not: a hamlet near Rome keeps Rome's clock, and `timezone` is ignored
+ * beside an identifier for the same reason — the place already answered it.
+ *
+ * The label then carries both, because a sheet that says «Roma» for a board
+ * laid fifty kilometres away says something untrue and nothing further on
+ * could tell.
+ *
  * With only a timezone, the place is taken to sit on the meridian the zone's
  * clock keeps at the chart's moment — which makes the longitude correction
  * zero rather than wrong. That longitude needs the date, which is read later,
@@ -249,33 +292,28 @@ export function readPlace(params: URLSearchParams): {
   label?: string;
   meridianAssumed?: boolean;
 } {
+  const coordinates = readCoordinates(params);
   const locationId = params.get('locationId');
+
   if (locationId) {
     const found = getLocation(Number(locationId));
     if (!found) {
       throw new ChartError('INVALID_COORDINATES', { longitude: locationId });
     }
-    return {
-      place: { latitude: found.latitude, longitude: found.longitude, timezone: found.timezone },
-      label: [found.name, found.region, found.country].filter(Boolean).join(', '),
+    const place: Place = {
+      latitude: coordinates?.latitude ?? found.latitude,
+      longitude: coordinates?.longitude ?? found.longitude,
+      timezone: found.timezone,
     };
+    const name = [found.name, found.region, found.country].filter(Boolean).join(', ');
+    return { place, label: coordinates ? `${name} · ${sayCoordinates(place)}` : name };
   }
 
-  const latitude = params.get('latitude');
-  const longitude = params.get('longitude');
   const timezone = params.get('timezone') ?? systemTimezone();
 
-  if (latitude !== null && longitude !== null) {
-    return {
-      place: {
-        latitude: readCoordinate('latitude', latitude),
-        longitude: readCoordinate('longitude', longitude),
-        timezone,
-      },
-    };
-  }
-  if (latitude !== null || longitude !== null) {
-    throw new ChartError('INVALID_COORDINATES', { longitude: longitude ?? '—' });
+  if (coordinates) {
+    const place: Place = { ...coordinates, timezone };
+    return { place, label: `${sayCoordinates(place)} (${timezone})` };
   }
 
   return { place: { latitude: 0, longitude: 0, timezone }, meridianAssumed: true };

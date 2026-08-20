@@ -11,6 +11,9 @@
     date = $bindable(''),
     time = $bindable(''),
     place = $bindable<Location | undefined>(undefined),
+    latitude = $bindable(''),
+    longitude = $bindable(''),
+    timezone = $bindable(''),
     trueSolarTime = $bindable(true),
     dayBoundary = $bindable('zishi'),
     method = $bindable<string | undefined>(undefined),
@@ -27,6 +30,15 @@
     date?: string;
     time?: string;
     place?: Location | undefined;
+    /**
+     * The place said in degrees — a refinement of the one above, or the whole
+     * of it. Passed straight through: the field that asks for a place is the
+     * field that has to be able to sharpen one, and every section that has
+     * the first has the second by having it. See `LocationSearch`.
+     */
+    latitude?: string;
+    longitude?: string;
+    timezone?: string;
     trueSolarTime?: boolean;
     dayBoundary?: string;
     /** Bound only where a ju is cast: the pillars have no method to choose. */
@@ -225,13 +237,13 @@
       <legend>{t(openLegend)}</legend>
       <div class="row" class:sole={when === 'options'}>
         {#if when === 'fields'}{@render moment()}{/if}
-        <LocationSearch {t} bind:selected={place} />
+        <LocationSearch {t} bind:selected={place} bind:latitude bind:longitude bind:timezone />
       </div>
     </fieldset>
   {:else}
     <div class="row" class:sole={when === 'options'}>
       {#if when === 'fields'}{@render moment()}{/if}
-      <LocationSearch {t} bind:selected={place} />
+      <LocationSearch {t} bind:selected={place} bind:latitude bind:longitude bind:timezone />
     </div>
   {/if}
 

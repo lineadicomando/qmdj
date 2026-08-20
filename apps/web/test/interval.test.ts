@@ -24,7 +24,14 @@ import {
  * what a middle click and a browser with no scripts get.
  */
 
-const ROME = { id: 3169070, name: 'Rome', country: 'Italy', timezone: 'Europe/Rome' };
+const ROME = {
+  id: 3169070,
+  name: 'Rome',
+  country: 'Italy',
+  timezone: 'Europe/Rome',
+  latitude: 41.8919,
+  longitude: 12.5113,
+};
 
 const INTERVAL: IntervalInput = {
   from: '2026-09-01',
@@ -32,6 +39,9 @@ const INTERVAL: IntervalInput = {
   fromTime: '',
   toTime: '',
   place: ROME as never,
+  latitude: '',
+  longitude: '',
+  timezone: '',
   trueSolarTime: true,
   dayBoundary: 'zishi',
   method: 'chaibu',
@@ -90,6 +100,68 @@ describe('the criteria as address fields', () => {
     expect(out.get('yuan')).toBe('futou');
     expect(out.get('fromTime')).toBe('06:00');
     expect(out.get('toTime')).toBe('18:30');
+  });
+
+  it('carries a place said in degrees, with the clock it is read on', () => {
+    const url = new URL(
+      'http://localhost/it/moments?from=2026-09-01&to=2026-09-08' +
+        '&latitude=41.8919&longitude=13.5113&timezone=Europe/Rome',
+    );
+    const { input } = readInterval(url);
+
+    expect(input.latitude).toBe('41.8919');
+    expect(input.timezone).toBe('Europe/Rome');
+
+    const out = new URLSearchParams(intervalQuery({ ...input }));
+    expect(out.get('latitude')).toBe('41.8919');
+    expect(out.get('longitude')).toBe('13.5113');
+    expect(out.get('timezone')).toBe('Europe/Rome');
+  });
+
+  it('drops the zone beside a named place, which already carries one', () => {
+    // A parameter that decides nothing has no business in an address: with an
+    // identifier the server reads the zone off the place, and a `timezone`
+    // riding along would read as a setting that bears on the answer.
+    const out = new URLSearchParams(
+      intervalQuery({ ...INTERVAL, latitude: '41.8919', longitude: '13.5113', timezone: 'Europe/Rome' }),
+    );
+
+    expect(out.get('locationId')).toBe('3169070');
+    expect(out.get('latitude')).toBe('41.8919');
+    expect(out.get('timezone')).toBeNull();
+  });
+
+  it('leaves out coordinates that only repeat the place', () => {
+    // The fields arrive filled with the town's own, so «filled» stops meaning
+    // «asked for». Carried anyway, every address of Rome would hold a pair of
+    // degrees and every answer would print them as a refinement nobody made.
+    const out = new URLSearchParams(
+      intervalQuery({ ...INTERVAL, latitude: String(ROME.latitude), longitude: String(ROME.longitude) }),
+    );
+
+    expect(out.get('locationId')).toBe('3169070');
+    expect(out.get('latitude')).toBeNull();
+    expect(out.get('longitude')).toBeNull();
+  });
+
+  it('writes them as soon as one of the two is moved', () => {
+    const out = new URLSearchParams(
+      intervalQuery({ ...INTERVAL, latitude: String(ROME.latitude), longitude: '13.5113' }),
+    );
+
+    expect(out.get('locationId')).toBe('3169070');
+    expect(out.get('latitude')).toBe('41.8919');
+    expect(out.get('longitude')).toBe('13.5113');
+  });
+
+  it('writes half a pair rather than losing it', () => {
+    // The form cannot submit one of the two — the fields require each other —
+    // but an address can be typed. Dropping the half that is there would turn
+    // a question the server refuses into a scan run somewhere else entirely.
+    const out = new URLSearchParams(intervalQuery({ ...INTERVAL, place: undefined, latitude: '41.8919' }));
+
+    expect(out.get('latitude')).toBe('41.8919');
+    expect(out.get('longitude')).toBeNull();
   });
 });
 

@@ -583,6 +583,69 @@ describe('GET /api/chart', () => {
     expect((body as { chart: { palaces: unknown[] } }).chart.palaces).toHaveLength(9);
   });
 
+  it('lets coordinates refine a named place without taking its clock', async () => {
+    // Rome is 12.5113°E in the dataset. A degree further east is a place the
+    // search does not know and somebody may well have been born in, and what
+    // it moves is the correction to true solar time: four minutes to a
+    // degree, exactly. The zone stays Europe/Rome, which is the half the
+    // coordinates cannot carry and the identifier is there for.
+    const at = 'date=2024-06-15&time=14:00&locationId=3169070';
+    const solar = async (query: string) =>
+      (
+        (await call(chart, query)).body as {
+          chart: { moment: { input: { timezone: string }; solar: { longitudeMinutes: number } } };
+        }
+      ).chart.moment;
+
+    const town = await solar(at);
+    const hamlet = await solar(`${at}&latitude=41.8919&longitude=13.5113`);
+
+    expect(hamlet.input.timezone).toBe('Europe/Rome');
+    expect(hamlet.solar.longitudeMinutes - town.solar.longitudeMinutes).toBeCloseTo(4, 3);
+  });
+
+  it('says both halves of a refined place, never the name alone', async () => {
+    // A sheet reading «Rome» over a board laid fifty kilometres away says
+    // something untrue, and nothing further on could tell.
+    const { body } = await call(
+      chart,
+      'date=2024-06-15&time=14:00&locationId=3169070&latitude=41.8919&longitude=13.5113',
+    );
+
+    expect((body as { place: string }).place).toBe('Rome, Lazio, Italy · 41.8919, 13.5113');
+  });
+
+  it('says where a board with no named place was laid, and on which clock', async () => {
+    const { body } = await call(
+      chart,
+      'date=2024-06-15&time=14:00&latitude=41.8919&longitude=12.5113&timezone=Europe/Rome',
+    );
+
+    expect((body as { place: string }).place).toBe('41.8919, 12.5113 (Europe/Rome)');
+  });
+
+  it('takes the zone from the named place and not from the address', async () => {
+    // A zone beside an identifier decides nothing: the place already answered
+    // it. Honouring it instead would let an address name Rome and read its
+    // hour on a Shanghai clock, which is a chart of neither.
+    const { body } = await call(
+      chart,
+      'date=2024-06-15&time=14:00&locationId=3169070&timezone=Asia/Shanghai',
+    );
+    const answer = body as { chart: { moment: { input: { timezone: string } } } };
+
+    expect(answer.chart.moment.input.timezone).toBe('Europe/Rome');
+  });
+
+  it('refuses half a pair beside a named place too', async () => {
+    // Without the refusal the longitude would be Rome's and the latitude the
+    // one somebody typed: a place that exists nowhere and was asked for by
+    // nobody.
+    expect((await call(chart, 'date=2024-06-15&locationId=3169070&latitude=41.8919')).status).toBe(
+      400,
+    );
+  });
+
   it('casts by the method the address chooses', async () => {
     // The same instant under the two schools, and not even the dun survives:
     // 15 June 2024 is ten days into 芒種, lower yuan of a yang chart under

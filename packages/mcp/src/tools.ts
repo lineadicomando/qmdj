@@ -143,7 +143,10 @@ export function registerComputeQimenChart(server: McpServer, context: ToolContex
         'to make. If the person wants a reading, it is yours to give and yours to own. ' +
         'For the present moment OMIT date and time: the server supplies them, and you do not ' +
         'know the current date. Give the place with location_id from search_location, or with ' +
-        'latitude + longitude + timezone together. ' +
+        'latitude + longitude + timezone together, or with a location_id and coordinates both — ' +
+        'which refines it, the coordinates replacing the ones GeoNames holds while the zone ' +
+        'stays the named place\'s. Refine only with coordinates somebody gave you: do not ' +
+        'invent a pair to sharpen a town you were told the name of. ' +
         'The chart is cast by the chaibu method unless method says otherwise; zhirun is the ' +
         'other one implemented, the two are different schools, and the answer says which one ' +
         'cast it. Inside chaibu, yuan says whether the third of the term is counted from the ' +

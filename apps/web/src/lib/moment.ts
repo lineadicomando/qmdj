@@ -20,12 +20,43 @@ import type { MessageKey, MessageParams, Translator } from '@qimendunjia/i18n';
 
 export type { Location };
 
-export interface MomentInput {
+/**
+ * Where a board is laid, in the three ways it can be said.
+ *
+ * A place is never guessed from a name: it is an identifier out of
+ * `/api/locations`, or a pair of coordinates, or an identifier **refined by**
+ * a pair of coordinates. The third is what a search cannot give — GeoNames
+ * knows the town and not the hamlet three valleys up, and the longitude is
+ * what the correction to true solar time is made of.
+ *
+ * The coordinates travel as strings for the reason the date does: they come
+ * out of fields and go into an address, `''` is the only honest way to say
+ * «not given», and `0` is a coordinate somebody may mean. Parsed to numbers
+ * here, an unfilled field and the Gulf of Guinea would be one value.
+ */
+export interface PlaceInput {
+  place?: Location;
+  /** Decimal degrees, positive north. `''` when not given. */
+  latitude: string;
+  /** Decimal degrees, positive east. `''` when not given. */
+  longitude: string;
+  /**
+   * IANA identifier, read **only where the coordinates stand alone**.
+   *
+   * With a place the zone is the place's, and the form does not send this at
+   * all: a parameter that decides nothing has no business in an address. With
+   * coordinates alone something has to say which clock the hour was read on,
+   * or the server falls back to its own — an answer wrong by hours and
+   * indistinguishable from a right one.
+   */
+  timezone: string;
+}
+
+export interface MomentInput extends PlaceInput {
   /** ISO `YYYY-MM-DD`, whatever the locale: a shared address means one thing. */
   date: string;
   /** `HH:mm`. */
   time: string;
-  place?: Location;
   trueSolarTime: boolean;
   dayBoundary: string;
   /** How the ju is determined. Carried verbatim: the server refuses a value
@@ -45,6 +76,89 @@ export interface Failure {
   params?: MessageParams;
 }
 
+/**
+ * The coordinates and the zone, as any address carries them.
+ *
+ * Three sections read a place out of a URL and one of them is not a moment,
+ * so this is the piece they share rather than a fourth copy of three lines.
+ */
+export function readPlaceInput(params: URLSearchParams): Omit<PlaceInput, 'place'> {
+  return {
+    latitude: params.get('latitude') ?? '',
+    longitude: params.get('longitude') ?? '',
+    timezone: params.get('timezone') ?? '',
+  };
+}
+
+/**
+ * Whether the coordinates say something the chosen place does not.
+ *
+ * The fields arrive filled with the place's own — a reader nudging a value is
+ * the whole use, and nobody can nudge an empty box they would have to guess
+ * the starting point of. Which makes «filled» the resting state rather than a
+ * statement, and this is what tells the two apart.
+ *
+ * It is the same rule `momentQuery` keeps for every other field: `chaibu` is
+ * not written into an address because it is what the engine would have done
+ * anyway. An untouched pair is the place, said twice — carried, it would put
+ * a doorstep in every link and print «Roma · 41.8919, 12.5113» under every
+ * chart of Rome, which reads as a refinement somebody made.
+ *
+ * Half a pair counts as a departure. The fields require each other, so it
+ * arrives only from an address somebody typed, and there the server's refusal
+ * is the right answer — quietly falling back to the town would answer a
+ * question nobody asked.
+ */
+export function refines(input: PlaceInput): boolean {
+  if (!input.latitude && !input.longitude) return false;
+  if (!input.place) return true;
+  return (
+    input.latitude !== String(input.place.latitude) ||
+    input.longitude !== String(input.place.longitude)
+  );
+}
+
+/**
+ * The place as address fields, for whichever query is being built.
+ *
+ * Each coordinate is written on its own and never as a pair: an address can
+ * be typed, and dropping the half that is there would turn a question the
+ * server refuses into a chart cast somewhere else entirely.
+ *
+ * The zone goes only where it is read: with a place it is the place's, and
+ * with no coordinates there is nothing for it to be the zone of.
+ */
+export function placeFields(input: PlaceInput): Record<string, string | undefined> {
+  const moved = refines(input);
+  return {
+    locationId: input.place ? String(input.place.id) : undefined,
+    latitude: moved ? input.latitude || undefined : undefined,
+    longitude: moved ? input.longitude || undefined : undefined,
+    timezone: !input.place && moved ? input.timezone || undefined : undefined,
+  };
+}
+
+/**
+ * Where the answer says it was cast, in one line.
+ *
+ * The short name and not the full one the API returns: this is the line on a
+ * shut panel and over a printed sheet, beside a date, and «Roma» is what
+ * somebody reads there. The coordinates follow it whenever they say something
+ * the place does not, because a sheet reading «Roma» for a board laid fifty
+ * kilometres away says something untrue — and standing alone they carry their
+ * zone, which is then the only thing on screen saying which clock the hour
+ * was read on. See `refines` for why «given» is not the test.
+ */
+export function sayPlace(input: PlaceInput): string {
+  const coordinates =
+    refines(input) && input.latitude && input.longitude
+      ? `${input.latitude}, ${input.longitude}`
+      : '';
+  if (input.place) return coordinates ? `${input.place.name} · ${coordinates}` : input.place.name;
+  if (!coordinates) return '';
+  return input.timezone ? `${coordinates} (${input.timezone})` : coordinates;
+}
+
 /** What the address says, before the place has a name. */
 export function readMoment(url: URL): {
   input: Omit<MomentInput, 'place'>;
@@ -55,6 +169,7 @@ export function readMoment(url: URL): {
     input: {
       date: params.get('date') ?? '',
       time: params.get('time') ?? '',
+      ...readPlaceInput(params),
       trueSolarTime: params.get('trueSolarTime') !== 'false',
       dayBoundary: params.get('dayBoundary') === 'midnight' ? 'midnight' : 'zishi',
       method: params.get('method') ?? 'chaibu',
@@ -78,13 +193,12 @@ export function momentQuery(
   const params = new URLSearchParams();
   if (input.date) params.set('date', input.date);
   if (input.time) params.set('time', input.time);
-  if (input.place) params.set('locationId', String(input.place.id));
   if (!input.trueSolarTime) params.set('trueSolarTime', 'false');
   if (input.dayBoundary !== 'zishi') params.set('dayBoundary', input.dayBoundary);
   if (input.method && input.method !== 'chaibu') params.set('method', input.method);
   if (input.yuan && input.yuan !== 'term') params.set('yuan', input.yuan);
 
-  for (const [key, value] of Object.entries(extra)) {
+  for (const [key, value] of Object.entries({ ...placeFields(input), ...extra })) {
     if (value) params.set(key, value);
   }
   return params.toString();

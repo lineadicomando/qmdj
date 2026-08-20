@@ -263,6 +263,42 @@ describe('compute_qimen_chart', () => {
     expect(italian).toMatch(/Le coordinate sono incomplete/);
   });
 
+  it('lets coordinates refine a location id, keeping its clock and saying both', async () => {
+    // The same rule the endpoint reads, because the tool and the endpoint take
+    // one query string: coordinates beside an identifier replace the ones
+    // GeoNames holds, the zone stays the named place's, and the answer says
+    // where it was laid as well as what the place is called.
+    const at = { date: '2024-06-15', time: '14:00', day_boundary: 'midnight' as const };
+    const minutes = (text: string): number =>
+      Number(/correction ([-\d.]+) min/.exec(text)?.[1] ?? Number.NaN);
+
+    const town = await call('compute_qimen_chart', { ...at, location_id: 1816670 });
+    const hamlet = await call('compute_qimen_chart', {
+      ...at,
+      location_id: 1816670,
+      latitude: 39.9075,
+      longitude: 117.3972,
+    });
+
+    expect(town).toContain('place: Beijing, Beijing, China');
+    expect(hamlet).toContain('place: Beijing, Beijing, China · 39.9075, 117.3972');
+    // A degree east is four minutes of correction, and the hour it is read on
+    // is still Shanghai's — which is the half the coordinates cannot carry.
+    expect(minutes(hamlet) - minutes(town)).toBeCloseTo(4, 1);
+  });
+
+  it('refuses half a pair beside a location id, rather than mixing the two', async () => {
+    // Filling the missing half from GeoNames would answer for a place that
+    // exists nowhere: one coordinate somebody typed and one the dataset holds.
+    const text = await failing('compute_qimen_chart', {
+      date: '2024-06-15',
+      location_id: 1816670,
+      latitude: 39.9,
+    });
+
+    expect(text).toMatch(/incomplete/i);
+  });
+
   it('refuses an invented location id', async () => {
     expect(await failing('compute_qimen_chart', { location_id: 1 })).toMatch(/do not invent/i);
 

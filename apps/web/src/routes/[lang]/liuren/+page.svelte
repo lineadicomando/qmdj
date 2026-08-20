@@ -2,7 +2,7 @@
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
   import { appearance } from '$lib/appearance.svelte';
-  import { momentQuery, sayFailure, type MomentInput } from '$lib/moment';
+  import { momentQuery, sayFailure, sayPlace, type MomentInput } from '$lib/moment';
   import FormPanel from '$lib/components/FormPanel.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
   import LiurenReading from '$lib/components/LiurenReading.svelte';
@@ -24,6 +24,15 @@
   const board = $derived(data.result?.liuren);
   const moment = $derived(data.result?.moment);
   const failure = $derived(data.failure ? sayFailure(t, data.failure) : '');
+
+  /**
+   * Where the answer says it was cast, on the bar and on paper.
+   *
+   * The place if that is all there is, and the coordinates with it when they
+   * were given: a line saying only «Roma» over a board laid at a pair of
+   * degrees somebody typed would be claiming a place that was refined away.
+   */
+  const where = $derived(sayPlace(data.moment));
 
   let busy = $state(false);
   let panel: FormPanel | undefined = $state();
@@ -86,6 +95,9 @@
       bind:date={asked.date}
       bind:time={asked.time}
       bind:place={asked.place}
+      bind:latitude={asked.latitude}
+      bind:longitude={asked.longitude}
+      bind:timezone={asked.timezone}
       bind:trueSolarTime={asked.trueSolarTime}
       bind:dayBoundary={asked.dayBoundary}
       bind:guiren
@@ -101,7 +113,7 @@
   {#snippet summary()}
     {data.moment.date || '—'}
     {data.moment.time}
-    {data.moment.place ? `· ${data.moment.place.name}` : ''}
+    {where ? `· ${where}` : ''}
   {/snippet}
 </FormPanel>
 

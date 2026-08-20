@@ -15,7 +15,7 @@
     type IntervalInput,
     type Kept,
   } from '$lib/interval';
-  import { sayFailure } from '$lib/moment';
+  import { sayFailure, sayPlace } from '$lib/moment';
   import { isPlainClick } from '$lib/navigation';
   import {
     DIRECTIONS,
@@ -74,6 +74,9 @@
 
   const scan = $derived(data.scan);
   const failure = $derived(data.failure ? sayFailure(t, data.failure) : '');
+  /** Where the scan was run from, on the bar and at the head of a shortlist
+   *  copied out: the place, and the coordinates whenever they were given. */
+  const where = $derived(sayPlace(data.interval));
   const gloss = (prefix: string, id: string): string => t(`label.${prefix}.${id}` as MessageKey);
 
   let busy = $state(false);
@@ -109,7 +112,10 @@
    * chose, looking exactly like five hours they did.
    */
   function carried(): Kept[] {
-    const moved = (asked.place?.id ?? null) !== (data.interval.place?.id ?? null);
+    // Not the identifier alone: coordinates move a scan as surely as a city
+    // does, and a pair typed under an unchanged place would otherwise keep a
+    // shortlist of hours cast somewhere else.
+    const moved = sayPlace(asked) !== sayPlace(data.interval);
     return moved ? [] : kept;
   }
 
@@ -313,7 +319,7 @@
         (entry) =>
           `${entry.start.slice(0, 10)} ${entry.start.slice(11, 16)} · ${palaceOf(entry.palace).number} ${gloss('palace', entry.palace)} ${glyph(palaceOf(entry.palace))}`,
       );
-      return [data.interval.place?.name, ...lines].filter(Boolean).join('\n');
+      return [sayPlace(data.interval), ...lines].filter(Boolean).join('\n');
     });
 
   /** The choice, written where somebody can copy it out of the address bar. */
@@ -395,7 +401,13 @@
           {t('form.to')}
           <input type="date" bind:value={asked.to} required />
         </label>
-        <LocationSearch {t} bind:selected={asked.place} />
+        <LocationSearch
+          {t}
+          bind:selected={asked.place}
+          bind:latitude={asked.latitude}
+          bind:longitude={asked.longitude}
+          bind:timezone={asked.timezone}
+        />
       </div>
     </fieldset>
 
@@ -503,7 +515,7 @@
   {/snippet}
   {#snippet summary()}
     <span>{data.interval.from || '—'} → {data.interval.to || '—'}</span>
-    {#if data.interval.place}<span>· {data.interval.place.name}</span>{/if}
+    {#if where}<span>· {where}</span>{/if}
     {#each said as criterion}<span class="criterion">{criterion}</span>{/each}
   {/snippet}
 </FormPanel>

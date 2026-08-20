@@ -258,6 +258,21 @@ locationId=1816670` is a chart, a link, and the same query string the API
 takes. Which is also how the moment follows a reader from the chart to the
 four pillars and back.
 
+A place in that address is a `locationId` from the search, or a `latitude` and
+a `longitude` with a `timezone`, or an identifier **refined by** a pair of
+coordinates. The third is there because the search knows the town and not the
+hamlet three valleys up, and the longitude is what the correction to true
+solar time is made of: the coordinates replace the ones GeoNames holds and the
+zone stays the named place's, which is the half a pair of degrees cannot
+carry. Every form with a place field offers them, folded away under it and
+filled with the chosen place's own — a refinement is a nudge, and a nudge
+needs somewhere to start. Only what departs from the place is written into
+the address, so the plainest question keeps the plainest address; where
+something did depart, the answer says both halves, because a sheet reading
+«Rome» over a board laid fifty kilometres off says something untrue. In this
+engine it is the longitude that moves the board — the latitude is carried and
+printed, and enters no calculation yet.
+
 The two are shown together, up to a point. The chart draws the four pillars it
 was cast from, as four tinted squares under the board — every calculator that
 shows this board shows them, and they are what the ju, the chief and both post

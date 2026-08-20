@@ -132,12 +132,26 @@ export const placeSchema = {
     .int()
     .optional()
     .describe('GeoNames identifier from search_location. Preferred over raw coordinates.'),
-  latitude: z.number().min(-90).max(90).optional().describe('Degrees, positive north.'),
-  longitude: z.number().min(-180).max(180).optional().describe('Degrees, positive east.'),
+  latitude: z
+    .number()
+    .min(-90)
+    .max(90)
+    .optional()
+    .describe(
+      'Degrees, positive north. Given beside a location_id it refines it: the coordinates replace the ones GeoNames holds and the zone stays the named place’s.',
+    ),
+  longitude: z
+    .number()
+    .min(-180)
+    .max(180)
+    .optional()
+    .describe('Degrees, positive east. Refines a location_id in the same way as latitude.'),
   timezone: z
     .string()
     .optional()
-    .describe('IANA identifier, e.g. Asia/Shanghai. Required with raw coordinates.'),
+    .describe(
+      'IANA identifier, e.g. Asia/Shanghai. Required with raw coordinates, ignored beside a location_id, which already carries its own.',
+    ),
 };
 
 /**
@@ -342,6 +356,16 @@ export function resolveBirth(
   );
 }
 
+/**
+ * A place is an identifier, or coordinates, or an identifier refined by them.
+ *
+ * The third reads the same way it does over HTTP, and it has to: the tool and
+ * the endpoint take one query string, and a rule that held on one of the two
+ * would make the README's promise false. Given both, the coordinates replace
+ * the ones GeoNames holds — which is what somebody who knows the hamlet and
+ * not just the town is saying — and the zone stays the identifier's, since
+ * that is the thing the coordinates cannot carry.
+ */
 function resolvePlace(
   raw: RawInput,
   context: ToolContext,
@@ -353,6 +377,14 @@ function resolvePlace(
     );
     if (!found) {
       throw new McpError('UNKNOWN_LOCATION', { id: raw.location_id });
+    }
+    if (raw.latitude !== undefined || raw.longitude !== undefined) {
+      if (raw.latitude === undefined || raw.longitude === undefined) {
+        throw new McpError('INCOMPLETE_COORDINATES');
+      }
+      return {
+        place: { latitude: raw.latitude, longitude: raw.longitude, timezone: found.timezone },
+      };
     }
     return {
       place: { latitude: found.latitude, longitude: found.longitude, timezone: found.timezone },
@@ -377,17 +409,29 @@ function resolvePlace(
   return { place: { latitude: 0, longitude: 0, timezone }, meridianAssumed: true };
 }
 
+/**
+ * What the answer says it was cast at.
+ *
+ * A refined identifier carries both halves: the name says which town's clock
+ * the hour was read on and the coordinates say where the board was actually
+ * laid, and a name alone beside coordinates somebody supplied would be the
+ * answer quietly dropping what it was told.
+ */
 function labelFor(raw: RawInput, place: Place, context: ToolContext): string {
+  const coordinates = `${place.latitude.toFixed(4)}, ${place.longitude.toFixed(4)}`;
   if (raw.location_id !== undefined) {
     const found = getLocation(
       raw.location_id,
       context.databasePath ? { databasePath: context.databasePath } : {},
     );
     if (found) {
-      return [found.name, found.region, found.country].filter(Boolean).join(', ');
+      const name = [found.name, found.region, found.country].filter(Boolean).join(', ');
+      return raw.latitude !== undefined && raw.longitude !== undefined
+        ? `${name} · ${coordinates}`
+        : name;
     }
   }
-  return `${place.latitude.toFixed(4)}, ${place.longitude.toFixed(4)} (${place.timezone})`;
+  return `${coordinates} (${place.timezone})`;
 }
 
 export function ephemerisOf(context: ToolContext): EphemerisContext {

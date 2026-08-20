@@ -725,6 +725,24 @@ export const en = {
   'form.placeRemove': 'Remove {place}',
   'form.legend': 'The moment and the place',
 
+  // The coordinates, offered under the place they refine or stand in for.
+  //
+  // Labels and nothing else. What these do to a board — and what the latitude
+  // does not, since in this engine it enters no calculation — is in the README
+  // and in `CLAUDE.md`: a fold opened on purpose to type a longitude into is
+  // opened by somebody who knows what one is, and a paragraph of prose over
+  // three fields is a lecture where a form was wanted.
+  'form.coordinates': 'Coordinates',
+  'form.coordinatesLatitude': 'Latitude — degrees, positive north',
+  'form.coordinatesLongitude': 'Longitude — degrees, positive east',
+  // Two ways back, because there are two resting states: the place's own
+  // coordinates where one is chosen, and empty where none is. A link under
+  // the fields rather than a × beside a value, so its face is this sentence
+  // and nothing else has to speak for it.
+  'form.coordinatesRemove': 'Remove the coordinates',
+  'form.coordinatesReset': 'Back to the place’s own',
+  'form.timezone': 'Time zone',
+
   // What a form offers has to be readable by whoever has to choose from it.
   // `zishi` and `midnight` are what the API takes and stay so; what the
   // reader sees says which hour that is, with the hanzi beside the words
@@ -1004,7 +1022,7 @@ export const en = {
   'privacy.nothing':
     'Nothing you type is stored. Dates, times and places — including a date of birth, if you give one so that a chart can say where it falls — travel in the address of the page, are used to compute an answer, and are not written to any database or log kept by this site.',
   'privacy.address':
-    'Because the parameters are in the address, a link to a chart carries a date, a time and a place with it. Share one only with someone you would tell those things to.',
+    'Because the parameters are in the address, a link to a chart carries a date, a time and a place with it — and if you gave coordinates, it carries those, which name a doorstep rather than a town. Share one only with someone you would tell those things to.',
   // The one thing on this site somebody types that is not a date or a place.
   'privacy.prompt':
     'The question you write for a prompt does not leave your browser. The server is told that a question exists, so that the prompt can end on the line that introduces one, and never what it is; the browser adds the sentence itself before putting the whole thing in your clipboard. This site talks to no AI and sends nothing to one — where you paste it afterwards is between you and whoever receives it.',

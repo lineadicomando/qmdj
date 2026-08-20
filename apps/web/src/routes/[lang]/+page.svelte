@@ -64,7 +64,7 @@
   import { page } from '$app/state';
   import { appearance } from '$lib/appearance.svelte';
   import { INSTRUMENTS, instrumentOf, type Instrument, type InstrumentId } from '$lib/instruments';
-  import { momentQuery, sayFailure, type Failure, type MomentInput } from '$lib/moment';
+  import { momentQuery, sayFailure, sayPlace, type Failure, type MomentInput } from '$lib/moment';
   import BaziReading from '$lib/components/BaziReading.svelte';
   import ChartReading from '$lib/components/ChartReading.svelte';
   import Takeaway from '$lib/components/Takeaway.svelte';
@@ -244,6 +244,17 @@
   function input(): MomentInput {
     return { ...asked, date: moment.date, time: moment.time };
   }
+
+  /**
+   * Where the board says it was laid, on the bar and on the printed sheet.
+   *
+   * The place, and the coordinates beside it whenever they were given: a
+   * sheet reading «Roma» over a board laid at a pair of degrees somebody
+   * typed would be naming a town the coordinates had just replaced. Under 天
+   * it is left off entirely, which is the caller's business and not this
+   * line's — see the two places it is used.
+   */
+  const where = $derived(sayPlace(asked));
 
   /**
    * The birth given *beside* what was asked, where an instrument takes one.
@@ -817,6 +828,9 @@
         bind:date={moment.date}
         bind:time={moment.time}
         bind:place={asked.place}
+        bind:latitude={asked.latitude}
+        bind:longitude={asked.longitude}
+        bind:timezone={asked.timezone}
         bind:trueSolarTime={asked.trueSolarTime}
         bind:dayBoundary={asked.dayBoundary}
         bind:method={asked.method}
@@ -912,7 +926,7 @@
          has to not believe. -->
     {#snippet summary()}
       {at || '—'}
-      {shown.needs !== 'year' && asked.place ? `· ${asked.place.name}` : ''}
+      {shown.needs !== 'year' && where ? `· ${where}` : ''}
     {/snippet}
 
     <!--
@@ -952,8 +966,8 @@
              never entered the board, and on a printed sheet a place beside a
              year is a claim nobody can walk back. -->
         <p class="note">
-          {t('consult.castAt', { when: at })}{shown.needs !== 'year' && asked.place
-            ? ` · ${asked.place.name}`
+          {t('consult.castAt', { when: at })}{shown.needs !== 'year' && where
+            ? ` · ${where}`
             : ''}
         </p>
       </header>

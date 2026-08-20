@@ -149,6 +149,34 @@ describe('the chart page', () => {
     expect(urls.some((url) => url.startsWith('/api/chart?'))).toBe(false);
   });
 
+  it('hands the coordinates on beside the place they refine', async () => {
+    // The page looks the identifier up for the name in its fields, and the
+    // coordinates it never looks up must still reach the endpoint: dropped
+    // here, the answer would be the town's and would look like the one asked
+    // for.
+    const { urls } = await open(
+      chart,
+      '/en?date=1984-03-12&locationId=1816670&latitude=39.9&longitude=116.5',
+      { '1816670': BEIJING },
+    );
+
+    expect(urls).toContain(
+      '/api/chart?date=1984-03-12&locationId=1816670&latitude=39.9&longitude=116.5&lang=en',
+    );
+  });
+
+  it('asks for a place given in degrees without looking anything up', async () => {
+    const { urls } = await open(
+      chart,
+      '/en?date=1984-03-12&latitude=39.9&longitude=116.5&timezone=Asia/Shanghai',
+    );
+
+    expect(urls.some((url) => url.startsWith('/api/locations'))).toBe(false);
+    expect(urls).toContain(
+      '/api/chart?date=1984-03-12&latitude=39.9&longitude=116.5&timezone=Asia%2FShanghai&lang=en',
+    );
+  });
+
   it('keeps the options the address carries', async () => {
     const { urls } = await open(chart, '/en?date=1984-03-12&trueSolarTime=false&dayBoundary=midnight');
 
