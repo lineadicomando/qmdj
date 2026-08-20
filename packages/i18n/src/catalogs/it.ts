@@ -751,9 +751,19 @@ export const it: Record<MessageKey, string> = {
   'nav.chart': 'Qi Men',
   'nav.bazi': 'Ba Zi',
   'nav.liuren': 'Liu Ren',
-  'nav.qizheng': 'Qi Zheng Si Yu',
-  'nav.ziwei': 'Zi Wei Dou Shu',
+  'nav.qizheng': 'Qi Zheng',
+  'nav.ziwei': 'Zi Wei',
   'nav.taiyi': 'Tai Yi',
+  // La forma lunga di un nome, portata dalla sezione che si sta leggendo e da
+  // nessun'altra. Quattro dei sei nomi stanno accorciati nella barra, come si
+  // accorciano parlando; la sezione corrente dice invece il proprio nome per
+  // intero, che è dove un nome vale la sua lunghezza. 八字 non si accorcia e
+  // 太乙 non si allunga: si veda il catalogo inglese per la ragione della
+  // seconda.
+  'nav.chart.full': 'Qi Men Dun Jia',
+  'nav.liuren.full': 'Da Liu Ren',
+  'nav.qizheng.full': 'Qi Zheng Si Yu',
+  'nav.ziwei.full': 'Zi Wei Dou Shu',
   'nav.moments': 'Scegliere il momento',
   'nav.consult': 'Consultazione',
   'nav.sections': 'Sezioni',

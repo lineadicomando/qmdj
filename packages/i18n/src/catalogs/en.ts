@@ -780,9 +780,33 @@ export const en = {
   'nav.chart': 'Qi Men',
   'nav.bazi': 'Ba Zi',
   'nav.liuren': 'Liu Ren',
-  'nav.qizheng': 'Qi Zheng Si Yu',
-  'nav.ziwei': 'Zi Wei Dou Shu',
+  'nav.qizheng': 'Qi Zheng',
+  'nav.ziwei': 'Zi Wei',
   'nav.taiyi': 'Tai Yi',
+  // The longer form of a name, worn by the section being read and by no other.
+  //
+  // Four of the six names are cut in the bar: 奇門遁甲 stands as `Qi Men`,
+  // 大六壬 as `Liu Ren`, 七政四餘 as `Qi Zheng` and 紫微斗數 as `Zi Wei`, the
+  // way they are cut in speech. A list of six full names is six phrases where
+  // the reader is looking for one, and the two longest were the two that had
+  // never been cut.
+  //
+  // The current section says the whole of its name instead, which is where a
+  // name is worth its length: the reader is on that board, the label is no
+  // longer one option among six, and what it costs to read it is what it costs
+  // to read a title. It is also the only mark this list carries besides the
+  // underline, and the two say the same thing in two registers.
+  //
+  // Two sections have no entry here and it is not an omission. 八字 is two
+  // characters and cutting it would leave nothing; 太乙 would extend to
+  // `Tai Yi Shen Shu`, and 神數 names the later transmission around
+  // 《太乙統宗寶鑑》 — a book with a different 上元積年 which `docs/sources.md`
+  // records as unread and which `epoch` declines. A nav label that named it
+  // would name the branch this section does not compute.
+  'nav.chart.full': 'Qi Men Dun Jia',
+  'nav.liuren.full': 'Da Liu Ren',
+  'nav.qizheng.full': 'Qi Zheng Si Yu',
+  'nav.ziwei.full': 'Zi Wei Dou Shu',
   'nav.moments': 'Choosing a time',
   // Named by the act, which is the one this section is built around: a
   // question put at an instant, and the chart cast for that instant. It was

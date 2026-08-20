@@ -101,7 +101,14 @@
           aria-current={current ? 'page' : undefined}
           class:current
         >
-          {t(section.label)}
+          <!-- Whole where the reader is, cut everywhere else. The name is the
+               second mark on the current section and the underline is the
+               first: one says which board this is, the other where it stands
+               in the row, and a reader coming to the bar from the page below
+               reads the name before they look for a rule under it. Four of the
+               six have a long form; `full` is absent on the other two and the
+               label answers for both cases. -->
+          {t(current && section.full ? section.full : section.label)}
         </a>
       </li>
     {/each}
@@ -182,17 +189,32 @@
   /*
    * Wide enough, and the fold is not drawn at all.
    *
-   * Measured rather than chosen. The seven Italian labels run to 41.5rem laid
-   * end to end — Italian and not English, since `Scegliere il momento` is the
-   * longest of the fourteen and the five instrument names are the same string
-   * in both — so they stand on one row from a window of 53.4rem up, and on two
-   * down to 32. Two rows is what this header was always willing to spend: the
-   * note this replaced said as much, and said it when there were three
-   * sections rather than seven.
+   * Measured rather than chosen, and measured again once the names were cut.
+   * Italian and not English throughout: `Scegliere il momento` is the longest
+   * label of all, and the six instrument names are the same string in both.
    *
-   * 36rem and not 32, which is where the third row would arrive. A threshold
-   * set at the exact width where a row breaks unfolds onto rows that only just
-   * fit, and the labels are the part of this a translation changes.
+   * The eight labels run to 43.2rem laid end to end with every name cut, and
+   * to 47rem at the widest — the 紫微斗數 section, where the longest of the
+   * long forms is worn — against 49.4rem when all six stood at full length.
+   * So the list holds one row from a window of about 59rem up in the widest
+   * case and 55 in the narrowest, where before the cut it wanted 61. Two rows
+   * is what this header was always willing to spend: the note this replaced
+   * said as much, and said it when there were three sections rather than
+   * eight.
+   *
+   * **No state of the list is wider than the row that stood here before**,
+   * because a long form is worn by one section at a time: where 七政四餘 and
+   * 紫微斗數 used to stand full beside each other, whichever of them is being
+   * read now stands beside the other one cut.
+   *
+   * 36rem and not 32, which is where the third row used to arrive: at 36.1rem
+   * the old labels stood in three rows and these stand in two, so the fold now
+   * opens onto a list with room rather than onto rows that only just fit. That
+   * margin is the part of this a translation spends. What the two forms cost
+   * in exchange is a row that can rewrap on navigation, near the width where
+   * it breaks; the alternative is holding the long form's room open under the
+   * short one, which buys a still row at the price of a gap beside five labels
+   * out of six.
    */
   @media (min-width: 36rem) {
     .toggle { display: none; }

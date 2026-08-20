@@ -18,7 +18,7 @@ import type { MessageKey } from '@qimendunjia/i18n';
  * **The division governs the labels too, and that is easy to get wrong.** An
  * act is *described*, in the reader's own language, so `nav.consult` and
  * `nav.moments` differ between the catalogs. An instrument is *named*, and a
- * name does not translate: `Qi Men`, `Liu Ren`, `Qi Zheng Si Yu` and `Ba Zi`
+ * name does not translate: `Qi Men`, `Liu Ren`, `Qi Zheng` and `Ba Zi`
  * are identical in both. The 七政四餘 section arrived as «Seven Governors»
  * and «Sette governatori» — a gloss where the other three had names, and the
  * only instrument label in the two catalogs that was not the same string,
@@ -40,17 +40,32 @@ import type { MessageKey } from '@qimendunjia/i18n';
 export const SECTIONS: readonly {
   slug: string;
   label: MessageKey;
+  /**
+   * The name at full length, worn only while this section is the one being
+   * read — and absent where there is no longer form to wear.
+   *
+   * A name is cut in a list and said whole in a title, and that is the
+   * distinction the two keys carry. Which four have one, and why 八字 and
+   * 太乙 do not, is argued in the catalogs beside the strings themselves: the
+   * reason is about the names and not about this list, and it would be a
+   * paragraph of Chinese bibliography in a file about where links go.
+   *
+   * Only an instrument has one, and that follows from the division above
+   * rather than being a second rule: an act is described rather than named,
+   * and a description does not have a long form and a short one.
+   */
+  full?: MessageKey;
   /** Which of the two kinds it is, for the break the header sets between them. */
   group: 'act' | 'instrument';
 }[] = [
   { slug: '', label: 'nav.consult', group: 'act' },
   { slug: 'moments', label: 'nav.moments', group: 'act' },
-  { slug: 'chart', label: 'nav.chart', group: 'instrument' },
-  { slug: 'liuren', label: 'nav.liuren', group: 'instrument' },
-  { slug: 'qizheng', label: 'nav.qizheng', group: 'instrument' },
+  { slug: 'chart', label: 'nav.chart', full: 'nav.chart.full', group: 'instrument' },
+  { slug: 'liuren', label: 'nav.liuren', full: 'nav.liuren.full', group: 'instrument' },
+  { slug: 'qizheng', label: 'nav.qizheng', full: 'nav.qizheng.full', group: 'instrument' },
   { slug: 'taiyi', label: 'nav.taiyi', group: 'instrument' },
   { slug: 'bazi', label: 'nav.bazi', group: 'instrument' },
-  { slug: 'ziwei', label: 'nav.ziwei', group: 'instrument' },
+  { slug: 'ziwei', label: 'nav.ziwei', full: 'nav.ziwei.full', group: 'instrument' },
 ];
 
 /**
