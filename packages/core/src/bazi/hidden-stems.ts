@@ -62,19 +62,26 @@ export interface TwelveStage {
   index: number;
 }
 
-const STAGES: [TwelveStageId, string, string][] = [
-  ['changsheng', '長生', 'chángshēng'],
-  ['muyu', '沐浴', 'mùyù'],
-  ['guandai', '冠帶', 'guāndài'],
-  ['linguan', '臨官', 'línguān'],
-  ['diwang', '帝旺', 'dìwàng'],
-  ['shuai', '衰', 'shuāi'],
-  ['bing', '病', 'bìng'],
-  ['si', '死', 'sǐ'],
-  ['mu', '墓', 'mù'],
-  ['jue', '絕', 'jué'],
-  ['tai', '胎', 'tāi'],
-  ['yang', '養', 'yǎng'],
+/**
+ * The ring itself, in order from 長生.
+ *
+ * Exported because 紫微斗數 walks the same twelve, from a seat its bureau
+ * names rather than from a day master; one list, two callers, and no chance
+ * of the readings drifting apart.
+ */
+export const TWELVE_STAGES: readonly TwelveStage[] = [
+  { id: 'changsheng', hanzi: '長生', pinyin: 'chángshēng', index: 0 },
+  { id: 'muyu', hanzi: '沐浴', pinyin: 'mùyù', index: 1 },
+  { id: 'guandai', hanzi: '冠帶', pinyin: 'guāndài', index: 2 },
+  { id: 'linguan', hanzi: '臨官', pinyin: 'línguān', index: 3 },
+  { id: 'diwang', hanzi: '帝旺', pinyin: 'dìwàng', index: 4 },
+  { id: 'shuai', hanzi: '衰', pinyin: 'shuāi', index: 5 },
+  { id: 'bing', hanzi: '病', pinyin: 'bìng', index: 6 },
+  { id: 'si', hanzi: '死', pinyin: 'sǐ', index: 7 },
+  { id: 'mu', hanzi: '墓', pinyin: 'mù', index: 8 },
+  { id: 'jue', hanzi: '絕', pinyin: 'jué', index: 9 },
+  { id: 'tai', hanzi: '胎', pinyin: 'tāi', index: 10 },
+  { id: 'yang', hanzi: '養', pinyin: 'yǎng', index: 11 },
 ];
 
 /** The branch at which each stem is born, indexed by stem. */
@@ -93,6 +100,5 @@ export function twelveStage(stem: Stem, branch: Branch): TwelveStage {
   const birth = BIRTH_BRANCH[stem.index] as number;
   const steps = stem.yang ? branch.index - birth : birth - branch.index;
   const index = ((steps % 12) + 12) % 12;
-  const [id, hanzi, pinyin] = STAGES[index] as [TwelveStageId, string, string];
-  return { id, hanzi, pinyin, index };
+  return TWELVE_STAGES[index] as TwelveStage;
 }

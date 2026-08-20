@@ -2361,6 +2361,462 @@ named — see `prompt.bazi.distribution` and `prompt.bazi.noScore`.
 
 ---
 
+## 紫微斗數 — a board with no sky, and the two cells the page lost
+
+The tiers invert here in the opposite direction from 七政四餘. There, every
+position was tier 1 and all the difficulty was in the frame. Here **nothing is
+tier 1 and nothing can be**: not one quantity on this board is astronomical.
+紫微 is not a star; no name on the board has a position; the whole construction
+is arithmetic on a lunar date, an hour branch and a year pillar. The only
+tier-1 input is the lunar calendar underneath it, which phase 1 settled. What
+this section has to establish is therefore only ever two things: that the rules
+were read off the page correctly, and that the page is the page it claims.
+
+### The witness, and the one that is not on the shelf
+
+**《紫微斗數全書》, 題 陳希夷 撰, Wikisource, in three juan.** 卷一 (`oldid`
+7913704), 卷二 (`oldid` 1963110), 卷三 (`oldid` 2268626), each retrieved as
+wikitext on 2026-08-20 with a row in `docs/provenance.tsv`. 卷二 is the whole
+of the placement layer and the only juan that matters for a computation; 卷一
+and 卷三 are interpretive and are not drawn on. **There is no 卷四 to fetch**:
+this recension is complete at three, and the 批命 material of the longer
+recensions is not in it.
+
+**《紫微斗數全書》(前三卷), 周宣屹 整編, 紫微斗數圈, 簡體整理本.** A second
+edition, and the one that turned two of this section's findings around. Its
+editor states his method in a preface: an old edition scanned page by page,
+converted from traditional to simplified, punctuated, and — the part that
+makes it usable as a witness — **where he judges the old text to carry a
+copyist's slip he corrects it and prints the original character beside his
+correction**. There are 166 such notes, of the form 「'庚'（古文為'甲'）」.
+Its base edition is **not named**, which is its one serious weakness and the
+reason nothing here rests on it alone; but that base cannot be the Wikisource
+lineage, because it carries a 卷四 the Wikisource recension does not have and
+because the two disagree in places where neither notes an emendation. Its 卷四
+is not reproduced — «由於本卷均為實際案例» — which costs nothing, that juan
+being worked 批命 and exactly the material this project declines.
+
+**What is on the shelf and is not a source.** A 456-page 心一堂 facsimile of
+the 《紫微斗數捷覽》 (明刊孤本, 1581) with its 點校本 was retrieved and is
+**39 watermarked pages drawn at random from it**, sold as a teaser for the
+rest. The pages are genuine facsimile of the Ming block and would be worth
+having whole — 捷覽 belongs to the *other* transmission, the one 《全集》
+belongs to — but a random ninth of a book, with no text layer and the plates
+rotated, settles nothing. It has a row in `docs/provenance.tsv` saying so.
+**That transmission is no longer the gap it was**: two witnesses of it arrived
+and have a section to themselves below.
+
+Three OCR files were on the shelf before this and are **not independent
+witnesses**. Two are Chrome print-offs of the same Wikisource 卷一 and 卷三;
+the third is a LibreOffice PDF carrying 卷一 through 卷三 whose descent the
+owner searched for in August 2026 and could not establish — most likely out of
+an old personal backup, and recorded as **untraceable** rather than merely
+undeclared, which is a stronger statement and a worse one. None is a scan. The copies in hand may therefore share one lineage, and
+this section never rests on their agreement.
+
+**A shelf of school manuals, kept and not used.** 《中國絕學》 (方外人,
+臺北金林文化, 1986), eleven volumes, in `texts/juexue`. Volume five is the
+《全集》 described below and is filed with the 紫微斗數 texts instead. Four of
+the other ten carry 紫微斗數 material — 同步斷訣, 河洛歸元, 細說星情 and
+四化斷訣 in the first; 闡微, 析論 and 特例命譜 in the sixth; 四化飛伏斷訣 and
+the 占驗·南·北 schools in the seventh; 逍遙子紫微郎秘訣 in the tenth — and all
+of it is twentieth-century school teaching: 飛星 and 四化 method, worked
+verdicts, per-palace doctrine. **None of it is a source here**, on the ground
+《果老星宗》 is declined on. They are kept because a divergence may one day need
+a school's name attached to it, and a school manual is where a school's name
+lives. Each has a row in `docs/provenance.tsv` saying what it holds. The rest
+of the set — 鐵版神數, 奇門易數, 邵子神數, 皇極天書, 玄空金口訣 — is arts this
+project does not compute.
+
+**One manual kept for what it names.** Aloysius Han, *Zi Wei Dou Shu 紫微斗数*,
+fifth revision (2014), self-published in English, 341 pages, of declared
+中州派 lineage. **It states no plotting rule at all** — not for 解神, not for
+魁鉞, not for 火鈴 — and what fills it is per-star and per-palace verdict
+doctrine, the class declined here. Two things in it earn the shelf space.
+
+Its **四化 table is printed whole**, and it agrees with 《全書》 at 戊
+(貪狼·太陰·右弼·天機) and at 庚 (太陽·武曲·太陰·天同, under the verse
+「庚日武阴同为首」 — which is the reading kept here against the second
+edition's 同陰, now with a modern school agreeing). It parts from this book at
+**壬 alone**, giving 科 to 左輔 where 《全書》 gives it to 天府:
+「壬梁紫**輔**武宿是」 against 「壬梁紫**府**武宿是」.
+
+And it **names the lineage that diverges**. 中州派 splits into 陸斌兆's line
+and 王亭之's, the first resting on 『世傳欽天監秘笈』 and the second on
+『紫微星訣』, neither published; the school as a whole it calls 「比較接近傳統
+『全書』和『全集』等古籍的學派」 — which is a third party placing those two
+titles side by side as the classical pair, exactly as the section above found
+them; and it is **王亭之's branch**, it says, whose 四化 depart from the
+received table at 戊, 庚 and 壬. That is the first name this section has been
+able to put to a divergence it refuses an option for, and the refusal is
+restated below in those terms.
+
+**The adjudicator, held and not yet read.** The Ming 南陽堂 woodblock —
+《新鐫希夷陳先生紫微斗數全書》, 題 宋 陳摶 撰, 明 潘希尹 補輯, in seven juan —
+was fetched from shuge.org, which took it from the 日本内閣文庫 copy.
+**528 pages, image-only, and the block is clean enough to read by eye.** It is
+a *different recension* under the same title, and the only witness on this
+shelf that is neither a transcription nor descended from one.
+
+Nothing in this section depends on it, and that sentence has changed meaning:
+it used to describe a book nobody owned and now describes work nobody has
+done. It is the standing adjudicator for every question this section leaves
+open, and the list is short enough to write down. The defective 火玲 line of
+安身主, which both editions in hand print identically and neither can settle.
+The 庚 line of the 四化, where the two editions read 陰同 against 同陰 and the
+split is carried as a variant rather than resolved. 火星 and 鈴星 off the hour,
+解神 off the year, and 壬 giving 科 to 天府 — each standing on two witnesses of
+one lineage, which is not the same as two lineages. The two repaired grid
+cells, forced by arithmetic and confirmed by a transcription. And the starting
+age of the 大限, which is nowhere a sentence in either edition and is induced
+from the opening words of the bureau verses. A seven-juan recension also
+carries the 批命 material the three-juan one lacks, which is the part this
+project declines and would not read.
+
+**Reading it is the largest thing outstanding on this board**, and it is not
+cheap: 528 pages of woodblock with no text layer, to adjudicate perhaps eight
+lines. Recorded as a debt with a price on it, not as a plan.
+
+### The other transmission, and why having it changes two stars and no rule
+
+Two texts arrived that are **not 《全書》 and not editions of it**, and the
+first thing to establish about them is that they are one work.
+
+**《紫微斗數》, 三卷, 撰人不詳, 《萬曆續道藏》.** A plain text file in GBK with
+no scan behind it and no editor named — the weakest kind of witness this
+register accepts, and one that would settle nothing alone. Its condition is
+visible on every page: two lacunae left as editorial marks (＃１, ＃２), 王 for
+壬, 實 for 貴, 大陰 for 太陰, and a 十干所屬陰陽 line printed with the two
+halves exchanged (「甲丙戊庚王屬陰，乙丁己辛癸屬陽」), which is the reverse of
+what every text in this project's bibliography says and is read here as one
+more slip rather than as a doctrine.
+
+**《十八飛星策天紫微斗數全集》**, 題 大宋扶搖子白雲先生陳摶 撰, 徐良弼 校正,
+金陵益軒唐謙 鏤梓 — reprinted as PDF pages 240–305 of 《中國絕學》第五冊
+(方外人, 臺北金林文化, 1986). A facsimile of a block-printed edition,
+**image-only**: it has no text layer, so every line quoted from it below was
+read off the plate by eye, which is a weaker operation than reading a
+transcription and is declared rather than hidden.
+
+They are witnesses of one text. The 論次序 that opens both runs word for word
+the same — 「一定時刻，二起八字，三立格局，四排星辰，五立坐命，六起大運，七起
+大限，八書化曜，九書喜忌，十排吉凶」 — and so do the 起例 that follow it.
+**And the second is legible in three places where the first is not**, which is
+what makes the pair worth more than the sum:
+
+| | 續道藏 | 全集 |
+|---|---|---|
+| 安命例 | 「本人生時是**印時**，則從子上起申，順數**至未**逢卯」 | 「假如枝星在子，本人生時是**申**，則從子上起申，順數至本逢卯，便是命宮」 |
+| 起大限例 | 陰男陽女，從**申**宮逆數 | 陰男陽女，從**身**宮逆數 |
+| 起小運例 | 陽男陰女，從**申**宮逆數 | 陽男陰女，從**身**宮逆數 |
+
+The 續道藏's 安命例 cannot be followed as printed: 「是印時」 swallows the
+worked example's own input, and 「至未逢卯」 counts to two palaces at once.
+申 and 身 differ by one stroke, and 身宮 is an anchor the rest of that text
+uses at every turn while 申宮 appears nowhere else in it. This is not an
+adjudication between two readings — it is one witness being legible where the
+other is damaged.
+
+**What the transmission is.** Not another layout of the board computed here: a
+different board under the same title. **Eighteen stars and no 五行局.** Twelve
+— 紫微, 天虛, 天貴, 天印, 天壽, 天空, 紅鸞, 天庫, 天貫, 文昌, 天福, 天祿 —
+are counted from 未 by the **year branch** and laid out counter-clockwise, one
+to a palace; four — 天杖, 天異, 毛頭, 天刃 — from 子 by the **birth month**;
+then 天刑 from 酉 and 天姚 from 丑 by month, and 天哭 on the year's 六合.
+紫微 arrives by the year, not by a bureau and a lunar day; there is no 天府,
+no mirrored second file, and not one of 天機, 太陽, 武曲, 天同, 廉貞, 太陰,
+貪狼, 巨門, 天相, 天梁, 七殺, 破軍 is on the board. 「命係星辰十八位」 is the
+總論's own line, and the eighteen are the nine 陽星 and the nine 陰星 the text
+lists by name — 天空 being placed and then not weighed, which is how twelve
+and four and three come to eighteen.
+
+**What it settles here, which is two stars.** Where the two transmissions use
+the same name they mostly do not use the same rule: 文昌 by the year here and
+by the hour in 《全書》; 龍池 and 鳳閣 by the birth hour here and by the year
+branch there; 三台 and 八座 from 戌 and 辰 by month and then day, against
+《全書》 counting them off 左輔 and 右弼; 天哭 on the 六合 of the year, against
+《全書》 counting back from 午. **Exactly two rules survive the crossing, and
+they agree:**
+
+| | 續道藏 · 全集 | 《紫微斗數全書》 卷二 |
+|---|---|---|
+| 天刑 | 「凡起天刑，從酉上起，正月順數，至本人生月安天刑」 | 「天刑星从酉上起正月顺至本生月便安之」 |
+| 天姚 | 「天姚在丑順行」 · 「丑上順正月」 | 「天姚星从丑上起正月顺至本生月即安之」 |
+
+Two lineages that share no other placement share these two, which lifts them
+off the single-lineage footing everything else on this board stands on. The
+engine already places both that way and nothing changes; what changed is what
+is known about them.
+
+**What it does not license, and this is the part that matters.** 《全書》 opens
+the 大限 in the palace *beside* the 命宮 — 「陽男陰女從命前一宮起順行 是父母
+宮」 — and `daxian: 'ming'`, the widespread practice of opening it in the 命宮
+itself, is refused below as a lineage nobody had read. A lineage has now been
+read, and it does open in the 命宮: 「陽男陰女，從命宮順數，十年行一宮」, in
+both witnesses. **That is not a reason to admit the option. It is a firmer
+reason to refuse it.** The rule is stated over a board with **no 五行局**,
+where every span is a flat ten years and the run has no starting age to
+inherit — while the variant asked for on 《全書》's board keeps the bureau's
+opening age (二歲, 三歲, 四歲…) and moves only the palace. They are not the
+same rule. Taking the starting palace from one system while keeping the
+starting ages of another is the graft this project names elsewhere as the
+natal Qi Men error, and it would be no better for being made between two books
+that share a title. The refusal stands, and now stands on something.
+
+**And none of it is implemented.** A board of eighteen stars placed off the
+year, with brightness verses of its own (諸星入廟樂旺詩訣) and limits of its
+own, is a second instrument and not a parameter. The standard is unchanged: it
+would earn a place by having a procedure a source states, which it now
+demonstrably does, and it would then need its own input type, its own output,
+its own drawing, and its own answer to what such a board is handed over *for*.
+None of that is designed and none of it is claimed here. What this register
+now says is only that 「紫微斗數」 **names two boards**; that the one computed
+here is 《全書》's fourteen; and that the other is on the shelf whole, instead
+of being named and missing.
+
+### The two cells the page lost, and why the repair is forced
+
+The five grids placing 紫微 by bureau and by day of the lunar month are printed
+as boxed diagrams, the day numbers running down column pairs. Read cell by
+cell, three of the five give all thirty days without a gap or a repetition.
+Two do not:
+
+| Bureau | What the page prints | What is missing |
+|---|---|---|
+| 木三局 | the 寅 cell reads 初三 · 初九 | 初九 already stands in 辰; 初五 stands nowhere |
+| 金四局 | the 亥 cell reads 初一 alone | 三十 stands nowhere |
+
+The repair is **not chosen, it is forced**, and the forcing is over-determination
+of the kind the 觜/參 finding rests on. The tradition carries an arithmetic
+beside the grids: take `q = ceil(day / 局)` and `r = q × 局 − day`, then count
+`q + r` palaces from 寅 when `r` is even and `q − r` when it is odd. That rule
+is **not in this book** — which is exactly what makes it a check on the book
+rather than a restatement of it. It reproduces **148 of the 150 printed cells
+exactly**, and it disagrees with the page at precisely the two places the page
+is short. A rule that agreed with a defective page would prove nothing; one
+that agrees everywhere except where the page has visibly dropped a character
+and a column is telling you what the page said before it lost them.
+`test/ziwei.test.ts` holds all 150 cells against that arithmetic.
+
+**The second edition then printed both cells whole**: 木三局's 寅 reads
+初三 初五 there, and 金四局's 亥 reads 初一 三十. A rule and a witness agreeing
+where one page failed, which is as close to settled as a tier-3 quantity gets.
+That edition's own grids are defective elsewhere and differently — its labels
+are shuffled, so the grid headed 木三局 is in fact 火六局 — which is itself
+useful: two copies corrupt in different places narrow the truth where one
+cannot.
+
+The text also checks itself once, in prose: 「如甲生人安命在寅卻起甲己之年丙為
+首，是丙寅丁卯爐中火，卻去火局尋某日生期起紫微帝王，如是正月初一生者是火局，
+酉宮起初一日」 — a 甲 year with 命宮 at 寅 gives 丙寅, whose 納音 is 爐中火,
+whose bureau is 火六局, whose first day sits at 酉. The engine reproduces every
+step, and the last of them is a cell of the grid.
+
+### The table of seven grades, which counted itself
+
+The brightness table closing 卷二 is a plain grid, one row a branch and seven
+columns of single-character star names. Twenty-one stars carry a grade.
+**Eighteen of them appear in all twelve branches and three appear in exactly
+eight** — 祿存, 擎羊, 陀羅 — and that is not a gap in the transcription: 祿存
+follows the year stem, which never sends it to the four 墓庫, and the other two
+flank it. A misread grid does not come out 12 and 8 by accident.
+
+The coarse per-star summaries of 卷三 agree with the fine table where they
+overlap, and on the two stars where the agreement is checkable end to end it is
+exact: 「擎羊 廟辰戌丑未 陷子午卯酉」 and 「陀羅 廟辰戌丑未 陷巳亥寅申」 name
+precisely the廟 and 陷 rows of those two eight-branch entries. 「紫微 廟丑未午
+旺寅申卯酉巳亥 平子 無陷」 likewise agrees, and the two branches it does not
+mention are the two the fine table grades 得地.
+
+### The comparison, and what it is worth
+
+Two independent runnable references exist, both MIT: **`iztro`** (npm,
+TypeScript, maintained) and **`fortel-ziweidoushu`** (npm), the latter of
+declared 中州派 lineage. `iztro` was read for its settings before a single
+comparison was believed — the kinliuren lesson — and its defaults are
+`yearDivide: 'normal'` (the year opening at 正月初一, which is this engine's
+default and the reason the two are comparable at all) and `algorithm:
+'default'`.
+
+**544 births compared**: 1930 to 2020, six dates a year, four hours apiece,
+both sexes — every birth outside a leap month and on a +08:00 clock, for
+reasons given below. **Sixty-three quantities were compared and fifty-seven
+agreed in every single chart**: the bureau, the 命宮, the 身宮, both masters,
+all fourteen main stars, and every auxiliary but four.
+
+The comparison earned its keep before it produced a number. A first run agreed
+on only 77.6 % of the main stars, and the divergences fell entirely on boards
+whose 命宮 landed on 子 or 丑. The stems of the twelve palaces are dealt out
+walking the ring forward from 寅, so the count must be taken mod twelve before
+it is taken mod ten — 子 is ten steps along, not two steps back. Two steps back
+is a different stem, a different 納音, a different bureau, and therefore a
+different position for 紫微 and everything hanging off it. The engine was
+wrong; the reference found it; the rule stands.
+
+**The residue was six lines. The second edition took two of them away, and
+they were mine.** What follows is the whole of it, after collation.
+
+| Quantity | Agreement | What it turned out to be |
+|---|---|---|
+| 天魁 · 天鉞 at 丙丁 | was 69.1 % · **now 100 %** | **a correction.** The Wikisource text prints 「丙丁豬**狗**位」 — 狗 is 戌 — and that was carried as this book parting from the modern tables. The second edition prints 豬**雞** (酉) with no emendation noted, and the reference computes 酉. Two independent readings against one, and the one belongs to the lineage documented as carrying several errors to the page |
+| 天魁 · 天鉞 at 辛 | was 91.2 % · **now 100 %** | the same correction. 「六辛逢**馬虎**」 puts 魁 on 午 and 鉞 on 寅; Wikisource transposes to 虎馬 |
+| 火星 · 鈴星 | 25.0 % | **stands, and both editions agree.** Each takes a seat from the year's triplicity and the birth hour never enters, where the widespread practice counts on from those seats by the hour — which is why agreement is exactly the quarter of the sample whose hour offset is zero. `huoling` names it. The second edition prints 寅午戌人**午**卯方 where the first prints 丑卯, and 丑 is kept: 午 already stands as a triplicity head two characters earlier, and the received seats are 丑 and 卯 |
+| 解神 | 10.3 % | **stands, and both editions agree.** 「解神從戌上起子，逆數至當生年太歲上是也」 — placed off the **birth year**. What modern software carries under this name is the 月系 star, placed off the month. Two quantities wearing one name |
+| 天府 taking 化科 at 壬 | 0 % | **stands, with two witnesses behind it.** Both editions read 「壬梁紫府武宿是」. Later lineages give 科 to 左輔, and one of them is now on the shelf with a name on it — the 中州派 manual above prints 「壬梁紫輔武宿是」. The divergence is unchanged; what changed is that the other side of it is no longer anonymous |
+| 化科 and 化忌 at 庚 | — | **the one line the two editions disagree about.** This text reads 庚日武**陰同**為首 (科 to 太陰, 忌 to 天同); the second reads 庚日武**同陰**為首, swapping them. That is the famous split at 庚, and it is carried as a variant rather than settled — the reading kept is the one the reference also computes, and the other is written here so nobody rediscovers that the line has two forms. **A third party has since sided with the reading kept**: the 中州派 manual described above prints 「庚日武阴同为首」 and a table to match, which is a school agreeing rather than a witness, and is worth exactly that much |
+| 命宮 in a leap month | excluded | this book counts a leap month as the month **after** it (「凡有閏月俱要依此為例」); `iztro` splits the month at its middle. `leapMonth` names all three readings and implements the book's |
+
+After the two corrections the comparison stands at **fifty-nine of
+sixty-three quantities agreeing in every chart**.
+
+One class of divergence is **not** about this art and is excluded above rather
+than explained away: a birth at 00:30 on a Chinese wartime or summer clock
+(1944 and 1986 in the sample) falls on the previous day at 120°E, so the lunar
+date — and therefore 紫微 — moves by one. The engine is right by its own stated
+rule, which is that the lunar calendar is a published artefact reckoned on
+120°E and that Chinese wartime and summer clocks do not move it. `iztro` and
+`lunar-typescript` both take the civil date. Anybody comparing this engine
+against Chinese software on a DST-era birth will meet this, and it is the
+calendar rule and not a 紫微斗數 rule.
+
+**Two of the sixty-three have a second kind of check**, which is not a run but
+a reading. 天刑 and 天姚 are the only placements 《全書》 shares with the
+十八飛星 transmission, and across that gap the two agree character for
+character — 酉 起正月順數 and 丑 起正月順數 in both. Everything else on this
+board rests on one lineage plus an implementation that could have inherited it;
+those two rest on two lineages that agree about nothing else at all. The
+transmission and its witnesses are described above.
+
+### The five phases, which this board reads and does not merely file
+
+The drawing tints its cells and inks its names by phase, and that needed
+establishing before it could be drawn, because a colour on these sheets is an
+assertion. Three passages of 卷二 carry it, and both editions agree on all
+three word for word.
+
+**The stars have phases, and the book tabulates them.**
+「論諸星分屬南北斗化吉凶並分屬五行」 gives one to every star it places bar
+thirteen: 紫微屬土, 天機屬木, 太陽屬火, 武曲屬金, 廉貞屬火, 天府屬土,
+太陰屬水, 巨門屬水, 天相屬水, 天梁屬土, 破軍屬水, 文昌屬金, 文曲屬水,
+祿存屬土, 魁鉞二星屬火, 天馬屬火, 擎羊屬金, 陀羅屬金, 火星鈴星屬火,
+天空地劫屬火, 天傷天使屬水, 紅鸞天喜屬水. **Three carry two apiece** —
+天同屬水金, 貪狼屬水木, 七殺屬火金 — and both travel, because the book means
+both. **輔弼二星屬土 is the second edition's**: the Wikisource text drops the
+two characters and prints only 「輔弼二星北斗善住雨令星」, so 左輔 and 右弼
+have a colour on the sheet because a second witness supplied it.
+
+**And the book says what to do with the table**, which is what parts this from
+mere filing:
+
+> 星曜全明生剋制化之機，次看落於何宮，如廉貞屬火在寅宮，乃木鄉能生廉貞之火，
+> 若武曲金星與廉貞同度，則武曲為財而無用也，餘倣此。
+>
+> 金入火鄉，火入水鄉，水入土鄉，土入木鄉，俱為受制。
+
+A star's phase is read against the phase of **the palace it fell in**, and the
+palace's phase is its branch's — 寅宮乃木鄉, 寅 is wood country. The word is
+鄉, a country, which is what a tint depicts rather than what a legend lists.
+卷一 works the same relation between two stars in one seat
+(「廉貞屬火，七殺屬金，是火能制金」, where it treats 七殺 as metal alone), and
+the 太微賦 opens the art on it: 「辨生剋制化，以定窮通」.
+
+**What the engine does with it, and what it does not.** `ZiweiStar.elements`
+carries the phases; the drawing tints a cell by its branch and inks a name in
+its phase where there is exactly one. Sixteen names are inked; the three
+dual-phase stars are not, because a glyph has one colour and picking one would
+be this engine choosing where the book gives two; nor are the thirteen the
+list passes over, which is the book being silent rather than the star being
+phaseless. **Nothing computes the relation.** That 太陰 is water in an earth
+palace is visible on the sheet and is not summed, scored, or reported as a
+verdict: 受制 is the text's own word for it and stays the reader's to say.
+
+The list also gives phases to the 四化 (化祿屬土, 化權屬木, 化科屬水,
+化忌屬水) and to the 博士 ring. Neither is carried yet: those ride on a star
+or fill every seat, and a second colour on a name already inked would be two
+assertions in one glyph.
+
+### 身主, where an induction was made and then withdrawn
+
+The 身主 line reads 「子午人火玲星」, where 玲 is 鈴, **and both editions print
+it that way** — so the defect is the work's rather than one copyist's, and the
+second witness that was expected to resolve it instead confirms there is
+nothing to resolve it with. Every other line of that
+table names **one** star for a pair of opposite branches, in a six-character
+slot; this one fills the same slot with 火鈴, which is the name of no star.
+
+The first reading taken here was the compressed one — 火 to 子 and 鈴 to 午 —
+and the argument for it was structural: the sibling rule 安命主 pairs ten
+branches and leaves 子 and 午 standing alone with *different* stars, so those
+two are exactly the pair the tradition treats singly.
+
+**It is withdrawn, and the withdrawal is the point.** The argument rested on
+the shape of the line and on nothing else. No worked instance in this book
+carries a 身主, so the induction had no instances to be induced *from* — which
+is what parts it from 太乙's 參將, where fourteen worked instances agreed
+without exception, rather than likening it to it. Against it stands a runnable
+reference agreeing with this table in eleven branches of twelve and giving 火星
+at 午. One reading with an argument and no witness, one with a witness and no
+argument: the witness carries it. The other reading is recorded here rather
+than lost, so that an edition printing the line whole overturns this in one
+commit.
+
+### What is not here
+
+**What the second edition confirmed rather than changed**: the 大限 opening in
+the palace beside the 命宮 (it drops the words 順行 and 逆行 and keeps
+「從命前一宮起 是父母宮」, which is the half that decides where the run opens);
+the leap month counted as the month after; 大耗 where the first witness prints
+天耗; and 封誥 counted from 寅, where the first witness garbles the line to
+「由寅起宮子順數」 and the second notes the transposition and fixes it. The
+**starting age of the 大限 is still nowhere stated as a sentence** in either
+edition — it is carried only by the opening words of the bureau verses
+(二歲行, 三歲起, 四歲花…) and remains induced.
+
+The **flow-year layer** — 流祿, 流羊, 流陀, 喪門, 白虎, 吊客, 官府, 斗君, the
+天德 and 月德, the 飛天三殺 — is placement 卷二 states, and it is postponed
+rather than refused. Its subject is a year laid on a person, and what such a
+thing would be handed over *for* has not been designed. That is phase 20's
+ground, and it is a debt.
+
+The **格局 catalogues of 卷一** (定富局, 定貴局, 定貧賤局, 定雜局) define their
+patterns precisely enough to compute — 「財蔭夾印 相守命武梁來夾是也」 — and
+could travel as `Pattern`s do. Not yet.
+
+The **fu poems of 卷一, the per-palace star readings of 卷二 and the grading
+doctrine of 卷三** are declined entirely, on the ground 《果老星宗》 is declined
+on: they are prose-verdict doctrine, and a verdict arriving inside an English
+gloss is a verdict nothing can test. What travels from this book toward meaning
+is what it *names and weighs in one line* — a brightness grade, a
+transformation — which is the ground `Pattern.valence` stands on.
+
+The **stars with no rule in 卷二** are absent rather than blank: 恩光, 天貴,
+天官, 天福, 咸池, 孤辰, 寡宿, 華蓋, 破碎, 天才, 天壽, 天廚, the year-branch
+大耗, and a 地空 distinct from this text's 天空. Modern boards carry them. This
+one carries what its book places.
+
+Three of that list — 天貴, 天福, 天壽 — **do have a rule, in the other
+transmission**, where they are three of the twelve counted from 未 off the year
+branch. That is not a rule this board can borrow: it is stated for a ring of
+eighteen that has no 天府 and no bureau, and lifting three names out of it onto
+《全書》's fourteen would be the graft refused two paragraphs up, made smaller.
+The same reading settles where the missing 地空 comes from. The 1986 editor of
+the 全集 notes, in his own voice and not the Ming text's, that 天空 there is
+「駕前一位」 — one palace past 太歲, off the year — while 地空 is counted off
+the birth hour, and that 俗本 print the second under the first's name. 《全書》
+counts its 天空 back from 亥 by the hour, which is to say that the star this
+engine calls 天空 is the star that transmission calls 地空. The engine follows
+its own book and keeps the name its own book gives; the collision is recorded
+because a reader holding the other kind of chart will otherwise think one of
+the two is wrong.
+
+The **子時 passage** of 卷三 divides the hour — 「如子時有十刻，上午刻屬昨夜亥
+時，下午刻屬今日子時」 — but 上午刻 must be 上五刻, the OCR is corrupt at the
+character that carries the arithmetic, and 「屬昨夜亥時」 is doctrinally odd as
+printed. The engine takes the plain hour and the day boundary its own
+calendrical layer settles. Recorded as a passage read and not used.
+
+---
+
 ## What is refused, and why
 
 | | Reason |
@@ -2385,6 +2841,12 @@ named — see `prompt.bazi.distribution` and `prompt.bazi.noScore`.
 | 七政四餘 `minggong` `ascendant` | 立命 by 加時 is what the texts state and gives a palace. The rising degree is a second method, not a sharper reading of the first. `OPTION_NOT_IMPLEMENTED` |
 | 七政四餘 `gong` `ci` | the 次 as stretches of 宿度 needs the same table `xiudu` is waiting for |
 | 留 | a station is a threshold on the daily motion and no source consulted states one. The speed travels in the output instead |
+| 紫微斗數 `huoling` `hour` | the widespread practice counts 火星 and 鈴星 on from the year's seats by the birth hour. No verse in 卷二 does, and agreement with a reference that does falls to exactly the quarter of a sample whose hour offset is zero. `OPTION_NOT_IMPLEMENTED` |
+| 紫微斗數 `leapMonth` `current` · `split` | 「凡有閏月俱要依此為例」 counts a leap month as the one after it. The other two readings are other schools' and neither is in this book |
+| 紫微斗數 `daxian` `ming` | 「陽男陰女從命前一宮起順行 是父母宮」 opens the run *beside* the 命宮, in both copies verbatim. Opening it in the 命宮 is now traceable — it is the 十八飛星 transmission's rule, in both witnesses of it — and that makes the refusal firmer rather than looser: there the spans are a flat ten years on a board with **no 五行局**, so the rule inherits no starting age, while the variant asked for here keeps the bureau's. Not the same rule, and not this book's |
+| 紫微斗數 `sihua` | one value, and the divergent lineage now has a name without having a text. A 中州派 manual on the shelf reports that it is **王亭之's branch** that departs from the received table at 戊, 庚 and 壬, and names what it rests on — 『紫微星訣』, unpublished. That manual's *own* table agrees with this book at 戊 and 庚 and parts from it at 壬 alone (科 to 左輔, not 天府), so the three-stem table that would be the second value is still unread. A lineage named is not yet a lineage read: the `tongzong` precedent holds, and what would overturn it is now a findable book rather than a rumour |
+| the 流年 layer of 紫微斗數 | placement 卷二 states, postponed rather than refused: its subject is a year laid on a person, and what that would be handed over for has not been designed |
+| the per-palace readings and fu of 紫微斗數全書 | prose-verdict doctrine, declined on the ground 《果老星宗》 is declined on. What is carried is what the book names and weighs in one line: a brightness grade, a transformation |
 
 `bigfishmarquis-qimen` implements 茅山, 置閏 and all four systems, and is
 therefore a candidate reference for several of these. It is five months old

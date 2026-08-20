@@ -409,6 +409,115 @@ export const it: Record<MessageKey, string> = {
   'label.house.fude': 'fortuna e virtù',
   'label.house.xiangmao': 'l\'aspetto',
 
+  // 紫微斗數 — le stelle di una tavola che non è un cielo. Nessuna di queste
+  // è un corpo: 紫微 non è una stella che un telescopio trova, e 天府 non è
+  // il 天輔 di una carta dunjia benché entrambe si dicano tiānfǔ. Ognuna è un
+  // seggio in un conteggio, e la glossa traduce il nome e nient'altro — che
+  // cosa un seggio dica di una vita spetta a chi legge, come ovunque qui.
+  // Sono nominate solo le stelle di cui il 卷二 enuncia una regola, ed è
+  // perché l'arredo moderno — 恩光, 天貴, 咸池, 孤辰, 寡宿, 華蓋 — manca
+  // invece di restare vuoto.
+  'label.ziwei.ziwei': 'la tenuità purpurea',
+  'label.ziwei.tianji': 'il perno celeste',
+  'label.ziwei.taiyang': 'il grande yang',
+  'label.ziwei.wuqu': 'la curva marziale',
+  'label.ziwei.tiantong': 'la concordia celeste',
+  'label.ziwei.lianzhen': 'l\'integro e casto',
+  'label.ziwei.tianfu': 'il tesoro celeste',
+  'label.ziwei.taiyin': 'il grande yin',
+  'label.ziwei.tanlang': 'il lupo avido',
+  'label.ziwei.jumen': 'la porta grande',
+  'label.ziwei.tianxiang': 'il ministro celeste',
+  'label.ziwei.tianliang': 'la trave celeste',
+  'label.ziwei.qisha': 'le sette uccisioni',
+  'label.ziwei.pojun': 'il rompitore d\'eserciti',
+  'label.ziwei.wenchang': 'il fiorire delle lettere',
+  'label.ziwei.wenqu': 'la curva delle lettere',
+  'label.ziwei.zuofu': 'il sostegno sinistro',
+  'label.ziwei.youbi': 'il sostegno destro',
+  'label.ziwei.tiankui': 'il capo celeste',
+  'label.ziwei.tianyue': 'la scure celeste',
+  'label.ziwei.lucun': 'l\'emolumento serbato',
+  'label.ziwei.tianma': 'il cavallo celeste',
+  'label.ziwei.qingyang': 'la lama levata',
+  'label.ziwei.tuoluo': 'la trottola',
+  'label.ziwei.huoxing': 'la stella del fuoco',
+  'label.ziwei.lingxing': 'la stella della campana',
+  'label.ziwei.dijie': 'la rovina terrestre',
+  'label.ziwei.tiankong': 'il vuoto celeste',
+  'label.ziwei.tianshang': 'la ferita celeste',
+  'label.ziwei.tianshi': 'l\'inviato celeste',
+  'label.ziwei.tianxing': 'la pena celeste',
+  'label.ziwei.tianyao': 'la seduzione celeste',
+  'label.ziwei.santai': 'le tre terrazze',
+  'label.ziwei.bazuo': 'gli otto seggi',
+  'label.ziwei.tianku': 'il pianto celeste',
+  'label.ziwei.tianxu': 'il vacuo celeste',
+  'label.ziwei.longchi': 'la peschiera del drago',
+  'label.ziwei.fengge': 'la torre della fenice',
+  'label.ziwei.hongluan': 'l\'uccello cremisi',
+  'label.ziwei.tianxi': 'la gioia celeste',
+  'label.ziwei.taifu': 'il sostegno della terrazza',
+  'label.ziwei.fenggao': 'il diploma d\'investitura',
+  'label.ziwei.jieshen': 'lo spirito che scioglie',
+  'label.ziwei.jielukongwang': 'il vuoto della strada tagliata',
+  'label.ziwei.xunzhongkongwang': 'il vuoto dentro la decade',
+
+  // I dodici seggi, coi nomi che il 卷二 dà loro — 妻妾 e non 夫妻,
+  // 奴僕 e non 交友, 官祿 e non 事業. Non sono i dodici 人事宮 del
+  // 七政四餘 qui sopra: elenco diverso, ordine diverso, posati nel verso
+  // opposto.
+  'label.ziweihouse.ming': 'la vita',
+  'label.ziweihouse.xiongdi': 'i fratelli',
+  'label.ziweihouse.qiqie': 'moglie e concubina',
+  'label.ziweihouse.zinu': 'i figli',
+  'label.ziweihouse.caibo': 'la ricchezza',
+  'label.ziweihouse.jie': 'malattia e travaglio',
+  'label.ziweihouse.qianyi': 'lo spostamento',
+  'label.ziweihouse.nupu': 'i servitori',
+  'label.ziweihouse.guanlu': 'carica e stipendio',
+  'label.ziweihouse.tianzhai': 'terra e casa',
+  'label.ziweihouse.fude': 'fortuna e virtù',
+  'label.ziweihouse.fumu': 'i genitori',
+
+  // 五行局 — ritagliato dal 納音 del 命宮, e il numero nel nome è il passo
+  // con cui conta la tavola di 紫微.
+  'label.bureau.shuierju': 'il quadro dell\'acqua, che conta per due',
+  'label.bureau.musanju': 'il quadro del legno, che conta per tre',
+  'label.bureau.jinsiju': 'il quadro del metallo, che conta per quattro',
+  'label.bureau.tuwuju': 'il quadro della terra, che conta per cinque',
+  'label.bureau.huoliuju': 'il quadro del fuoco, che conta per sei',
+
+  // I sette gradi della tavola che chiude il 卷二. Un grado dice dove sta
+  // una stella in un ramo, non come va una vita, e nulla li somma.
+  'label.brightness.miao': 'nel suo tempio',
+  'label.brightness.wang': 'rigoglioso',
+  'label.brightness.dedi': 'che tiene il terreno',
+  'label.brightness.liyi': 'avvantaggiato',
+  'label.brightness.pinghe': 'in piano',
+  'label.brightness.budedi': 'senza terreno',
+  'label.brightness.luoxian': 'caduto',
+
+  // 四化 — ciò che lo stelo dell'anno di nascita opera su quattro stelle.
+  'label.transform.hualu': 'volto a emolumento',
+  'label.transform.huaquan': 'volto ad autorità',
+  'label.transform.huake': 'volto a esame',
+  'label.transform.huaji': 'volto a ostacolo',
+
+  // 博士十二神, l'anello che cammina a partire da 祿存.
+  'label.boshi.boshi': 'l\'erudito',
+  'label.boshi.lishi': 'il forzuto',
+  'label.boshi.qinglong': 'il drago azzurro',
+  'label.boshi.xiaohao': 'lo spreco piccolo',
+  'label.boshi.jiangjun': 'il generale',
+  'label.boshi.zoushu': 'il memoriale',
+  'label.boshi.feilian': 'il corridore del vento',
+  'label.boshi.xishen': 'lo spirito della gioia',
+  'label.boshi.bingfu': 'il segno della malattia',
+  'label.boshi.dahao': 'lo spreco grande',
+  'label.boshi.fubing': 'l\'imboscata',
+  'label.boshi.guanfu': 'il magistrato',
+
   // 十六神 — l'anello su cui si legge una tavola di 太乙: dodici rami e i
   // quattro trigrammi d'angolo, ciascuno con un nome proprio. Il 卷二 del
   // 《太乙金鏡式經》 dà la ragione di ognuno, e le glosse seguono quelle
@@ -643,6 +752,7 @@ export const it: Record<MessageKey, string> = {
   'nav.bazi': 'Ba Zi',
   'nav.liuren': 'Liu Ren',
   'nav.qizheng': 'Qi Zheng Si Yu',
+  'nav.ziwei': 'Zi Wei Dou Shu',
   'nav.taiyi': 'Tai Yi',
   'nav.moments': 'Scegliere il momento',
   'nav.consult': 'Consultazione',
@@ -915,6 +1025,33 @@ export const it: Record<MessageKey, string> = {
     'Tutto ciò che segue è stato calcolato dalla nascita esattamente come è stata fornita, e l\'ora del giorno è portante: la tradizione divide il giorno in dodici 時辰 shíchén di due ore ciascuno, e una nascita al di là di un confine produce una tavola diversa. Vicino alla mezzanotte può spostarsi il giorno stesso. **Sollevalo solo dove c\'è qualcosa da sollevare.** Se ti è stato detto che l\'ora è approssimativa, ricostruita o arrotondata, dillo nel punto in cui morde e nomina che cosa ne resta scosso. Se non ti è stato detto, non dirne nulla: un paragrafo d\'apertura che accerta che l\'ora va bene è un paragrafo di cui nessuno aveva bisogno, e insegna a chi legge che una lettura comincia con le cautele.',
   'prompt.ming.limits':
     'Un nome che la tradizione dà a una fase — 死 sǐ, 囚 qiú, 絕 jué — è la sua parola per uno stadio di un ciclo, nel modo in cui inverno è una parola per uno stadio dell\'anno, e non una sentenza pronunciata su una vita. Dove è stampato il verdetto di una fonte, riportalo come suo e di\' di chi è. Ciò che si può offrire è praticabile e poggia su ciò che dipende da chi legge; ciò che non si può offrire affatto: previsioni con date, consulenze mediche, psichiatriche, legali o finanziarie, giorni o numeri fortunati, e qualunque pronostico sul gioco. Se ti viene chiesto se tutto questo sia vero, rispondi con onestà: non ha fondamento scientifico — il calcolo è astronomicamente esatto, e la lettura è un linguaggio simbolico.',
+
+  'prompt.ziwei.heading': 'Leggere una tavola di Zi Wei Dou Shu',
+  // La regola di cui questa tavola ha bisogno e che le altre due tavole di
+  // 命 non hanno mai richiesto. Sta in testa perché governa tutto il resto.
+  'prompt.ziwei.role':
+    'Qui sotto è disposta una tavola di Zi Wei Dou Shu: dodici seggi, ciascuno su un ramo, con le stelle contate dentro, il quadro e i due signori. **Nulla su questa tavola sta nel cielo.** 紫微 non è una stella che un telescopio trova; nessuno di questi nomi è un corpo, nessuno ha una posizione, nessuno sorge o tramonta. L\'intera tavola è aritmetica su una data lunare, un\'ora e un anno — questo è ciò che l\'arte è, non un limite di questo calcolo. Dunque: niente pianeti, niente aspetti, niente transiti, niente effemeridi, niente astrologia occidentale o indiana di alcun genere, e non tradurre questa tavola in una di quelle per leggerla. Leggi i seggi esattamente come stanno e non aggiungervi nulla.',
+  // I seggi arrivano già nominati. Nominare non è assegnare — lo stesso
+  // limite che porta il prompt di qizheng, e qui morde di più perché questi
+  // nomi sono più bruschi.
+  'prompt.ziwei.houses':
+    'I dodici seggi portano i nomi che dà loro il 《紫微斗數全書》 — 命宮, 兄弟, 妻妾, 子女, 財帛, 疾厄, 遷移, 奴僕, 官祿, 田宅, 福德, 父母. **Un nome non è un\'assegnazione.** Che un seggio si chiami 妻妾 non fa di ciò che vi sta un\'affermazione sul matrimonio di qualcuno, e i nomi antichi sono più bruschi di quanto un lettore moderno si aspetti: leggi 妻妾 come il seggio del legame più stretto, 奴僕 come il seggio di coloro con cui o per cui si lavora, 官祿 come il seggio della posizione e del lavoro. Quale tema leggi da quale seggio è una tua scelta: dillo mentre la fai.',
+  // I gradi sono la pesatura del testo, e restano comunque non un punteggio.
+  'prompt.ziwei.brightness':
+    'Dove una stella porta un grado — 廟, 旺, 得地, 利益, 平和, 不得地, 落陷 — il grado è del libro, e dice quanto bene quella stella sieda su quel ramo. Non è un punteggio: non sommare i gradi, non farne una media, non ordinare i seggi secondo essi, e non trasformare 落陷 in una sventura né 廟 in una promessa. Ventuno stelle sono graduate e le altre no; una stella senza grado è una di cui il libro non dice nulla, non una stella debole.',
+  'prompt.ziwei.sihua':
+    'Le 四化 — 化祿, 化權, 化科, 化忌 — sono operate dallo stelo dell\'anno di nascita su quattro delle stelle già insediate. Questa tavola usa la tabella che stampa il 《全書》, che si scosta da quelle posteriori a 戊, 庚 e 壬; se conosci un\'altra tabella, questa non è quella, e lo scostamento è del libro e non un errore. 化忌 non è una maledizione e 化祿 non è una ricompensa.',
+  // La regola della tavola sola, affilata sulla tavola con cui si sovrappone di più.
+  'prompt.ziwei.substrate':
+    'Questa tavola e un 八字 sono costruiti sulla stessa nascita, e lo stelo dell\'anno che qui porta le 四化, 祿存, 天魁 e 天鉞 è lo stesso stelo dell\'anno che là porta gli dèi. Se hai entrambe, hai un fatto due volte e non due testimoni. Qui hai una tavola sola: leggi quella.',
+  'prompt.ziwei.limits':
+    'Dove sono mostrati i 大限, ogni seggio tiene un decennio di anni e la corsa si apre nel seggio accanto al 命宮, che è la lettura di questo libro e non di ogni scuola. Il 小限 mostra l\'età alla quale raggiunge per la prima volta un seggio, tornandovi ogni dodicesimo anno. Questi collocano un tratto di vita sulla tavola. Non datano un evento, e nulla qui dice che cosa vi accadrà.',
+  'prompt.ziwei.board': 'La tavola',
+  'prompt.ziwei.opening':
+    'Apri collocando la nascita in una frase o due con parole tue — quando e dove, qual è il quadro e su quale seggio cade la vita — così che chi legge sappia che cosa si sta leggendo prima che sia letto.',
+  'prompt.ziwei.read':
+    'Che cosa guardare, ed è un elenco da cui attingere più che da percorrere: quali stelle siedono sul 命宮 e sul 身宮, e se i due condividono un seggio; dove stanno 紫微 e 天府 e quanto distano; i seggi affollati e i seggi vuoti, leggendo un seggio vuoto attraverso quello che gli sta di fronte; dove sono cadute le quattro trasformazioni; dove le stelle graduate stanno bene e dove male; dove siede 祿存 con 擎羊 e 陀羅 attorno. Che cosa tutto questo significhi verso una vita non viaggia con la tavola: dove attingi a una tradizione, nominala come di quella tradizione.',
+
   'prompt.qizheng.heading': 'Leggere un quadro di Qi Zheng Si Yu',
   'prompt.qizheng.role':
     'Qui sotto è disposto un quadro di Qi Zheng Si Yu: i sette governatori, i residui, e i dodici palazzi dell\'eclittica con le dimore in cui i corpi sono caduti. È stato calcolato da un\'effemeride, non da te: leggilo esattamente come sta, e non aggiungervi nulla. Nessun corpo, nessuna dimora, nessun grado, nessun palazzo che non sia scritto lì. **Non è un oroscopo occidentale e le sue parti non sono quelle di uno** — non importare aspetti, orbi, domicili o un sistema di case, e non tradurlo in uno per leggerlo. Se manca qualcosa che ti serve, di\' che manca. **Non aggiungere nulla riguarda il quadro e non la lettura**: non inventare corpi né posizioni, e poi di\' che cosa quelle posizioni sono.',
@@ -1035,6 +1172,7 @@ export const it: Record<MessageKey, string> = {
   'form.instrument.qimen': 'Quando muovermi, e da che parte — 奇門遁甲 qíméndùnjiǎ',
   'form.instrument.liuren': 'Cosa sta succedendo, e con chi — 大六壬 dàliùrén',
   'form.instrument.qizheng': 'Il cielo sotto cui una vita è cominciata — 七政四餘 qīzhèngsìyú',
+  'form.instrument.ziwei': 'I seggi in cui una vita è contata — 紫微斗數 zǐwēidǒushù',
   'form.instrument.bazi': "Di che cosa è fatta una vita, all'ora di una nascita — 八字 bāzì",
   'form.instrument.taiyi': 'Come sta un anno, per tutti quelli che ci stanno dentro — 太乙神數 tàiyǐshénshù',
   'form.guiren': 'Quale verso insedia il nobile (貴人)',
@@ -1051,6 +1189,16 @@ export const it: Record<MessageKey, string> = {
   'cli.column.motion': 'corre',
   'cli.column.house': 'palazzo di',
   'cli.column.standing': 'vi sta',
+  'cli.column.seat': 'seggio',
+  // Il nome accessibile delle dodici aree sensibili sovrapposte al
+  // disegno. Non portano testo proprio — il seggio sta sotto, sulla
+  // figura — quindi è l'unico nome che un lettore di schermo ha.
+  'board.seatLink': 'Mostra che cosa sta in {seat}',
+  'board.seatBack': 'Trova {seat} sul grafico qui sopra',
+  'cli.column.ground': 'terreno',
+  'cli.column.starsThere': 'contate dentro',
+  'cli.column.rings': 'anelli',
+  'cli.column.limit': 'decennio',
   'cli.heading.liuren': 'Il quadro del Liu Ren',
   'cli.field.yuejiang': 'generale del mese',
   'cli.field.plate': 'cielo sopra terra',
@@ -1069,6 +1217,19 @@ export const it: Record<MessageKey, string> = {
   'cli.field.remainders': 'i residui',
   'cli.field.minggong': 'palazzo della vita',
   'cli.field.houses': 'i dodici palazzi',
+
+  'cli.heading.ziwei': 'La tavola di Zi Wei Dou Shu',
+  'cli.field.bureau': 'il quadro',
+  'cli.field.minggongPalace': 'palazzo della vita',
+  'cli.field.shengong': 'palazzo del corpo',
+  'cli.field.lifeMaster': 'signore della vita',
+  'cli.field.bodyMaster': 'signore del corpo',
+  'cli.field.ziweiPalaces': 'i dodici seggi',
+  'cli.field.lunarDate': 'la data lunare',
+  'cli.field.majorLimit': 'decennio',
+  // Detto una volta, dove chi legge può soppesarlo. Si veda PLAN.md § 4 fase 23.
+  'cli.value.ziweiSource':
+    'collocazioni dal 《紫微斗數全書》 卷二 in ogni punto — la trasmissione delle quattordici stelle, non quella delle diciotto, i 十八飛星 del 《全集》 e del 《捷覽》; dove le sue tavole si scostano da quelle moderne — 火星 e 鈴星 slegate dall\'ora, 魁鉞 a 丙丁辛, 解神 preso dall\'anno, 壬 che dà 科 a 天府 — si segue questo libro e lo scostamento è registrato',
   'form.luohou': 'Quale nodo è 羅睺',
   'form.luohou.descending': 'il nodo discendente — la legge degli astrologi',
   'form.luohou.ascending': 'il nodo ascendente — 湯若望 e il 時憲曆',

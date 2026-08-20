@@ -60,6 +60,7 @@ compatible with it. The GeoNames data is CC BY 4.0.
 | Qi Men charts | 時家 by the 拆補 or 置閏 method: four plates, configurations, seasonal states, 門宮 and 星宮 relations, the post horse of the day and of the hour |
 | Liu Ren boards | 大六壬: the 天地盤 by 月將加時, the 四課, the 三傳 by the 九宗門, the 十二天將, the 遁干 and the 空亡 |
 | 七政四餘 boards | the seven governors and three of the four remainders, placed by ephemeris: the 宿 and the 入宿度 with the boundaries taken from the 距星 themselves, the twelve 次 and the 宮度, 順 and 逆, the 命宮 by 加時 and the 人事十二宮 numbered from it |
+| 紫微斗數 boards | the twelve seats counted from a birth: 紫微 by the 五行局 and the day of the lunar month with the thirteen that hang off it, the auxiliaries 卷二 places, the 四化, the seven grades of brightness, the two masters, the 大限, the 小限 and the rings of 長生 and 博士. Nothing on it is in the sky |
 | 太乙 boards | 太乙神數 in the 年計: 太乙 walking the eight palaces and never the centre, the 十六神, 文昌 and 始擊, the 主算 and 客算 with the 大將 and 參將 each seats, the 八門直使, the 三基, 五福 and 大遊, and the conditions 掩 擊 迫 囚 關 格 對 |
 | Almanac | 曆注: 建除十二神, 二十八宿值日, the 十二神, twenty-six 年神, the four 德 of the month and twenty-eight 神煞 — the officer, the lodge and the god of the day, and the bearings the year holds, reckoned on 120°E beside the chart rather than inside it |
 | Choosing a time | 擇時擇方: every chart over an interval, narrowed to the palaces answering stated criteria |
@@ -141,8 +142,8 @@ the engine names two counts and stops. The prompt commissions the choice and
 requires it declared, exactly as a chart's 用神 is the reader's and said aloud.
 
 **And nothing is asked of a board of 命 or of 天.** `--ask` works on `chart` and
-`liuren`, which are cast for a question, and is refused on `bazi`, `qizheng`
-and `taiyi` rather than quietly dropped. Under 命 the themes a reading traverses
+`liuren`, which are cast for a question, and is refused on `bazi`, `qizheng`,
+`ziwei` and `taiyi` rather than quietly dropped. Under 命 the themes a reading traverses
 are commissioned in the prompt itself, and what the reader wants to look at next
 belongs to the conversation that follows. Under 天 there is nobody to ask on
 behalf of at all, and a question is how a reader gets written into a figure of a
@@ -206,9 +207,9 @@ longer there.
 | `packages/i18n` | message catalogs and locale negotiation. A leaf: depends on nothing |
 | `packages/geo` | location lookup over a local GeoNames dataset (SQLite) |
 | `packages/core` | the engine, and the `qimen` command |
-| `packages/plate` | the drawings: the nine palaces framed by the compass with the configurations under them, the ring of twelve a 六壬 board and a 七政四餘 board share, and the 太乙 grid with its empty middle and sixteen seats, SVG and PNG |
+| `packages/plate` | the drawings: the nine palaces framed by the compass with the configurations under them, the ring of twelve a 六壬 board and a 七政四餘 board share, the 太乙 grid with its empty middle and sixteen seats, and the 紫微斗數 four by four with the birth in the middle of it, SVG and PNG |
 | `packages/mcp` | MCP server, eleven tools, stdio |
-| `apps/web` | SvelteKit: seven sections at `/en` and `/it`, twenty-one endpoints under `/api` |
+| `apps/web` | SvelteKit: eight sections at `/en` and `/it`, twenty-six endpoints under `/api` |
 
 npm workspaces, Node ≥ 22, ESM, TypeScript.
 
@@ -238,6 +239,7 @@ qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lang en
 qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --method zhirun
 qimen liuren --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lang en
 qimen qizheng --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lang en
+qimen ziwei   --date 1984-05-05 --time 14:30 --tz Asia/Shanghai --gender male
 qimen taiyi --year 2026 --lang en
 qimen bazi  --date 1968-03-12 --time 14:30 --tz Europe/Rome --gender male
 qimen terms --year 2024 --tz Asia/Shanghai

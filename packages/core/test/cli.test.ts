@@ -208,6 +208,59 @@ describe('--ask and --about where they do not belong', () => {
   });
 });
 
+describe('ziwei', () => {
+  const BIRTH = [
+    '--date', '1984-05-05', '--time', '14:30', '--tz', 'Asia/Shanghai',
+    '--lon', '116.4', '--no-true-solar', '--day-boundary', 'midnight',
+  ];
+
+  it('lays a board on a birth, under this book\'s names', async () => {
+    expect(await run(['ziwei', ...BIRTH, '--lang', 'en'])).toBe(0);
+
+    expect(out).toContain('The Zi Wei Dou Shu board');
+    expect(out).toContain('火六局');
+    // The twelve seats keep 卷二's names and not the modern ones.
+    expect(out).toContain('妻妾');
+    expect(out).toContain('奴僕');
+    expect(out).not.toContain('夫妻');
+  });
+
+  it('closes the board with the one line a reader cannot supply', async () => {
+    // Which book, and where its tables part from the modern ones. The board
+    // used to carry a second line saying nothing on it is in the sky; it was
+    // dropped as something anybody reading this already knows, and the prompt
+    // still opens on it for the one reader who does not.
+    await run(['ziwei', ...BIRTH, '--lang', 'en']);
+
+    expect(out).toContain('卷二');
+  });
+
+  it('leaves out the limits without a gender and prints them with one', async () => {
+    await run(['ziwei', ...BIRTH, '--lang', 'en']);
+    expect(out).not.toContain('116–125');
+
+    out = '';
+    await run(['ziwei', ...BIRTH, '--gender', 'male', '--lang', 'en']);
+    expect(out).toContain('116–125');
+  });
+
+  it('refuses --ask, and says why rather than dropping it', async () => {
+    expect(
+      await run(['ziwei', ...BIRTH, '--ask', 'how is my career', '--lang', 'en']),
+    ).not.toBe(0);
+    expect(err).toContain('--ask');
+  });
+
+  it('builds a prompt that forbids the sky before anything else', async () => {
+    expect(await run(['ziwei', ...BIRTH, '--prompt', '--lang', 'en'])).toBe(0);
+
+    expect(out).toContain('Nothing on this board is in the sky');
+    expect(out).toContain('no planets, no aspects, no transits');
+    // One board to a reading, said where it bites hardest.
+    expect(out).toContain('one fact twice and not two witnesses');
+  });
+});
+
 describe('qizheng', () => {
   it('prints the eleven names and places the seven', async () => {
     expect(await run(['qizheng', ...MOMENT, '--lang', 'en'])).toBe(0);

@@ -58,6 +58,7 @@ describe('what the server offers', () => {
       'compute_qimen_chart',
       'compute_qizheng',
       'compute_taiyi',
+      'compute_ziwei',
       'draw_liuren',
       'draw_qimen_chart',
       'lunar_date',
@@ -93,6 +94,13 @@ describe('what the server offers', () => {
     expect(byName.get('compute_qizheng')).toMatch(/three remainders, not\s+\*\*four\*\*|three remainders, not/i);
     expect(byName.get('compute_qizheng')).toMatch(/descending node here/i);
     expect(byName.get('compute_qizheng')).toMatch(/no epoch\s+enters|no epoch enters/i);
+
+    // The one thing a model must be told before it reads this board, and the
+    // four tables where this book parts from the modern ones.
+    expect(byName.get('compute_ziwei')).toMatch(/[Nn]othing on this board is in the sky/);
+    expect(byName.get('compute_ziwei')).toMatch(/birth hour never enters/i);
+    expect(byName.get('compute_ziwei')).toMatch(/丙丁豬狗位/);
+    expect(byName.get('compute_ziwei')).toMatch(/name and not an assignment/i);
     // The two ways an agent turns a scan into something it is not: dropping
     // the direction, and answering a question that was not asked.
     expect(byName.get('scan_moments')).toMatch(/never the hour alone/i);

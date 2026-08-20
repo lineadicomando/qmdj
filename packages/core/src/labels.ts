@@ -2,6 +2,7 @@ import type { MessageKey, Translator } from '@qimendunjia/i18n';
 import { BRANCHES, STEMS, type Ganzhi } from './ganzhi.js';
 import { GENERALS, KETI, LIUREN_RULES } from './liuren.js';
 import { CI, HOUSES, MOTIONS, QIZHENG_BODIES } from './qizheng.js';
+import { ZIWEI_HOUSES, ZIWEI_STARS } from './ziwei/stars.js';
 import { TAIYI_GODS, TAIYI_PATTERN_IDS } from './taiyi.js';
 import {
   DIRECTIONS,
@@ -131,6 +132,44 @@ export function liurenLabels(t: Translator): LiurenLabels {
  * of every board this engine draws. A picture travels further than the page
  * it was made on, so they travel on its face.
  */
+/**
+ * The captions a 紫微斗數 drawing needs, already translated.
+ *
+ * Short, and shorter than the other boards' bundles, because this drawing
+ * carries almost no words: the seats and the stars are hanzi, the readings go
+ * in the band beneath, and what is left is three words in the middle.
+ */
+export interface ZiweiLabels {
+  /**
+   * Every star under the word for it, keyed by identifier.
+   *
+   * All forty-five, though the drawing spends its room on the eighteen 正曜:
+   * which subset a surface can afford is the surface's business, and a bundle
+   * that pre-decided it would have to be rebuilt the first time one of them
+   * found more room than another.
+   */
+  star: Record<string, string>;
+  /** The twelve seats under the word for each, for the band. */
+  house: Record<string, string>;
+  bureau: string;
+  lifeMaster: string;
+  bodyMaster: string;
+}
+
+export function ziweiLabels(t: Translator): ZiweiLabels {
+  return {
+    star: Object.fromEntries(
+      ZIWEI_STARS.map((one) => [one.id, t(`label.ziwei.${one.id}` as MessageKey)]),
+    ),
+    house: Object.fromEntries(
+      ZIWEI_HOUSES.map((one) => [one.id, t(`label.ziweihouse.${one.id}` as MessageKey)]),
+    ),
+    bureau: t('cli.field.bureau'),
+    lifeMaster: t('cli.field.lifeMaster'),
+    bodyMaster: t('cli.field.bodyMaster'),
+  };
+}
+
 export interface QizhengLabels {
   /** The eleven — the seven governors and the four remainders. */
   body: Record<string, string>;

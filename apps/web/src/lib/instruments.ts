@@ -34,7 +34,7 @@ import type { MessageKey } from '@qimendunjia/i18n';
  * fourteen conditionals it replaced, a board that is neither of the two kinds
  * would have been fourteen edits and a page nobody could read afterwards.
  */
-export type InstrumentId = 'qimen' | 'liuren' | 'qizheng' | 'bazi' | 'taiyi';
+export type InstrumentId = 'qimen' | 'liuren' | 'qizheng' | 'bazi' | 'taiyi' | 'ziwei';
 
 export interface Instrument {
   readonly id: InstrumentId;
@@ -179,6 +179,21 @@ export const INSTRUMENTS: readonly Instrument[] = [
     takesGender: true,
     strengths: false,
     option: 'form.instrument.bazi',
+  },
+  // The sixth board, and it cost the table nothing: 紫微斗數 is 命 laid on a
+  // birth, so it is a row with the values 八字 already had. That the widening
+  // was a row and not a value is what says the third kind was the hard one.
+  {
+    id: 'ziwei',
+    api: 'ziwei',
+    needs: 'birth',
+    takesBirth: false,
+    takesGender: true,
+    strengths: false,
+    // Taller than it is wide, and that is the band of readings: a board of
+    // this art names forty things and every one of them has to be sayable.
+    plate: { width: 900, height: 1150 },
+    option: 'form.instrument.ziwei',
   },
   // Last, and not by seniority: it is the one instrument here whose errand is
   // nobody's, so a reader scanning the five for the shape of their own finds

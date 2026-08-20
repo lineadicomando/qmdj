@@ -1,4 +1,4 @@
-import { escape, round } from './fit.js';
+import { escape, fitted, round } from './fit.js';
 /**
  * The band where the board says its names aloud.
  *
@@ -20,10 +20,61 @@ import { escape, round } from './fit.js';
  * that drifted between them would teach a reader two habits for one lookup.
  */
 
-/** A name and the sound of it: `休門 xiūmén`. */
+/** A name, the sound of it, and — where a caller has one — the word for it. */
 export interface Said {
   hanzi: string;
   pinyin: string;
+  /**
+   * The entry's place in the band, from one.
+   *
+   * Set by the caller when the drawing means to key its cells to this list:
+   * the same numeral goes beside the name in the grid, so a reader meeting a
+   * glyph can find what it means without knowing how it is said.
+   */
+  index?: number | undefined;
+  /**
+   * What the name means, in the reader's language.
+   *
+   * Optional, and supplied by one board rather than by all: a drawing whose
+   * cells have room for the word beside the glyph does not need it repeated
+   * here, and a drawing whose cells do not is the one that does. 紫微斗數
+   * sets forty names in twelve squares and can afford the word on one to a
+   * square, so its band is where the other thirty-nine are said. The rest pass
+   * nothing and their bands are unchanged.
+   */
+  word?: string | undefined;
+}
+
+/**
+ * A ringed numeral, drawn rather than typed.
+ *
+ * The circled digits Unicode carries stop at fifty and come out full-width in
+ * a CJK font, which is twice the room this has. Drawn, it is the same mark at
+ * any count and it sits on the line it belongs to.
+ *
+ * Faint and smaller than the name it keys: it is an index, not a reading, and
+ * a reader who is not looking one up has to be able to look past it.
+ */
+export function ringed(index: number, x: number, y: number, size: number): string {
+  const r = size * 0.56;
+  const cx = x + r;
+  const cy = y - size * 0.28;
+  return (
+    `<circle cx="${round(cx)}" cy="${round(cy)}" r="${round(r)}" class="ring"/>` +
+    `<text x="${round(cx)}" y="${round(cy + size * 0.28)}" font-size="${round(size * 0.76)}" ` +
+    `text-anchor="middle" class="faint">${index}</text>`
+  );
+}
+
+/**
+ * How much room a ringed numeral takes on a line, in the units it is drawn in.
+ *
+ * A shade over the ring's own diameter, which is what keeps it off the glyph
+ * beside it. Tightening it below that does not buy a narrower entry, it buys
+ * a numeral sitting on a name.
+ */
+export function ringRoom(size: number): number {
+  return size * 1.32;
 }
 
 /**
@@ -51,11 +102,15 @@ const WITHIN = ' · ';
  * own, and their readings are optional in it, so a caller on an older engine
  * draws a shorter band rather than a band of blanks.
  */
-export function said(names: Iterable<{ hanzi: string; pinyin?: string | undefined } | undefined>): Said[] {
+export function said(
+  names: Iterable<{ hanzi: string; pinyin?: string | undefined; id?: string } | undefined>,
+  words: Record<string, string> = {},
+): Said[] {
   const gathered = new Map<string, Said>();
   for (const name of names) {
     if (!name?.pinyin || !name.hanzi || gathered.has(name.hanzi)) continue;
-    gathered.set(name.hanzi, { hanzi: name.hanzi, pinyin: name.pinyin });
+    const word = name.id ? words[name.id] : undefined;
+    gathered.set(name.hanzi, { hanzi: name.hanzi, pinyin: name.pinyin, ...(word ? { word } : {}) });
   }
   return [...gathered.values()];
 }
@@ -127,6 +182,161 @@ export interface Placed {
  * supply, which keeps this package holding no catalog. No lines is no band
  * rather than a heading over nothing.
  */
+/**
+ * How small an entry may be set to keep it on one line.
+ *
+ * Above this it is shrunk, which nobody sees; below it the entry breaks after
+ * its reading and the word goes on a line of its own at full size. Measured
+ * over both catalogs, that is six or seven entries of fifty-seven — and the
+ * longest half of any of them still fits a column, so a broken entry never
+ * needs shrinking as well.
+ */
+const KEEP = 0.92;
+
+/**
+ * The breath between one group and the next, in lines.
+ *
+ * The groups start level, so the shallowest columns show the join and the
+ * deepest one does not — and in that column the twelve seats ran straight on
+ * from the stars as though they were more of them. Half a line is enough to
+ * part them without reading as a heading nobody wrote.
+ */
+const GROUP_GAP = 0.6;
+
+/**
+ * How many lines the columned band will take.
+ *
+ * Asked before the sheet is sized, because the answer is not the number of
+ * names: some break onto a second line and the columns are filled to an even
+ * number of lines. The caller has to know the depth to give the band room, and
+ * guessing it short runs the band off the paper.
+ */
+export function readingDepth(
+  groups: readonly (readonly Said[])[],
+  at: { size: number; maxWidth: number; columns: number },
+): number {
+  const gutter = at.size * 1.2;
+  const room = (at.maxWidth + gutter) / at.columns - gutter;
+
+  let deep = 0;
+  for (const group of groups) {
+    if (group.length === 0) continue;
+    const lines = group.map((one) => {
+      if (!one.word) return 1;
+      const whole = `${one.hanzi}${BREATH}${one.pinyin}${BREATH}${one.word}`;
+      const usable = room - (one.index ? ringRoom(at.size) : 0);
+      return usable / (measure(whole) * at.size) < KEEP ? 2 : 1;
+    });
+    if (deep > 0) deep += GROUP_GAP;
+    deep += Math.ceil(lines.reduce((n, count) => n + count, 0) / at.columns);
+  }
+  return deep;
+}
+
+/**
+ * The band, drawn in columns.
+ *
+ * **Each column runs on its own, and that is what lets an entry take two
+ * lines.** A row shared across three columns has to advance them together, so
+ * one entry breaking would have pushed its neighbours out of line or over each
+ * other; given its own cursor, a column simply grows a line longer than its
+ * neighbours, which is what a column of a printed list does.
+ *
+ * The columns are filled to an even number of *lines* rather than of entries,
+ * so a column holding two broken entries takes two fewer names than the one
+ * beside it and both end level. A group never shares its columns with another:
+ * the seats begin under the tallest column of the stars.
+ */
+export function drawReadingColumns(
+  groups: readonly (readonly Said[])[],
+  heading: string,
+  at: Placed & { columns: number },
+): string[] {
+  const filled = groups.filter((group) => group.length > 0);
+  if (filled.length === 0) return [];
+
+  const gutter = at.size * 1.2;
+  const column = (at.maxWidth + gutter) / at.columns;
+  const room = column - gutter;
+
+  const parts = [line(at.x, at.heading, [{ text: heading, className: 'word' }], at)];
+  let top = at.first;
+
+  for (const group of filled) {
+    // What each entry costs: one line, or two where keeping it on one would
+    // set it below what a reader can take in.
+    const measured = group.map((one) => {
+      const head = `${one.hanzi}${BREATH}${one.pinyin}`;
+      const whole = one.word ? `${head}${BREATH}${one.word}` : head;
+      const scale = (room - (one.index ? ringRoom(at.size) : 0)) / (measure(whole) * at.size);
+      const broken = Boolean(one.word) && scale < KEEP;
+      return { one, head, whole, broken, lines: broken ? 2 : 1 };
+    });
+
+    // Filled to an even share of the lines, never past it unless the column
+    // is still empty — one entry has to go somewhere.
+    const total = measured.reduce((n, entry) => n + entry.lines, 0);
+    const share = Math.ceil(total / at.columns);
+    const columns: (typeof measured)[] = [[]];
+    let used = 0;
+    for (const entry of measured) {
+      const here = columns[columns.length - 1] as typeof measured;
+      if (here.length > 0 && used + entry.lines > share && columns.length < at.columns) {
+        columns.push([entry]);
+        used = entry.lines;
+      } else {
+        here.push(entry);
+        used += entry.lines;
+      }
+    }
+
+    let deepest = 0;
+    columns.forEach((entries, place) => {
+      const x = at.x + column * place;
+      let y = top;
+      for (const entry of entries) {
+        const key = entry.one.index;
+        const indent = key ? ringRoom(at.size) : 0;
+        if (key) parts.push(ringed(key, x, y, at.size));
+        if (entry.broken) {
+          parts.push(
+            line(x + indent, y, [
+              { text: entry.one.hanzi },
+              { text: `${BREATH}${entry.one.pinyin}`, className: 'word' },
+            ], { ...at, maxWidth: room }),
+          );
+          y += at.step;
+          // Indented under the name it belongs to, so the eye keeps them
+          // together where a flush second line would read as a new entry.
+          parts.push(
+            line(
+              x + indent + at.size * 0.9,
+              y,
+              [{ text: entry.one.word as string, className: 'faint' }],
+              { ...at, maxWidth: room - indent },
+            ),
+          );
+          y += at.step;
+        } else {
+          const runs: Run[] = [
+            { text: entry.one.hanzi },
+            { text: `${BREATH}${entry.one.pinyin}`, className: 'word' },
+          ];
+          if (entry.one.word) runs.push({ text: `${BREATH}${entry.one.word}`, className: 'faint' });
+          const size = fitted(entry.whole, at.size, room - indent);
+          parts.push(line(x + indent, y, runs, { ...at, size, maxWidth: room - indent }));
+          y += at.step;
+        }
+      }
+      deepest = Math.max(deepest, y);
+    });
+
+    top = deepest + at.step * GROUP_GAP;
+  }
+
+  return parts.filter(Boolean);
+}
+
 export function drawReadings(lines: readonly (readonly Said[])[], heading: string, at: Placed): string[] {
   if (lines.length === 0) return [];
 
@@ -141,6 +351,11 @@ export function drawReadings(lines: readonly (readonly Said[])[], heading: strin
       // what a reader without Chinese takes away, and it is held there rather
       // than whispered at the faintness of a gloss on something already legible.
       runs.push({ text: one.hanzi }, { text: `${BREATH}${one.pinyin}`, className: 'word' });
+      // The word after the reading and fainter than it, because the order is
+      // the order of use: a reader meets the glyph on the board, needs the
+      // sound to ask about it, and the meaning last. Fainter, because unlike
+      // the reading it is a gloss on something the line has already said.
+      if (one.word) runs.push({ text: `${BREATH}${one.word}`, className: 'faint' });
     }
     parts.push(line(at.x, at.first + at.step * index, runs, at));
   });
@@ -180,7 +395,10 @@ function line(x: number, y: number, runs: readonly Run[], at: Placed): string {
  * tone mark rides over one without widening it.
  */
 function measure(content: string | Said): number {
-  const text = typeof content === 'string' ? content : `${content.hanzi}${BREATH}${content.pinyin}`;
+  const text =
+    typeof content === 'string'
+      ? content
+      : `${content.hanzi}${BREATH}${content.pinyin}${content.word ? `${BREATH}${content.word}` : ''}`;
   let ems = 0;
   for (const character of text) ems += /[⺀-鿿＀-｠]/.test(character) ? 1 : 0.54;
   return ems;

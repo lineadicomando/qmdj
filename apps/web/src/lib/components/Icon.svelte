@@ -11,9 +11,18 @@
 
   So every one of these travels with its word, and this is `aria-hidden`: to a
   screen reader the button is its label and this is nothing at all.
+
+  **One stands alone, and the exception is stated rather than taken.** `up` is
+  the return from a table to the picture above it, and it sits in a button
+  with no text — the way the colour-scheme toggle in the header does. What
+  makes that admissible is not the shape being obvious; it is that the control
+  is chrome rather than content. Nothing is being *decided* from it, the row
+  it sits in already names the seat in the reader's language, and the button
+  carries that name as its accessible label. A mark replacing a word a reader
+  has to weigh would still be the thing `CLAUDE.md` refuses.
 -->
 <script lang="ts">
-  let { name }: { name: 'copy' | 'copied' | 'print' | 'menu' } = $props();
+  let { name }: { name: 'copy' | 'copied' | 'print' | 'menu' | 'up' } = $props();
 </script>
 
 <svg
@@ -33,6 +42,10 @@
     <path d="M10.5 5.5V3A1.5 1.5 0 0 0 9 1.5H4A1.5 1.5 0 0 0 2.5 3v6A1.5 1.5 0 0 0 4 10.5h1.5" />
   {:else if name === 'copied'}
     <path d="M2.5 8.5 6 12l7.5-8" />
+  {:else if name === 'up'}
+    <!-- Up, because the board is above the table and that is the whole of
+         what this does. -->
+    <path d="M8 13.5V3.5M3.5 8 8 3.5 12.5 8" />
   {:else if name === 'print'}
     <path d="M4.5 6.5v-5h7v5" />
     <rect x="1.5" y="6.5" width="13" height="5.5" rx="1.3" />

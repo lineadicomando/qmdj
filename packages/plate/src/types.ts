@@ -417,6 +417,90 @@ export interface PlateQizhengOptions {
  * shape a promise the drawing did not keep — and required them of any board
  * handed to it for fields no line of the drawing consults.
  */
+/**
+ * A 紫微斗數 board, as the drawing needs it.
+ *
+ * Looser than the engine's in the two places `PlateQizheng` is looser than
+ * its own, and for the same reason: a field the picture never reads is a
+ * field the picture must not require. `changsheng`, `boshi` and `majorLimit`
+ * are absent whenever no sex was given, and the drawing prints what it is
+ * handed.
+ */
+export interface PlateZiwei {
+  /** The twelve, 命宮 first, in the order 卷二 numbers them. */
+  palaces: readonly PlateZiweiPalace[];
+  bureau: Named;
+  /** The branch the 身宮 fell on, for the centre. */
+  bodyBranch: Named;
+  lifeMaster: Named;
+  bodyMaster: Named;
+  /** The stem-branch of the 命宮, whose 納音 cut the bureau. */
+  minggongPillar: Named;
+  nayin: Named;
+  yearPillar: Named;
+  hourBranch: Named;
+  lunar: { year: number; month: number; leap: boolean; day: number };
+}
+
+export interface PlateZiweiPalace {
+  house: Named;
+  /**
+   * The ground the seat stands on. The drawing places the cell by this, and
+   * tints it by the phase — 卷二 calls a palace its phase's 鄉, its country,
+   * and tells the reader to weigh a star against the country it fell in.
+   */
+  branch: Named & { element: string };
+  stem: Named;
+  stars: readonly PlateZiweiSeat[];
+  /** True where the 身宮 fell. */
+  body: boolean;
+  changsheng?: Named | null | undefined;
+  boshi?: Named | null | undefined;
+  majorLimit?: { from: number; to: number } | null | undefined;
+}
+
+export interface PlateZiweiSeat {
+  /**
+   * The star, with the phase or phases the book gives it.
+   *
+   * An array because three of them have two — 天同屬水金, 貪狼屬水木,
+   * 七殺屬火金 — and thirteen have none stated. The drawing inks a name in
+   * its phase only where there is exactly one to ink it in.
+   */
+  star: Named & { starClass: string; elements: readonly string[]; zhengyao: boolean };
+  /** The grade the book gives this star on this branch, where it gives one. */
+  brightness?: Named | null | undefined;
+  transform?: Named | null | undefined;
+}
+
+export interface PlateZiweiLabels {
+  /**
+   * Every star under the word for it. The drawing glosses the eighteen 正曜
+   * and leaves the rest to the band, so it reads only some of these — but it
+   * is handed all of them, because which it can afford is its own arithmetic
+   * and not the caller's.
+   */
+  star?: Record<string, string>;
+  /**
+   * The twelve seats under the word for each. Read only by the band: the
+   * corner of a cell has room for the glyph and no more, and a seat is the one
+   * name on this board a reader meets twelve times.
+   */
+  house?: Record<string, string>;
+  bureau?: string;
+  lifeMaster?: string;
+  bodyMaster?: string;
+}
+
+export interface PlateZiweiOptions {
+  size?: number;
+  scheme?: 'light' | 'dark' | 'auto';
+  labels?: PlateZiweiLabels;
+  heading?: string;
+  /** The heading over the band where the names are said aloud. */
+  readings?: string;
+}
+
 export interface PlateTaiyi {
   year: number;
   sui: { hanzi: string };

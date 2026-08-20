@@ -21,6 +21,7 @@ import {
   type QizhengBoard,
 } from './qizheng.js';
 import type { ScanMatch } from './scan.js';
+import type { ZiweiBoard, ZiweiPalace } from './ziwei/index.js';
 import {
   taiyiPalace,
   type TaiyiBoard,
@@ -594,6 +595,92 @@ export function formatLiuren(board: LiurenBoard, t: Translator): string {
  * are both derived from is not printed — it is the engine's working, not the
  * board's reading, and a third number would only invite arithmetic.
  */
+/**
+ * A 紫微斗數 board, printed.
+ *
+ * The twelve seats go down the page rather than round a square, because a
+ * transcript is read in a line and a reader following one is following the
+ * order of the palaces, not a compass. One line closes it, and it is the one
+ * a reader cannot supply for themselves: which book the placements came out
+ * of, and where its tables part from the modern ones.
+ */
+export function formatZiwei(board: ZiweiBoard, t: Translator): string {
+  const lines = [t('cli.heading.ziwei')];
+
+  const leap = board.lunar.leap ? `${t('cli.value.leapMonth')} ` : '';
+  lines.push(
+    '',
+    ...table(
+      [
+        [
+          t('cli.field.lunarDate'),
+          `${board.lunar.year} · ${leap}${board.lunar.month}/${board.lunar.day}` +
+            ` · ${glyph(board.hourBranch)}` +
+            ` · ${glyph(board.yearPillar)}`,
+        ],
+        [
+          t('cli.field.bureau'),
+          `${named(board.bureau, `label.bureau.${board.bureau.id}` as MessageKey, t)}` +
+            ` · ${glyph(board.minggongPillar)} ${glyph(board.nayin)}`,
+        ],
+        [t('cli.field.minggongPalace'), glyph(board.palaces[0]!.branch)],
+        [t('cli.field.shengong'), glyph(board.bodyBranch)],
+        [
+          t('cli.field.lifeMaster'),
+          named(board.lifeMaster, `label.ziwei.${board.lifeMaster.id}` as MessageKey, t),
+        ],
+        [
+          t('cli.field.bodyMaster'),
+          named(board.bodyMaster, `label.ziwei.${board.bodyMaster.id}` as MessageKey, t),
+        ],
+      ],
+      4,
+    ),
+  );
+
+  lines.push(
+    '',
+    `  ${t('cli.field.ziweiPalaces')}`,
+    ...table(board.palaces.map((palace) => ziweiPalaceRow(palace, t)), 2).map(
+      (line) => `  ${line}`,
+    ),
+  );
+
+  lines.push('', `  ${t('cli.value.ziweiSource')}`);
+
+  return lines.join('\n');
+}
+
+/**
+ * One seat: which of the twelve it is, the ground it stands on, and what was
+ * counted into it.
+ *
+ * A star prints its grade and its transformation beside it where it has one,
+ * because both are attributes of that star in that seat and a reader looking
+ * them up separately would be reading a different board.
+ */
+function ziweiPalaceRow(palace: ZiweiPalace, t: Translator): string[] {
+  const stars = palace.stars
+    .map((seat) => {
+      const grade = seat.brightness ? ` ${seat.brightness.hanzi}` : '';
+      const change = seat.transform ? ` ${seat.transform.hanzi}` : '';
+      return `${seat.star.hanzi}${grade}${change}`;
+    })
+    .join(' ');
+  const marks: string[] = [];
+  if (palace.body) marks.push('身');
+  if (palace.changsheng) marks.push(palace.changsheng.hanzi);
+  if (palace.boshi) marks.push(palace.boshi.hanzi);
+  const limit = palace.majorLimit ? `${palace.majorLimit.from}–${palace.majorLimit.to}` : '';
+  return [
+    named(palace.house, `label.ziweihouse.${palace.house.id}` as MessageKey, t),
+    `${palace.stem.hanzi}${palace.branch.hanzi} ${palace.stem.pinyin}${palace.branch.pinyin}`,
+    stars,
+    marks.join(' '),
+    limit,
+  ];
+}
+
 export function formatQizheng(board: QizhengBoard, t: Translator): string {
   const lines = [t('cli.heading.qizheng')];
 

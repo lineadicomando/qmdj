@@ -14,6 +14,7 @@ import {
   registerComputeLiuren,
   registerComputeQimenChart,
   registerComputeQizheng,
+  registerComputeZiwei,
   registerComputeTaiyi,
   registerDrawLiuren,
   registerDrawQimenChart,
@@ -69,6 +70,7 @@ export function createServer(context: ToolContext = {}): McpServer {
   registerComputeBazi(server, context);
   registerComputeLiuren(server, context);
   registerComputeQizheng(server, context);
+  registerComputeZiwei(server, context);
   registerComputeTaiyi(server);
   registerDrawQimenChart(server, context);
   registerDrawLiuren(server, context);

@@ -35,6 +35,12 @@ export { renderChartSvg, STRENGTH_MARKS } from './svg.js';
 export { renderLiurenSvg, DEFAULT_LIUREN_SIZE } from './liuren-svg.js';
 export { renderQizhengSvg, DEFAULT_QIZHENG_SIZE } from './qizheng-svg.js';
 export { renderTaiyiSvg, DEFAULT_TAIYI_SIZE } from './taiyi-svg.js';
+export {
+  renderZiweiSvg,
+  ziweiSeatBoxes,
+  DEFAULT_ZIWEI_SIZE,
+  type ZiweiSeatBox,
+} from './ziwei-svg.js';
 export type {
   Named,
   PlateCaptions,
@@ -53,6 +59,11 @@ export type {
   PlateTaiyiPalace,
   PlateTaiyiSide,
   PlateTransmission,
+  PlateZiwei,
+  PlateZiweiLabels,
+  PlateZiweiOptions,
+  PlateZiweiPalace,
+  PlateZiweiSeat,
   PlateChart,
   PlateDirections,
   PlateLabels,

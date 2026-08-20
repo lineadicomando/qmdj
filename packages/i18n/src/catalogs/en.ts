@@ -429,6 +429,114 @@ export const en = {
   'label.house.fude': 'fortune and virtue',
   'label.house.xiangmao': 'countenance',
 
+  // 紫微斗數 — the stars of a board that is not a sky. None of these is a
+  // body: 紫微 is not a star a telescope finds, and 天府 is not the 天輔 of a
+  // dunjia chart even though the two are tiānfǔ alike. Each is a seat in a
+  // count, and the gloss translates the name and nothing more — what a seat
+  // says about a life is the reader's, as everywhere here. Only the stars
+  // 卷二 states a rule for are named, which is why the modern furniture —
+  // 恩光, 天貴, 咸池, 孤辰, 寡宿, 華蓋 — is missing rather than blank.
+  'label.ziwei.ziwei': 'the purple tenuity',
+  'label.ziwei.tianji': 'the celestial pivot',
+  'label.ziwei.taiyang': 'the great yang',
+  'label.ziwei.wuqu': 'the martial bend',
+  'label.ziwei.tiantong': 'the celestial concord',
+  'label.ziwei.lianzhen': 'the upright and chaste',
+  'label.ziwei.tianfu': 'the celestial treasury',
+  'label.ziwei.taiyin': 'the great yin',
+  'label.ziwei.tanlang': 'the greedy wolf',
+  'label.ziwei.jumen': 'the great gate',
+  'label.ziwei.tianxiang': 'the celestial minister',
+  'label.ziwei.tianliang': 'the celestial beam',
+  'label.ziwei.qisha': 'the seven killings',
+  'label.ziwei.pojun': 'the breaker of armies',
+  'label.ziwei.wenchang': 'the flourishing of letters',
+  'label.ziwei.wenqu': 'the bend of letters',
+  'label.ziwei.zuofu': 'the left support',
+  'label.ziwei.youbi': 'the right support',
+  'label.ziwei.tiankui': 'the celestial chief',
+  'label.ziwei.tianyue': 'the celestial axe',
+  'label.ziwei.lucun': 'the emolument in store',
+  'label.ziwei.tianma': 'the celestial horse',
+  'label.ziwei.qingyang': 'the raised blade',
+  'label.ziwei.tuoluo': 'the spinning top',
+  'label.ziwei.huoxing': 'the star of fire',
+  'label.ziwei.lingxing': 'the star of the bell',
+  'label.ziwei.dijie': 'the earthly ruin',
+  'label.ziwei.tiankong': 'the celestial void',
+  'label.ziwei.tianshang': 'the celestial wound',
+  'label.ziwei.tianshi': 'the celestial envoy',
+  'label.ziwei.tianxing': 'the celestial punishment',
+  'label.ziwei.tianyao': 'the celestial allure',
+  'label.ziwei.santai': 'the three terraces',
+  'label.ziwei.bazuo': 'the eight seats',
+  'label.ziwei.tianku': 'the celestial weeping',
+  'label.ziwei.tianxu': 'the celestial emptiness',
+  'label.ziwei.longchi': 'the dragon pool',
+  'label.ziwei.fengge': 'the phoenix tower',
+  'label.ziwei.hongluan': 'the crimson bird',
+  'label.ziwei.tianxi': 'the celestial joy',
+  'label.ziwei.taifu': 'the support of the terrace',
+  'label.ziwei.fenggao': 'the patent of investiture',
+  'label.ziwei.jieshen': 'the spirit that loosens',
+  'label.ziwei.jielukongwang': 'the void of the severed road',
+  'label.ziwei.xunzhongkongwang': 'the void within the decade',
+
+  // The twelve seats, under the names 卷二 gives them — 妻妾 and not
+  // 夫妻, 奴僕 and not 交友, 官祿 and not 事業. They are not the twelve
+  // 人事宮 of 七政四餘 above: a different list, in a different order, laid
+  // the other way round.
+  'label.ziweihouse.ming': 'the life',
+  'label.ziweihouse.xiongdi': 'siblings',
+  'label.ziweihouse.qiqie': 'wife and concubine',
+  'label.ziweihouse.zinu': 'children',
+  'label.ziweihouse.caibo': 'wealth',
+  'label.ziweihouse.jie': 'illness and hardship',
+  'label.ziweihouse.qianyi': 'removal',
+  'label.ziweihouse.nupu': 'servants',
+  'label.ziweihouse.guanlu': 'office and salary',
+  'label.ziweihouse.tianzhai': 'land and house',
+  'label.ziweihouse.fude': 'fortune and virtue',
+  'label.ziweihouse.fumu': 'parents',
+
+  // 五行局 — cut from the 納音 of the 命宮, and the number in the name is
+  // the step the table of 紫微 counts by.
+  'label.bureau.shuierju': 'the water bureau, which counts by two',
+  'label.bureau.musanju': 'the wood bureau, which counts by three',
+  'label.bureau.jinsiju': 'the metal bureau, which counts by four',
+  'label.bureau.tuwuju': 'the earth bureau, which counts by five',
+  'label.bureau.huoliuju': 'the fire bureau, which counts by six',
+
+  // The seven grades of the table that closes 卷二. A grade says where a
+  // star stands in a branch, not how a life goes, and nothing adds them up.
+  'label.brightness.miao': 'in its temple',
+  'label.brightness.wang': 'flourishing',
+  'label.brightness.dedi': 'holding ground',
+  'label.brightness.liyi': 'advantaged',
+  'label.brightness.pinghe': 'level',
+  'label.brightness.budedi': 'without ground',
+  'label.brightness.luoxian': 'fallen',
+
+  // 四化 — what the stem of the birth year works on four of the stars.
+  'label.transform.hualu': 'turned to emolument',
+  'label.transform.huaquan': 'turned to authority',
+  'label.transform.huake': 'turned to examination',
+  'label.transform.huaji': 'turned to obstruction',
+
+  // 博士十二神, the ring that walks from 祿存.
+  'label.boshi.boshi': 'the erudite',
+  'label.boshi.lishi': 'the strongman',
+  'label.boshi.qinglong': 'the azure dragon',
+  'label.boshi.xiaohao': 'the small waste',
+  'label.boshi.jiangjun': 'the general',
+  'label.boshi.zoushu': 'the memorial',
+  'label.boshi.feilian': 'the runner of the wind',
+  'label.boshi.xishen': 'the spirit of joy',
+  'label.boshi.bingfu': 'the tally of illness',
+  'label.boshi.dahao': 'the great waste',
+  'label.boshi.fubing': 'the ambush',
+  'label.boshi.guanfu': 'the magistrate',
+
   // 十六神 — the ring a 太乙 board is read on: twelve branches and the four
   // corner trigrams, each under a name of its own. 卷二 of 《太乙金鏡式經》
   // gives the reason for every one of them, and the glosses follow those
@@ -673,6 +781,7 @@ export const en = {
   'nav.bazi': 'Ba Zi',
   'nav.liuren': 'Liu Ren',
   'nav.qizheng': 'Qi Zheng Si Yu',
+  'nav.ziwei': 'Zi Wei Dou Shu',
   'nav.taiyi': 'Tai Yi',
   'nav.moments': 'Choosing a time',
   // Named by the act, which is the one this section is built around: a
@@ -1176,6 +1285,33 @@ export const en = {
   // on the reader, and the professions the disclaimer names stay out.
   'prompt.ming.limits':
     'A name the tradition gives a phase — 死 sǐ, 囚 qiú, 絕 jué — is its word for a stage in a cycle, in the way winter is a word for a stage in a year, and not a sentence passed on a life. Where a source\'s own verdict is printed, report it as that source\'s and say whose it is. What may be offered is practicable and rests on what depends on the person reading; what may not be offered at all: predictions with dates on them, medical, psychiatric, legal or financial counsel, lucky days or numbers, and any pronouncement on games of chance. If asked whether any of this is true, answer honestly: it has no scientific standing — the computation is astronomically exact, and the reading is a symbolic language.',
+
+  'prompt.ziwei.heading': 'Reading a Zi Wei Dou Shu board',
+  // The rule this board needs and the other two 命 boards never did. It leads
+  // because everything below it is governed by it.
+  'prompt.ziwei.role':
+    'A Zi Wei Dou Shu board is set out below: twelve seats, each on a branch, with the stars counted into them, the bureau, and the two masters. **Nothing on this board is in the sky.** 紫微 is not a star a telescope finds; none of these names is a body, none has a position, none rises or sets. The whole board is arithmetic on a lunar date, an hour and a year — that is what the art is, not a limitation of this computation. So: no planets, no aspects, no transits, no ephemeris, no Western or Indian astrology of any kind, and no translating this into one to read it. Read the seats exactly as they stand and add nothing to them.',
+  // The seats arrive named. Naming is not assigning — the same bound the
+  // qizheng prompt carries, and it bites harder here because these names are
+  // blunter.
+  'prompt.ziwei.houses':
+    'The twelve seats carry the names 《紫微斗數全書》 gives them — 命宮, 兄弟, 妻妾, 子女, 財帛, 疾厄, 遷移, 奴僕, 官祿, 田宅, 福德, 父母. **A name is not an assignment.** That a seat is called 妻妾 does not make what stands there a statement about somebody\'s marriage, and the older names are blunter than a modern reader expects: read 妻妾 as the seat of the closest tie, 奴僕 as the seat of those one works with or through, 官祿 as the seat of standing and work. Which theme you read from which seat is your choice: say it as you make it.',
+  // The grades are the text's own weighing, and they are still not a score.
+  'prompt.ziwei.brightness':
+    'Where a star carries a grade — 廟, 旺, 得地, 利益, 平和, 不得地, 落陷 — the grade is the book\'s own, and it says how well that star sits on that branch. It is not a score: do not add grades up, do not average them, do not rank the seats by them, and do not turn 落陷 into a misfortune or 廟 into a promise. Twenty-one stars are graded and the rest are not; an ungraded star is one the book says nothing about, not a weak one.',
+  'prompt.ziwei.sihua':
+    'The 四化 — 化祿, 化權, 化科, 化忌 — are worked by the stem of the birth year on four of the stars already seated. This board uses the table 《全書》 prints, which parts from later ones at 戊, 庚 and 壬; if you know another table, this is not it, and the divergence is the book\'s rather than an error. 化忌 is not a curse and 化祿 is not a reward.',
+  // The one-board rule, sharpened for the board it overlaps most.
+  'prompt.ziwei.substrate':
+    'This board and a 八字 are built from the same birth, and the year stem that carries the 四化, 祿存, 天魁 and 天鉞 here is the same year stem that carries the gods there. If you have both, you have one fact twice and not two witnesses. You have one board here; read it.',
+  'prompt.ziwei.limits':
+    'Where the 大限 are shown, each seat holds a decade of years and the run opens in the seat beside the 命宮, which is this book\'s reading and not every school\'s. The 小限 shows the age at which it first reaches a seat, returning every twelfth year. These locate a stretch of life on the board. They do not date an event, and nothing here says what will happen in one.',
+  'prompt.ziwei.board': 'The board',
+  'prompt.ziwei.opening':
+    'Open by situating the birth in a sentence or two of your own words — when and where, what the bureau is and what seat the life falls on — so the reader knows what is being read before it is read.',
+  'prompt.ziwei.read':
+    'What to look at, and it is a list to draw on rather than to walk: which stars sit on the 命宮 and on the 身宮, and whether the two share a seat; where 紫微 and 天府 stand and how far apart; seats that are crowded and seats that are empty, an empty seat being read through the one opposite it; where the four transformations fell; where the graded stars stand well and poorly; where 祿存 sits with 擎羊 and 陀羅 about it. What any of this means toward a life is not shipped with the board: where you draw on a tradition, name it as that tradition\'s.',
+
   'prompt.qizheng.heading': 'Reading a Qi Zheng Si Yu board',
   'prompt.qizheng.role':
     'A Qi Zheng Si Yu board is set out below: the seven governors, the remainders, and the twelve palaces of the ecliptic with the lodges the bodies fell in. It was computed from an ephemeris, not by you: read it exactly as it stands, and add nothing to it. No body, no lodge, no degree, no palace that is not written there. **It is not a Western horoscope and its parts are not the parts of one** — do not import aspects, orbs, rulerships, or a house system, and do not translate it into one to read it. If something you need is missing, say it is missing. **Adding nothing is about the board and not about the reading**: invent no body and no position, and then say what the positions are.',
@@ -1366,6 +1502,7 @@ export const en = {
   'form.instrument.qimen': 'When to move, and which way — 奇門遁甲 qíméndùnjiǎ',
   'form.instrument.liuren': 'What is going on, and with whom — 大六壬 dàliùrén',
   'form.instrument.qizheng': 'The sky a life began under — 七政四餘 qīzhèngsìyú',
+  'form.instrument.ziwei': 'The seats a life is counted into — 紫微斗數 zǐwēidǒushù',
   'form.instrument.bazi': 'What a life is built from, at the hour of a birth — 八字 bāzì',
   // The fifth, and the one whose errand is nobody's. Said in the same register
   // as the other four — what it is for — and what it is for is a year rather
@@ -1385,6 +1522,16 @@ export const en = {
   'cli.column.motion': 'running',
   'cli.column.house': 'palace of',
   'cli.column.standing': 'standing there',
+  'cli.column.seat': 'seat',
+  // The accessible name of the twelve hit-areas laid over the drawing.
+  // They carry no text of their own — the seat is under them, on the
+  // picture — so this is the only name a screen reader has for them.
+  'board.seatLink': 'Show what stands in {seat}',
+  'board.seatBack': 'Find {seat} on the board above',
+  'cli.column.ground': 'ground',
+  'cli.column.starsThere': 'counted in',
+  'cli.column.rings': 'rings',
+  'cli.column.limit': 'decade',
   'cli.heading.liuren': 'The Liu Ren board',
   'cli.field.yuejiang': 'general of the month',
   'cli.field.plate': 'heaven over earth',
@@ -1406,6 +1553,19 @@ export const en = {
   'cli.field.remainders': 'the remainders',
   'cli.field.minggong': 'palace of the life',
   'cli.field.houses': 'the twelve palaces',
+
+  'cli.heading.ziwei': 'The Zi Wei Dou Shu board',
+  'cli.field.bureau': 'the bureau',
+  'cli.field.minggongPalace': 'palace of the life',
+  'cli.field.shengong': 'palace of the body',
+  'cli.field.lifeMaster': 'master of the life',
+  'cli.field.bodyMaster': 'master of the body',
+  'cli.field.ziweiPalaces': 'the twelve seats',
+  'cli.field.lunarDate': 'the lunar date',
+  'cli.field.majorLimit': 'decade',
+  // Said once, where a reader can weigh it. See PLAN.md § 4 phase 23.
+  'cli.value.ziweiSource':
+    'placed by 《紫微斗數全書》 卷二 throughout — the fourteen-star transmission, and not the eighteen-star 十八飛星 line that 《全集》 and 《捷覽》 carry; where its tables part from the modern ones — 火星 and 鈴星 off the hour, 魁鉞 at 丙丁辛, 解神 off the year, 壬 giving 科 to 天府 — this book is followed and the divergence is recorded',
   'form.luohou': 'Which node is 羅睺',
   'form.luohou.descending': 'the descending node — the astrologers\u2019 law',
   'form.luohou.ascending': 'the ascending node — 湯若望 and the 時憲曆',

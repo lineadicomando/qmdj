@@ -73,6 +73,7 @@
   import MomentForm from '$lib/components/MomentForm.svelte';
   import PillarPlate from '$lib/components/PillarPlate.svelte';
   import QizhengReading from '$lib/components/QizhengReading.svelte';
+  import ZiweiReading from '$lib/components/ZiweiReading.svelte';
   import StrengthLegend from '$lib/components/StrengthLegend.svelte';
   import TaiyiReading from '$lib/components/TaiyiReading.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
@@ -1019,7 +1020,7 @@
         carries its own, one only the board. A registry entry naming a
         component would have to name the props with it, and a table of prop
         shapes is a conditional written sideways. It is keyed on the identifier
-        rather than on a boolean, so a fifth board adds an arm and nothing else.
+        rather than on a boolean, so a sixth board adds an arm and nothing else.
       -->
       <div>
         {#if shown.id === 'liuren'}
@@ -1030,6 +1031,8 @@
           <BaziReading bazi={chart} {t} />
         {:else if shown.id === 'taiyi'}
           <TaiyiReading board={chart} {t} />
+        {:else if shown.id === 'ziwei'}
+          <ZiweiReading board={chart} {t} moment={castMoment} />
         {:else}
           <ChartReading {chart} {t} wide />
         {/if}

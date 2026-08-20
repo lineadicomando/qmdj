@@ -43,6 +43,7 @@ import {
   formatLiuren,
   formatQizheng,
   formatNianming,
+  formatZiwei,
   formatScan,
   formatSolarTerms,
   formatTaiyi,
@@ -60,6 +61,7 @@ import {
   type QizhengOptions,
 } from './qizheng.js';
 import { nianmingOf, yearsLived, type Nianming, type NianmingOptions } from './nianming.js';
+import { DEFAULT_ZIWEI_OPTIONS, computeZiwei } from './ziwei/index.js';
 import { resolveMoment, type Moment } from './pillars.js';
 import {
   baziReadingPrompt,
@@ -67,6 +69,7 @@ import {
   liurenReadingPrompt,
   qizhengReadingPrompt,
   readingPrompt,
+  ziweiReadingPrompt,
   taiyiReadingPrompt,
 } from './prompt.js';
 import { PURPOSES, purposeCriteria, type PurposeId } from './purposes.js';
@@ -115,6 +118,7 @@ const COMMANDS = [
   'qizheng',
   'taiyi',
   'bazi',
+  'ziwei',
   'terms',
   'calendar',
   'scan',
@@ -176,6 +180,7 @@ Usage
   qimen qizheng   [options]     the 七政四餘 board for a moment
   qimen taiyi     [--year N]    the 太乙 board of a year — 年計
   qimen bazi      [options]     the four pillars, read out
+  qimen ziwei     [options]     the 紫微斗數 board for a birth
   qimen terms     [options]     the twenty-four solar terms of a year
   qimen calendar  [options]     the lunar date of a moment
   qimen scan      [options]     every chart between two moments
@@ -189,9 +194,10 @@ Options
                          --date. Under \`taiyi\` that year is the whole input:
                          the board is a function of a year and takes no place
                          and no hour
-  --gender male|female   for \`bazi\`, where the luck cycles need it, and for
-                         the 行年 of \`chart --born\`. In both it is read for
-                         the traditional rule and for nothing else
+  --gender male|female   for \`bazi\`, where the luck cycles need it, for
+                         \`ziwei\`, where the limits and the two rings do, and
+                         for the 行年 of \`chart --born\`. In all three it is
+                         read for the traditional rule and for nothing else
 
 Narrowing a scan
   --until YYYY-MM-DD     the end of the interval; --date opens it
@@ -496,6 +502,28 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
     return parts.join('\n');
   }
 
+  if (command === 'ziwei') {
+    const gender = options.gender as Gender | undefined;
+    if (gender && gender !== 'male' && gender !== 'female') {
+      throw new UsageError('cli.error.unknownValue', { option: '--gender', value: gender });
+    }
+    const board = computeZiwei(moment, {
+      ...DEFAULT_ZIWEI_OPTIONS,
+      ...(gender ? { gender } : {}),
+    });
+    if (options.json) return JSON.stringify({ moment, ziwei: board }, null, 2);
+
+    if (options.prompt) return ziweiReadingPrompt(moment, board, t);
+
+    // The almanac's line is left out for the reason `bazi` leaves it out: this
+    // is the moment read as a person, and 曆注 weighs a day as the occasion of
+    // an undertaking.
+    const parts = [formatMoment(moment, t, { almanac: false }), '', formatZiwei(board, t)];
+    const warnings = warningsOf(moment, t);
+    if (warnings !== '') parts.push(warnings);
+    return parts.join('\n');
+  }
+
   if (command === 'qizheng') {
     // The one board here that asks the sky rather than a cycle, so the
     // ephemeris goes in where the other two take pillars.
@@ -641,6 +669,7 @@ const CARRIES: Record<Command, readonly ('ask' | 'about')[]> = {
   qizheng: [],
   taiyi: ['about'],
   bazi: [],
+  ziwei: [],
   terms: [],
   calendar: [],
   scan: [],
@@ -660,6 +689,7 @@ const CARRIES: Record<Command, readonly ('ask' | 'about')[]> = {
 const NOT_ASKED: Partial<Record<Command, 'cli.error.notAsked' | 'cli.error.notAskedYear'>> = {
   bazi: 'cli.error.notAsked',
   qizheng: 'cli.error.notAsked',
+  ziwei: 'cli.error.notAsked',
   taiyi: 'cli.error.notAskedYear',
 };
 

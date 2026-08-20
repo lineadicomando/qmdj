@@ -50,6 +50,7 @@ export const SECTIONS: readonly {
   { slug: 'qizheng', label: 'nav.qizheng', group: 'instrument' },
   { slug: 'taiyi', label: 'nav.taiyi', group: 'instrument' },
   { slug: 'bazi', label: 'nav.bazi', group: 'instrument' },
+  { slug: 'ziwei', label: 'nav.ziwei', group: 'instrument' },
 ];
 
 /**

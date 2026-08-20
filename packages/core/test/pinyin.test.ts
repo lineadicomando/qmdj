@@ -10,6 +10,14 @@ import { RELATION_IDS, relationOf } from '../src/dunjia/relation.js';
 import { strengthOf } from '../src/dunjia/strength.js';
 import { BRANCHES, STEMS, ganzhiOf } from '../src/ganzhi.js';
 import { CI, HOUSES, MOTIONS, QIZHENG_BODIES } from '../src/qizheng.js';
+import {
+  BOSHI_GODS,
+  BRIGHTNESSES,
+  BUREAUS,
+  TRANSFORMS,
+  ZIWEI_HOUSES,
+  ZIWEI_STARS,
+} from '../src/ziwei/index.js';
 import { SOLAR_TERMS } from '../src/solar-terms.js';
 import {
   TAIYI_GODS,
@@ -62,6 +70,12 @@ function everything(): { hanzi: string; pinyin: string }[] {
     ...TAIYI_PALACES,
     ...TAIYI_WUFU_PALACES,
     ...TAIYI_PATTERN_IDS.map(taiyiPatternName),
+    ...ZIWEI_STARS,
+    ...ZIWEI_HOUSES,
+    ...BUREAUS,
+    ...BRIGHTNESSES,
+    ...TRANSFORMS,
+    ...BOSHI_GODS,
   ];
 
   for (const yuan of ['shang', 'zhong', 'xia'] as Yuan[]) {

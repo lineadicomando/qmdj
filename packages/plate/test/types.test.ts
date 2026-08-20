@@ -8,11 +8,25 @@ import {
   DEFAULT_OPTIONS,
   DEFAULT_QIZHENG_OPTIONS,
   DEFAULT_TAIYI_OPTIONS,
+  DEFAULT_ZIWEI_OPTIONS,
+  computeZiwei,
   taiyiBoard,
 } from '@qimendunjia/core';
-import type { LiurenBoard, QimenChart, QizhengBoard, TaiyiBoard } from '@qimendunjia/core';
+import type {
+  LiurenBoard,
+  QimenChart,
+  QizhengBoard,
+  TaiyiBoard,
+  ZiweiBoard,
+} from '@qimendunjia/core';
 import { describe, expect, it } from 'vitest';
-import type { PlateChart, PlateLiuren, PlateQizheng, PlateTaiyi } from '../src/types.js';
+import type {
+  PlateChart,
+  PlateLiuren,
+  PlateQizheng,
+  PlateTaiyi,
+  PlateZiwei,
+} from '../src/types.js';
 
 /**
  * The guard on the one rule this package exists to keep.
@@ -229,5 +243,66 @@ describe('the redeclared 太乙 board', () => {
     // places nothing.
     expect(plate.taiyi.palace.direction).toMatch(/^(n|ne|e|se|s|sw|w|nw)$/);
     for (const pattern of plate.patterns) expect(pattern.valence.hanzi).toMatch(/^.$/);
+  });
+});
+
+const ziwei: ZiweiBoard = computeZiwei(chart.moment, {
+  ...DEFAULT_ZIWEI_OPTIONS,
+  gender: 'male',
+});
+
+describe('the redeclared 紫微斗數 board', () => {
+  it('accepts a real board without a cast', () => {
+    const asPlate: PlateZiwei = ziwei;
+
+    expect(asPlate.palaces).toHaveLength(12);
+    expect(asPlate.bureau.hanzi).toMatch(/局$/);
+  });
+
+  it('finds every field the drawing reads', () => {
+    const plate: PlateZiwei = ziwei;
+
+    // The centre.
+    expect(plate.minggongPillar.hanzi).toMatch(/^.{2}$/);
+    expect(plate.nayin.hanzi).toMatch(/\S/);
+    expect(plate.yearPillar.hanzi).toMatch(/^.{2}$/);
+    expect(plate.hourBranch.hanzi).toMatch(/^.$/);
+    expect(plate.bodyBranch.hanzi).toMatch(/^.$/);
+    expect(plate.lifeMaster.hanzi).toMatch(/\S/);
+    expect(plate.bodyMaster.hanzi).toMatch(/\S/);
+    expect(typeof plate.lunar.year).toBe('number');
+    expect(typeof plate.lunar.leap).toBe('boolean');
+
+    // Each cell is placed by the identifier of its branch, so that identifier
+    // has to be one the drawing's seating table knows.
+    const grounds = new Set(plate.palaces.map((palace) => palace.branch.id));
+    expect(grounds.size).toBe(12);
+
+    for (const palace of plate.palaces) {
+      expect(palace.house.hanzi).toMatch(/\S/);
+      expect(palace.house.pinyin).toMatch(/\S/);
+      expect(palace.stem.hanzi).toMatch(/^.$/);
+      expect(typeof palace.body).toBe('boolean');
+      for (const seat of palace.stars) {
+        expect(seat.star.hanzi).toMatch(/\S/);
+        expect(seat.star.pinyin).toMatch(/\S/);
+        expect(typeof seat.star.starClass).toBe('string');
+      }
+    }
+
+    // Exactly one seat carries the 身宮, and the scaffolding a sex buys is
+    // present on every cell when one was given.
+    expect(plate.palaces.filter((palace) => palace.body)).toHaveLength(1);
+    expect(plate.palaces.every((palace) => palace.majorLimit)).toBe(true);
+    expect(plate.palaces.every((palace) => palace.changsheng)).toBe(true);
+    expect(plate.palaces.every((palace) => palace.boshi)).toBe(true);
+  });
+
+  it('accepts a board laid without a sex, which is what the loose fields are for', () => {
+    const bare: PlateZiwei = computeZiwei(chart.moment, DEFAULT_ZIWEI_OPTIONS);
+
+    expect(bare.palaces.every((palace) => palace.majorLimit === null)).toBe(true);
+    expect(bare.palaces.every((palace) => palace.boshi === null)).toBe(true);
+    expect(bare.palaces.some((palace) => palace.stars.length > 0)).toBe(true);
   });
 });

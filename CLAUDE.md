@@ -11,10 +11,10 @@ anything.
 |---|---|
 | `packages/i18n` | message catalogs and locale negotiation. A leaf: depends on nothing |
 | `packages/geo` | location lookup over a local GeoNames dataset (SQLite) |
-| `packages/core` | calculation engine and the `qimen` CLI: solar terms, lunar calendar, sexagenary cycles, Four Pillars, Qi Men charts, Liu Ren boards, 太乙 boards, scanning an interval |
-| `packages/plate` | the drawings: the nine palaces of a chart, the ring of twelve a 六壬 board and a 七政四餘 board share, the 太乙 grid with its empty middle and sixteen border seats, glyphs, SVG and PNG |
-| `packages/mcp` | MCP server: eleven tools, four resources, stdio transport |
-| `apps/web` | SvelteKit: seven sections at `/en` and `/it`, plus twenty-two GET endpoints under `/api` |
+| `packages/core` | calculation engine and the `qimen` CLI: solar terms, lunar calendar, sexagenary cycles, Four Pillars, Qi Men charts, Liu Ren boards, 紫微斗數 boards, 太乙 boards, scanning an interval |
+| `packages/plate` | the drawings: the nine palaces of a chart, the ring of twelve a 六壬 board and a 七政四餘 board share, the 太乙 grid with its empty middle and sixteen border seats, the 紫微斗數 four by four with the birth in the middle, glyphs, SVG and PNG |
+| `packages/mcp` | MCP server: twelve tools, four resources, stdio transport |
+| `apps/web` | SvelteKit: eight sections at `/en` and `/it`, plus twenty-six GET endpoints under `/api` |
 
 npm workspaces monorepo, Node ≥ 22, ESM, TypeScript.
 
@@ -336,6 +336,16 @@ the engine falls back to Moshier, which needs no files.
   dunjia's, and none lends dunjia a doctrine it does not have. **The scope
   widened, the standard did not**: a board earns its place by having a
   procedure a source states, never by filling a hole in a catalogue.
+- **紫微斗數 names two boards, and this engine computes one of them.** What is
+  here is 《全書》's fourteen 正曜, cut by a 五行局 and a lunar day. The other
+  transmission — the 十八飛星 of 《全集》 and 《捷覽》 — has eighteen stars
+  counted off the **year branch**, no 五行局, no 天府, no mirrored second file,
+  and not one of the fourteen on it. Both are now on the shelf in
+  `texts/ziwei`, and the shelf is the trap: 天貴, 天福 and 天壽 have no rule in
+  卷二 and a rule in the other book, and what 《全書》 calls 天空 is what that
+  book calls 地空. A placement carried across is a graft and not a gap being
+  filled — the natal-Qimen error, made smaller and between two books that share
+  a title. See the 紫微斗數 section of `docs/sources.md`.
 - **The lunar calendar is reckoned on 120°E, never on the chart's zone.** It
   is a published artefact: the same instant carries the same lunar date in
   Rome and in Beijing. Chinese wartime and summer clocks do not move it. The

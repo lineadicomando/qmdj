@@ -10,6 +10,10 @@ import { GET as baziText } from '../src/routes/api/bazi/text/+server';
 import { GET as qizheng } from '../src/routes/api/qizheng/+server';
 import { GET as qizhengPrompt } from '../src/routes/api/qizheng/prompt/+server';
 import { GET as qizhengText } from '../src/routes/api/qizheng/text/+server';
+import { GET as ziwei } from '../src/routes/api/ziwei/+server';
+import { GET as ziweiPlate } from '../src/routes/api/ziwei/plate/+server';
+import { GET as ziweiPrompt } from '../src/routes/api/ziwei/prompt/+server';
+import { GET as ziweiText } from '../src/routes/api/ziwei/text/+server';
 import { GET as taiyi } from '../src/routes/api/taiyi/+server';
 import { GET as taiyiPlate } from '../src/routes/api/taiyi/plate/+server';
 import { GET as taiyiPrompt } from '../src/routes/api/taiyi/prompt/+server';
@@ -706,6 +710,69 @@ describe('GET /api/chart', () => {
 
     expect(status).toBe(501);
     expect(body).toMatchObject({ code: 'METHOD_NOT_IMPLEMENTED' });
+  });
+});
+
+describe('GET /api/ziwei', () => {
+  it('counts the twelve seats', async () => {
+    const { body } = await call(ziwei, `${MOMENT}&gender=male`);
+    const answer = body as {
+      ziwei: { palaces: { house: { id: string }; majorLimit: unknown }[]; bureau: { id: string } };
+    };
+
+    expect(answer.ziwei.palaces).toHaveLength(12);
+    expect(answer.ziwei.palaces[0]!.house.id).toBe('ming');
+    expect(answer.ziwei.bureau.id).toMatch(/ju$/);
+    expect(answer.ziwei.palaces[0]!.majorLimit).toBeTruthy();
+  });
+
+  it('leaves the limits and the rings out without a gender, and keeps the seats', async () => {
+    const { body } = await call(ziwei, MOMENT);
+    const answer = body as {
+      ziwei: { palaces: { majorLimit: unknown; boshi: unknown; stars: unknown[] }[] };
+    };
+
+    expect(answer.ziwei.palaces.every((seat) => seat.majorLimit === null)).toBe(true);
+    expect(answer.ziwei.palaces.every((seat) => seat.boshi === null)).toBe(true);
+    expect(answer.ziwei.palaces.some((seat) => seat.stars.length > 0)).toBe(true);
+  });
+
+  it('is private in a cache and never public: the address holds a birth', async () => {
+    const { headers } = await call(ziwei, MOMENT);
+
+    expect(headers['cache-control']).toBe('private, max-age=86400');
+  });
+
+  it('carries the options that produced it', async () => {
+    const { body } = await call(ziwei, MOMENT);
+
+    expect((body as { ziwei: { options: { sihua: string } } }).ziwei.options.sihua).toBe('quanshu');
+  });
+
+  it('says the board in words, with the line that places it', async () => {
+    const { text, headers } = await call(ziweiText, MOMENT);
+
+    expect(text).toContain('卷二');
+    expect(headers['content-type']).toContain('text/plain');
+  });
+
+  it('draws the board as a grid, with the branches in fixed corners', async () => {
+    const { text, headers } = await call(ziweiPlate, `${MOMENT}&gender=male`);
+
+    expect(headers['content-type']).toContain('image/svg+xml');
+    // Twelve seats plus the sheet's own ground.
+    expect(text.match(/<rect /g)).toHaveLength(13);
+    // Private in a cache like every other address holding a birth.
+    expect(headers['cache-control']).toBe('private, max-age=86400');
+  });
+
+  it('builds a prompt that forbids the sky, and takes no question', async () => {
+    // No `asked`, for the reason /api/bazi/prompt has none: nothing is asked
+    // of a board of 命, so there is no line to append a question to.
+    const { text } = await call(ziweiPrompt, `${MOMENT}&asked=true`);
+
+    expect(text).toContain('Nothing on this board is in the sky');
+    expect(text).not.toContain('The question');
   });
 });
 

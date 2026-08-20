@@ -8,6 +8,7 @@ import {
   formatNianming,
   formatQimenChart,
   formatQizheng,
+  formatZiwei,
   formatTaiyi,
   formatWarnings,
 } from './format.js';
@@ -16,6 +17,7 @@ import type { Nianming } from './nianming.js';
 import type { Moment } from './pillars.js';
 import type { QizhengBoard } from './qizheng.js';
 import type { TaiyiBoard } from './taiyi.js';
+import type { ZiweiBoard } from './ziwei/index.js';
 
 /**
  * The chart handed to somebody who will read it, with what they have to know.
@@ -594,6 +596,86 @@ export function qizhengReadingPrompt(
 }
 
 /**
+ * A 紫微斗數 board said in full: the birth, the lunar date it is counted on,
+ * the bureau, and the twelve seats with what was counted into each.
+ *
+ * The almanac's line is left out for the reason it is left out of a 八字 —
+ * this is the moment read as a person — and here for a second reason as well:
+ * 曆注's 值日宿 is a lodge of the sky, and this board has no sky to confuse it
+ * with.
+ */
+export function ziweiTranscript(
+  moment: Moment,
+  board: ZiweiBoard,
+  t: Translator,
+  extra: { source?: string } = {},
+): string {
+  const warnings = formatWarnings(moment, t);
+  return [
+    formatMoment(moment, t, { almanac: false }),
+    '',
+    formatZiwei(board, t),
+    ...(warnings ? ['', warnings] : []),
+    ...(extra.source ? ['', `  ${t('prompt.source', { url: extra.source })}`] : []),
+  ].join('\n');
+}
+
+/**
+ * The twelve seats, the instructions for reading them, and the birth they
+ * were counted from.
+ *
+ * The rule that leads is the one the other two boards of 命 never needed:
+ * **nothing here is in the sky.** A model handed twelve palaces on twelve
+ * branches, with stars in them, will reach for planets unless the first thing
+ * it reads forbids it — and a reading built on that reach would be fluent,
+ * confident and about a different art.
+ */
+export function ziweiReadingPrompt(
+  moment: Moment,
+  board: ZiweiBoard,
+  t: Translator,
+  request: MingReadingRequest = {},
+): string {
+  return [
+    `# ${t('prompt.ziwei.heading')}`,
+    '',
+    t('prompt.ziwei.role'),
+    '',
+    t('prompt.language'),
+    '',
+    `- ${t('prompt.ming.configuration')}`,
+    `- ${t('prompt.ziwei.houses')}`,
+    `- ${t('prompt.ming.time')}`,
+    `- ${t('prompt.ziwei.brightness')}`,
+    `- ${t('prompt.ziwei.sihua')}`,
+    `- ${t('prompt.ziwei.limits')}`,
+    // The one-board rule, and it is stated on this board rather than left to
+    // the documentation because this is the board it bites hardest on: the
+    // year stem that carries the 四化 here carries the ten gods there.
+    `- ${t('prompt.ziwei.substrate')}`,
+    `- ${t('prompt.ming.limits')}`,
+    `- ${t('prompt.ming.noRecital')}`,
+    `- ${t('prompt.ming.explain')}`,
+    `- ${t('prompt.ming.register')}`,
+    `- ${t('prompt.ming.tension')}`,
+    `- ${t('prompt.ming.rulesStayOut')}`,
+    `- ${t('prompt.yours')}`,
+    '',
+    t('prompt.names'),
+    '',
+    t('prompt.disclaimer'),
+    '',
+    `## ${t('prompt.ziwei.board')}`,
+    '',
+    '```',
+    ziweiTranscript(moment, board, t, request.source ? { source: request.source } : {}),
+    '```',
+    '',
+    ...mingClosing(t, 'ziwei'),
+  ].join('\n');
+}
+
+/**
  * How a reading of a board of 命 is laid out, said after the fence.
  *
  * Everything above this is a bound or a place to look, and what follows from
@@ -608,7 +690,7 @@ export function qizhengReadingPrompt(
  * differ — a 八字 is a birth written in a calendar and a 七政四餘 board is a
  * birth written in the sky; the rest is shared.
  */
-function mingClosing(t: Translator, board: 'bazi' | 'qizheng'): string[] {
+function mingClosing(t: Translator, board: 'bazi' | 'qizheng' | 'ziwei'): string[] {
   return [
     t('prompt.ming.noQuestion'),
     '',

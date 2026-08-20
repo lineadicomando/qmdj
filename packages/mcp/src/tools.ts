@@ -2,6 +2,7 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import {
   DEFAULT_LIUREN_OPTIONS,
   DEFAULT_QIZHENG_OPTIONS,
+  DEFAULT_ZIWEI_OPTIONS,
   DEFAULT_TAIYI_OPTIONS,
   GATES,
   PATTERN_IDS,
@@ -17,6 +18,8 @@ import {
   formatNianming,
   formatQimenChart,
   formatQizheng,
+  formatZiwei,
+  computeZiwei,
   formatScan,
   formatSolarTerms,
   formatTaiyi,
@@ -33,6 +36,7 @@ import {
   taiyiBoard,
   type LiurenOptions,
   type QizhengOptions,
+  type ZiweiOptions,
   type ScanCriteria,
 } from '@qimendunjia/core';
 import { searchLocations } from '@qimendunjia/geo';
@@ -378,6 +382,80 @@ export function registerComputeQizheng(server: McpServer, context: ToolContext):
             formatMoment(moment, t),
             '',
             formatQizheng(board, t),
+            formatWarnings(moment, t),
+          ]
+            .filter((part) => part !== '')
+            .join('\n'),
+        );
+      } catch (error) {
+        return fail(describeError(error, t));
+      }
+    },
+  );
+}
+
+export function registerComputeZiwei(server: McpServer, context: ToolContext): void {
+  server.registerTool(
+    'compute_ziwei',
+    {
+      title: 'Lay the 紫微斗數 board of a birth',
+      description:
+        'Counts the twelve seats of a 紫微斗數 board from a birth, placing 紫微 and the ' +
+        'thirteen that hang off it, the auxiliaries, the 四化, the two masters, the 大限, the ' +
+        '小限 and the rings of 長生 and 博士. ' +
+        '**Nothing on this board is in the sky, and a report that treats it as a sky is about ' +
+        'a different art.** 紫微 is not a star a telescope finds; none of these names is a ' +
+        'body, none has a position, none rises or sets. The board is arithmetic: the month ' +
+        'and hour give the 命宮, its 納音 gives the bureau, the bureau and the day of the ' +
+        'lunar month give 紫微, and the rest follows by counting. No ephemeris is consulted. ' +
+        'Do not import planets, aspects, transits or a house system, and do not translate it ' +
+        'into one to read it. ' +
+        'Every placement is 《紫微斗數全書》 卷二, and four of its tables part from the ones ' +
+        'modern software carries — say so if you report those four. **火星 and 鈴星 take a ' +
+        'seat apiece from the year’s triplicity and the birth hour never enters**, where the ' +
+        'widespread practice counts on from those seats by the hour. **天魁 and 天鉞 go to 亥 ' +
+        'and 戌 for 丙 and 丁** (「丙丁豬狗位」), where the modern verse reads 豬雞; and 辛 ' +
+        'takes 寅 then 午. **解神 is placed off the birth year**, not off the month. **壬 ' +
+        'gives 化科 to 天府**, not to 左輔. ' +
+        'gender is needed only for the 大限, the 小限 and the two rings; without it the seats ' +
+        'are complete and those four are absent, which is the right answer and not a degraded ' +
+        'one. Do not guess it. ' +
+        'It reports where the seats fall and what the book grades them. It does not say what a ' +
+        'seat means, which palace matters, or how a life goes: that a seat is named 妻妾 is a ' +
+        'name and not an assignment, and a 落陷 is not a misfortune. Those need a question to ' +
+        'have been asked and belong to the reader.',
+      inputSchema: {
+        date: dateSchema,
+        time: timeSchema,
+        ...placeSchema,
+        gender: z
+          .enum(['male', 'female'])
+          .optional()
+          .describe(
+            'Only the 大限, the 小限 and the rings of 長生 and 博士 depend on it. Do not guess it.',
+          ),
+        ...optionSchema,
+        lang: langSchema,
+      },
+    },
+    async (args) => {
+      const t = translatorFor(args.lang);
+      try {
+        const { moment, label } = resolveInput(args, context);
+        const options: ZiweiOptions = { ...DEFAULT_ZIWEI_OPTIONS };
+        if (args.gender) options.gender = args.gender;
+
+        const board = computeZiwei(moment, options);
+
+        return ok(
+          [
+            `${t('cli.field.place')}: ${label}`,
+            '',
+            // The almanac's line stays out, as it does under 八字: this is the
+            // moment read as a person.
+            formatMoment(moment, t, { almanac: false }),
+            '',
+            formatZiwei(board, t),
             formatWarnings(moment, t),
           ]
             .filter((part) => part !== '')

@@ -233,6 +233,18 @@ rather than advises. Do not supply it from memory.
   時憲曆's, and the reverse of what you will produce if you reason from Vedic
   astrology. `luohou` can flip it, and the answer says which was used. Read
   the name off the board, never off your own memory of what the name means.
+- **A 紫微斗數 board is not a sky and must never be read as one.** 紫微 is not
+  a star a telescope finds; none of the names on that board is a body, none
+  has a position, none rises or sets. Twelve palaces on twelve branches with
+  stars in them invites the reach for planets, and a reading built on that
+  reach is fluent, confident and about a different art. Four of its tables
+  also part from what modern software carries — 火星 and 鈴星 take a seat from
+  the year's triplicity and the birth hour never enters, 天魁 and 天鉞 go to
+  亥 and 戌 for 丙 and 丁, 解神 is placed off the birth year rather than the
+  month, and 壬 gives 化科 to 天府 rather than 左輔. Those are 《紫微斗數全書》
+  卷二 against later lineages, not errors. And a seat named 妻妾 is a **name
+  and not an assignment**: which theme is read from which seat is the reader's
+  act, said aloud as it is made.
 - **The 七政四餘 board carries three remainders and not four.** 紫氣 is a
   table rather than a body, and a rule for it does exist. What does not is any
   way to check the rule, since checking means comparing against a position in
@@ -278,7 +290,10 @@ rather than advises. Do not supply it from memory.
   looks like the mildest of the four: it *is* the four pillars, and the other
   three are laid from them. Beside any of the others it is not a second
   reading of one instant, it is the same instant's pillars printed again with
-  the ten gods read off them. Four boards, one to a reading.
+  the ten gods read off them. **A 紫微斗數 board is under it beside the 八字
+  most of all**, and for the same reason turned around: it is built from that
+  same birth, and the year stem carrying its 四化, 祿存, 天魁 and 天鉞 is the
+  year stem carrying the other's gods. Five boards, one to a reading.
 
 ## How sure the numbers are
 
@@ -322,6 +337,20 @@ Not uniformly, and the difference matters when you are asked to justify one.
   人事宮** are weaker still — one source and three derivations, set out in
   `docs/sources.md`. If you are asked where the lodge boundaries come from,
   the honest answer is "the stars, computed", not "the 時憲曆".
+- **The 紫微斗數 board** — the only board here with **no tier-1 quantity in it
+  at all**, and that is a fact about the art rather than a weakness of the
+  computation. Nothing on it is astronomical: 紫微 is not a star, no name on
+  the board has a position, and the whole construction is arithmetic on a
+  lunar date, an hour branch and a year pillar. The only tier-1 input is the
+  lunar calendar underneath it. Against that, the *transcription* is unusually
+  well pinned: an arithmetic the tradition carries beside the printed tables
+  reproduces 148 of their 150 cells and disagrees only at the two cells where
+  the page has visibly dropped a character and a column; and a comparison
+  against an independent implementation over 544 births agrees on 57 of 63
+  quantities in every chart, the residue being six places where this book
+  states something the modern tables do not. If you are asked how sure the
+  board is, the honest answer is «the placements are as sure as a well-read
+  text can make them, and none of it is a measurement».
 - **The almanac's page** (建除十二神 and 二十八宿值日) — both agreeing with an
   independent implementation on **all 14 600 days of 2000 to 2039**. The
   officer's one awkward clause, the doubling at a 節, is stated outright by
@@ -375,6 +404,7 @@ prompt — it was in one once, and what a model did with it was recite it.
 | `compute_qimen_chart` | the nine palaces, the plates, the configurations, how each star and gate stands to its palace, and both post horses — 日馬 and 時馬, never one of the two. With `born`, also a 年命: the birth placed *inside* this chart |
 | `compute_bazi` | the four pillars, read out. `gender` only affects the luck cycles |
 | `compute_liuren` | the 大六壬 board — the other 式, laid on the same instant and answering the same shape of question. Lay it for the moment of the asking, never for a birth |
+| `compute_ziwei` | the 紫微斗數 board — the twelve seats counted from a birth, with 紫微 and the thirteen that hang off it, the auxiliaries, the 四化, the brightness grades, the two masters and the limits. **Nothing on it is in the sky**: do not read planets, aspects or transits into it |
 | `compute_qizheng` | the 七政四餘 board — the seven governors and three remainders on the sky, each said twice over: the 宿 with its 入宿度 and the 宮 with its 宮度. A 命 art, so it is laid for a birth as readily as for a question, and it borrows nothing from the other two boards |
 | `compute_taiyi` | the 太乙 board of a year — 年計. Takes a year and nothing else: no place, no hour, nobody's birth. Never says who is 主 and who is 客, and its palace numbers are not a Qi Men chart's |
 | `draw_qimen_chart` | the picture, framed by the eight directions, with the configurations and their fortunes listed under the grid. After the calculation, never instead of it |
