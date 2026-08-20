@@ -244,6 +244,36 @@ describe('ziwei', () => {
     expect(out).toContain('116–125');
   });
 
+  /**
+   * The gender moved the board, so the board says so.
+   *
+   * It turns the 大限 and the 小限 round, which is why every decade printed
+   * depends on it — and it is the only biographical fact this board is given.
+   * A transcript that withheld it left a model to guess who it was writing
+   * to, and one reading in Italian duly addressed a man in the feminine
+   * throughout. An input that reached the arithmetic reaches the page.
+   */
+  it('says the gender it was given, and says nothing where it was not', async () => {
+    // The whole row, not the word: `male` is a substring of `female`, so an
+    // assertion on the word alone would pass on the wrong answer.
+    const row = (text: string) =>
+      text
+        .split('\n')
+        .find((line) => line.trimStart().startsWith('gender'))
+        ?.trim();
+
+    await run(['ziwei', ...BIRTH, '--gender', 'male', '--lang', 'en']);
+    expect(row(out)?.split(/\s{2,}/)).toEqual(['gender', 'male']);
+
+    out = '';
+    await run(['ziwei', ...BIRTH, '--gender', 'female', '--lang', 'en']);
+    expect(row(out)?.split(/\s{2,}/)).toEqual(['gender', 'female']);
+
+    out = '';
+    await run(['ziwei', ...BIRTH, '--lang', 'en']);
+    expect(row(out)).toBeUndefined();
+  });
+
   it('refuses --ask, and says why rather than dropping it', async () => {
     expect(
       await run(['ziwei', ...BIRTH, '--ask', 'how is my career', '--lang', 'en']),
@@ -339,6 +369,16 @@ describe('bazi', () => {
     expect(out).not.toContain('Day officer');
     expect(out).not.toContain('定 dìng');
     expect(out).toContain('month opened at');
+  });
+
+  // Beside the direction it decided, because 陽男陰女 turns the run one way and
+  // 陰男陽女 the other: `forward` alone cannot be read back to a gender without
+  // also weighing the year stem, so the run carries the gender rather than
+  // leaving a reader to solve for it.
+  it('names the gender beside the direction of the run', async () => {
+    await run(['bazi', ...MOMENT, '--gender', 'female', '--lang', 'en']);
+    const heading = out.split('\n').find((line) => line.includes('Luck cycles'))!;
+    expect(heading).toContain('female');
   });
 
   it('carries the almanac in the JSON, which is asked for rather than shown', async () => {

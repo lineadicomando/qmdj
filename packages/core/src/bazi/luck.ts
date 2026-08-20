@@ -24,6 +24,17 @@ export interface LuckCycle {
 }
 
 export interface LuckCycles {
+  /**
+   * The gender the run was laid out for.
+   *
+   * Carried rather than left to be worked back out, and the direction is why:
+   * `forward` is `yearIsYang === (gender === 'male')`, so a reader holding it
+   * alone cannot say which gender produced it without also weighing the year
+   * stem. This is the one biographical fact the board is given, and a
+   * transcript that made a reader re-derive it would be handing over an input
+   * as a puzzle.
+   */
+  gender: Gender;
   /** `true` when the cycles run forwards from the month pillar (順行). */
   forward: boolean;
   /** How long after birth the run begins. */
@@ -108,7 +119,7 @@ export function luckCycles(
     });
   }
 
-  return { forward, start: { years, months, days }, startJD, cycles };
+  return { gender, forward, start: { years, months, days }, startJD, cycles };
 }
 
 interface Elapsed {

@@ -1579,6 +1579,14 @@ export const en = {
   'cli.field.houses': 'the twelve palaces',
 
   'cli.heading.ziwei': 'The Zi Wei Dou Shu board',
+  // Said in the transcript because it is an input that moved the board: it
+  // turns the 大限 and the 小限 round, so every decade printed depends on it.
+  // It is also the one biographical fact the board holds, and a reading is
+  // addressed to a person — a model left to guess it will guess, and in a
+  // language that agrees it will be visibly wrong half the time.
+  'cli.field.gender': 'gender',
+  'label.gender.male': 'male',
+  'label.gender.female': 'female',
   'cli.field.bureau': 'the bureau',
   'cli.field.minggongPalace': 'palace of the life',
   'cli.field.shengong': 'palace of the body',

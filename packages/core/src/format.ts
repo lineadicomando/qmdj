@@ -625,6 +625,17 @@ export function formatZiwei(board: ZiweiBoard, t: Translator): string {
         ],
         [t('cli.field.minggongPalace'), glyph(board.palaces[0]!.branch)],
         [t('cli.field.shengong'), glyph(board.bodyBranch)],
+        // Absent when it was not given, exactly as the 大限 blocks are: a row
+        // reading «sesso —» would be the board asserting a gap rather than
+        // leaving one.
+        ...(board.options.gender
+          ? [
+              [
+                t('cli.field.gender'),
+                t(`label.gender.${board.options.gender}` as MessageKey),
+              ] as [string, string],
+            ]
+          : []),
         [
           t('cli.field.lifeMaster'),
           named(board.lifeMaster, `label.ziwei.${board.lifeMaster.id}` as MessageKey, t),
@@ -1092,9 +1103,14 @@ export function formatBazi(bazi: Bazi, t: Translator): string {
 
   if (bazi.luck) {
     const direction = bazi.luck.forward ? t('cli.value.forward') : t('cli.value.backward');
+    // The gender rides beside the direction it decided, rather than in a field
+    // of its own: 陽男陰女 turns the run one way and 陰男陽女 the other, so the
+    // two belong in one breath. Printed here and not higher up because without
+    // a gender there is no run and nothing to say.
+    const who = t(`label.gender.${bazi.luck.gender}` as MessageKey);
     lines.push(
       '',
-      `${t('cli.heading.luck')} — ${direction}, ${t('cli.value.luckStart', bazi.luck.start)}`,
+      `${t('cli.heading.luck')} — ${who}, ${direction}, ${t('cli.value.luckStart', bazi.luck.start)}`,
       ...table(
         bazi.luck.cycles.map((cycle) => [
           String(cycle.startAge).padStart(3),

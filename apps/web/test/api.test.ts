@@ -774,6 +774,17 @@ describe('GET /api/ziwei', () => {
     expect(text).toContain('Nothing on this board is in the sky');
     expect(text).not.toContain('The question');
   });
+
+  // The path a reader actually copies from. The gender reaches the board here
+  // — it turns the 大限 round — and until it reached the *page* too, a model
+  // was left to guess who it was writing to.
+  it('carries the gender through to the transcript it hands over', async () => {
+    const { text } = await call(ziweiPrompt, `${MOMENT}&gender=male`);
+    expect(text).toMatch(/gender\s+male/);
+
+    const { text: plain } = await call(ziweiPrompt, MOMENT);
+    expect(plain).not.toMatch(/gender\s+male/);
+  });
 });
 
 describe('GET /api/bazi', () => {

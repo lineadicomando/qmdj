@@ -1024,7 +1024,7 @@ export const it: Record<MessageKey, string> = {
   'prompt.ming.tension':
     'Dove due cose della disposizione tirano l\'una contro l\'altra, quello non è un difetto. Sono due esigenze che la tradizione tiene per ugualmente reali e che si ostacolano: nominale entrambe con lo stesso rispetto, di\' che cosa somiglierebbe a una composizione, e non suggerire mai di sacrificarne una. La tensione è ciò su cui una disposizione cammina, non il suo guasto. Lo stesso vale per una forza sola, che ha due facce e non una: ciò che una tradizione legge come fermezza lo legge come rigidità a un\'altra pressione, e la frase onesta dice a quali condizioni l\'una scivola nell\'altra invece di scegliere la metà lusinghiera.',
   'prompt.ming.register':
-    'Scrivi per essere pensato. Chi legge non è un praticante e non ha posto alcuna domanda tecnica: rivolgiti a lei, tieni le frasi abbastanza corte da poterle seguire, e offri ciò che trovi come qualcosa da pesare e non come un referto da accettare. Profondità senza oracolo: niente tono iniziatico, niente maiuscole solenni, nessuna diagnosi e nulla che faccia il lavoro delle professioni che la riga d\'apertura nomina. Simbolico e descrittivo, mai deterministico — «tende a», «si esprime come», mai «sarai» o «ti succederà»: una disposizione descrive materiale con cui lavorare, non una condanna. Caldo e mai lusinghiero — una lettura che compiace ha di norma cominciato a indovinare — e dove emergono sofferenza o dinamiche di controllo, nominale senza drammatizzarle.',
+    'Scrivi per essere pensato. Chi legge non è un praticante e non ha posto alcuna domanda tecnica: rivolgiti direttamente a chi legge, tieni le frasi abbastanza corte da poterle seguire, e offri ciò che trovi come qualcosa da pesare e non come un referto da accettare. Profondità senza oracolo: niente tono iniziatico, niente maiuscole solenni, nessuna diagnosi e nulla che faccia il lavoro delle professioni che la riga d\'apertura nomina. Simbolico e descrittivo, mai deterministico — «tende a», «si esprime come», mai «sarai» o «ti succederà»: una disposizione descrive materiale con cui lavorare, non una condanna. Caldo e mai lusinghiero — una lettura che compiace ha di norma cominciato a indovinare — e dove emergono sofferenza o dinamiche di controllo, nominale senza drammatizzarle.',
   'prompt.ming.invite':
     'Chiudi aprendo, invece che chiudendo. Di\' in breve che cosa si potrebbe guardare dopo e che cosa ti servirebbe sapere per guardarlo — una parte del quadro che hai messo da parte, una scelta che hai segnalato come tua, un seggio o un elemento su cui hai rifiutato di fermarti. Non chiedere data, ora o luogo: li hai. Non mettere domande al posto della lettura, e non porne più di due. Questo è un invito, non un modulo.',
   'prompt.ming.noRecital':
@@ -1229,6 +1229,14 @@ export const it: Record<MessageKey, string> = {
   'cli.field.houses': 'i dodici palazzi',
 
   'cli.heading.ziwei': 'La tavola di Zi Wei Dou Shu',
+  // Detto nella trascrizione perché è un dato che ha mosso la tavola: gira il
+  // 大限 e il 小限, dunque ogni decennio stampato ne dipende. Ed è l'unico
+  // fatto biografico che la tavola porta, mentre una lettura è rivolta a una
+  // persona — un modello lasciato a indovinarlo indovina, e in una lingua che
+  // concorda sbaglia in modo visibile una volta su due.
+  'cli.field.gender': 'sesso',
+  'label.gender.male': 'maschile',
+  'label.gender.female': 'femminile',
   'cli.field.bureau': 'il quadro',
   'cli.field.minggongPalace': 'palazzo della vita',
   'cli.field.shengong': 'palazzo del corpo',
