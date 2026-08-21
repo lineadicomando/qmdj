@@ -17,7 +17,7 @@ import {
   type Locale,
   type MessageKey,
   type MessageParams,
-} from '@qimendunjia/i18n';
+} from '@shipan/i18n';
 import { computeBazi, type Gender } from './bazi/index.js';
 import {
   GATES,

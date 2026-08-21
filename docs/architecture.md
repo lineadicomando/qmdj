@@ -5,7 +5,7 @@ it does not localise, does not interpret, and does not know it is being called
 over HTTP. Everything a surface adds — a language, a picture, a route, a
 prompt — is added outside it.
 
-npm workspaces monorepo, npm scope `@qimendunjia/*`, Node ≥ 22, ESM,
+npm workspaces monorepo, npm scope `@shipan/*`, Node ≥ 22, ESM,
 TypeScript, AGPL-3.0-or-later.
 
 ## The packages
@@ -27,7 +27,7 @@ shape it needs — of a chart, of a 六壬 board, of a 太乙 grid alike — and
 lives in `core` and draws, so the other direction would close a cycle; and a
 drawing package that could reach the engine would end up computing.
 
-**The PNG lives at `@qimendunjia/plate/png`**, a separate entry point, because
+**The PNG lives at `@shipan/plate/png`**, a separate entry point, because
 it pulls a native module that must never reach the browser. It also needs a
 CJK font *and* `fontconfig` — the glyphs are the content, and without either
 the drawing comes out an empty grid, silently. `png.ts` refuses to draw when

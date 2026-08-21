@@ -1,4 +1,4 @@
-import { matchRuns, scanCharts, type ScanMatch } from '@qimendunjia/core';
+import { matchRuns, scanCharts, type ScanMatch } from '@shipan/core';
 import { json } from '@sveltejs/kit';
 import { ephemerisContext, readCriteria, readInterval } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';

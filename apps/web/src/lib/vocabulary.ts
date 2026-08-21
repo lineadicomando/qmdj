@@ -6,7 +6,7 @@
  * from `core`. A value import would drag the ephemerides and a native module
  * into the browser bundle to populate a `select` with eight words.
  *
- * So they are written out here, exactly as `@qimendunjia/plate` redeclares
+ * So they are written out here, exactly as `@shipan/plate` redeclares
  * the shape of a chart, and `test/vocabulary.test.ts` asserts that these and
  * the engine's still agree. A form offering a gate the engine has never heard
  * of would come back with an error; one missing a gate would silently make it
@@ -144,7 +144,7 @@ export const STRENGTHS = ['wang', 'xiang', 'xiu', 'qiu', 'si'] as const;
  *
  * Three copies meet here and none of them may drift: the ids are `STRENGTHS`
  * above, the hanzi and the readings are the engine's `strengthOf`, and the
- * marks are `STRENGTH_MARKS` in `@qimendunjia/plate`. All three are values
+ * marks are `STRENGTH_MARKS` in `@shipan/plate`. All three are values
  * this page may not import — the engine because a value import drags the
  * ephemerides into the browser, the drawing because it would arrive whole to
  * print five glyphs — so they are written out and `test/vocabulary.test.ts`

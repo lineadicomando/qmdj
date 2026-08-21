@@ -10,7 +10,7 @@ import type { MessageKey } from './en.js';
  */
 export const it: Record<MessageKey, string> = {
   'geo.error.DATABASE_MISSING':
-    'Database delle località non trovato in {path}. Costruiscilo una volta con `npm run geo:import -w @qimendunjia/geo` (scarica ~215 MB da GeoNames).',
+    'Database delle località non trovato in {path}. Costruiscilo una volta con `npm run geo:import -w @shipan/geo` (scarica ~215 MB da GeoNames).',
   'geo.error.EMPTY_QUERY': 'La stringa di ricerca è vuota.',
   'geo.error.DATABASE_CORRUPT': 'Impossibile aprire {path}: {reason}',
 
@@ -46,7 +46,7 @@ export const it: Record<MessageKey, string> = {
   'core.warning.NONEXISTENT_LOCAL_TIME':
     'L\'ora locale {time} del {date} non è mai esistita in {timezone} (passaggio all\'ora legale). È stato usato l\'istante immediatamente successivo.',
   'core.warning.MOSHIER_FALLBACK':
-    'File di effemeridi non trovati in {path}: si usano le effemeridi Moshier, che non richiedono file e sono accurate a circa un decimo di secondo d\'arco. Esegui `npm run ephe:download -w @qimendunjia/core` per i file completi.',
+    'File di effemeridi non trovati in {path}: si usano le effemeridi Moshier, che non richiedono file e sono accurate a circa un decimo di secondo d\'arco. Esegui `npm run ephe:download -w @shipan/core` per i file completi.',
 
   'web.error.UNKNOWN_LOCATION': 'Nessun luogo ha l\'identificatore {id}.',
   'web.error.INVALID_NUMBER': '"{value}" non è un numero valido per {parameter}.',

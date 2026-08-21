@@ -1,4 +1,4 @@
-import type { MessageKey, Translator } from '@qimendunjia/i18n';
+import type { MessageKey, Translator } from '@shipan/i18n';
 import { BRANCHES, STEMS, type Ganzhi } from './ganzhi.js';
 import { GENERALS, KETI, LIUREN_RULES } from './liuren.js';
 import { CI, HOUSES, MOTIONS, QIZHENG_BODIES } from './qizheng.js';

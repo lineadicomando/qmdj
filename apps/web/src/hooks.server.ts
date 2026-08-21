@@ -1,4 +1,4 @@
-import { resolveLocale } from '@qimendunjia/i18n';
+import { resolveLocale } from '@shipan/i18n';
 import type { Handle } from '@sveltejs/kit';
 
 /**

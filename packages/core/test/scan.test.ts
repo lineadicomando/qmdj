@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { translate, type Translator } from '@qimendunjia/i18n';
+import { translate, type Translator } from '@shipan/i18n';
 import { computeQimenChart } from '../src/dunjia/index.js';
 import { formatScan } from '../src/format.js';
 import { ChartError } from '../src/errors.js';

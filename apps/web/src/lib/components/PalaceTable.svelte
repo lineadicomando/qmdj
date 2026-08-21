@@ -1,6 +1,6 @@
 <script lang="ts">
   import { glyph } from '$lib/glyph';
-  import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { MessageKey, Translator } from '@shipan/i18n';
 
   /**
    * Takes the palaces, not the chart.

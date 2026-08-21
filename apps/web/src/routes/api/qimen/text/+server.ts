@@ -1,5 +1,5 @@
-import { chartTranscript, computeQimenChart, nianmingOf } from '@qimendunjia/core';
-import { createTranslator } from '@qimendunjia/i18n';
+import { chartTranscript, computeQimenChart, nianmingOf } from '@shipan/core';
+import { createTranslator } from '@shipan/i18n';
 import {
   momentIsFixed,
   pageAddress,

@@ -1,5 +1,5 @@
-import { ChartError } from '@qimendunjia/core';
-import { GeoError } from '@qimendunjia/geo';
+import { ChartError } from '@shipan/core';
+import { GeoError } from '@shipan/geo';
 import { error } from '@sveltejs/kit';
 
 /**

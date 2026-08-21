@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { MessageKey, Translator } from '@qimendunjia/i18n';
-  import type { TaiyiBoard, TaiyiFief, TaiyiPalace } from '@qimendunjia/core';
+  import type { MessageKey, Translator } from '@shipan/i18n';
+  import type { TaiyiBoard, TaiyiFief, TaiyiPalace } from '@shipan/core';
   import { glyph } from '$lib/glyph';
 
   /**

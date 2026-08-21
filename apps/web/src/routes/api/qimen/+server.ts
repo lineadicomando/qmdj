@@ -1,4 +1,4 @@
-import { computeQimenChart, nianmingOf } from '@qimendunjia/core';
+import { computeQimenChart, nianmingOf } from '@shipan/core';
 import { json } from '@sveltejs/kit';
 import {
   momentIsFixed,

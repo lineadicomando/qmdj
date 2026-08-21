@@ -2,7 +2,7 @@
   import { glyph } from '$lib/glyph';
   import { goto, replaceState } from '$app/navigation';
   import { page } from '$app/state';
-  import type { MessageKey } from '@qimendunjia/i18n';
+  import type { MessageKey } from '@shipan/i18n';
   import { appearance } from '$lib/appearance.svelte';
   import {
     chartQuery,

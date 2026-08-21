@@ -1,5 +1,5 @@
 {
-  "name": "@qimendunjia/mcp",
+  "name": "@shipan/mcp",
   "version": "0.0.0",
   "description": "MCP server: Qi Men Dun Jia charts and Four Pillars for agents",
   "license": "AGPL-3.0-or-later",
@@ -27,10 +27,10 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
-    "@qimendunjia/core": "*",
-    "@qimendunjia/geo": "*",
-    "@qimendunjia/i18n": "*",
-    "@qimendunjia/plate": "*",
+    "@shipan/core": "*",
+    "@shipan/geo": "*",
+    "@shipan/i18n": "*",
+    "@shipan/plate": "*",
     "zod": "^3.25.76"
   },
   "devDependencies": {

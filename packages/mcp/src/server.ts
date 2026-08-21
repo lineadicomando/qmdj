@@ -7,8 +7,8 @@ import {
   SPIRITS_YANG,
   SPIRITS_YIN,
   STARS,
-} from '@qimendunjia/core';
-import { createTranslator, type MessageKey } from '@qimendunjia/i18n';
+} from '@shipan/core';
+import { createTranslator, type MessageKey } from '@shipan/i18n';
 import {
   registerComputeBazi,
   registerComputeLiuren,

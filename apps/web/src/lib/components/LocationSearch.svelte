@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Translator } from '@qimendunjia/i18n';
+  import type { Translator } from '@shipan/i18n';
   import { refines, type Location } from '$lib/moment';
 
   let {

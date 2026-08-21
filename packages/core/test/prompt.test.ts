@@ -1,4 +1,4 @@
-import { createTranslator } from '@qimendunjia/i18n';
+import { createTranslator } from '@shipan/i18n';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { computeQimenChart } from '../src/dunjia/index.js';
 import { ganzhiOf } from '../src/ganzhi.js';

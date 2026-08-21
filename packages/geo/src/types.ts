@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, translate, type Locale, type MessageKey, type MessageParams } from '@qimendunjia/i18n';
+import { DEFAULT_LOCALE, translate, type Locale, type MessageKey, type MessageParams } from '@shipan/i18n';
 
 /**
  * A place with everything a chart needs: coordinates and — above all — the

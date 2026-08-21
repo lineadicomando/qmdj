@@ -22,7 +22,7 @@
  */
 export const en = {
   'geo.error.DATABASE_MISSING':
-    'Location database not found at {path}. Build it once with `npm run geo:import -w @qimendunjia/geo` (downloads ~215 MB from GeoNames).',
+    'Location database not found at {path}. Build it once with `npm run geo:import -w @shipan/geo` (downloads ~215 MB from GeoNames).',
   'geo.error.EMPTY_QUERY': 'The search string is empty.',
   'geo.error.DATABASE_CORRUPT': 'Cannot open {path}: {reason}',
 
@@ -56,7 +56,7 @@ export const en = {
   'core.warning.NONEXISTENT_LOCAL_TIME':
     'Local time {time} on {date} never existed in {timezone} (clocks went forward). The instant immediately after was used.',
   'core.warning.MOSHIER_FALLBACK':
-    'Ephemeris files not found in {path}: using the Moshier ephemeris, which needs no files and is accurate to about a tenth of an arc second. Run `npm run ephe:download -w @qimendunjia/core` for the full files.',
+    'Ephemeris files not found in {path}: using the Moshier ephemeris, which needs no files and is accurate to about a tenth of an arc second. Run `npm run ephe:download -w @shipan/core` for the full files.',
 
   'web.error.UNKNOWN_LOCATION': 'No place has the identifier {id}.',
   // Refused rather than clamped: `Number('abc')` is NaN, and NaN slides

@@ -1,4 +1,4 @@
-import type { MessageKey } from '@qimendunjia/i18n';
+import type { MessageKey } from '@shipan/i18n';
 
 /**
  * The sections, in the order the header lists them, and in two kinds.

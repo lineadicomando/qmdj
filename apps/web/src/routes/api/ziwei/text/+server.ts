@@ -1,5 +1,5 @@
-import { DEFAULT_ZIWEI_OPTIONS, computeZiwei, ziweiTranscript } from '@qimendunjia/core';
-import { createTranslator } from '@qimendunjia/i18n';
+import { DEFAULT_ZIWEI_OPTIONS, computeZiwei, ziweiTranscript } from '@shipan/core';
+import { createTranslator } from '@shipan/i18n';
 import {
   momentIsFixed,
   pageAddress,

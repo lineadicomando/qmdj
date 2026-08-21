@@ -18,10 +18,10 @@
 -->
 <script lang="ts">
   import { glyph } from '$lib/glyph';
-  import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { MessageKey, Translator } from '@shipan/i18n';
   // Types only. A value import would drag the ephemerides and a native module
   // into the browser bundle — the rule `TaiyiReading` states for all four.
-  import type { Bazi, ElementCount, Ganzhi } from '@qimendunjia/core';
+  import type { Bazi, ElementCount, Ganzhi } from '@shipan/core';
 
   let { bazi, t }: { bazi: Bazi; t: Translator } = $props();
 

@@ -14,8 +14,8 @@
 -->
 <script lang="ts">
   import { glyph } from '$lib/glyph';
-  import type { MessageKey, Translator } from '@qimendunjia/i18n';
-  import type { QimenChart } from '@qimendunjia/core';
+  import type { MessageKey, Translator } from '@shipan/i18n';
+  import type { QimenChart } from '@shipan/core';
   import PalaceTable from './PalaceTable.svelte';
   import CalendarAndAlmanac from './CalendarAndAlmanac.svelte';
   import PillarPlate from './PillarPlate.svelte';

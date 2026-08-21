@@ -3,7 +3,7 @@ import {
   translate,
   type MessageKey,
   type MessageParams,
-} from '@qimendunjia/i18n';
+} from '@shipan/i18n';
 
 export type ChartErrorCode =
   | 'INVALID_DATE'

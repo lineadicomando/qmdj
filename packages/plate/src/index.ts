@@ -1,5 +1,5 @@
 /**
- * @qimendunjia/plate — the drawing.
+ * @shipan/plate — the drawing.
  *
  * Given a chart, it produces a picture of it. It does not know how to compute
  * one, and by design it cannot: it declares the shape it needs in `types.ts`
@@ -11,7 +11,7 @@
  * the grid are text in a language, and the caller supplies those already
  * translated.
  *
- * PNG lives at `@qimendunjia/plate/png`, which pulls a native module.
+ * PNG lives at `@shipan/plate/png`, which pulls a native module.
  */
 
 export {

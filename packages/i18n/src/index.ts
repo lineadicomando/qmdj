@@ -1,5 +1,5 @@
 /**
- * @qimendunjia/i18n — message catalogs and locale negotiation.
+ * @shipan/i18n — message catalogs and locale negotiation.
  *
  * A leaf package: it depends on nothing, not even on Node, so it can be
  * imported by the engine, the CLI, the MCP server and the browser bundle

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { MessageKey, Translator } from '@qimendunjia/i18n';
-  import type { Moment, ZiweiBoard } from '@qimendunjia/core';
+  import type { MessageKey, Translator } from '@shipan/i18n';
+  import type { Moment, ZiweiBoard } from '@shipan/core';
   import CalendarAndAlmanac from './CalendarAndAlmanac.svelte';
   import Icon from './Icon.svelte';
   import { glyph } from '$lib/glyph';

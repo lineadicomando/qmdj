@@ -3,8 +3,8 @@ import {
   liurenBoard,
   liurenReadingPrompt,
   type LiurenOptions,
-} from '@qimendunjia/core';
-import { createTranslator } from '@qimendunjia/i18n';
+} from '@shipan/core';
+import { createTranslator } from '@shipan/i18n';
 import { momentIsFixed, pageAddress, readLocale, readMoment } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';

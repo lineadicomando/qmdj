@@ -1,4 +1,4 @@
-import type { MessageKey, Translator } from '@qimendunjia/i18n';
+import type { MessageKey, Translator } from '@shipan/i18n';
 import type { Almanac, YearGodSeat } from './almanac.js';
 import { ELEMENTS, type Bazi } from './bazi/index.js';
 import { palace, YUAN_HANZI, YUAN_PINYIN, type QimenChart } from './dunjia/index.js';

@@ -49,7 +49,7 @@ jobs:
           key: swiss-ephemeris-1800-2399
 
       - run: npm ci
-      - run: npm run ephe:download -w @qimendunjia/core
+      - run: npm run ephe:download -w @shipan/core
 
       # `npm ci` already ran `prepare`, which builds; saying it again costs
       # seconds and keeps the pipeline true if `prepare` ever changes.
@@ -60,7 +60,7 @@ jobs:
       # ~90 MB dataset nobody downloads in CI. The tests reach for exactly
       # these; the script refuses to replace a database that already exists.
       - name: Build the location fixture
-        run: npm run geo:fixture -w @qimendunjia/geo
+        run: npm run geo:fixture -w @shipan/geo
 
       - run: npm test
 

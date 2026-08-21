@@ -1,4 +1,4 @@
-import { translate } from '@qimendunjia/i18n';
+import { translate } from '@shipan/i18n';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { GATES } from '../src/dunjia/index.js';
 import { ChartError } from '../src/errors.js';

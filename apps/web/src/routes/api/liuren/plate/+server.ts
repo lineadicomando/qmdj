@@ -4,9 +4,9 @@ import {
   liurenLabels,
   sayGanzhi,
   type LiurenOptions,
-} from '@qimendunjia/core';
-import { createTranslator } from '@qimendunjia/i18n';
-import { renderLiurenSvg } from '@qimendunjia/plate';
+} from '@shipan/core';
+import { createTranslator } from '@shipan/i18n';
+import { renderLiurenSvg } from '@shipan/plate';
 import { momentIsFixed, readLocale, readMoment, readPlateOptions } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';

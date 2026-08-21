@@ -1,5 +1,5 @@
-import { getLocation, searchLocations } from '@qimendunjia/geo';
-import { resolveLocale } from '@qimendunjia/i18n';
+import { getLocation, searchLocations } from '@shipan/geo';
+import { resolveLocale } from '@shipan/i18n';
 import { error, json } from '@sveltejs/kit';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import { readInteger } from '$lib/server/params';

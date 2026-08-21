@@ -1,4 +1,4 @@
-import type { MessageKey } from '@qimendunjia/i18n';
+import type { MessageKey } from '@shipan/i18n';
 
 /**
  * The instruments a consultation can be laid on, and everything that turns

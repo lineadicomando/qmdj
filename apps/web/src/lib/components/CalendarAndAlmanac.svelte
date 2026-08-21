@@ -18,8 +18,8 @@
   two copies of it and the copy that drifts is never the one being looked at.
 -->
 <script lang="ts">
-  import type { MessageKey, Translator } from '@qimendunjia/i18n';
-  import type { Moment } from '@qimendunjia/core';
+  import type { MessageKey, Translator } from '@shipan/i18n';
+  import type { Moment } from '@shipan/core';
 
   /**
    * The moment as data, not as a type: the client imports only types from

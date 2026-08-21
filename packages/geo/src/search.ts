@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, type Locale } from '@qimendunjia/i18n';
+import { DEFAULT_LOCALE, type Locale } from '@shipan/i18n';
 import { normalizeName, openDatabase } from './database.js';
 import { GeoError, type Location, type SearchOptions } from './types.js';
 

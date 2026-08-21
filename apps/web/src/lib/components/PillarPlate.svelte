@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { MessageKey, Translator } from '@shipan/i18n';
 
   /**
    * The four pillars drawn the way the Qi Men board is: one square each,

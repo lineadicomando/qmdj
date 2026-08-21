@@ -38,7 +38,7 @@ and the equation of time inside the true-solar correction is its `lmt_to_lat`
 (`true-solar.ts`) — up to sixteen minutes either way, and the whole of the
 correction for a place on its zone's meridian.
 
-Without the `.se1` files (~2 MB, `npm run ephe:download -w @qimendunjia/core`)
+Without the `.se1` files (~2 MB, `npm run ephe:download -w @shipan/core`)
 it falls back to its built-in Moshier mode: analytical, needing no files, and
 accurate to about a tenth of an arc second for the Sun and the Moon. A tenth
 of an arc second of solar longitude moves a solar term by well under a second

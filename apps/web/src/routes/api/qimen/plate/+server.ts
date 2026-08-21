@@ -1,6 +1,6 @@
-import { chartLabels, computeQimenChart, sayGanzhi } from '@qimendunjia/core';
-import { createTranslator } from '@qimendunjia/i18n';
-import { renderChartSvg } from '@qimendunjia/plate';
+import { chartLabels, computeQimenChart, sayGanzhi } from '@shipan/core';
+import { createTranslator } from '@shipan/i18n';
+import { renderChartSvg } from '@shipan/plate';
 import { momentIsFixed, readLocale, readMoment, readPlateOptions } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';

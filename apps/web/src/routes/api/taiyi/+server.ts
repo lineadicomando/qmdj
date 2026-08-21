@@ -1,4 +1,4 @@
-import { DEFAULT_TAIYI_OPTIONS, taiyiBoard } from '@qimendunjia/core';
+import { DEFAULT_TAIYI_OPTIONS, taiyiBoard } from '@shipan/core';
 import { json } from '@sveltejs/kit';
 import { readTaiyiYear, taiyiCacheControl } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';

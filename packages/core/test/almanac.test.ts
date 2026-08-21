@@ -8,7 +8,7 @@ import { computeQimenChart } from '../src/dunjia/index.js';
 import { chartTranscript } from '../src/prompt.js';
 import { resolveMoment } from '../src/pillars.js';
 import { DEFAULT_OPTIONS, type ChartOptions, type Place } from '../src/types.js';
-import { createTranslator } from '@qimendunjia/i18n';
+import { createTranslator } from '@shipan/i18n';
 
 /**
  * The values below were read off `lunar-javascript`, which every pillar in

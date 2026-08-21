@@ -1,5 +1,5 @@
 /**
- * @qimendunjia/mcp — the engine, for agents.
+ * @shipan/mcp — the engine, for agents.
  *
  * The same calculations the CLI and the API expose, described so that a model
  * can use them without producing something plausible and wrong. Two rules do

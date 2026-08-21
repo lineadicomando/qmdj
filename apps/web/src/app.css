@@ -8,7 +8,7 @@
  */
 /*
  * The five phases are the plate's tints, repeated here rather than imported.
- * `@qimendunjia/plate` hands them out inside an SVG it carries with it, and
+ * `@shipan/plate` hands them out inside an SVG it carries with it, and
  * that copy answers to a media query alone — which is one appearance short of
  * what this page offers. Same values, so a square drawn in the page and a
  * palace drawn in the picture are the same colour.

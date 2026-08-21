@@ -77,7 +77,7 @@
   import StrengthLegend from '$lib/components/StrengthLegend.svelte';
   import TaiyiReading from '$lib/components/TaiyiReading.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
-  import type { MessageKey } from '@qimendunjia/i18n';
+  import type { MessageKey } from '@shipan/i18n';
   // Types only, never a value: a value import from `core` would drag the
   // ephemerides and a native module into the browser bundle.
   import type {
@@ -88,7 +88,7 @@
     QizhengBoard,
     TaiyiBoard,
     ZiweiBoard,
-  } from '@qimendunjia/core';
+  } from '@shipan/core';
 
   let { data } = $props();
   const t = $derived(data.t);

@@ -11,14 +11,14 @@ import {
   DEFAULT_ZIWEI_OPTIONS,
   computeZiwei,
   taiyiBoard,
-} from '@qimendunjia/core';
+} from '@shipan/core';
 import type {
   LiurenBoard,
   QimenChart,
   QizhengBoard,
   TaiyiBoard,
   ZiweiBoard,
-} from '@qimendunjia/core';
+} from '@shipan/core';
 import { describe, expect, it } from 'vitest';
 import type {
   PlateChart,

@@ -1,4 +1,4 @@
-import type { Translator } from '@qimendunjia/i18n';
+import type { Translator } from '@shipan/i18n';
 import type { Bazi } from './bazi/index.js';
 import type { QimenChart } from './dunjia/index.js';
 import {

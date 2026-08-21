@@ -41,7 +41,7 @@ ENV NODE_ENV=development \
 
 EXPOSE 5173
 
-CMD ["npm", "run", "dev", "-w", "@qimendunjia/web", "--", "--host", "0.0.0.0"]
+CMD ["npm", "run", "dev", "-w", "@shipan/web", "--", "--host", "0.0.0.0"]
 
 
 # ── Build ────────────────────────────────────────────────────────────────────
@@ -56,7 +56,7 @@ RUN npm run build
 # Not versioned, fetched at build time. The ephemerides (~2 MB) fit in the
 # image; the location dataset (~90 MB) does not and lives on a volume — see
 # GEONAMES_DB_PATH below.
-RUN npm run ephe:download -w @qimendunjia/core
+RUN npm run ephe:download -w @shipan/core
 
 RUN npm prune --omit=dev --ignore-scripts
 

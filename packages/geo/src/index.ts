@@ -1,5 +1,5 @@
 /**
- * @qimendunjia/geo — location lookup with coordinates and timezone.
+ * @shipan/geo — location lookup with coordinates and timezone.
  *
  * The GeoNames dataset is imported into a local SQLite database: no network
  * call at runtime, no rate limit, no dependency on an external service. The

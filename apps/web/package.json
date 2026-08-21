@@ -1,5 +1,5 @@
 {
-  "name": "@qimendunjia/web",
+  "name": "@shipan/web",
   "version": "0.0.0",
   "private": true,
   "license": "AGPL-3.0-or-later",
@@ -13,10 +13,10 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@qimendunjia/core": "*",
-    "@qimendunjia/geo": "*",
-    "@qimendunjia/i18n": "*",
-    "@qimendunjia/plate": "*"
+    "@shipan/core": "*",
+    "@shipan/geo": "*",
+    "@shipan/i18n": "*",
+    "@shipan/plate": "*"
   },
   "devDependencies": {
     "@sveltejs/adapter-node": "^5.2.14",

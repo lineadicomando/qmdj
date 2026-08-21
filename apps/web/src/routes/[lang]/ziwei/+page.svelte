@@ -4,7 +4,7 @@
   import { appearance } from '$lib/appearance.svelte';
   import { momentQuery, sayFailure, sayPlace, type MomentInput } from '$lib/moment';
   import ZiweiReading from '$lib/components/ZiweiReading.svelte';
-  import { ziweiSeatBoxes } from '@qimendunjia/plate';
+  import { ziweiSeatBoxes } from '@shipan/plate';
   import FormPanel from '$lib/components/FormPanel.svelte';
   import MomentForm from '$lib/components/MomentForm.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';

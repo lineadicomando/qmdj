@@ -1,5 +1,5 @@
 /**
- * @qimendunjia/core — the calculation engine.
+ * @shipan/core — the calculation engine.
  *
  * A pure library: no dependency on HTTP, on a web framework, or on MCP. The
  * adapters consume it from outside.
@@ -10,7 +10,7 @@
  * everything that needs to know what somebody wants. It chooses no 用神, ranks
  * nothing and advises nobody. **The engine does not localise**: it returns
  * identifiers, hanzi and numbers, and readable text is made at the surface
- * from the catalogs in `@qimendunjia/i18n`.
+ * from the catalogs in `@shipan/i18n`.
  */
 
 export {

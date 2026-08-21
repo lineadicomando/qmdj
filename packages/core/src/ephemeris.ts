@@ -7,7 +7,7 @@ import { julianDayToMillis } from './time.js';
 
 /**
  * Minimal ephemeris files for `swisseph` mode, covering 1800-2399.
- * Downloadable with `npm run ephe:download -w @qimendunjia/core`.
+ * Downloadable with `npm run ephe:download -w @shipan/core`.
  */
 const REQUIRED_FILES = ['sepl_18.se1', 'semo_18.se1'];
 

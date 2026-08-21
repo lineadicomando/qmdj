@@ -3,9 +3,9 @@ import {
   qizhengBoard,
   qizhengLabels,
   type QizhengOptions,
-} from '@qimendunjia/core';
-import { createTranslator } from '@qimendunjia/i18n';
-import { renderQizhengSvg } from '@qimendunjia/plate';
+} from '@shipan/core';
+import { createTranslator } from '@shipan/i18n';
+import { renderQizhengSvg } from '@shipan/plate';
 import {
   ephemerisContext,
   momentIsFixed,

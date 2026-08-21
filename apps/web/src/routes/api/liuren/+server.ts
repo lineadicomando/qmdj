@@ -1,4 +1,4 @@
-import { DEFAULT_LIUREN_OPTIONS, liurenBoard, type LiurenOptions } from '@qimendunjia/core';
+import { DEFAULT_LIUREN_OPTIONS, liurenBoard, type LiurenOptions } from '@shipan/core';
 import { json } from '@sveltejs/kit';
 import { momentIsFixed, readMoment } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';

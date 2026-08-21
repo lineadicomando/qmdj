@@ -14,7 +14,7 @@
 <script lang="ts">
   import { Copier, fetchText } from '$lib/copy.svelte';
   import Icon from './Icon.svelte';
-  import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { MessageKey, Translator } from '@shipan/i18n';
 
   interface Props {
     t: Translator;

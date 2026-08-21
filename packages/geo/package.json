@@ -1,5 +1,5 @@
 {
-  "name": "@qimendunjia/geo",
+  "name": "@shipan/geo",
   "version": "0.0.0",
   "description": "Location lookup with coordinates and timezone, from a local GeoNames dataset",
   "license": "AGPL-3.0-or-later",
@@ -26,6 +26,6 @@
     "geo:fixture": "node scripts/build-fixture.mjs"
   },
   "dependencies": {
-    "@qimendunjia/i18n": "*"
+    "@shipan/i18n": "*"
   }
 }

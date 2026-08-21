@@ -34,19 +34,19 @@ package boundaries that are load-bearing, in [`docs/architecture.md`](docs/archi
 
 ```sh
 npm test                                # every workspace (vitest)
-npm run test:watch -w @qimendunjia/geo
+npm run test:watch -w @shipan/geo
 npm run typecheck
 npm run build
-npm run cli -w @qimendunjia/core -- chart   # or `qimen chart` once built
-npm run dev -w @qimendunjia/web             # http://localhost:5173
-npm start -w @qimendunjia/web               # http://localhost:3000, after build
+npm run cli -w @shipan/core -- chart   # or `qimen chart` once built
+npm run dev -w @shipan/web             # http://localhost:5173
+npm start -w @shipan/web               # http://localhost:3000, after build
 ```
 
-`npm run geo:import -w @qimendunjia/geo` downloads **~215 MB**: run it once,
+`npm run geo:import -w @shipan/geo` downloads **~215 MB**: run it once,
 when location search does not work. Not something to run out of habit.
-`npm run geo:fixture -w @qimendunjia/geo` writes a four-place stand-in
+`npm run geo:fixture -w @shipan/geo` writes a four-place stand-in
 instead — enough for every test suite, refused if a database already exists.
-`npm run ephe:download -w @qimendunjia/core` (~2 MB) is optional — without it
+`npm run ephe:download -w @shipan/core` (~2 MB) is optional — without it
 the engine falls back to Moshier, which needs no files.
 
 ## The rules

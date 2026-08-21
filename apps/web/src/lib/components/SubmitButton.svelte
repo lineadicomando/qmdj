@@ -17,7 +17,7 @@
   already showing.
 -->
 <script lang="ts">
-  import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { MessageKey, Translator } from '@shipan/i18n';
 
   interface Props {
     t: Translator;

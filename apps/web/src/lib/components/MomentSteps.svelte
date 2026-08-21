@@ -30,7 +30,7 @@
   move something that does not move.
 -->
 <script lang="ts">
-  import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { MessageKey, Translator } from '@shipan/i18n';
   import type { Unit } from '$lib/step';
 
   interface Props {

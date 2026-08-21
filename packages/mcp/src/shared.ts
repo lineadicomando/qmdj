@@ -15,9 +15,9 @@ import {
   type NianmingOptions,
   type Place,
   type QimenChart,
-} from '@qimendunjia/core';
-import { DEFAULT_OPTIONS } from '@qimendunjia/core';
-import { GeoError, getLocation } from '@qimendunjia/geo';
+} from '@shipan/core';
+import { DEFAULT_OPTIONS } from '@shipan/core';
+import { GeoError, getLocation } from '@shipan/geo';
 import {
   DEFAULT_LOCALE,
   createTranslator,
@@ -26,7 +26,7 @@ import {
   type MessageKey,
   type MessageParams,
   type Translator,
-} from '@qimendunjia/i18n';
+} from '@shipan/i18n';
 import { z } from 'zod';
 
 export interface ToolContext {

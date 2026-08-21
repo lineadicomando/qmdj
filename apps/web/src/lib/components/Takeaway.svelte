@@ -13,7 +13,7 @@
   learned the mark yet. See `Icon.svelte` for why neither travels alone.
 -->
 <script lang="ts">
-  import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { MessageKey, Translator } from '@shipan/i18n';
   import CopyText from './CopyText.svelte';
   import PrintButton from './PrintButton.svelte';
 

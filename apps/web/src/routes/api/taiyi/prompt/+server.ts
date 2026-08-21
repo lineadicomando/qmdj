@@ -1,5 +1,5 @@
-import { DEFAULT_TAIYI_OPTIONS, taiyiBoard, taiyiReadingPrompt } from '@qimendunjia/core';
-import { createTranslator } from '@qimendunjia/i18n';
+import { DEFAULT_TAIYI_OPTIONS, taiyiBoard, taiyiReadingPrompt } from '@shipan/core';
+import { createTranslator } from '@shipan/i18n';
 import {
   localeVary,
   pageAddress,

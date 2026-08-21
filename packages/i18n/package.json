@@ -1,5 +1,5 @@
 {
-  "name": "@qimendunjia/i18n",
+  "name": "@shipan/i18n",
   "version": "0.0.0",
   "description": "Message catalogs and locale negotiation, shared by every surface",
   "license": "AGPL-3.0-or-later",

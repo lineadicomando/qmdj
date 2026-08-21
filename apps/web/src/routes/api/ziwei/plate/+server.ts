@@ -1,6 +1,6 @@
-import { DEFAULT_ZIWEI_OPTIONS, computeZiwei, ziweiLabels } from '@qimendunjia/core';
-import { createTranslator } from '@qimendunjia/i18n';
-import { renderZiweiSvg } from '@qimendunjia/plate';
+import { DEFAULT_ZIWEI_OPTIONS, computeZiwei, ziweiLabels } from '@shipan/core';
+import { createTranslator } from '@shipan/i18n';
+import { renderZiweiSvg } from '@shipan/plate';
 import {
   momentIsFixed,
   readLocale,

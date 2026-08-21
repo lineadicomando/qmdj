@@ -7,7 +7,7 @@
   here: this only opens the dialog.
 -->
 <script lang="ts">
-  import type { Translator } from '@qimendunjia/i18n';
+  import type { Translator } from '@shipan/i18n';
   import Icon from './Icon.svelte';
 
   let { t }: { t: Translator } = $props();

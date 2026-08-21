@@ -1,4 +1,4 @@
-import { DEFAULT_QIZHENG_OPTIONS, qizhengBoard, type QizhengOptions } from '@qimendunjia/core';
+import { DEFAULT_QIZHENG_OPTIONS, qizhengBoard, type QizhengOptions } from '@shipan/core';
 import { json } from '@sveltejs/kit';
 import { ephemerisContext, momentIsFixed, readMoment } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';

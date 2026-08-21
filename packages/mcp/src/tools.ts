@@ -38,9 +38,9 @@ import {
   type QizhengOptions,
   type ZiweiOptions,
   type ScanCriteria,
-} from '@qimendunjia/core';
-import { searchLocations } from '@qimendunjia/geo';
-import { renderChartSvg, renderLiurenSvg } from '@qimendunjia/plate';
+} from '@shipan/core';
+import { searchLocations } from '@shipan/geo';
+import { renderChartSvg, renderLiurenSvg } from '@shipan/plate';
 import { z } from 'zod';
 import {
   birthSchema,

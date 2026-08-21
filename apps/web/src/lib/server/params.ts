@@ -31,9 +31,9 @@ import {
   type StarId,
   type StemId,
   type StrengthId,
-} from '@qimendunjia/core';
-import { getLocation } from '@qimendunjia/geo';
-import { resolveLocale, type Locale } from '@qimendunjia/i18n';
+} from '@shipan/core';
+import { getLocation } from '@shipan/geo';
+import { resolveLocale, type Locale } from '@shipan/i18n';
 import { error } from '@sveltejs/kit';
 
 /**

@@ -31,8 +31,8 @@
   list already, or absent because it answered no criterion.
 -->
 <script lang="ts">
-  import type { Translator } from '@qimendunjia/i18n';
-  import type { QimenChart } from '@qimendunjia/core';
+  import type { Translator } from '@shipan/i18n';
+  import type { QimenChart } from '@shipan/core';
   import { sayFailure, type Failure } from '$lib/moment';
   import ChartReading from './ChartReading.svelte';
   import PalaceTable from './PalaceTable.svelte';

@@ -1,5 +1,5 @@
 {
-  "name": "qimendunjia",
+  "name": "shipan",
   "version": "0.0.0",
   "private": true,
   "description": "Qi Men Dun Jia and Four Pillars charts: calculation engine, REST API and MCP server",
@@ -13,10 +13,10 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "npm run build -w @qimendunjia/i18n -w @qimendunjia/plate -w @qimendunjia/geo -w @qimendunjia/core && npm run build -w @qimendunjia/mcp -w @qimendunjia/web",
+    "build": "npm run build -w @shipan/i18n -w @shipan/plate -w @shipan/geo -w @shipan/core && npm run build -w @shipan/mcp -w @shipan/web",
     "test": "npm run test --workspaces --if-present",
-    "typecheck": "npm run build -w @qimendunjia/i18n && npm run typecheck --workspaces --if-present",
-    "prepare": "npm run build -w @qimendunjia/i18n -w @qimendunjia/plate -w @qimendunjia/geo -w @qimendunjia/core && npm run build -w @qimendunjia/mcp -w @qimendunjia/web"
+    "typecheck": "npm run build -w @shipan/i18n && npm run typecheck --workspaces --if-present",
+    "prepare": "npm run build -w @shipan/i18n -w @shipan/plate -w @shipan/geo -w @shipan/core && npm run build -w @shipan/mcp -w @shipan/web"
   },
   "devDependencies": {
     "@types/node": "^24.7.0",

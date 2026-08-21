@@ -1,4 +1,4 @@
-import { isLocale, loadCatalog, translatorOver } from '@qimendunjia/i18n';
+import { isLocale, loadCatalog, translatorOver } from '@shipan/i18n';
 import { error } from '@sveltejs/kit';
 import type { LayoutLoad } from './$types';
 

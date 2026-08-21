@@ -9,7 +9,7 @@ import type { PlateChart, PlateOptions } from './types.js';
  * `@resvg/resvg-js` is a native module. Importing it from the package index
  * would drag it into every bundle that so much as wanted an SVG, including
  * the browser's, where it cannot run at all. Anything that needs a raster
- * imports `@qimendunjia/plate/png` and knows it is asking for a native
+ * imports `@shipan/plate/png` and knows it is asking for a native
  * dependency.
  */
 

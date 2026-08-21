@@ -148,17 +148,17 @@ its own instead, which is what the three boards of 命 are.
 
 ```sh
 npm install
-npm run geo:import -w @qimendunjia/geo   # ~215 MB, once
+npm run geo:import -w @shipan/geo   # ~215 MB, once
 npm run build
 npm test
 ```
 
 The location import is the only slow step and is needed only for searching
 places by name; everything else works without it, except the tests that
-search. `npm run geo:fixture -w @qimendunjia/geo` writes a four-place stand-in
+search. `npm run geo:fixture -w @shipan/geo` writes a four-place stand-in
 in seconds — enough for every suite, refused if a database already exists, and
 what continuous integration uses. The ephemeris files come from
-`npm run ephe:download -w @qimendunjia/core` (~2 MB) and are optional: without
+`npm run ephe:download -w @shipan/core` (~2 MB) and are optional: without
 them the engine falls back to Moshier, accurate to about a tenth of an arc
 second, which is far below anything a pillar turns on.
 
@@ -177,9 +177,9 @@ qimen calendar --date 2023-04-01
 qimen scan     --date 2026-09-01 --until 2026-09-08 --tz Europe/Rome \
                --gate kaimen --towards se,s
 
-npm run dev -w @qimendunjia/web    # http://localhost:5173
-npm start   -w @qimendunjia/web    # http://localhost:3000, after build
-npm start   -w @qimendunjia/mcp    # MCP on stdio
+npm run dev -w @shipan/web    # http://localhost:5173
+npm start   -w @shipan/web    # http://localhost:3000, after build
+npm start   -w @shipan/mcp    # MCP on stdio
 ```
 
 Every surface takes the same parameters and answers the same way. A chart is a

@@ -20,7 +20,7 @@
 <script lang="ts">
   import { glyph } from '$lib/glyph';
   import { STRENGTH_KEY } from '$lib/vocabulary';
-  import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { MessageKey, Translator } from '@shipan/i18n';
 
   let { t }: { t: Translator } = $props();
 </script>

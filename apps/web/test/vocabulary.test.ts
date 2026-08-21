@@ -8,10 +8,10 @@ import {
   SPIRIT_IDS as ENGINE_SPIRIT_IDS,
   STARS,
   strengthOf,
-} from '@qimendunjia/core';
-import { STRENGTH_MARKS } from '@qimendunjia/plate';
+} from '@shipan/core';
+import { STRENGTH_MARKS } from '@shipan/plate';
 import { describe, expect, it } from 'vitest';
-import type { ChartOptions } from '@qimendunjia/core';
+import type { ChartOptions } from '@shipan/core';
 import {
   DIRECTIONS,
   GATE_IDS,
@@ -29,7 +29,7 @@ import {
 /**
  * `$lib/vocabulary` redeclares what the engine already knows, because the
  * client imports only types from `core` and these are values. This is the
- * test that keeps the copy honest — the same bargain `@qimendunjia/plate`
+ * test that keeps the copy honest — the same bargain `@shipan/plate`
  * makes with its own redeclared types.
  *
  * A form offering a gate the engine has never heard of comes back with an

@@ -1,6 +1,6 @@
-import { DEFAULT_TAIYI_OPTIONS, taiyiBoard, taiyiLabels } from '@qimendunjia/core';
-import { createTranslator } from '@qimendunjia/i18n';
-import { renderTaiyiSvg } from '@qimendunjia/plate';
+import { DEFAULT_TAIYI_OPTIONS, taiyiBoard, taiyiLabels } from '@shipan/core';
+import { createTranslator } from '@shipan/i18n';
+import { renderTaiyiSvg } from '@shipan/plate';
 import {
   localeVary,
   readLocale,

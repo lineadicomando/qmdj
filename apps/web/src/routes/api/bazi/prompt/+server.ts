@@ -1,5 +1,5 @@
-import { baziReadingPrompt, computeBazi } from '@qimendunjia/core';
-import { createTranslator } from '@qimendunjia/i18n';
+import { baziReadingPrompt, computeBazi } from '@shipan/core';
+import { createTranslator } from '@shipan/i18n';
 import {
   ephemerisContext,
   momentIsFixed,

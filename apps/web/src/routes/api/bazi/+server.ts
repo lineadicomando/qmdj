@@ -1,4 +1,4 @@
-import { computeBazi } from '@qimendunjia/core';
+import { computeBazi } from '@shipan/core';
 import { json } from '@sveltejs/kit';
 import { ephemerisContext, momentIsFixed, readInteger, readMoment } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';

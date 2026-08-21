@@ -3,8 +3,8 @@ import {
   qizhengBoard,
   qizhengTranscript,
   type QizhengOptions,
-} from '@qimendunjia/core';
-import { createTranslator } from '@qimendunjia/i18n';
+} from '@shipan/core';
+import { createTranslator } from '@shipan/i18n';
 import {
   ephemerisContext,
   momentIsFixed,

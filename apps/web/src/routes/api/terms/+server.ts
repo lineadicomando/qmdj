@@ -1,4 +1,4 @@
-import { solarTermsOfYear, systemTimezone } from '@qimendunjia/core';
+import { solarTermsOfYear, systemTimezone } from '@shipan/core';
 import { json } from '@sveltejs/kit';
 import { ephemerisContext, readYear } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';

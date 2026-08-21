@@ -1,7 +1,7 @@
-import type { Location } from '@qimendunjia/geo';
-import type { MessageKey, MessageParams, Translator } from '@qimendunjia/i18n';
+import type { Location } from '@shipan/geo';
+import type { MessageKey, MessageParams, Translator } from '@shipan/i18n';
 // Types only: a value import would put the engine in the browser bundle.
-import type { Ganzhi, Ju, PalaceContents, Pattern } from '@qimendunjia/core';
+import type { Ganzhi, Ju, PalaceContents, Pattern } from '@shipan/core';
 
 /**
  * The moment, as it travels in the address.

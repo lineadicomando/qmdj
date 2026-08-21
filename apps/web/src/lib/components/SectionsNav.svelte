@@ -35,7 +35,7 @@
 <script lang="ts">
   import { afterNavigate } from '$app/navigation';
   import { page } from '$app/state';
-  import type { Translator } from '@qimendunjia/i18n';
+  import type { Translator } from '@shipan/i18n';
   import { SECTIONS, carriedSearch, href, isCurrent } from '$lib/navigation';
   import Icon from './Icon.svelte';
 
