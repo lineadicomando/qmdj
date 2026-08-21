@@ -1,6 +1,7 @@
 <script lang="ts">
   import { glyph } from '$lib/glyph';
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { ScannedMoment } from '$lib/moment';
   import { isPlainClick } from '$lib/navigation';
 
   /**
@@ -23,7 +24,7 @@
     keeping,
     onkeep,
   }: {
-    moments: readonly any[];
+    moments: readonly ScannedMoment[];
     t: Translator;
     /** Where the whole board for a row lives. */
     href: (start: string) => string;
@@ -69,7 +70,7 @@
    * away.
    */
   const days = $derived(
-    moments.reduce<{ date: string; moments: any[] }[]>((groups, moment) => {
+    moments.reduce<{ date: string; moments: ScannedMoment[] }[]>((groups, moment) => {
       const date = moment.start.slice(0, 10);
       const last = groups.at(-1);
       if (last && last.date === date) last.moments.push(moment);

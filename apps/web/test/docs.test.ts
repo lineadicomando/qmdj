@@ -75,6 +75,17 @@ function endpoints(directory: string): number {
   return total;
 }
 
+/** Every source file of every workspace, for the tests that read the source. */
+function sources(directory: string, found: string[] = []): string[] {
+  for (const entry of readdirSync(directory)) {
+    if (['node_modules', 'dist', '.svelte-kit', 'coverage'].includes(entry)) continue;
+    const path = join(directory, entry);
+    if (statSync(path).isDirectory()) sources(path, found);
+    else if (/\.(ts|svelte)$/.test(path)) found.push(path);
+  }
+  return found;
+}
+
 /** The `COMMANDS` tuple of the CLI, read as text: the test must not import it. */
 function cliCommands(): number {
   const source = read('packages/core/src/cli.ts');
@@ -124,6 +135,46 @@ describe('the documents point where they say they point', () => {
       }
     });
   }
+
+  /**
+   * The phases the source cites are phases that exist.
+   *
+   * A comment saying «see `docs/history/` phase 21» is a pointer no tool can
+   * follow: it is not a path, deliberately — `docs/` owns what binds and a
+   * rule may not link into a phase — so nothing checks it, and thirty-odd of
+   * them point wherever the numbering last left them. Renumber a phase and the
+   * citations go on naming a file that has moved, in silence.
+   *
+   * The number is what is checked and not the shape of the sentence: whatever
+   * a comment says around it, the phase it names has a file.
+   */
+  it('cites only phases that exist', () => {
+    const phases = new Set(
+      readdirSync(join(ROOT, 'docs/history'))
+        .map((entry) => /^(\d+)-/.exec(entry)?.[1])
+        .filter(Boolean)
+        .map((number) => Number(number)),
+    );
+    expect(phases.size).toBeGreaterThan(0);
+
+    const cited = new Map<number, string[]>();
+    for (const path of sources(join(ROOT, 'packages')).concat(sources(join(ROOT, 'apps')))) {
+      const text = readFileSync(path, 'utf8');
+      for (const match of text.matchAll(/docs\/history\/`?\s*phases?\s+(\d+)(?:\s+and\s+(\d+))?/g)) {
+        for (const number of [match[1], match[2]].filter(Boolean)) {
+          const at = Number(number);
+          cited.set(at, [...(cited.get(at) ?? []), path.slice(ROOT.length)]);
+        }
+      }
+    }
+    expect(cited.size, 'the source should cite some phases').toBeGreaterThan(0);
+
+    const missing = [...cited].filter(([number]) => !phases.has(number));
+    expect(
+      missing.map(([number, where]) => `phase ${number} (${where.join(', ')})`),
+      'A source comment names a phase file that is not in docs/history/.',
+    ).toEqual([]);
+  });
 
   it('keeps the history out of the rules', () => {
     /**

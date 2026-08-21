@@ -2,6 +2,7 @@ import { matchRuns, scanCharts, type ScanMatch } from '@qimendunjia/core';
 import { json } from '@sveltejs/kit';
 import { ephemerisContext, readCriteria, readInterval } from '$lib/server/params';
 import { isHttpError, toHttpError } from '$lib/server/errors';
+import type { ScannedMoment } from '$lib/moment';
 import type { RequestHandler } from './$types';
 
 /**
@@ -56,7 +57,7 @@ export const GET: RequestHandler = ({ url, setHeaders }) => {
  * `/api/qimen` remains the way to get the whole board for any of these
  * moments, which is what the interface links each row to.
  */
-function project({ run, palaces }: ScanMatch): unknown {
+function project({ run, palaces }: ScanMatch): ScannedMoment {
   const numbers = new Set(palaces.map((cell) => cell.palace.number));
 
   return {

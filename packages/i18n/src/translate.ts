@@ -36,3 +36,47 @@ export function createTranslator(locale: Locale): Translator {
     translate(locale, key, params);
   return Object.assign(translator, { locale });
 }
+
+/**
+ * The one catalog a locale needs, fetched on its own.
+ *
+ * Everything above this line reaches both catalogs through `catalogs`, which
+ * is what a bundler has to follow: import `translate` anywhere and English and
+ * Italian both come with it. On a server that costs nothing. In a browser it
+ * meant an Italian reader downloading the English catalog and an English
+ * reader the Italian one, in the chunk the layout loads on every page.
+ *
+ * Split behind a dynamic import, the two become chunks a bundler can keep
+ * apart, and a reader is served the one they read.
+ */
+export async function loadCatalog(locale: Locale): Promise<Record<MessageKey, string>> {
+  const module = locale === 'it' ? await import('./catalogs/it.js') : await import('./catalogs/en.js');
+  return locale === 'it'
+    ? (module as { it: Record<MessageKey, string> }).it
+    : (module as { en: Record<MessageKey, string> }).en;
+}
+
+/**
+ * A translator over one catalog already in hand.
+ *
+ * **It has no English to fall back on, and that is the point rather than a
+ * shortcut.** `translate` falls back to `DEFAULT_LOCALE` and then to the key;
+ * the first of those needs the English catalog present, which is the whole of
+ * what this exists to avoid loading. So a key this catalog lacks degrades
+ * straight to the key.
+ *
+ * What makes that safe is not optimism. The catalogs are typed against a
+ * single key union, so a missing Italian key is a compilation error, and
+ * `catalogs.test.ts` asserts the two agree in both directions besides. The
+ * fallback was already documented as something that «should never happen»;
+ * what is given up here is the second of two nets under a case the type system
+ * does not permit.
+ */
+export function translatorOver(
+  locale: Locale,
+  catalog: Record<MessageKey, string>,
+): Translator {
+  const translator = (key: MessageKey, params?: MessageParams): string =>
+    format(catalog[key] ?? key, params);
+  return Object.assign(translator, { locale });
+}

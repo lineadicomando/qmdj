@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { GET as qimen } from '../src/routes/api/qimen/+server';
 import { GET as plate } from '../src/routes/api/qimen/plate/+server';
@@ -369,9 +371,39 @@ describe('every board endpoint yields the instant it was laid for', () => {
       moment?: { input: { date: string } };
     };
 
+    // The board is under its own name, which is the convention `Instrument.api`
+    // is a single field because of. Asserted before the moment rather than
+    // only through it: read with `?.`, a board that had gone missing under the
+    // name it answers with would have left this test measuring nothing.
+    expect(answer[key], `/api/${key} should answer with a ${key}`).toBeDefined();
+
     // Exactly how the consultation reads it: beside the board, or inside it.
     const moment = answer.moment ?? answer[key]?.moment;
     expect(moment?.input.date).toBeTruthy();
+  });
+
+  /**
+   * The convention has two halves, and only the server's was ever asserted.
+   *
+   * A client has to read the same name. The consultation reads
+   * `body[instrument.api]` and cannot drift from it; `PlateDialog` names the
+   * key outright, which is fair — the scan lays Qi Men charts and only those —
+   * and that is the copy that went stale. When `/api/chart` became
+   * `/api/qimen` the path moved and the payload key moved with it, and that
+   * line went on asking for `body.chart`. It was typed `any`, so nothing
+   * between the fetch and `found.palaces` had a shape to check it against, and
+   * the dialog's whole reading came out `undefined`.
+   */
+  it('is read under that name by the one client that hardcodes it', async () => {
+    const source = readFileSync(
+      fileURLToPath(new URL('../src/lib/components/PlateDialog.svelte', import.meta.url)),
+      'utf8',
+    );
+    const taken = /return body\.(\w+) as/.exec(source);
+    expect(taken, 'PlateDialog should take the board off the body under one name').not.toBeNull();
+
+    const { body } = await call(qimen, MOMENT);
+    expect(Object.keys(body as object)).toContain(taken?.[1]);
   });
 });
 

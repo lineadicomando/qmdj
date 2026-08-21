@@ -19,7 +19,14 @@
  */
 
 export { format, type MessageParams } from './format.js';
-export { catalogs, createTranslator, translate, type Translator } from './translate.js';
+export {
+  catalogs,
+  createTranslator,
+  loadCatalog,
+  translate,
+  translatorOver,
+  type Translator,
+} from './translate.js';
 export { type MessageKey } from './catalogs/en.js';
 export {
   DEFAULT_LOCALE,

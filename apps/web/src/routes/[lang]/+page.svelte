@@ -78,6 +78,17 @@
   import TaiyiReading from '$lib/components/TaiyiReading.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
   import type { MessageKey } from '@qimendunjia/i18n';
+  // Types only, never a value: a value import from `core` would drag the
+  // ephemerides and a native module into the browser bundle.
+  import type {
+    Bazi,
+    LiurenBoard,
+    Moment,
+    QimenChart,
+    QizhengBoard,
+    TaiyiBoard,
+    ZiweiBoard,
+  } from '@qimendunjia/core';
 
   let { data } = $props();
   const t = $derived(data.t);
@@ -181,8 +192,30 @@
    */
   // svelte-ignore state_referenced_locally
   let failure = $state<Failure | undefined>(data.failure);
-  /** The board as it came back — whichever of the four was laid. */
-  let chart = $state<any>();
+  /**
+   * The board as it came back, **carrying the name of the art it belongs to**.
+   *
+   * One value and not two, and that is the whole of why it is shaped this way.
+   * The board and the instrument it was laid with have to move together — the
+   * note on `castInstrument` below says what it cost when they did not, a Qi
+   * Men chart handed to 八字's reading and an exception in a render — and a
+   * pairing kept by hand is a pairing that can come apart. Kept in one
+   * discriminated value it cannot: the arm that reads `board` is the arm that
+   * matched on `id`, and the compiler will not let the two disagree.
+   *
+   * `castInstrument` still exists beside it, and is a different fact: this
+   * says which board is on screen, that one carries the descriptor everything
+   * around it is measured by — the plate's size, the endpoint, the legend.
+   */
+  type Laid =
+    | { id: 'qimen'; board: QimenChart }
+    | { id: 'liuren'; board: LiurenBoard }
+    | { id: 'taiyi'; board: TaiyiBoard }
+    | { id: 'qizheng'; board: QizhengBoard }
+    | { id: 'ziwei'; board: ZiweiBoard }
+    | { id: 'bazi'; board: Bazi };
+
+  let chart = $state<Laid | undefined>();
   /**
    * The instrument the standing answer was laid with, pinned at the cast.
    *
@@ -212,7 +245,7 @@
    * stale once already, when `jianchu` was renamed under it and the line
    * quietly stopped appearing.
    */
-  let castMoment = $state<any>();
+  let castMoment = $state<Moment | null | undefined>();
   /** The fields, which withdraw once they have answered. */
   let panel: FormPanel | undefined = $state();
 
@@ -475,7 +508,13 @@
 
       // An endpoint returns its board named after itself, which is the
       // convention `api` stands on — see `instruments.ts`.
-      chart = body[instrument.api];
+      //
+      // The one cast in this function, and it is where it has to be: what
+      // `json()` hands back is shapeless by nature, so the shape is asserted
+      // once, here, at the instant the board is paired with the name of the
+      // art that produced it. Everything downstream of this line is checked.
+      const laid = { id: instrument.id, board: body[instrument.api] } as Laid;
+      chart = laid;
       /**
        * The moment, from wherever this board keeps it.
        *
@@ -487,7 +526,8 @@
        * matters: the message it produced is one a reader would read as an
        * outage rather than as a bug, and the other instrument worked.
        */
-      castMoment = body.moment ?? body[instrument.api]?.moment ?? null;
+      const laidAt = body.moment ?? body[instrument.api]?.moment ?? null;
+      castMoment = laidAt;
       /**
        * The address of what was laid, and under 天 there is no moment in it.
        *
@@ -499,14 +539,25 @@
        *
        * Either way it is pinned to what the engine actually laid rather than to
        * the field: under a question that is the instant of the press, and under
-       * a year it is `chart.year`, which is the year the server settled on when
-       * the field said nothing.
+       * a year it is the board's own `year`, which is the one the server settled
+       * on when the field said nothing.
+       *
+       * Matched on the board rather than on `laidOnAYear`, which reads the
+       * *field*: the two agree here, and only one of them is the thing whose
+       * `year` is about to be read.
        */
-      if (laidOnAYear) {
-        at = String(chart.year);
+      if (laid.id === 'taiyi') {
+        at = String(laid.board.year);
         address = `year=${at}&lang=${t.locale}`;
       } else {
-        const cast = { date: castMoment.input.date, time: castMoment.input.time };
+        // Every board but 太乙 comes back with the instant it was laid at, so
+        // its absence here is not a shape this page has to render — it is an
+        // answer that cannot be one. Said outright rather than left to fail on
+        // the next line: either way the press ends in the `catch` below and
+        // the reader is told the casting failed, but only one of the two says
+        // so on purpose.
+        if (!laidAt) throw new Error('a board came back without the moment it was laid at');
+        const cast = { date: laidAt.input.date, time: laidAt.input.time };
         address = momentQuery(
           { ...input(), ...cast },
           {
@@ -533,6 +584,13 @@
     } catch {
       chart = undefined;
       castInstrument = undefined;
+      // Reset with the rest, as the refusal branch above does. It was the one
+      // of the four left standing here, so a failed request kept the previous
+      // cast's moment beside no board at all. Nothing rendered it — everything
+      // under the result is inside `{#if chart}` — but two branches that clear
+      // the same answer should clear the same fields, and the one that does
+      // not is the one a later reader trusts.
+      castMoment = undefined;
       address = '';
       // The request itself failed, so there is no code to translate — and it
       // may well be the first press, when nothing was ever cast to be "read
@@ -1039,8 +1097,15 @@
         without an image to fetch — so there is no second copy to warm for
         paper either, since a component takes the print stylesheet the page's
         own rules give it.
+
+        Asked of the board and not of `shown.plate`, though the two divide the
+        six the same way. `plate` being absent is what 八字 *lacks*; `bazi` is
+        what it **is**, and only the second gets `PillarPlate` the pillars it
+        draws already narrowed to the one board that has any.
       -->
-      {#if shown.plate}
+      {#if chart.id === 'bazi'}
+        <PillarPlate pillars={chart.board.pillars} {t} />
+      {:else if shown.plate}
         <div class="board" class:swapped={onPaper}>
           <img
             src={plate}
@@ -1062,8 +1127,6 @@
           {/if}
           {#if shown.strengths}<StrengthLegend {t} />{/if}
         </div>
-      {:else}
-        <PillarPlate pillars={chart.pillars} {t} />
       {/if}
       <!-- `wide`: the board above has the page to itself, so what it was cast
            from is set as its caption — at the drawing's own measure, centred
@@ -1077,20 +1140,28 @@
         component would have to name the props with it, and a table of prop
         shapes is a conditional written sideways. It is keyed on the identifier
         rather than on a boolean, so a sixth board adds an arm and nothing else.
+
+        Matched on the **board's** own name and not on `shown.id`. The two
+        agree inside this block — nothing is cast without pinning the
+        instrument beside it — but only one of them is the name the board
+        travels under, and matching on it is what lets each arm be handed
+        `chart.board` already narrowed to the shape that arm reads. The pairing
+        stops being an invariant somebody maintains and becomes one the
+        compiler holds.
       -->
       <div>
-        {#if shown.id === 'liuren'}
-          <LiurenReading board={chart} {t} moment={castMoment} />
-        {:else if shown.id === 'qizheng'}
-          <QizhengReading board={chart} {t} />
-        {:else if shown.id === 'bazi'}
-          <BaziReading bazi={chart} {t} />
-        {:else if shown.id === 'taiyi'}
-          <TaiyiReading board={chart} {t} />
-        {:else if shown.id === 'ziwei'}
-          <ZiweiReading board={chart} {t} moment={castMoment} />
+        {#if chart.id === 'liuren'}
+          <LiurenReading board={chart.board} {t} moment={castMoment} />
+        {:else if chart.id === 'qizheng'}
+          <QizhengReading board={chart.board} {t} />
+        {:else if chart.id === 'bazi'}
+          <BaziReading bazi={chart.board} {t} />
+        {:else if chart.id === 'taiyi'}
+          <TaiyiReading board={chart.board} {t} />
+        {:else if chart.id === 'ziwei'}
+          <ZiweiReading board={chart.board} {t} moment={castMoment} />
         {:else}
-          <ChartReading {chart} {t} wide />
+          <ChartReading chart={chart.board} {t} wide />
         {/if}
       </div>
     </section>

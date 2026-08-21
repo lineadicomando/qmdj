@@ -1,5 +1,7 @@
 import type { Location } from '@qimendunjia/geo';
 import type { MessageKey, MessageParams, Translator } from '@qimendunjia/i18n';
+// Types only: a value import would put the engine in the browser bundle.
+import type { Ganzhi, Ju, PalaceContents, Pattern } from '@qimendunjia/core';
 
 /**
  * The moment, as it travels in the address.
@@ -235,4 +237,31 @@ export async function lookupPlace(
 /** A failure in the reader's language, falling back to the English it carries. */
 export function sayFailure(t: Translator, failure: Failure): string {
   return failure.messageKey ? t(failure.messageKey, failure.params ?? {}) : failure.message;
+}
+
+/**
+ * One run of a scan, as `/api/moments` projects it.
+ *
+ * A **projection** and not a `ScanRun`: the engine's run carries a whole chart
+ * per hour, and a month of them is a payload nobody reads. What crosses is the
+ * hour, the ju, the palaces that answered and the configurations bearing on
+ * them.
+ *
+ * Named here rather than inside the endpoint because both halves need it and
+ * neither may import the other — a component cannot reach into `+server.ts`,
+ * and the shape stated in one of the two and inferred in the other is the
+ * shape that drifts. The endpoint declares this as what it returns; the table
+ * and the page declare it as what they read.
+ */
+export interface ScannedMoment {
+  /** When the run opens, as local clock time at the place. ISO 8601. */
+  start: string;
+  /** When the next one opens. Half-open, as the engine reports them. */
+  end: string;
+  hour: Ganzhi;
+  ju: Ju;
+  /** The palaces that answered what was asked of the interval. */
+  palaces: readonly PalaceContents[];
+  /** Those of the whole board, and of the palaces that answered. */
+  patterns: readonly Pattern[];
 }

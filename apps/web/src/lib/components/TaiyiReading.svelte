@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { TaiyiBoard, TaiyiFief, TaiyiPalace } from '@qimendunjia/core';
   import { glyph } from '$lib/glyph';
 
   /**
@@ -26,7 +27,7 @@
    * from `core`: a value import would drag the ephemerides and a native module
    * into the browser bundle.
    */
-  let { board, t }: { board: any; t: Translator } = $props();
+  let { board, t }: { board: TaiyiBoard; t: Translator } = $props();
 
   const sides = $derived([
     { key: 'host', eye: board.wenchang, side: board.host, eyeWord: 'label.taiyi.wenchang', count: 'label.taiyi.hostCount' },
@@ -34,7 +35,25 @@
   ]);
 
   /** A palace of this board: the trigram, and the number *this* board gives it. */
-  const seat = (palace: any): string => `${glyph(palace)} ${palace.number}`;
+  const seat = (palace: TaiyiPalace): string => `${glyph(palace)} ${palace.number}`;
+
+  /**
+   * 三基 — the three bases, each said over the period it runs on.
+   *
+   * The period is read off the fief and **not written here**. 卷五 gives the
+   * three bases three different periods over one ring of twelve, and the
+   * engine carries the number rather than leaving it to the reader for the
+   * reason `TaiyiFief.period` states: 民基 at `1/1` is a base that moves every
+   * year and can never say anything else, where a bare `1` beside a sovereign
+   * at `23` reads as a structure newly begun — a fact nobody computed. Written
+   * as literals in the markup, that number was one quantity kept in two
+   * places, and the copy here could not be wrong in a way any test would see.
+   */
+  const bases = $derived<[MessageKey, TaiyiFief][]>([
+    ['label.taiyi.junji', board.sanji.jun],
+    ['label.taiyi.chenji', board.sanji.chen],
+    ['label.taiyi.minji', board.sanji.min],
+  ]);
 </script>
 
 <div class="words">
@@ -136,11 +155,11 @@
             <span class="glyph">{glyph(board.dayou.wenchang)}</span></td>
           <td class="count">{board.dayou.station.year}/36</td>
         </tr>
-        {#each [['junji', board.sanji.jun, 30], ['chenji', board.sanji.chen, 3], ['minji', board.sanji.min, 1]] as [id, fief, span]}
+        {#each bases as [word, fief]}
           <tr>
-            <th scope="row">{t(`label.taiyi.${id}` as MessageKey)}</th>
+            <th scope="row">{t(word)}</th>
             <td class="glyph">{glyph(fief.branch)}</td>
-            <td class="count">{fief.year}/{span}</td>
+            <td class="count">{fief.year}/{fief.period}</td>
           </tr>
         {/each}
       </tbody>

@@ -138,6 +138,9 @@ export {
   type DayGodId,
   type Lodge,
   type LodgeId,
+  type MonthGod,
+  type MonthGodId,
+  type MonthGodSeat,
   type Officer,
   type OfficerId,
   type YearGod,
@@ -316,6 +319,9 @@ export {
   type Bazi,
   type BaziOptions,
   type BaziPillar,
+  // Part of `Bazi` and not reachable without this line: the count a surface
+  // prints is a field of the board it was handed.
+  type ElementCount,
   type Gender,
   type HiddenRank,
   type HiddenStem,

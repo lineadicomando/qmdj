@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { LiurenBoard, Moment } from '@qimendunjia/core';
   import CalendarAndAlmanac from './CalendarAndAlmanac.svelte';
   import { glyph } from '$lib/glyph';
 
@@ -24,7 +25,7 @@
    * Neither is part of a 六壬 board any more than either is part of a chart.
    * Both pages that show a board have the moment, and both pass it.
    */
-  let { board, t, moment = null }: { board: any; t: Translator; moment?: any } = $props();
+  let { board, t, moment = null }: { board: LiurenBoard; t: Translator; moment?: Moment | null } = $props();
 
   /**
    * Written out with their readings, because a name carries one.

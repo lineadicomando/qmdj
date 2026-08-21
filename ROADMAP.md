@@ -74,7 +74,11 @@ is no reference against which a 茅山 chart could be falsified. See
 `docs/refusals.md`.
 
 `ziqi: yinianyisu` is the one waiting on a single citable fact — an epoch. See
-the 紫氣 entry in `docs/refusals.md` and the research in `texts/README.md`.
+the 紫氣 entry in `docs/refusals.md`. The research behind it is on the local
+shelf, in `texts/`, which `.gitignore` excludes — so a clone does not have it,
+and nothing here depends on it: what a source establishes is in
+`docs/sources.md`, cited by title and never by path. See `docs/README.md`
+§ "The sources themselves are not here".
 
 ## 3. What is refused and stays refused
 

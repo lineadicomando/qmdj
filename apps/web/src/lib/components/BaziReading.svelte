@@ -19,16 +19,19 @@
 <script lang="ts">
   import { glyph } from '$lib/glyph';
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  // Types only. A value import would drag the ephemerides and a native module
+  // into the browser bundle — the rule `TaiyiReading` states for all four.
+  import type { Bazi, ElementCount, Ganzhi } from '@qimendunjia/core';
 
-  let { bazi, t }: { bazi: any; t: Translator } = $props();
+  let { bazi, t }: { bazi: Bazi; t: Translator } = $props();
 
-  const say = (pair: any): string =>
+  const say = (pair: Ganzhi): string =>
     `${t(`label.stem.${pair.stem.id}` as MessageKey)} · ${t(`label.branch.${pair.branch.id}` as MessageKey)}`;
 
   // All five, zeroes included, in the order `formatBazi` prints them: the
   // count exists to show what is absent as much as what abounds.
   const elements = ['mu', 'huo', 'tu', 'jin', 'shui'] as const;
-  const counted = (distribution: any): string =>
+  const counted = (distribution: ElementCount): string =>
     elements
       .map((element) => `${t(`label.element.${element}` as MessageKey)} ${distribution[element]}`)
       .join(' · ');

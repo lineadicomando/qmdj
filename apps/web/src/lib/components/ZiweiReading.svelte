@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { Moment, ZiweiBoard } from '@qimendunjia/core';
   import CalendarAndAlmanac from './CalendarAndAlmanac.svelte';
   import Icon from './Icon.svelte';
   import { glyph } from '$lib/glyph';
@@ -26,9 +27,9 @@
     found = null,
     onfind = undefined,
   }: {
-    board: any;
+    board: ZiweiBoard;
     t: Translator;
-    moment?: any;
+    moment?: Moment | null;
     pointed?: string | null;
     /** Where the last press landed. Owned by the page; see the note there. */
     found?: string | null;
@@ -36,7 +37,7 @@
     onfind?: ((branch: string) => void) | undefined;
   } = $props();
 
-  const gendered = $derived(board.palaces.some((palace: any) => palace.majorLimit !== null));
+  const gendered = $derived(board.palaces.some((palace) => palace.majorLimit !== null));
 </script>
 
 <div class="words">

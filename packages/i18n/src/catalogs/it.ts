@@ -909,7 +909,6 @@ export const it: Record<MessageKey, string> = {
   'consult.year': 'L\'anno su cui il quadro è steso',
   'consult.yearNote': 'Lascialo vuoto per l\'anno in cui siamo.',
   'consult.changeBirth': 'Cambia la nascita',
-  'consult.changeYear': 'Cambia l\'anno',
   'consult.changeMatter': 'Cambia ciò che stai guardando',
   'consult.change': 'Cambia la domanda',
   'consult.castAt': 'Posto per il {when}',
@@ -1247,7 +1246,6 @@ export const it: Record<MessageKey, string> = {
   'cli.field.bodyMaster': 'signore del corpo',
   'cli.field.ziweiPalaces': 'i dodici seggi',
   'cli.field.lunarDate': 'la data lunare',
-  'cli.field.majorLimit': 'decennio',
   // Detto una volta, dove chi legge può soppesarlo. Si veda `docs/history/`, fase 23.
   'cli.value.ziweiSource':
     'collocazioni dal 《紫微斗數全書》 卷二 in ogni punto — la trasmissione delle quattordici stelle, non quella delle diciotto, i 十八飛星 del 《全集》 e del 《捷覽》; dove le sue tavole si scostano da quelle moderne — 火星 e 鈴星 slegate dall\'ora, 魁鉞 a 丙丁辛, 解神 preso dall\'anno, 壬 che dà 科 a 天府 — si segue questo libro e lo scostamento è registrato',
@@ -1271,7 +1269,6 @@ export const it: Record<MessageKey, string> = {
   'cli.field.taiyiJu': 'disposizione',
   'cli.field.taiyiEyes': 'i due occhi',
   'cli.field.taiyiCounts': 'i due conti',
-  'cli.field.taiyiGenerals': 'i generali',
   'cli.field.taiyiBases': 'le tre basi',
   'cli.field.taiyiCircuits': 'i giri lunghi',
   'cli.field.taiyiGate': 'porta di turno',

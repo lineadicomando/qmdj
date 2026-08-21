@@ -1069,7 +1069,6 @@ export const en = {
   // empty is somebody's answer rather than nobody's.
   'consult.yearNote': 'Leave it empty for the year we are in.',
   'consult.changeBirth': 'Change the birth',
-  'consult.changeYear': 'Change the year',
   'consult.changeMatter': 'Change what you are looking at',
   // What reopening the panel offers, which is the question and not the
   // moment: a second consultation begins by rewriting the question, and
@@ -1604,7 +1603,6 @@ export const en = {
   'cli.field.bodyMaster': 'master of the body',
   'cli.field.ziweiPalaces': 'the twelve seats',
   'cli.field.lunarDate': 'the lunar date',
-  'cli.field.majorLimit': 'decade',
   // Said once, where a reader can weigh it. See `docs/history/` phase 23.
   'cli.value.ziweiSource':
     'placed by 《紫微斗數全書》 卷二 throughout — the fourteen-star transmission, and not the eighteen-star 十八飛星 line that 《全集》 and 《捷覽》 carry; where its tables part from the modern ones — 火星 and 鈴星 off the hour, 魁鉞 at 丙丁辛, 解神 off the year, 壬 giving 科 to 天府 — this book is followed and the divergence is recorded',
@@ -1628,7 +1626,6 @@ export const en = {
   'cli.field.taiyiJu': 'arrangement',
   'cli.field.taiyiEyes': 'the two eyes',
   'cli.field.taiyiCounts': 'the two counts',
-  'cli.field.taiyiGenerals': 'the generals',
   'cli.field.taiyiBases': 'the three bases',
   'cli.field.taiyiCircuits': 'the longer circuits',
   'cli.field.taiyiGate': 'gate on duty',

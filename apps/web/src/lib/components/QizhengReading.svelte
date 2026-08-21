@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { Moment, QizhengBoard } from '@qimendunjia/core';
   import CalendarAndAlmanac from './CalendarAndAlmanac.svelte';
   import { glyph } from '$lib/glyph';
 
@@ -18,14 +19,14 @@
    * arrives rather than looked up: a value import would drag the ephemerides
    * and a native module into the browser bundle.
    */
-  let { board, t, moment = null }: { board: any; t: Translator; moment?: any } = $props();
+  let { board, t, moment = null }: { board: QizhengBoard; t: Translator; moment?: Moment | null } = $props();
 
   const placed = $derived([...board.governors, ...board.remainders]);
 
   /** What stands in each palace, by the palace's index on the ring. */
   const standing = $derived(
-    board.houses.map((seat: any) =>
-      placed.filter((one: any) => one.palace.index === seat.palace.index),
+    board.houses.map((seat) =>
+      placed.filter((one) => one.palace.index === seat.palace.index),
     ),
   );
 

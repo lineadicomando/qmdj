@@ -32,6 +32,7 @@
 -->
 <script lang="ts">
   import type { Translator } from '@qimendunjia/i18n';
+  import type { QimenChart } from '@qimendunjia/core';
   import { sayFailure, type Failure } from '$lib/moment';
   import ChartReading from './ChartReading.svelte';
   import PalaceTable from './PalaceTable.svelte';
@@ -99,11 +100,21 @@
    */
   const asked = $derived(read(chart));
 
-  async function read(from: string): Promise<any> {
+  /**
+   * The board behind the drawing, under the name the endpoint answers with.
+   *
+   * `qimen` and not `chart`. Every board endpoint returns its board named
+   * after itself — the convention `Instrument.api` is one field because of —
+   * and this one was `/api/chart` answering with a `chart` until the section
+   * took the name of its art. The path moved, the key moved with it, and this
+   * line read the old word for a while: the return was `any`, so nothing
+   * between here and `found.palaces` had anything to check it against.
+   */
+  async function read(from: string): Promise<QimenChart> {
     const response = await fetch(from);
     const body = await response.json();
     if (!response.ok) throw new Error(sayFailure(t, body as Failure));
-    return body.chart;
+    return body.qimen as QimenChart;
   }
 
   /**

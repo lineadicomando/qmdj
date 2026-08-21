@@ -15,6 +15,7 @@
 <script lang="ts">
   import { glyph } from '$lib/glyph';
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { QimenChart } from '@qimendunjia/core';
   import PalaceTable from './PalaceTable.svelte';
   import CalendarAndAlmanac from './CalendarAndAlmanac.svelte';
   import PillarPlate from './PillarPlate.svelte';
@@ -52,7 +53,7 @@
     t,
     palaces = true,
     wide = false,
-  }: { chart: any; t: Translator; palaces?: boolean; wide?: boolean } = $props();
+  }: { chart: QimenChart; t: Translator; palaces?: boolean; wide?: boolean } = $props();
 
   /** Largest to smallest, as every almanac and the drawing's caption have it. */
   const PILLARS = ['year', 'month', 'day', 'hour'] as const;

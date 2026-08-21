@@ -19,6 +19,7 @@
 -->
 <script lang="ts">
   import type { MessageKey, Translator } from '@qimendunjia/i18n';
+  import type { Moment } from '@qimendunjia/core';
 
   /**
    * The moment as data, not as a type: the client imports only types from
@@ -37,7 +38,7 @@
    * derives otherwise, and no source reads this page against a nativity. That
    * is the graft the natal Qi Men was made of. See `docs/history/` phase 15.
    */
-  let { moment, t, almanac = true }: { moment: any; t: Translator; almanac?: boolean } = $props();
+  let { moment, t, almanac = true }: { moment: Moment | null; t: Translator; almanac?: boolean } = $props();
 
   /**
    * Every field is guarded on its own, and the guard is not superstition.
@@ -142,10 +143,10 @@
           </dd>
         {/if}
 
-        {#if page.shensha?.some((god: any) => god.onDay)}
+        {#if page.shensha?.some((god) => god.onDay)}
           <dt>{t('cli.field.shensha')}</dt>
           <dd>
-            {#each page.shensha.filter((god: any) => god.onDay) as god}
+            {#each page.shensha.filter((god) => god.onDay) as god}
               <span class="entry">
                 <span class="glyph">{god.hanzi}</span>
                 {t(`label.shensha.${god.id}` as MessageKey)}
@@ -168,7 +169,7 @@
                     : god.seat.kind === 'trigram'
                       ? t(`label.palace.${god.seat.trigram.id}` as MessageKey)
                       : god.seat.branches
-                          .map((b: any) => t(`label.branch.${b.id}` as MessageKey))
+                          .map((b) => t(`label.branch.${b.id}` as MessageKey))
                           .join(', ')}
               </span>
             {/each}

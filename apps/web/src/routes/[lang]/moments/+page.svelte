@@ -15,7 +15,7 @@
     type IntervalInput,
     type Kept,
   } from '$lib/interval';
-  import { sayFailure, sayPlace } from '$lib/moment';
+  import { sayFailure, sayPlace, type ScannedMoment } from '$lib/moment';
   import { isPlainClick } from '$lib/navigation';
   import {
     DIRECTIONS,
@@ -184,7 +184,7 @@
    * the pillar in the heading, and nothing else.
    */
   const picked = $derived(
-    at ? scan?.moments.find((moment: any) => moment.start.slice(0, 16) === at.slice(0, 16)) : undefined,
+    at ? scan?.moments.find((moment: ScannedMoment) => moment.start.slice(0, 16) === at.slice(0, 16)) : undefined,
   );
 
   /**

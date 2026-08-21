@@ -464,6 +464,23 @@ export function yearGodsOf(year: Ganzhi): readonly YearGod[] {
 
 export type MonthGodId = 'tiande' | 'tiandehe' | 'yuede' | 'yuedehe';
 
+/**
+ * Where a 月德 sits, which is narrower than where a 年神 does.
+ *
+ * A virtue of the month stands on a stem or on a corner trigram and on nothing
+ * else — 「四仲之月天徳居四維」, and `monthGodsOf` produces those two seats
+ * alone. A 年神 may also stand on a branch, or on a set of them for 金神.
+ *
+ * Declared apart rather than borrowing `YearGodSeat` whole, because a union
+ * wider than what the function can return hands two impossible arms to every
+ * surface that reads one. A surface then either answers them — markup for a
+ * case the source excludes — or assumes them away, which is what the interface
+ * did: it tested for `stem` and read `trigram` off the else, so a seat on a
+ * branch would have been a bearing printed as a trigram it does not have.
+ * Unreachable today, and unreachable by the type from here.
+ */
+export type MonthGodSeat = Extract<YearGodSeat, { kind: 'stem' } | { kind: 'trigram' }>;
+
 export interface MonthGod {
   id: MonthGodId;
   hanzi: string;
@@ -474,7 +491,7 @@ export interface MonthGod {
    * Only 天德合 is ever absent: 「四仲之月天徳居四維，故無合也」 — in the four
    * 仲 months the 天德 stands on a corner trigram, and a trigram has no 五合.
    */
-  seat?: YearGodSeat;
+  seat?: MonthGodSeat;
   /**
    * Whether **this day** carries it, which is the seat and the day agreeing.
    *
@@ -521,11 +538,11 @@ export function monthGodsOf(monthBranch: Branch, day: Ganzhi): readonly MonthGod
   const tiande = TIANDE[monthBranch.index] as number;
   const yuede = YUEDE[monthBranch.index] as number;
 
-  const stemSeat = (index: number): YearGodSeat => ({
+  const stemSeat = (index: number): MonthGodSeat => ({
     kind: 'stem',
     stem: STEMS[index] as Stem,
   });
-  const seats: Record<MonthGodId, YearGodSeat | undefined> = {
+  const seats: Record<MonthGodId, MonthGodSeat | undefined> = {
     tiande:
       tiande >= 0
         ? stemSeat(tiande)
