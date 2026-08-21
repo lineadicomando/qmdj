@@ -1,6 +1,6 @@
 ---
 name: new-feature
-description: Use when ADDING or EXTENDING a calculation in shipan that has to reach users or agents — a new computation in core, a new /api endpoint, a new MCP tool, a new section of the interface, a new CLI option, a new pattern in dunjia. Lists the surfaces to cross (core, i18n, CLI, plate, web, MCP, README, agent-prompt) and the order to work through them in. Triggers: new calculation, new endpoint, new MCP tool, new section, expose to agents, new CLI option, new pattern.
+description: Use when ADDING or EXTENDING a calculation in shipan that has to reach users or agents — a new computation in core, a new /api endpoint, a new MCP tool, a new section of the interface, a new CLI option, a new pattern in dunjia. Lists the surfaces to cross (core, i18n, CLI, plate, web, MCP tools and server instructions, README, agent-prompt) and the order to work through them in. Triggers: new calculation, new endpoint, new MCP tool, new section, expose to agents, new CLI option, new pattern.
 ---
 
 # Adding a feature to shipan
@@ -33,7 +33,9 @@ apps/web/
   └── src/routes/[lang]/<...>         if it is a new page
 
 packages/mcp/src/tools.ts             registerXxx(server, context)
-packages/mcp/src/server.ts            the registration
+packages/mcp/src/server.ts            the registration — and `instructions`,
+                                      which is the frame a caller reads before
+                                      it has seen a tool. Name a board there
 packages/mcp/test/server.test.ts      obligatory
 
 README.md                             the description and the tables
@@ -68,7 +70,10 @@ change.
    a quantity without an entry there is a quantity nobody can weigh.
 6. `npm test && npm run typecheck`. If the feature added an endpoint, a tool,
    a section or a command, `docs.test.ts` will fail until the count stated in
-   `docs/architecture.md` is corrected. That is what it is for.
+   `docs/architecture.md` is corrected. That is what it is for. A board adds a
+   `compute_` tool, so the MCP half fails too until the server's `instructions`
+   name it — see `docs/history/26-the-frame-a-caller-reads.md` for why that
+   string is the one surface a checklist kept missing.
 
 ## The commit
 

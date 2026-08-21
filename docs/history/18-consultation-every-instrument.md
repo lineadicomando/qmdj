@@ -29,7 +29,7 @@ the two holes is the substrate every other board is built on.
 consultation, chosen before the press and at no point after it. The rule does
 more work at four boards than it did at two, and the overlaps are now worth
 enumerating: the Qi Men chart and the 六壬 board share the day pillar, the 旬,
-the 空亡, the 遁干 and seven of the eight 八神; the twelve 宮 of 七政四餘
+the 空亡, the 遁干 and five of the eight 八神; the twelve 宮 of 七政四餘
 *are* the ring 六壬 seats its 月將 on; and a 八字 is the four pillars every
 other board is laid from, so beside any of them it is the same fact a second
 time. **Nothing is fused, because nothing is ever in the fence together.** The

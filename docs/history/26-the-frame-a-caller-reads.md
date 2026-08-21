@@ -36,7 +36,7 @@ had never needed to reach an MCP caller: a frame offering two tools does not
 tempt anybody to triangulate. A frame offering six does. An agent handed six
 compute tools calls three and reports their agreement, and **the boards are
 not independent** — a 奇門 chart and a 六壬 board share the day pillar, the
-decade, the void branches and seven of the eight spirits; a 七政四餘 board's
+decade, the void branches and five of the eight spirits; a 七政四餘 board's
 twelve 宮 are the ring a 六壬 general is seated on; a 八字 *is* the four pillars
 the others are built from. Where two agree it is frequently one fact printed
 twice.
