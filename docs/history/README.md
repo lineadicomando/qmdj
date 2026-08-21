@@ -58,6 +58,7 @@ phase.
 | 22 | [A place said in degrees](22-place-in-degrees.md) | done — a place refined by coordinates |
 | 23 | [紫微斗數, the third board of 命](23-ziwei.md) | done — 《全書》's fourteen 正曜, and not the other book's eighteen |
 | 24 | [The sections say the names they are](24-section-names.md) | done — `/chart` becomes `/qimen` |
+| 25 | [The project takes its name](25-the-project-takes-its-name.md) | done — the project is shipan 式盤 |
 
 ## The rest of the record
 
