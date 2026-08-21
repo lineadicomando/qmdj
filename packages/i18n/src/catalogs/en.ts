@@ -1095,7 +1095,16 @@ export const en = {
   // aloud. It is not a formality: the chart is read *towards* a question, and
   // a prompt built without one asks a model to read towards nothing.
   'form.question': 'Your question',
-  'form.questionPlaceholder': 'What are you asking?',
+  // One placeholder per board of 卜, and they are not decoration: the two
+  // arts take different shapes of question, and a reader who has just chosen
+  // between two errands is owed the difference where they are about to type.
+  // «What are you asking?» over both was the label said a second time — it
+  // taught nothing and changed with nothing. The card above says what the art
+  // is *for*; these say what to write.
+  'form.questionPlaceholder.qimen':
+    'Something to be done and the moment to do it in — whether to accept, whether to go, whether to open a negotiation now or wait',
+  'form.questionPlaceholder.liuren':
+    'A situation already under way and the people in it — how things stand, what the other side has in mind, what is moving',
   // Deliberately not «your question». What goes here is a field of view with
   // two parties in it, because that is what the board's two counts are counts
   // *of* — and the placeholder does the teaching, since «matter» alone would

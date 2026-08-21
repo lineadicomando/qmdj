@@ -681,79 +681,23 @@
     onsubmit={consult}
   >
     {#snippet fields()}
-      <!-- Above the moment and above the button, because that is the order:
-           the chart is cast for the instant the question is put. -->
       <!--
-        What is being asked, under no heading at all.
+        Which board this is, and it stands first because everything above it
+        used to move.
 
-        A name over these two would have to say «the question, and which
-        board» — over a field labelled «Your question» and one labelled «What
-        kind of question is it». Three ways of saying one thing, which is what
-        the panel's own heading was taken off for. The lead line above the
-        panel already says what the page is for, and these are the fields that
-        do it; what takes a name below is the circumstance, which is a
-        different kind of thing and reads as the step it is.
-      -->
-      <!--
-        Absent under a board of 命 or of 天, rather than disabled or ignored.
+        The question and the matter are not the same field: one appears where
+        the other does not, they carry different labels and different
+        placeholders, and under an instrument of 命 neither is there at all.
+        Put over the choice, that made the first thing on the page the thing
+        that jumps — a reader comparing two instruments watched the box they
+        had just started reading appear, vanish and change name under their
+        hand, and everything below it slide by two lines. **What turns stands
+        under what turns it.** The order the section is built on is untouched
+        by the move: what has to come before the casting is the question, and
+        the casting is the button at the foot of the panel.
 
-        Nothing is asked of those three, and a box standing empty over them
-        would be the page inviting exactly the thing the prompt refuses. Under
-        命 a topic names one of the seats the board prints — «my career» *is*
-        官祿宮 — and a reading that started from it would have reached a seat
-        without ever choosing one. Under 天 it is worse rather than milder:
-        there is nobody on that board at all, and a question typed over it is
-        how a reader gets written into a figure of a year they are not in. See
-        `prompt.ts` and `PLAN.md` § 4 phases 18 and 21.
-      -->
-      <!--
-        The matter, under 天 and where the question stands under 卜.
-
-        It is **not** the question field relabelled, and the two are kept apart
-        in the state for the same reason they are kept apart here: a question
-        asks what will happen and puts the person asking inside a figure they
-        are not in, which is the one thing this board refuses outright. A matter
-        names what is being *looked at* — and naming two sides of it is what
-        lets the board's two counts be counts of anything at all.
-
-        Required, unlike the year beneath it. That looks like this page
-        contradicting itself and is the same rule one field over: what may be
-        empty is what has an honest default, and the year has one — the year
-        being lived. What the figure is read *for* has none, and a board of 天
-        laid on nothing produces a precise description of a figure that never
-        says «and so?». Which is what it produced before this field existed.
-
-        A label and a placeholder and nothing else. There was a note under it
-        saying the same three things a third time — not a question, not about
-        you, name two sides — and the placeholder already carries the shape
-        where the reader is looking when they start typing. Three ways of
-        saying one thing is what the panel's own heading was taken off for.
-      -->
-      {#if laidOnAYear}
-        <label class="question">
-          {t('form.matter')}
-          <textarea bind:value={matter} rows="3" placeholder={t('form.matterPlaceholder')}
-          ></textarea>
-        </label>
-      {/if}
-
-      {#if asking}
-        <label class="question">
-          {t('form.question')}
-          <!-- Five lines rather than two. What is typed here is the one thing
-               on the page the reader composes rather than picks, and a box the
-               size of a caption says to keep it to a caption — when what makes
-               a question readable is the circumstance around it. -->
-          <textarea bind:value={question} rows="5" placeholder={t('form.questionPlaceholder')}
-          ></textarea>
-        </label>
-      {/if}
-
-      <!--
-        Which board the question is put to, in the open with it.
-
-        Not behind the disclosure, because it is not a refinement of the
-        instant: it decides what is laid on it, and the two boards answer
+        Not behind the disclosure either, because it is not a refinement of the
+        instant: it decides what is laid on it, and the boards answer
         different shapes of question. The options say what they are **for**
         and not what they are called — somebody arriving with a question
         recognises the shape of their own, where `Qi Men` and `Liu Ren` are
@@ -811,6 +755,84 @@
           {/each}
         </div>
       </fieldset>
+
+      <!-- Above the moment and above the button, because that is the order:
+           the chart is cast for the instant the question is put. -->
+      <!--
+        What is being asked, under no heading at all.
+
+        A name over this and the choice above it would have to say «the
+        question, and which board» — over a field labelled «Your question» and
+        a group labelled «What kind of reading is it». Three ways of saying one
+        thing, which is what the panel's own heading was taken off for. The
+        lead line above the panel already says what the page is for, and these
+        are the fields that do it; what takes a name below is the circumstance,
+        which is a different kind of thing and reads as the step it is.
+      -->
+      <!--
+        Absent under a board of 命, rather than disabled or ignored.
+
+        Nothing is asked of those three, and a box standing empty over them
+        would be the page inviting exactly the thing the prompt refuses. Under
+        命 a topic names one of the seats the board prints — «my career» *is*
+        官祿宮 — and a reading that started from it would have reached a seat
+        without ever choosing one.
+      -->
+      <!--
+        The matter, under 天 and where the question stands under 卜.
+
+        It is **not** the question field relabelled, and the two are kept apart
+        in the state for the same reason they are kept apart here: a question
+        asks what will happen and puts the person asking inside a figure they
+        are not in, which is the one thing this board refuses outright. A matter
+        names what is being *looked at* — and naming two sides of it is what
+        lets the board's two counts be counts of anything at all.
+
+        Required, unlike the year beneath it. That looks like this page
+        contradicting itself and is the same rule one field over: what may be
+        empty is what has an honest default, and the year has one — the year
+        being lived. What the figure is read *for* has none, and a board of 天
+        laid on nothing produces a precise description of a figure that never
+        says «and so?». Which is what it produced before this field existed.
+
+        A label and a placeholder and nothing else. There was a note under it
+        saying the same three things a third time — not a question, not about
+        you, name two sides — and the placeholder already carries the shape
+        where the reader is looking when they start typing. Three ways of
+        saying one thing is what the panel's own heading was taken off for.
+      -->
+      <!-- `instrument.asks` in the guard rather than a non-null assertion under
+           it: the key rides on the descriptor beside the kind, so an instrument
+           that puts a field up is the same fact as one that says what to write
+           in it, and the narrowing is where `shown.plate` does it below. -->
+      {#if laidOnAYear && instrument.asks}
+        <label class="question">
+          {t('form.matter')}
+          <textarea bind:value={matter} rows="3" placeholder={t(instrument.asks)}></textarea>
+        </label>
+      {/if}
+
+      {#if asking && instrument.asks}
+        <label class="question">
+          {t('form.question')}
+          <!-- Five lines rather than two. What is typed here is the one thing
+               on the page the reader composes rather than picks, and a box the
+               size of a caption says to keep it to a caption — when what makes
+               a question readable is the circumstance around it. -->
+          <!--
+            The placeholder is the instrument's and not the field's, which is
+            why it is read off the descriptor rather than off a key written
+            here. Both boards of 卜 take a question and they take different
+            ones: 奇門 is asked about a thing to be done and the hour to do it
+            in, 六壬 about a situation already under way and the people in it.
+            A single «What are you asking?» over both was the field naming
+            itself a second time, and it left a reader who had just chosen
+            between two errands with nothing telling them what changed. The
+            card above says what the art is for; this says what to write.
+          -->
+          <textarea bind:value={question} rows="5" placeholder={t(instrument.asks)}></textarea>
+        </label>
+      {/if}
 
       <!--
         The moment, and where it stands depends on what it is.

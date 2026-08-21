@@ -147,6 +147,23 @@ export interface Instrument {
    */
   readonly option: MessageKey;
   /**
+   * What to write in the field this instrument puts up — the question's
+   * placeholder, or the matter's.
+   *
+   * A column of its own rather than a value read off `needs`, because it is
+   * the one thing here that differs *inside* a kind: 奇門 and 六壬 are both
+   * boards of 卜 and both take a question, and they take different questions —
+   * a thing to be done and the hour to do it in, against a situation already
+   * under way and the people in it. One «What are you asking?» over both was
+   * the label said twice, and it left a reader who had just weighed two
+   * errands with nothing telling them what their choice had changed.
+   *
+   * Absent on a board of 命, and absent the way `plate` is: there is no field
+   * to put it under. Nothing is asked of those three, and a placeholder is
+   * something to write in a box that is not there.
+   */
+  readonly asks?: MessageKey;
+  /**
    * The name of the art, in its script and said aloud.
    *
    * Not a `MessageKey`, and that is the rule rather than an economy — 奇門遁甲
@@ -176,7 +193,25 @@ export interface Instrument {
   readonly name: { readonly hanzi: string; readonly pinyin: string };
 }
 
-/** The instruments, in the order the consultation offers them. */
+/**
+ * The instruments, in the order the consultation offers them — and the order
+ * is the span of what each board is about.
+ *
+ * **卜 first.** 奇門 and 六壬 are put at an instant and asked about a thing
+ * under way, which is the shortest subject here and the one somebody arriving
+ * with a question recognises without reading further. **Then 太乙**, whose
+ * subject is a year: longer than the instant above it, shorter than the life
+ * below, and nobody's. **Then 命**, three boards laid on one birth and ordered
+ * from the widest frame to the tightest — the sky a life began under, the
+ * seats it is counted in, what it is made of. Which is also why 八字 is last
+ * rather than first: it is the substrate the other two are built from, and a
+ * substrate reads as ground rather than as preface.
+ *
+ * `SECTIONS` in `navigation.ts` lists the same six the same way, and that is
+ * one order rather than two lists that happen to agree: a reader meets these
+ * arts in the header and should not have to learn the row again when they open
+ * the consultation.
+ */
 export const INSTRUMENTS: readonly Instrument[] = [
   {
     id: 'qimen',
@@ -187,6 +222,7 @@ export const INSTRUMENTS: readonly Instrument[] = [
     strengths: true,
     plate: { width: 900, height: 1280 },
     option: 'form.instrument.qimen',
+    asks: 'form.questionPlaceholder.qimen',
     name: { hanzi: '奇門遁甲', pinyin: 'Qí Mén Dùn Jiǎ' },
   },
   {
@@ -198,7 +234,25 @@ export const INSTRUMENTS: readonly Instrument[] = [
     strengths: false,
     plate: { width: 900, height: 1379 },
     option: 'form.instrument.liuren',
+    asks: 'form.questionPlaceholder.liuren',
     name: { hanzi: '大六壬', pinyin: 'Dà Liù Rén' },
+  },
+  // Third, where it used to stand last. The list is ordered by the span of what
+  // a board is about, and a year sits between the instant a question is put at
+  // and the life the three below are laid on. What that supersedes is an
+  // argument about errands — this one is nobody's, so it was kept out of the
+  // way — which held while the order had nothing else to say.
+  {
+    id: 'taiyi',
+    api: 'taiyi',
+    needs: 'year',
+    takesBirth: false,
+    takesGender: false,
+    strengths: false,
+    plate: { width: 900, height: 1360 },
+    option: 'form.instrument.taiyi',
+    asks: 'form.matterPlaceholder',
+    name: { hanzi: '太乙神數', pinyin: 'Tài Yǐ Shén Shù' },
   },
   {
     id: 'qizheng',
@@ -211,19 +265,10 @@ export const INSTRUMENTS: readonly Instrument[] = [
     option: 'form.instrument.qizheng',
     name: { hanzi: '七政四餘', pinyin: 'Qī Zhèng Sì Yú' },
   },
-  {
-    id: 'bazi',
-    api: 'bazi',
-    needs: 'birth',
-    takesBirth: false,
-    takesGender: true,
-    strengths: false,
-    option: 'form.instrument.bazi',
-    name: { hanzi: '八字', pinyin: 'Bā Zì' },
-  },
-  // The sixth board, and it cost the table nothing: 紫微斗數 is 命 laid on a
-  // birth, so it is a row with the values 八字 already had. That the widening
-  // was a row and not a value is what says the third kind was the hard one.
+  // The sixth board to arrive, and it cost the table nothing: 紫微斗數 is 命
+  // laid on a birth, so it is a row with the values 八字 already had. That the
+  // widening was a row and not a value is what says the third kind was the
+  // hard one.
   {
     id: 'ziwei',
     api: 'ziwei',
@@ -237,19 +282,15 @@ export const INSTRUMENTS: readonly Instrument[] = [
     option: 'form.instrument.ziwei',
     name: { hanzi: '紫微斗數', pinyin: 'Zǐ Wēi Dǒu Shù' },
   },
-  // Last, and not by seniority: it is the one instrument here whose errand is
-  // nobody's, so a reader scanning the five for the shape of their own finds
-  // the four that could be theirs first.
   {
-    id: 'taiyi',
-    api: 'taiyi',
-    needs: 'year',
+    id: 'bazi',
+    api: 'bazi',
+    needs: 'birth',
     takesBirth: false,
-    takesGender: false,
+    takesGender: true,
     strengths: false,
-    plate: { width: 900, height: 1360 },
-    option: 'form.instrument.taiyi',
-    name: { hanzi: '太乙神數', pinyin: 'Tài Yǐ Shén Shù' },
+    option: 'form.instrument.bazi',
+    name: { hanzi: '八字', pinyin: 'Bā Zì' },
   },
 ];
 

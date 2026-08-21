@@ -26,6 +26,16 @@ import type { MessageKey } from '@qimendunjia/i18n';
  * reader who clicks a name they do not know lands on a page that says what it
  * is, and a nav item has no room to.
  *
+ * **The six instruments are in the order the consultation offers them**, and
+ * that is one order rather than two lists that happen to agree. It is the span
+ * of what each board is about: 奇門 and 六壬 are put at an instant, 太乙 is
+ * laid on a year, and the three of 命 are laid on a life — and within those,
+ * the widest frame first, the sky a birth happened under before the seats it
+ * is counted in before what it is made of. See `INSTRUMENTS` in
+ * `instruments.ts`, which is where the argument is written out. A reader meets
+ * these arts here, and the select they open afterwards should not make them
+ * learn the row a second time.
+ *
  * **What the grouping does not say is which art a section uses.** Choosing a
  * time walks Qi Men charts and only those, and no arrangement of a flat list
  * can carry that: a nav says where things are, not what they are made of. It
@@ -70,10 +80,10 @@ export const SECTIONS: readonly {
   { slug: 'moments', label: 'nav.moments', group: 'act' },
   { slug: 'qimen', label: 'nav.qimen', full: 'nav.qimen.full', group: 'instrument' },
   { slug: 'liuren', label: 'nav.liuren', full: 'nav.liuren.full', group: 'instrument' },
-  { slug: 'qizheng', label: 'nav.qizheng', full: 'nav.qizheng.full', group: 'instrument' },
   { slug: 'taiyi', label: 'nav.taiyi', group: 'instrument' },
-  { slug: 'bazi', label: 'nav.bazi', group: 'instrument' },
+  { slug: 'qizheng', label: 'nav.qizheng', full: 'nav.qizheng.full', group: 'instrument' },
   { slug: 'ziwei', label: 'nav.ziwei', full: 'nav.ziwei.full', group: 'instrument' },
+  { slug: 'bazi', label: 'nav.bazi', group: 'instrument' },
 ];
 
 /**

@@ -921,7 +921,10 @@ export const it: Record<MessageKey, string> = {
   'form.question': 'La tua domanda',
   'form.matter': 'Che cosa stai guardando quest\'anno',
   'form.matterPlaceholder': 'Una situazione con due parti — due organizzazioni, due parti di una trattativa, due forze in un campo',
-  'form.questionPlaceholder': 'Che cosa stai chiedendo?',
+  'form.questionPlaceholder.qimen':
+    'Una cosa da fare e il momento di farla — se accettare, se partire, se aprire adesso una trattativa o aspettare',
+  'form.questionPlaceholder.liuren':
+    'Una situazione già in corso e chi ci sta dentro — come stanno le cose, che cosa ha in mente l\'altra parte, che cosa si sta muovendo',
 
   'step.shichen': 'doppia ora',
   'step.day': 'giorno',
