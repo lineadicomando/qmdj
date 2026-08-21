@@ -44,8 +44,14 @@ export interface Instrument {
    *
    * One field and not two, because it is a convention rather than a
    * coincidence: every board endpoint returns its board named after itself —
-   * `/api/chart` a `chart`, `/api/liuren` a `liuren`, and `/api/qizheng` and
+   * `/api/qimen` a `qimen`, `/api/liuren` a `liuren`, and `/api/qizheng` and
    * `/api/bazi` likewise. It also addresses `/plate` and `/prompt` beneath it.
+   *
+   * **It held for five boards of six and was written as though it held for
+   * all**, because the sixth was addressed `/api/chart` and answered with a
+   * `chart` — the same word twice, so `api` stayed one field and the exception
+   * was invisible. Naming the section after its art moved both halves at once
+   * and the convention is now what this paragraph says it is.
    *
    * The one thing it does not settle is the moment: a chart carries its own
    * inside it, where the other boards are handed it alongside — and 太乙 has
@@ -174,7 +180,7 @@ export interface Instrument {
 export const INSTRUMENTS: readonly Instrument[] = [
   {
     id: 'qimen',
-    api: 'chart',
+    api: 'qimen',
     needs: 'question',
     takesBirth: true,
     takesGender: true,

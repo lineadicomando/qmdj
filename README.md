@@ -255,10 +255,18 @@ npm start   -w @qimendunjia/mcp    # MCP on stdio
 
 Every surface takes the same parameters and answers the same way. A chart is a
 pure function of its input, so the web address of one is shareable and
-reproducible — the interface included: `/it/chart?date=1984-03-12&time=07:30&
+reproducible — the interface included: `/it/qimen?date=1984-03-12&time=07:30&
 locationId=1816670` is a chart, a link, and the same query string the API
 takes. Which is also how the moment follows a reader from the chart to the
 four pillars and back.
+
+Every section here is addressed by the art it lays out — `/it/qimen`,
+`/it/liuren`, `/it/qizheng`, `/it/ziwei`, `/it/taiyi` — and so is the endpoint
+under it, which answers with its board named after itself. The consultation is
+the one that has no art of its own, because it takes any of them: it answers
+at `/it`, the root of a language, and `/it/consult` and `/consult` are the
+word for it rather than a second address, redirecting to that root with
+whatever setup they were given.
 
 A place in that address is a `locationId` from the search, or a `latitude` and
 a `longitude` with a `timezone`, or an identifier **refined by** a pair of
@@ -305,7 +313,14 @@ instant it is asked for, it holds somebody's question, and neither is in the
 URL. Which is the trade it makes to stand first: the classical use of this
 method is a question put at an instant, and the three sections after it are
 the instruments that use serves itself with. What it costs is the chart's old
-address, `/en`, now `/en/chart`. See the section above.
+address, `/en`, now `/en/qimen`. See the section above.
+
+`/en/consult` and `/consult` reach it too, and they are the name of the
+section rather than an address of the answer: they redirect, so there is one
+place a consultation is and one link that leads to it. What is still not in
+the address is the chart and the question — both alias and root land on a
+form, and reloading either finds the fields ready rather than the answer
+preserved.
 
 The other way out of a cast chart is a printer. There is a stylesheet for
 paper — the board redrawn in the colours of paper whichever appearance is on

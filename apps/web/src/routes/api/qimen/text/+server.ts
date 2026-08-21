@@ -12,9 +12,9 @@ import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
 /**
- * `GET /api/chart/text?date=2024-06-15&time=14:00&locationId=1816670`
+ * `GET /api/qimen/text?date=2024-06-15&time=14:00&locationId=1816670`
  *
- * The chart said in words: the same thing `/api/chart` answers with, in the
+ * The chart said in words: the same thing `/api/qimen` answers with, in the
  * form the CLI prints and a person can paste into a notebook. Not a second
  * rendering — `chartTranscript` is the one the terminal uses, so what is
  * copied here cannot drift from what the engine's own surface shows.

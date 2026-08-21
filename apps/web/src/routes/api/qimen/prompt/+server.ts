@@ -12,7 +12,7 @@ import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
 /**
- * `GET /api/chart/prompt?date=2024-06-15&time=14:00&locationId=1816670&asked=true`
+ * `GET /api/qimen/prompt?date=2024-06-15&time=14:00&locationId=1816670&asked=true`
  *
  * The chart wrapped in what somebody reading it has to be told, for pasting
  * into an assistant that has no connection to this engine. It is

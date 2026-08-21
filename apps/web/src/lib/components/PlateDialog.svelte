@@ -16,7 +16,7 @@
 
   It holds **the whole reading**, and it used to offer a link to the chart
   section for the rest of it. The link was answering with a page load for
-  something already in hand: `/api/chart` comes back with the nine palaces
+  something already in hand: `/api/qimen` comes back with the nine palaces
   whether or not anybody reads them, and this asked for it anyway to get the
   ju and the configurations. So the palaces are shown, and the round trip out
   to the chart section and back is gone — along with the way back it needed at

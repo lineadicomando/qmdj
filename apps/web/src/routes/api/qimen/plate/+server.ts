@@ -6,7 +6,7 @@ import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
 /**
- * `GET /api/chart/plate?date=2024-06-15&time=14:00&locationId=1816670`
+ * `GET /api/qimen/plate?date=2024-06-15&time=14:00&locationId=1816670`
  *
  * The chart as a picture. It carries the note that it is not a reading,
  * because a picture travels further than the page it was made on — but it

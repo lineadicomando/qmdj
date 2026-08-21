@@ -10,7 +10,7 @@ import { isHttpError, toHttpError } from '$lib/server/errors';
 import type { RequestHandler } from './$types';
 
 /**
- * `GET /api/chart?date=2024-06-15&time=14:00&locationId=1816670`
+ * `GET /api/qimen?date=2024-06-15&time=14:00&locationId=1816670`
  *
  * GET and not POST on purpose: a chart is a pure function of its parameters,
  * so the address is shareable and the answer cacheable.
@@ -41,7 +41,11 @@ export const GET: RequestHandler = ({ url, setHeaders }) => {
     setHeaders({
       'cache-control': momentIsFixed(url.searchParams) ? 'private, max-age=86400' : 'no-store',
     });
-    return json({ chart, nianming, place: label ?? null });
+    // `qimen` and not `chart`: every board endpoint here answers with its
+    // board named after itself, and this was the one that did not — which is
+    // what `Instrument.api` being a single field depends on. See
+    // `lib/instruments.ts`.
+    return json({ qimen: chart, nianming, place: label ?? null });
   } catch (cause) {
     if (isHttpError(cause)) throw cause;
     toHttpError(cause);

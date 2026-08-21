@@ -166,7 +166,7 @@
    * parameters nobody read, in an address somebody might share.
    */
   const chartHref = (start: string): string =>
-    `/${t.locale}/chart?${chartQuery(start, data.interval)}`;
+    `/${t.locale}/qimen?${chartQuery(start, data.interval)}`;
 
   /**
    * The row of the answer the open hour stands on, if the answer still has
@@ -195,10 +195,10 @@
    * criteria still returned.
    */
   const plateSrc = $derived(
-    at && `/api/chart/plate?${chartQuery(at, data.interval, { lang: t.locale, scheme: appearance.current })}`,
+    at && `/api/qimen/plate?${chartQuery(at, data.interval, { lang: t.locale, scheme: appearance.current })}`,
   );
   const chartSrc = $derived(
-    at && `/api/chart?${chartQuery(at, data.interval, { lang: t.locale })}`,
+    at && `/api/qimen?${chartQuery(at, data.interval, { lang: t.locale })}`,
   );
 
   /**

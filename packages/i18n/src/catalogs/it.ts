@@ -748,7 +748,7 @@ export const it: Record<MessageKey, string> = {
   // Senza segni di tono, a differenza di ogni altro nome: sono le forme
   // staccate e maiuscole che un lettore incontra in stampa, non le letture che
   // il motore porta accanto ai propri hanzi.
-  'nav.chart': 'Qi Men',
+  'nav.qimen': 'Qi Men',
   'nav.bazi': 'Ba Zi',
   'nav.liuren': 'Liu Ren',
   'nav.qizheng': 'Qi Zheng',
@@ -760,7 +760,7 @@ export const it: Record<MessageKey, string> = {
   // intero, che è dove un nome vale la sua lunghezza. 八字 non si accorcia e
   // 太乙 non si allunga: si veda il catalogo inglese per la ragione della
   // seconda.
-  'nav.chart.full': 'Qi Men Dun Jia',
+  'nav.qimen.full': 'Qi Men Dun Jia',
   'nav.liuren.full': 'Da Liu Ren',
   'nav.qizheng.full': 'Qi Zheng Si Yu',
   'nav.ziwei.full': 'Zi Wei Dou Shu',

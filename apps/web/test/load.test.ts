@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { load as consult } from '../src/routes/[lang]/+page';
 import { load as bazi } from '../src/routes/[lang]/bazi/+page';
-import { load as chart } from '../src/routes/[lang]/chart/+page';
+import { load as consultAlias } from '../src/routes/[lang]/consult/+page.server';
 import { load as moments } from '../src/routes/[lang]/moments/+page';
+import { load as qimen } from '../src/routes/[lang]/qimen/+page';
 import { load as taiyi } from '../src/routes/[lang]/taiyi/+page';
+import { load as consultRoot } from '../src/routes/consult/+page.server';
 
 /**
  * What the pages ask for, given an address.
@@ -63,7 +65,7 @@ async function open(load: Load, address: string, places: Record<string, unknown>
             { status: 400 },
           );
     }
-    return Response.json({ chart: { ju: 'a chart' }, bazi: { pillars: [] }, taiyi: { ju: 49 } });
+    return Response.json({ qimen: { ju: 'a chart' }, bazi: { pillars: [] }, taiyi: { ju: 49 } });
   };
 
   const data = (await load({
@@ -121,32 +123,32 @@ describe('the 太乙 page', () => {
   });
 });
 
-describe('the chart page', () => {
+describe('the Qi Men page', () => {
   it('casts for the present when the address says nothing', async () => {
-    const { data, urls } = await open(chart, '/en');
+    const { data, urls } = await open(qimen, '/en');
 
     expect(data.chart).toBeTruthy();
-    expect(urls.some((url) => url.startsWith('/api/chart?'))).toBe(true);
+    expect(urls.some((url) => url.startsWith('/api/qimen?'))).toBe(true);
   });
 
   it('asks for the place the address names', async () => {
-    const { urls } = await open(chart, '/en?date=1984-03-12&time=07:30&locationId=1816670', {
+    const { urls } = await open(qimen, '/en?date=1984-03-12&time=07:30&locationId=1816670', {
       '1816670': BEIJING,
     });
 
     expect(urls).toContain('/api/locations?id=1816670&lang=en');
-    expect(urls).toContain('/api/chart?date=1984-03-12&time=07%3A30&locationId=1816670&lang=en');
+    expect(urls).toContain('/api/qimen?date=1984-03-12&time=07%3A30&locationId=1816670&lang=en');
   });
 
   it('refuses a place it cannot find instead of casting without one', async () => {
     // The failure this guards: dropping the identifier and computing for the
     // server's own zone produces something that looks exactly like a chart
     // and is a chart of somewhere else.
-    const { data, urls } = await open(chart, '/en?date=1984-03-12&time=07:30&locationId=999999999');
+    const { data, urls } = await open(qimen, '/en?date=1984-03-12&time=07:30&locationId=999999999');
 
     expect(data.chart).toBeUndefined();
     expect(data.failure).toMatchObject({ code: 'UNKNOWN_LOCATION' });
-    expect(urls.some((url) => url.startsWith('/api/chart?'))).toBe(false);
+    expect(urls.some((url) => url.startsWith('/api/qimen?'))).toBe(false);
   });
 
   it('hands the coordinates on beside the place they refine', async () => {
@@ -155,32 +157,32 @@ describe('the chart page', () => {
     // here, the answer would be the town's and would look like the one asked
     // for.
     const { urls } = await open(
-      chart,
+      qimen,
       '/en?date=1984-03-12&locationId=1816670&latitude=39.9&longitude=116.5',
       { '1816670': BEIJING },
     );
 
     expect(urls).toContain(
-      '/api/chart?date=1984-03-12&locationId=1816670&latitude=39.9&longitude=116.5&lang=en',
+      '/api/qimen?date=1984-03-12&locationId=1816670&latitude=39.9&longitude=116.5&lang=en',
     );
   });
 
   it('asks for a place given in degrees without looking anything up', async () => {
     const { urls } = await open(
-      chart,
+      qimen,
       '/en?date=1984-03-12&latitude=39.9&longitude=116.5&timezone=Asia/Shanghai',
     );
 
     expect(urls.some((url) => url.startsWith('/api/locations'))).toBe(false);
     expect(urls).toContain(
-      '/api/chart?date=1984-03-12&latitude=39.9&longitude=116.5&timezone=Asia%2FShanghai&lang=en',
+      '/api/qimen?date=1984-03-12&latitude=39.9&longitude=116.5&timezone=Asia%2FShanghai&lang=en',
     );
   });
 
   it('keeps the options the address carries', async () => {
-    const { urls } = await open(chart, '/en?date=1984-03-12&trueSolarTime=false&dayBoundary=midnight');
+    const { urls } = await open(qimen, '/en?date=1984-03-12&trueSolarTime=false&dayBoundary=midnight');
 
-    expect(urls[0]).toBe('/api/chart?date=1984-03-12&trueSolarTime=false&dayBoundary=midnight&lang=en');
+    expect(urls[0]).toBe('/api/qimen?date=1984-03-12&trueSolarTime=false&dayBoundary=midnight&lang=en');
   });
 });
 
@@ -220,7 +222,7 @@ describe('the consult page', () => {
     expect(data.born).toBe('1990-06-01');
     expect(data.gender).toBe('male');
     expect(data.failure).toBeUndefined();
-    expect(urls.some((url) => url.startsWith('/api/chart'))).toBe(false);
+    expect(urls.some((url) => url.startsWith('/api/qimen'))).toBe(false);
   });
 
   it('reports a place it cannot find, for the page to show', async () => {
@@ -322,5 +324,69 @@ describe('the moments page', () => {
 
     expect(data.placeLost).toBe(false);
     expect(urls).toContain('/api/moments?from=2026-09-01&to=2026-09-08&locationId=1816670&lang=en');
+  });
+});
+
+/**
+ * The name of the section that has none, and where it leads.
+ *
+ * The consultation answers at the root of a language and the nav points
+ * there, so `/[lang]/consult` and `/consult` are the word rather than the
+ * address: they resolve, they resolve to the one place, and they carry the
+ * setup with them. A redirect that dropped the search string would land a
+ * reader on a consultation configured as nobody asked, which looks exactly
+ * like the one they were sent.
+ */
+describe('the consultation answers to its name', () => {
+  /** A redirect is thrown, so it is caught rather than returned. */
+  function sent(load: Load, event: unknown): { status: number; location: string } {
+    try {
+      load(event as never);
+    } catch (thrown) {
+      const redirect = thrown as { status: number; location: string };
+      return { status: redirect.status, location: redirect.location };
+    }
+    throw new Error('nothing was thrown: the load answered instead of redirecting');
+  }
+
+  it('sends /[lang]/consult to the root of that language', () => {
+    const answer = sent(consultAlias, {
+      params: { lang: 'it' },
+      url: new URL('http://localhost/it/consult'),
+    });
+
+    // Permanent, because this destination does not depend on who is asking.
+    expect(answer).toEqual({ status: 308, location: '/it' });
+  });
+
+  it('carries the setup across, since that is what the address holds', () => {
+    const answer = sent(consultAlias, {
+      params: { lang: 'en' },
+      url: new URL('http://localhost/en/consult?instrument=liuren&locationId=1816670'),
+    });
+
+    expect(answer.location).toBe('/en?instrument=liuren&locationId=1816670');
+  });
+
+  it('negotiates a language for /consult, and says so with a 307', () => {
+    const answer = sent(consultRoot, {
+      request: new Request('http://localhost/consult', {
+        headers: { 'accept-language': 'it-IT,it;q=0.9' },
+      }),
+      url: new URL('http://localhost/consult'),
+    });
+
+    // 307 and not 308: a permanent redirect here would be one reader's
+    // language remembered for the next one.
+    expect(answer).toEqual({ status: 307, location: '/it' });
+  });
+
+  it('falls to the default language when the request states none', () => {
+    const answer = sent(consultRoot, {
+      request: new Request('http://localhost/consult'),
+      url: new URL('http://localhost/consult?instrument=taiyi'),
+    });
+
+    expect(answer).toEqual({ status: 307, location: '/en?instrument=taiyi' });
   });
 });

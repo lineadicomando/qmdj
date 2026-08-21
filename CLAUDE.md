@@ -258,8 +258,17 @@ the engine falls back to Moshier, which needs no files.
   kind is the rest of the rule — one
   instrument to a consultation, chosen before the press, and the prompt built
   here and nowhere else. The sections that are addresses show boards and their
-  transcripts, and asking there is navigating: the chart is `/[lang]/chart`,
+  transcripts, and asking there is navigating: the chart is `/[lang]/qimen`,
   which is where it moved from the root when the consultation took the lead.
+  **A section is addressed by the art it lays out, and so is its endpoint**,
+  which answers with its board named after itself — `/api/qimen` a `qimen`, as
+  `/api/liuren` a `liuren`. The consultation is the one with no art of its
+  own, since it takes any of them, so it keeps the root of the language;
+  `/[lang]/consult` and `/consult` are the *name* of that section and not a
+  second address for it, and they redirect there carrying the setup. The name
+  resolving does not put a consultation in an address: what a redirect leads
+  to is the form, and the board and the question are as absent from it as
+  they are from the root.
   A prompt is an asking and belongs where the asking is. See `navigation.ts`
   for what that cost and bought, and `PLAN.md` § 4 phase 18 for the widening.
 - **A 命 prompt asks for a reading of the person, and the themes are

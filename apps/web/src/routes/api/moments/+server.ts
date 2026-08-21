@@ -53,7 +53,7 @@ export const GET: RequestHandler = ({ url, setHeaders }) => {
  * not make that cut — it does not know which palace the caller cared about
  * until the criteria say — so the surface makes it, and says here that it did.
  *
- * `/api/chart` remains the way to get the whole board for any of these
+ * `/api/qimen` remains the way to get the whole board for any of these
  * moments, which is what the interface links each row to.
  */
 function project({ run, palaces }: ScanMatch): unknown {

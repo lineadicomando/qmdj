@@ -52,7 +52,7 @@
   // instant, so that "now" is a new address every time and not one image
   // cached over a day of different charts.
   const plate = $derived(
-    `/api/chart/plate?${momentQuery({ ...data.moment, ...cast }, { lang: t.locale, scheme: appearance.current })}`,
+    `/api/qimen/plate?${momentQuery({ ...data.moment, ...cast }, { lang: t.locale, scheme: appearance.current })}`,
   );
 
   /**
@@ -67,7 +67,7 @@
    */
   const onPaper = $derived(appearance.current !== 'light');
   const paper = $derived(
-    `/api/chart/plate?${momentQuery({ ...data.moment, ...cast }, { lang: t.locale, scheme: 'light' })}`,
+    `/api/qimen/plate?${momentQuery({ ...data.moment, ...cast }, { lang: t.locale, scheme: 'light' })}`,
   );
   $effect(() => {
     if (!chart || !onPaper) return;
@@ -230,7 +230,7 @@
     <!-- The same corner in every section: finding them once is finding them
          everywhere. Only where there is something to take away. -->
     {#if chart}
-      <Takeaway {t} copyLabel="form.copyChart" copyUrl="/api/chart/text?{address}" />
+      <Takeaway {t} copyLabel="form.copyChart" copyUrl="/api/qimen/text?{address}" />
     {/if}
   {/snippet}
 </FormPanel>

@@ -777,7 +777,7 @@ export const en = {
   // No tone marks here, unlike everywhere else a name is set: these are the
   // spaced, capitalised forms an English or Italian reader meets in print,
   // not the readings the engine carries beside its hanzi.
-  'nav.chart': 'Qi Men',
+  'nav.qimen': 'Qi Men',
   'nav.bazi': 'Ba Zi',
   'nav.liuren': 'Liu Ren',
   'nav.qizheng': 'Qi Zheng',
@@ -803,7 +803,7 @@ export const en = {
   // 《太乙統宗寶鑑》 — a book with a different 上元積年 which `docs/sources.md`
   // records as unread and which `epoch` declines. A nav label that named it
   // would name the branch this section does not compute.
-  'nav.chart.full': 'Qi Men Dun Jia',
+  'nav.qimen.full': 'Qi Men Dun Jia',
   'nav.liuren.full': 'Da Liu Ren',
   'nav.qizheng.full': 'Qi Zheng Si Yu',
   'nav.ziwei.full': 'Zi Wei Dou Shu',

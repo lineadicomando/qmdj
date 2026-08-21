@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { GET as chart } from '../src/routes/api/chart/+server';
-import { GET as plate } from '../src/routes/api/chart/plate/+server';
-import { GET as prompt } from '../src/routes/api/chart/prompt/+server';
-import { GET as text_ } from '../src/routes/api/chart/text/+server';
+import { GET as qimen } from '../src/routes/api/qimen/+server';
+import { GET as plate } from '../src/routes/api/qimen/plate/+server';
+import { GET as prompt } from '../src/routes/api/qimen/prompt/+server';
+import { GET as text_ } from '../src/routes/api/qimen/text/+server';
 import { GET as bazi } from '../src/routes/api/bazi/+server';
 import { GET as liuren } from '../src/routes/api/liuren/+server';
 import { GET as baziPrompt } from '../src/routes/api/bazi/prompt/+server';
@@ -338,7 +338,7 @@ describe('GET /api/qizheng', () => {
  * The moment, reachable on every board — which is what the consultation needs
  * and what it silently did not have.
  *
- * Three of the four endpoints hand the moment over beside the board; `/api/chart`
+ * Three of the four endpoints hand the moment over beside the board; `/api/qimen`
  * keeps it inside the chart, because a chart carries its own. The consultation
  * read `body.moment` alone from the day a second board arrived, so every Qi Men
  * press threw on the line after the fetch and was reported as a board that could
@@ -350,7 +350,7 @@ describe('every board endpoint yields the instant it was laid for', () => {
   const BIRTH = 'date=1968-03-12&time=14:30&timezone=Asia/Shanghai&trueSolarTime=false';
 
   it.each([
-    ['chart', chart, MOMENT],
+    ['qimen', qimen, MOMENT],
     ['liuren', liuren, MOMENT],
     ['qizheng', qizheng, BIRTH],
     ['bazi', bazi, BIRTH],
@@ -448,28 +448,28 @@ describe('the prompts for a board of 命', () => {
   });
 });
 
-describe('GET /api/chart', () => {
+describe('GET /api/qimen', () => {
   it('casts a chart from the query string alone', async () => {
-    const { status, body } = await call(chart, MOMENT);
-    const answer = body as { chart: { ju: unknown; palaces: unknown[] } };
+    const { status, body } = await call(qimen, MOMENT);
+    const answer = body as { qimen: { ju: unknown; palaces: unknown[] } };
 
     expect(status).toBe(200);
-    expect(answer.chart.ju).toMatchObject({ yang: true, number: 9, yuan: 'xia' });
-    expect(answer.chart.palaces).toHaveLength(9);
+    expect(answer.qimen.ju).toMatchObject({ yang: true, number: 9, yuan: 'xia' });
+    expect(answer.qimen.palaces).toHaveLength(9);
   });
 
   it('is cacheable by the browser that asked, and by nothing else', async () => {
     // The key of a shared cache would be an address holding somebody's date,
     // time and place of birth.
-    const { headers } = await call(chart, MOMENT);
+    const { headers } = await call(qimen, MOMENT);
 
     expect(headers['cache-control']).toBe('private, max-age=86400');
   });
 
   it('carries the options that produced it', async () => {
-    const { body } = await call(chart, MOMENT);
+    const { body } = await call(qimen, MOMENT);
 
-    expect((body as { chart: { options: unknown } }).chart.options).toMatchObject({
+    expect((body as { qimen: { options: unknown } }).qimen.options).toMatchObject({
       method: 'chaibu',
       trueSolarTime: false,
       dayBoundary: 'midnight',
@@ -478,15 +478,15 @@ describe('GET /api/chart', () => {
 
   it('needs nothing at all', async () => {
     // No date, no time, no place: the present moment, in the server's zone.
-    expect((await call(chart, '')).status).toBe(200);
+    expect((await call(qimen, '')).status).toBe(200);
   });
 
   it('is not cacheable at all when the address does not say when', async () => {
     // Without a date the question is "now", which is a different question
     // every hour: an answer kept for a day would be yesterday's chart. A time
     // alone does not fix it either — the day it falls in is still today's.
-    expect((await call(chart, 'timezone=Asia/Shanghai')).headers['cache-control']).toBe('no-store');
-    expect((await call(chart, 'time=14:00')).headers['cache-control']).toBe('no-store');
+    expect((await call(qimen, 'timezone=Asia/Shanghai')).headers['cache-control']).toBe('no-store');
+    expect((await call(qimen, 'time=14:00')).headers['cache-control']).toBe('no-store');
   });
 
   it('reads a date given without a time as noon on that date', async () => {
@@ -495,11 +495,11 @@ describe('GET /api/chart', () => {
     // thing a chart may never do. Noon fixes the instant — so the answer is
     // stable, and now cacheable like any other fixed moment.
     const bare = 'date=2024-06-15&timezone=Asia/Shanghai&trueSolarTime=false';
-    const first = await call(chart, bare);
-    const again = await call(chart, bare);
-    const answer = first.body as { chart: { moment: { input: { time: string } } } };
+    const first = await call(qimen, bare);
+    const again = await call(qimen, bare);
+    const answer = first.body as { qimen: { moment: { input: { time: string } } } };
 
-    expect(answer.chart.moment.input.time).toBe('12:00');
+    expect(answer.qimen.moment.input.time).toBe('12:00');
     expect(first.text).toBe(again.text);
     expect(first.headers['cache-control']).toBe('private, max-age=86400');
   });
@@ -509,20 +509,20 @@ describe('GET /api/chart', () => {
     // carries it — and it is reckoned on 120°E, which is why it is reported
     // with its own ganzhi rather than left to be read off the day pillar.
     const answer = (
-      await call(chart, 'date=2024-06-15&timezone=Asia/Shanghai&trueSolarTime=false')
-    ).body as { chart: { moment: { almanac: { officer: { id: string }; day: { hanzi: string }; doubled: boolean; lodge: { id: string; planet: { hanzi: string } }; god: { id: string; valence: { id: string } } } } } };
+      await call(qimen, 'date=2024-06-15&timezone=Asia/Shanghai&trueSolarTime=false')
+    ).body as { qimen: { moment: { almanac: { officer: { id: string }; day: { hanzi: string }; doubled: boolean; lodge: { id: string; planet: { hanzi: string } }; god: { id: string; valence: { id: string } } } } } };
 
-    expect(answer.chart.moment.almanac.officer.id).toBe('ding');
-    expect(answer.chart.moment.almanac.day.hanzi).toBe('庚戌');
-    expect(answer.chart.moment.almanac.doubled).toBe(false);
+    expect(answer.qimen.moment.almanac.officer.id).toBe('ding');
+    expect(answer.qimen.moment.almanac.day.hanzi).toBe('庚戌');
+    expect(answer.qimen.moment.almanac.doubled).toBe(false);
     // The lodge is a count of days, so it carries its 七政 — which is what
     // ties it to a weekday and lets a reader catch an epoch that ever slipped.
-    expect(answer.chart.moment.almanac.lodge.id).toBe('wei4');
-    expect(answer.chart.moment.almanac.lodge.planet.hanzi).toBe('土');
+    expect(answer.qimen.moment.almanac.lodge.id).toBe('wei4');
+    expect(answer.qimen.moment.almanac.lodge.planet.hanzi).toBe('土');
     // The god carries its fortune the way a configuration does, and nothing
     // about what the day is said to suit.
-    expect(answer.chart.moment.almanac.god.id).toBe('tianxing');
-    expect(answer.chart.moment.almanac.god.valence.id).toBe('xiong');
+    expect(answer.qimen.moment.almanac.god.id).toBe('tianxing');
+    expect(answer.qimen.moment.almanac.god.valence.id).toBe('xiong');
   });
 
   it('leaves the longitude correction at zero when given only a timezone', async () => {
@@ -531,15 +531,15 @@ describe('GET /api/chart', () => {
     // a spurious hour of correction. One of the two dates catches it in
     // whichever season this test runs.
     for (const date of ['2024-01-15', '2024-07-15']) {
-      const { body } = await call(chart, `date=${date}&time=10:00&timezone=Europe/Rome`);
-      const answer = body as { chart: { moment: { solar: { longitudeMinutes: number } } } };
+      const { body } = await call(qimen, `date=${date}&time=10:00&timezone=Europe/Rome`);
+      const answer = body as { qimen: { moment: { solar: { longitudeMinutes: number } } } };
 
-      expect(answer.chart.moment.solar.longitudeMinutes).toBe(0);
+      expect(answer.qimen.moment.solar.longitudeMinutes).toBe(0);
     }
   });
 
   it('fails with a code and parameters, not with prose', async () => {
-    const { status, body } = await call(chart, 'date=15/06/2024');
+    const { status, body } = await call(qimen, 'date=15/06/2024');
 
     expect(status).toBe(400);
     expect(body).toMatchObject({
@@ -550,14 +550,14 @@ describe('GET /api/chart', () => {
   });
 
   it('refuses half a set of coordinates', async () => {
-    expect((await call(chart, 'latitude=39.9')).status).toBe(400);
+    expect((await call(qimen, 'latitude=39.9')).status).toBe(400);
   });
 
   it('refuses coordinates given as empty strings', async () => {
     // `?latitude=&longitude=` passed the presence check, and `Number('')` is
     // 0: a chart for the Gulf of Guinea, looking exactly like the one asked
     // for.
-    const { status, body } = await call(chart, 'date=2024-06-15&latitude=&longitude=');
+    const { status, body } = await call(qimen, 'date=2024-06-15&latitude=&longitude=');
 
     expect(status).toBe(400);
     expect(body).toMatchObject({
@@ -569,7 +569,7 @@ describe('GET /api/chart', () => {
 
   it('refuses a coordinate that does not read as a number', async () => {
     // `Number('abc')` is NaN, which serializes as `null` and was served 200.
-    const { status, body } = await call(chart, 'date=2024-06-15&latitude=39.9&longitude=abc');
+    const { status, body } = await call(qimen, 'date=2024-06-15&latitude=39.9&longitude=abc');
 
     expect(status).toBe(400);
     expect(body).toMatchObject({
@@ -581,10 +581,10 @@ describe('GET /api/chart', () => {
   it('accepts coordinates with a sign and a fraction', async () => {
     const southern =
       'date=2024-06-15&time=14:00&latitude=-33.8688&longitude=151.2093&timezone=Australia/Sydney';
-    const { status, body } = await call(chart, southern);
+    const { status, body } = await call(qimen, southern);
 
     expect(status).toBe(200);
-    expect((body as { chart: { palaces: unknown[] } }).chart.palaces).toHaveLength(9);
+    expect((body as { qimen: { palaces: unknown[] } }).qimen.palaces).toHaveLength(9);
   });
 
   it('lets coordinates refine a named place without taking its clock', async () => {
@@ -596,10 +596,10 @@ describe('GET /api/chart', () => {
     const at = 'date=2024-06-15&time=14:00&locationId=3169070';
     const solar = async (query: string) =>
       (
-        (await call(chart, query)).body as {
-          chart: { moment: { input: { timezone: string }; solar: { longitudeMinutes: number } } };
+        (await call(qimen, query)).body as {
+          qimen: { moment: { input: { timezone: string }; solar: { longitudeMinutes: number } } };
         }
-      ).chart.moment;
+      ).qimen.moment;
 
     const town = await solar(at);
     const hamlet = await solar(`${at}&latitude=41.8919&longitude=13.5113`);
@@ -612,7 +612,7 @@ describe('GET /api/chart', () => {
     // A sheet reading «Rome» over a board laid fifty kilometres away says
     // something untrue, and nothing further on could tell.
     const { body } = await call(
-      chart,
+      qimen,
       'date=2024-06-15&time=14:00&locationId=3169070&latitude=41.8919&longitude=13.5113',
     );
 
@@ -621,7 +621,7 @@ describe('GET /api/chart', () => {
 
   it('says where a board with no named place was laid, and on which clock', async () => {
     const { body } = await call(
-      chart,
+      qimen,
       'date=2024-06-15&time=14:00&latitude=41.8919&longitude=12.5113&timezone=Europe/Rome',
     );
 
@@ -633,19 +633,19 @@ describe('GET /api/chart', () => {
     // it. Honouring it instead would let an address name Rome and read its
     // hour on a Shanghai clock, which is a chart of neither.
     const { body } = await call(
-      chart,
+      qimen,
       'date=2024-06-15&time=14:00&locationId=3169070&timezone=Asia/Shanghai',
     );
-    const answer = body as { chart: { moment: { input: { timezone: string } } } };
+    const answer = body as { qimen: { moment: { input: { timezone: string } } } };
 
-    expect(answer.chart.moment.input.timezone).toBe('Europe/Rome');
+    expect(answer.qimen.moment.input.timezone).toBe('Europe/Rome');
   });
 
   it('refuses half a pair beside a named place too', async () => {
     // Without the refusal the longitude would be Rome's and the latitude the
     // one somebody typed: a place that exists nowhere and was asked for by
     // nobody.
-    expect((await call(chart, 'date=2024-06-15&locationId=3169070&latitude=41.8919')).status).toBe(
+    expect((await call(qimen, 'date=2024-06-15&locationId=3169070&latitude=41.8919')).status).toBe(
       400,
     );
   });
@@ -655,18 +655,18 @@ describe('GET /api/chart', () => {
     // 15 June 2024 is ten days into 芒種, lower yuan of a yang chart under
     // chaibu — but its 庚戌 day stands in a block already serving 夏至, six
     // days before the Sun gets there (超神), and 夏至 opens the yin half.
-    const { body } = await call(chart, `${MOMENT}&method=zhirun`);
-    const answer = body as { chart: { ju: Record<string, unknown>; options: { method: string } } };
+    const { body } = await call(qimen, `${MOMENT}&method=zhirun`);
+    const answer = body as { qimen: { ju: Record<string, unknown>; options: { method: string } } };
 
-    expect(answer.chart.options.method).toBe('zhirun');
-    expect(answer.chart.ju).toMatchObject({ yang: false, number: 9, yuan: 'shang' });
-    expect(answer.chart.ju['term']).toMatchObject({ id: 'xiazhi' });
+    expect(answer.qimen.options.method).toBe('zhirun');
+    expect(answer.qimen.ju).toMatchObject({ yang: false, number: 9, yuan: 'shang' });
+    expect(answer.qimen.ju['term']).toMatchObject({ id: 'xiazhi' });
   });
 
   it('refuses a method it has never heard of', async () => {
     // Ignoring it instead would cast a chaibu chart under whatever name the
     // address misspelt, and it would look exactly like the chart asked for.
-    const { status, body } = await call(chart, `${MOMENT}&method=zhirn`);
+    const { status, body } = await call(qimen, `${MOMENT}&method=zhirn`);
 
     expect(status).toBe(400);
     expect(body).toMatchObject({
@@ -682,10 +682,10 @@ describe('GET /api/chart', () => {
     const at = 'date=1999-01-06&time=12:00&timezone=Asia/Shanghai&trueSolarTime=false';
     const ju = async (query: string) =>
       (
-        (await call(chart, query)).body as {
-          chart: { ju: Record<string, unknown>; options: { yuan: string } };
+        (await call(qimen, query)).body as {
+          qimen: { ju: Record<string, unknown>; options: { yuan: string } };
         }
-      ).chart;
+      ).qimen;
 
     expect((await ju(at)).ju).toMatchObject({ yang: true, number: 2, yuan: 'shang' });
 
@@ -696,7 +696,7 @@ describe('GET /api/chart', () => {
   });
 
   it('refuses a yuan it has never heard of', async () => {
-    const { status, body } = await call(chart, `${MOMENT}&yuan=futuo`);
+    const { status, body } = await call(qimen, `${MOMENT}&yuan=futuo`);
 
     expect(status).toBe(400);
     expect(body).toMatchObject({
@@ -706,7 +706,7 @@ describe('GET /api/chart', () => {
   });
 
   it('answers maoshan with a refusal, not a substitute', async () => {
-    const { status, body } = await call(chart, `${MOMENT}&method=maoshan`);
+    const { status, body } = await call(qimen, `${MOMENT}&method=maoshan`);
 
     expect(status).toBe(501);
     expect(body).toMatchObject({ code: 'METHOD_NOT_IMPLEMENTED' });
@@ -939,7 +939,7 @@ describe('GET /api/locations', () => {
   });
 });
 
-describe('GET /api/chart/plate', () => {
+describe('GET /api/qimen/plate', () => {
   it('returns an SVG', async () => {
     const { status, headers, text } = await call(plate, `${MOMENT}&size=400`);
 
@@ -1004,7 +1004,7 @@ describe('GET /api/chart/plate', () => {
   });
 });
 
-describe('GET /api/chart/text', () => {
+describe('GET /api/qimen/text', () => {
   it('says the chart in words, in the language it was asked for', async () => {
     const { status, headers, text } = await call(text_, `${MOMENT}&lang=en`);
 
@@ -1030,7 +1030,7 @@ describe('GET /api/chart/text', () => {
   });
 });
 
-describe('GET /api/chart/prompt', () => {
+describe('GET /api/qimen/prompt', () => {
   it('carries the chart and the rules for reading it', async () => {
     const { status, headers, text } = await call(prompt, `${MOMENT}&lang=en`);
 

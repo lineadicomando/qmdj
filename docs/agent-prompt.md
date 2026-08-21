@@ -142,7 +142,7 @@ rather than advises. Do not supply it from memory.
 ## What the answers do not contain
 
 - **A drawing carries no warnings.** `draw_qimen_chart` and
-  `/api/chart/plate` return a picture with the glyphs and the note that it is
+  `/api/qimen/plate` return a picture with the glyphs and the note that it is
   not a reading. It does not carry the note about an ambiguous local hour, or
   about the method. Call the drawing **after** the calculation and show both,
   or show the data alone.
@@ -429,7 +429,7 @@ query string, so a chart is a shareable address.
 ```
 GET /api/locations?q=Beijing&lang=en
 GET /api/locations?id=1816670&lang=en          # the way back from an address
-GET /api/chart?date=2024-06-15&time=14:00&locationId=1816670
+GET /api/qimen?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/bazi?date=1968-03-12&time=14:30&locationId=3169070&gender=male
 GET /api/bazi/text?date=1968-03-12&time=14:30&locationId=3169070&gender=male
 GET /api/bazi/prompt?date=1968-03-12&time=14:30&locationId=3169070&gender=male
@@ -445,13 +445,13 @@ GET /api/qizheng?date=1968-03-12&time=14:30&locationId=3169070
 GET /api/qizheng/text?date=1968-03-12&time=14:30&locationId=3169070
 GET /api/qizheng/prompt?date=1968-03-12&time=14:30&locationId=3169070
 GET /api/terms?year=2024&timezone=Asia/Shanghai
-GET /api/chart/plate?date=2024-06-15&time=14:00&locationId=1816670
+GET /api/qimen/plate?date=2024-06-15&time=14:00&locationId=1816670
 GET /api/moments?from=2026-09-01&to=2026-09-08&locationId=3169070&gate=kaimen&towards=se,s
-GET /api/chart/text?date=2024-06-15&time=14:00&locationId=1816670
-GET /api/chart/prompt?date=2024-06-15&time=14:00&locationId=1816670&asked=true
-GET /api/chart?date=2024-06-15&time=14:00&locationId=1816670&born=1968-03-12&gender=female
-GET /api/chart?date=2024-06-15&time=14:00&latitude=39.9075&longitude=116.3972&timezone=Asia/Shanghai
-GET /api/chart?date=2024-06-15&time=14:00&locationId=1816670&latitude=39.8000&longitude=116.6000
+GET /api/qimen/text?date=2024-06-15&time=14:00&locationId=1816670
+GET /api/qimen/prompt?date=2024-06-15&time=14:00&locationId=1816670&asked=true
+GET /api/qimen?date=2024-06-15&time=14:00&locationId=1816670&born=1968-03-12&gender=female
+GET /api/qimen?date=2024-06-15&time=14:00&latitude=39.9075&longitude=116.3972&timezone=Asia/Shanghai
+GET /api/qimen?date=2024-06-15&time=14:00&locationId=1816670&latitude=39.8000&longitude=116.6000
 ```
 
 A place is a `locationId`, or a `latitude` and a `longitude` with a

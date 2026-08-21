@@ -34,8 +34,16 @@ import type { MessageKey } from '@qimendunjia/i18n';
  *
  * The cost of the order is paid knowingly and it is the chart's address.
  * `/[lang]` was the chart of now and is now a form: a link to a chart is
- * `/[lang]/chart` with the moment in it, and links shared before that change
- * land on the consultation instead.
+ * `/[lang]/qimen` with the moment in it.
+ *
+ * **A slug is the name of what the section holds, and `chart` was not one.**
+ * Every other instrument here is addressed by the art it lays out, and that
+ * one was addressed by the shape its answer comes out in — which reads as a
+ * generic where the neighbours read as names, and stops saying anything at
+ * all now that six sections draw a board apiece. The label above it never
+ * said `Chart`: it has said `Qi Men` since there was a nav, so the rename
+ * moved the address to where the word already was rather than changing what
+ * a reader sees.
  */
 export const SECTIONS: readonly {
   slug: string;
@@ -60,7 +68,7 @@ export const SECTIONS: readonly {
 }[] = [
   { slug: '', label: 'nav.consult', group: 'act' },
   { slug: 'moments', label: 'nav.moments', group: 'act' },
-  { slug: 'chart', label: 'nav.chart', full: 'nav.chart.full', group: 'instrument' },
+  { slug: 'qimen', label: 'nav.qimen', full: 'nav.qimen.full', group: 'instrument' },
   { slug: 'liuren', label: 'nav.liuren', full: 'nav.liuren.full', group: 'instrument' },
   { slug: 'qizheng', label: 'nav.qizheng', full: 'nav.qizheng.full', group: 'instrument' },
   { slug: 'taiyi', label: 'nav.taiyi', group: 'instrument' },

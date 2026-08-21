@@ -25,12 +25,15 @@ export const load: PageLoad = async ({ url, fetch, parent }) => {
   // would look like the right one.
   if (unknownPlace) return { moment, chart: undefined, failure: unknownPlace };
 
-  const response = await fetch(`/api/chart?${momentQuery(moment, { lang: locale })}`);
+  const response = await fetch(`/api/qimen?${momentQuery(moment, { lang: locale })}`);
   const body = await response.json();
 
   // A failure is data, not a page: the form has to stay on screen, because
   // what needs correcting is in it.
+  // `body.qimen` on the wire, `chart` on the page: the endpoint is named for
+  // the art it lays out, and what it hands back is a chart. Only the address
+  // and the payload took the art's name — see `lib/instruments.ts`.
   return response.ok
-    ? { moment, chart: body.chart, failure: undefined }
+    ? { moment, chart: body.qimen, failure: undefined }
     : { moment, chart: undefined, failure: body as Failure };
 };
