@@ -1157,7 +1157,7 @@ export const en = {
   // behind it, and misinforms exactly the reader who came here to check rather
   // than to read. Both are settled at the end of the project, in one writing,
   // rather than anticipated now and realigned at every change.
-  // See PLAN.md § 4 phase 17.
+  // See `docs/history/` phase 17.
   'notes.title': 'Section still being defined',
 
   'privacy.title': 'Privacy',
@@ -1262,7 +1262,7 @@ export const en = {
   // The boards of 命, and what parts sideways from the two above. A board of
   // 卜 is cast for a question and ends on the line that introduces one; these
   // are laid on a birth, nothing is asked of them, and the prompt ends on how
-  // the reading is to be written instead. See `PLAN.md` § 4 phases 18 and 19.
+  // the reading is to be written instead. See `docs/history/` phases 18 and 19.
   // The subject of the reading, said first. Everything under it is a bound or
   // a place to look, and a list of bounds with nothing above it reads as an
   // instruction to withhold.
@@ -1579,7 +1579,7 @@ export const en = {
   'cli.value.emptyBranch': 'empty',
   // Said on a board no reference could check. The other rules were compared
   // against two independent implementations; this one has a clause neither
-  // settles. See PLAN.md § 4 phase 13.
+  // settles. See `docs/history/` phase 13.
   'cli.value.liurenUnverified':
     'no reference implementation covers this rule; the classical text enumerates every board it can draw, and this engine matches them',
   'cli.heading.qizheng': 'The seven governors and the four remainders',
@@ -1605,7 +1605,7 @@ export const en = {
   'cli.field.ziweiPalaces': 'the twelve seats',
   'cli.field.lunarDate': 'the lunar date',
   'cli.field.majorLimit': 'decade',
-  // Said once, where a reader can weigh it. See PLAN.md § 4 phase 23.
+  // Said once, where a reader can weigh it. See `docs/history/` phase 23.
   'cli.value.ziweiSource':
     'placed by 《紫微斗數全書》 卷二 throughout — the fourteen-star transmission, and not the eighteen-star 十八飛星 line that 《全集》 and 《捷覽》 carry; where its tables part from the modern ones — 火星 and 鈴星 off the hour, 魁鉞 at 丙丁辛, 解神 off the year, 壬 giving 科 to 天府 — this book is followed and the divergence is recorded',
   'form.luohou': 'Which node is 羅睺',
@@ -1619,7 +1619,7 @@ export const en = {
   'cli.value.threeRemainders':
     'three, not four: 紫氣 is a table and not a body, so there is no position in the sky against which its table could be checked',
   // Said once under a board whose frame nothing published can be held
-  // against. See PLAN.md § 4 phase 16.
+  // against. See `docs/history/` phase 16.
   'cli.value.qizhengFrame':
     'the lodges begin at their determinative stars, placed at this instant; no table of 宿度 and no epoch enters',
 

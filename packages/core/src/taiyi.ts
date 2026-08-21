@@ -35,7 +35,7 @@ import type { Element } from './types.js';
  * The board names positions and numbers and stops.
  */
 
-/** The divergences of this board. See `PLAN.md` § 3. */
+/** The divergences of this board. See `docs/parameters.md`. */
 export interface TaiyiOptions {
   /**
    * Which 上元積年 the count runs from.

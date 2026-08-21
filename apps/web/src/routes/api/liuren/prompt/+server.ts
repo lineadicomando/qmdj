@@ -25,7 +25,7 @@ import type { RequestHandler } from './$types';
  * and a Liu Ren board of one instant reads their agreement as corroboration,
  * when the two share the day pillar, the decade, the void branches and seven
  * of the eight spirits — where they agree it is frequently one fact printed
- * twice. See `PLAN.md` § 4 phase 14.
+ * twice. See `docs/readings.md`, and `docs/history/` phase 14.
  *
  * No 年命 here, and not by omission: the person asking is already in this
  * board, standing on the day stem.

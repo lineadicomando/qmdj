@@ -50,7 +50,8 @@ import type { ZiweiBoard } from './ziwei/index.js';
  * pillars every one of the other three is laid from. Where two agree it is
  * frequently one fact printed twice. So the functions below never meet: a
  * consultation takes one instrument, and comparing instruments happens where
- * nothing is being asked. See `PLAN.md` § 4 phases 14 and 18.
+ * nothing is being asked. The rule is `docs/readings.md`; the decisions are
+ * `docs/history/` phases 14 and 18.
  *
  * **太乙 overlaps none of them, and the rule holds for it anyway.** Its subject
  * is a year and it shares not one quantity with the other four, so the
@@ -67,7 +68,7 @@ import type { ZiweiBoard } from './ziwei/index.js';
  * empty. A board of 天 — 太乙, and it is the only one — is laid on a year,
  * nothing is asked of it either, and its subject is nobody: it ends on its own
  * closing, and the thing it has to be stopped from becoming is not a verdict
- * but a forecast. See `PLAN.md` § 4 phase 21.
+ * but a forecast. See `docs/history/` phase 21.
  */
 
 /**
@@ -127,8 +128,8 @@ export interface ReadingRequest {
  * printed a few lines below it, so inside a fence it is one datum wearing two
  * names and a model reads the second as confirming the first. The surfaces
  * that are *addresses* print it beside this block instead — the page does,
- * under the pillars, and the CLI does with `formatAlmanac`. See `PLAN.md` § 4
- * phase 15.
+ * under the pillars, and the CLI does with `formatAlmanac`. See
+ * `docs/history/` phase 15.
  */
 export function chartTranscript(
   moment: Moment,
@@ -311,7 +312,7 @@ export function readingPrompt(
  * whether anybody asks anything or not. The themes a reading traverses are
  * commissioned in the prompt itself, and what the reader wants to look at
  * next belongs to the conversation that follows. See `CLAUDE.md` and
- * `PLAN.md` § 4 phases 18 and 19.
+ * `docs/history/` phases 18 and 19.
  */
 export interface MingReadingRequest {
   /** Where the board can be seen again, if the caller knows an address. */

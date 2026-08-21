@@ -47,7 +47,7 @@ import type { RequestHandler } from './$types';
  * reading it produced showed the design was half there — the register refused
  * everything and commissioned nothing, so the answer was a precise account of a
  * board that never says «and so?». The matter is what it was missing. See
- * `prompt.ts` and `PLAN.md` § 4 phase 21.
+ * `prompt.ts`, `docs/readings.md` and `docs/history/` phase 21.
  *
  * `vary: Accept-Language` where the address does not say `lang` — the glosses
  * around the hanzi, and the whole of the instructions, are what turns with a

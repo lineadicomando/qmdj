@@ -33,7 +33,7 @@
   year is everybody's answer where an empty birth is nobody's. What does not
   turn with the kind is the rest of it — one instrument to a consultation,
   chosen before the press, and the prompt built here and nowhere else. See
-  `instruments.ts`, and `PLAN.md` § 4 phases 18 and 21.
+  `instruments.ts`, and `docs/history/` phases 18 and 21.
 
   A birth may be given with it, and then the chart carries a 年命 — 本命, the
   year pillar of that birth, and 行年, the year being lived, both looked up
@@ -161,11 +161,11 @@
    * neither: it goes into `fields`, so the answer is spent the moment it
    * moves, and what is on screen is put away until the next press.
    *
-   * See `PLAN.md` § 4 phase 14 for why it is one board at a time and not two.
+   * See `docs/history/` phase 14 for why it is one board at a time and not two.
    *
    * The identifier is what travels and what the field binds to; everything
    * that turns with it is read off the descriptor, in `instruments.ts`, so
-   * that a board is a row rather than a branch. See `PLAN.md` § 4 phase 18.
+   * that a board is a row rather than a branch. See `docs/history/` phase 18.
    */
   // svelte-ignore state_referenced_locally
   let instrumentId = $state<InstrumentId>(data.instrument);
@@ -456,7 +456,7 @@
               // No birth reaches a Liu Ren board, and not by oversight: the person
               // asking is already in it, standing on the day stem. Which boards
               // take one is `takesBirth`, where the reason is written down. See
-              // the page's own note, and `PLAN.md` § 4 phase 14.
+              // the page's own note, and `docs/history/` phase 14.
               born: sentBirth,
               gender: sentGender,
             },

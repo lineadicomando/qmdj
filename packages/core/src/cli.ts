@@ -466,8 +466,9 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
       // It printed it until now by the default of `formatMoment` rather than
       // by a decision, and the decision goes the other way: this is the moment
       // read as a person, and 曆注 weighs a day as the occasion of an
-      // undertaking. See `formatMoment` for the three reasons and `PLAN.md`
-      // § 4 phase 15. The JSON above still carries it, because a caller who
+      // undertaking. See `formatMoment` for the three reasons and
+      // `docs/history/` phase 15. The JSON above still carries it,
+      // because a caller who
       // wants the layer for this instant is asking, not being shown.
       formatMoment(moment, t, { almanac: false }),
       '',
@@ -684,7 +685,7 @@ const CARRIES: Record<Command, readonly ('ask' | 'about')[]> = {
  * **nobody to ask on behalf of**: the subject is a year, the reader is not on
  * the board, and a question is how they would get put there. The rest take the
  * plain refusal, because there the flag is not a design decision but simply
- * not that command's. See `prompt.ts` and `PLAN.md` § 4 phases 18 and 21.
+ * not that command's. See `prompt.ts` and `docs/history/` phases 18 and 21.
  */
 const NOT_ASKED: Partial<Record<Command, 'cli.error.notAsked' | 'cli.error.notAskedYear'>> = {
   bazi: 'cli.error.notAsked',

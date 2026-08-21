@@ -35,7 +35,7 @@
    * of the month and day branches printed a hand's width above, 天德 月德 天馬
    * 劫煞 三合 六合 太陰 白虎 大耗 are all names the 八字 tradition also uses and
    * derives otherwise, and no source reads this page against a nativity. That
-   * is the graft the natal Qi Men was made of. See `PLAN.md` § 4 phase 15.
+   * is the graft the natal Qi Men was made of. See `docs/history/` phase 15.
    */
   let { moment, t, almanac = true }: { moment: any; t: Translator; almanac?: boolean } = $props();
 

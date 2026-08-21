@@ -96,7 +96,7 @@
    * the board — because this art reads a seat *against* the others, the one
    * opposite it and the three it stands in aspect to, and a panel covering the
    * board to explain one cell puts out the light it was read by. So both stay
-   * visible and only the emphasis moves. See `PLAN.md` § 4 phase 23.
+   * visible and only the emphasis moves. See `docs/history/` phase 23.
    */
   let pointed = $state<string | null>(null);
 

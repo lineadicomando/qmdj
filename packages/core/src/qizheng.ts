@@ -36,11 +36,11 @@ import type { Element } from './types.js';
  * to run. What is declined is the step after. A palace is labelled here and
  * never read: the geometry is the 命宮, the twelve 次 the bodies sit in and the
  * name each palace takes, and the doctrine that reads a life off them is the
- * reader's, as it is everywhere else here. See `PLAN.md` § 4 phase 16 and the
+ * reader's, as it is everywhere else here. See `docs/history/` phase 16 and the
  * 七政四餘 section of `docs/sources.md`.
  */
 
-/** The divergences of this board. See `PLAN.md` § 3. */
+/** The divergences of this board. See `docs/parameters.md`. */
 export interface QizhengOptions {
   /**
    * Where the twenty-eight 宿 begin.

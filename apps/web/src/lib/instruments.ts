@@ -5,8 +5,8 @@ import type { MessageKey } from '@qimendunjia/i18n';
  * with the choice.
  *
  * A consultation takes **one** instrument, chosen before the press and at no
- * point after it — see `CLAUDE.md` and `PLAN.md` § 4 phase 14 for why that is
- * the rule and not a preference. What this file adds is the other half of it:
+ * point after it — see `docs/readings.md` for why that is the rule and not a
+ * preference, and `docs/history/` phase 14 for the decision. What this file adds is the other half of it:
  * *which* one is a value, so that what turns with it is a field rather than a
  * conditional.
  *
@@ -20,7 +20,7 @@ import type { MessageKey } from '@qimendunjia/i18n';
  * live one are the same shape. A descriptor cannot hide that — a column of
  * one repeated value is visible on the page.
  *
- * **A row is a board, and the fourth board was a row.** `PLAN.md` § 4 phase 18
+ * **A row is a board, and the fourth board was a row.** `docs/history/` phase 18
  * gave the consultation the instruments of 命 as well, and `needs` is the field
  * that arrived with them: a question, cast at the instant of asking, or a
  * birth, cast at the birth. It was left undeclared while both rows would have

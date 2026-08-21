@@ -22,7 +22,7 @@ import type { RequestHandler } from './$types';
  * line: 八字 arrived as the substrate a chart is cast from rather than as
  * something anybody would hand over, so nothing ever asked it for a rendering
  * of its own. That it had neither `/text` nor `/prompt` when the other three
- * had one or both was an omission, not a decision. See `PLAN.md` § 4 phase 18.
+ * had one or both was an omission, not a decision. See `docs/history/` phase 18.
  *
  * `gender` is optional and only the decade luck cycles depend on it. Without
  * it the pillars are complete and the cycles are absent, which is the correct

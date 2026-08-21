@@ -26,13 +26,13 @@ import type { Element } from './types.js';
  * identifier, the hanzi and the reading. They name a shape of the board and
  * are not a verdict on it.
  *
- * See `PLAN.md` § 4 phase 13 for the references this was checked against and
+ * See `docs/history/` phase 13 for the references this was checked against and
  * the two divergences they settled, and the 六壬 section of `docs/sources.md`
  * for 《六壬大全》卷一 入手法 — the verse that states the nine rules, which was
  * read after this was written and is quoted there line against implementation.
  */
 
-/** The divergences of this board. See `PLAN.md` § 3. */
+/** The divergences of this board. See `docs/parameters.md`. */
 export interface LiurenOptions {
   /**
    * When the 太陽 changes palace, which fixes the 月將.

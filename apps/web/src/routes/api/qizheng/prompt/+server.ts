@@ -28,7 +28,7 @@ import type { RequestHandler } from './$types';
  * question to, because a question would name a seat this board prints. Somebody
  * writing «what about my career» has said 官祿宮, and a model handed the two
  * together arrives there without making a choice anybody could ask it to
- * justify. See `prompt.ts` and `PLAN.md` § 4 phase 18.
+ * justify. See `prompt.ts` and `docs/history/` phase 18.
  *
  * **And one board is in the fence, never two.** Sharper here than between the
  * other two: the twelve palaces of this board *are* the ring a 六壬 board seats
@@ -39,7 +39,7 @@ import type { RequestHandler } from './$types';
  * sound — it just does not reach the conclusion, since a consultation hands
  * over one board and the pair never meets. What had to be settled first was
  * different: this board arrives with its twelve seats already *named*, so the
- * prompt says outright that a name is not an assignment. `PLAN.md` § 4 phase 16
+ * prompt says outright that a name is not an assignment. `docs/history/` phase 16
  * records the reversal.
  */
 export const GET: RequestHandler = ({ url, request, setHeaders }) => {

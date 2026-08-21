@@ -558,7 +558,7 @@ describe('the prompt for a board of 命', () => {
  * instructions and not only inside the fence; and the two refusals that bound
  * it — the dynastic doctrine, and the reader who is not on this board.
  *
- * See `PLAN.md` § 4 phase 21.
+ * See `docs/history/` phase 21.
  */
 describe('the prompt for a board of 天', () => {
   const board = () => taiyiBoard({ year: 2026 }, DEFAULT_TAIYI_OPTIONS);

@@ -32,7 +32,7 @@
    * to hand a year to a model goes there, as they do for the other four. What
    * this section keeps is what every section that is an address keeps — the
    * board, its transcript, and the two ways out that do not involve asking
-   * anything. See `PLAN.md` § 4 phases 20 and 21.
+   * anything. See `docs/history/` phases 20 and 21.
    */
   let { data } = $props();
   const t = $derived(data.t);

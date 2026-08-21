@@ -1013,7 +1013,7 @@ export const it: Record<MessageKey, string> = {
   // Le tavole di 命, e ciò che le separa dalle due sopra. Una tavola di 卜 è
   // posta per una domanda e finisce sulla riga che la introduce; queste sono
   // stese su una nascita, non si chiede loro nulla, e il prompt finisce su
-  // come va scritta la lettura. Vedi `PLAN.md` § 4 fasi 18 e 19.
+  // come va scritta la lettura. Vedi `docs/history/`, fasi 18 e 19.
   'prompt.ming.configuration':
     'Una lettura non è la trascrizione ridetta in frasi, e il suo soggetto non sono i pilastri: è la persona su cui sono stati stesi. Parti da chi è — come questa disposizione la inclina a sentire, di che cosa ha bisogno per stare al mondo, come si difende quando è scoperta, che cosa desidera e che cosa teme di desiderare, dove cerca un senso che la ecceda — e lascia che ciò che è stampato qui sotto arrivi come prova, dopo la frase che sostiene. I significati sono trasmessi: le fonti dicono che cosa sia incontrare un dato dio in un dato pilastro, per un ramo essere vuoto, per due corpi radunarsi in un palazzo, e leggerli su questa persona è la lettura. Dove compi un passo che questa trascrizione non porta — il metodo di una scuola, un significato non stampato qui — di\' che lo stai compiendo e di chi è. **Una carta non vuole nulla**: a volere è la persona su cui è stata stesa.',
   'prompt.ming.noQuestion':
@@ -1248,7 +1248,7 @@ export const it: Record<MessageKey, string> = {
   'cli.field.ziweiPalaces': 'i dodici seggi',
   'cli.field.lunarDate': 'la data lunare',
   'cli.field.majorLimit': 'decennio',
-  // Detto una volta, dove chi legge può soppesarlo. Si veda PLAN.md § 4 fase 23.
+  // Detto una volta, dove chi legge può soppesarlo. Si veda `docs/history/`, fase 23.
   'cli.value.ziweiSource':
     'collocazioni dal 《紫微斗數全書》 卷二 in ogni punto — la trasmissione delle quattordici stelle, non quella delle diciotto, i 十八飛星 del 《全集》 e del 《捷覽》; dove le sue tavole si scostano da quelle moderne — 火星 e 鈴星 slegate dall\'ora, 魁鉞 a 丙丁辛, 解神 preso dall\'anno, 壬 che dà 科 a 天府 — si segue questo libro e lo scostamento è registrato',
   'form.luohou': 'Quale nodo è 羅睺',
@@ -1262,7 +1262,7 @@ export const it: Record<MessageKey, string> = {
   'cli.value.threeRemainders':
     'tre, non quattro: 紫氣 è una tavola e non un corpo, quindi non esiste una posizione in cielo con cui verificarne la tavola',
   // Detto una volta sotto una tavola il cui quadro non ha nulla di pubblicato
-  // contro cui essere verificato. Vedi PLAN.md § 4 fase 16.
+  // contro cui essere verificato. Vedi `docs/history/`, fase 16.
   'cli.value.qizhengFrame':
     'le dimore cominciano alle loro stelle di riferimento, collocate a questo istante; nessuna tavola di 宿度 e nessuna epoca vi entra',
 

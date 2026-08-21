@@ -5,7 +5,7 @@ import type { PageServerLoad } from './$types';
  * The consultation answers at the root of a language, and this is the name
  * somebody types looking for it.
  *
- * `/[lang]` is the consultation and stays the address — `PLAN.md` § 4 phase 12
+ * `/[lang]` is the consultation and stays the address — `docs/history/` phase 12
  * settled that, and the nav points there. What this adds is the word: every
  * other section here can be reached by naming it, and the one that leads was
  * the only one a reader had to know was *nowhere* in order to find. So the

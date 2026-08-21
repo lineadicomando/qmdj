@@ -37,9 +37,20 @@ packages/mcp/src/server.ts            the registration
 packages/mcp/test/server.test.ts      obligatory
 
 README.md                             the description and the tables
+docs/sources.md                       where the number comes from — never skip
+docs/parameters.md                    if a school diverges
+docs/refusals.md                      if something is deliberately left out
+docs/readings.md                      if it reaches a prompt
 docs/agent-prompt.md                  the contract agents actually read
-PLAN.md                               what was learned, especially if wrong
+docs/history/<n>-<slug>.md            what was learned, especially if wrong
+CLAUDE.md                             only if a new rule binds every change
 ```
+
+**`docs/` is the present tense and `docs/history/` is the past.** State the
+rule in the page that owns it and write the record in a new phase file; never
+edit an old phase to match what the code does now. `CLAUDE.md` gets a line and
+a pointer, not the argument — and only if the rule really does bind every
+change.
 
 ## Procedure
 
@@ -53,8 +64,11 @@ PLAN.md                               what was learned, especially if wrong
 4. **The surfaces**, together: endpoint, interface, MCP tool. Reuse
    `lib/server/params.ts` instead of rewriting the validation, and let the
    Svelte tables take the rows, not the chart.
-5. **The documentation**, last and never omitted.
-6. `npm test && npm run typecheck`.
+5. **The documentation**, last and never omitted. `docs/sources.md` first —
+   a quantity without an entry there is a quantity nobody can weigh.
+6. `npm test && npm run typecheck`. If the feature added an endpoint, a tool,
+   a section or a command, `docs.test.ts` will fail until the count stated in
+   `docs/architecture.md` is corrected. That is what it is for.
 
 ## The commit
 

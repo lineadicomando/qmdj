@@ -141,7 +141,7 @@ describe('十二天將', () => {
  * One board per rule, and every one of them agrees with **both** references —
  * `kinliuren` 0.1.2.9 and `liuren-ts-lib` 3.1.0. Where those two disagree with
  * each other, which is 17.6 % of the space, nothing is asserted here.
- * See `PLAN.md` § 4 phase 13.
+ * See `docs/history/` phase 13.
  */
 describe('九宗門', () => {
   it('賊剋 · 元首 — one upper controls its ground', () => {

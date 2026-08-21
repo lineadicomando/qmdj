@@ -28,8 +28,8 @@ import type { ChartOptions } from './types.js';
  *
  * **It is not a board.** Nothing is laid, nothing is asked, and the same page
  * belongs to everybody who opens it on the same day — which is why it takes no
- * options, sits in no consultation, and enters no prompt. See `PLAN.md` § 4
- * phase 15.
+ * options, sits in no consultation, and enters no prompt. See
+ * `docs/history/` phase 15.
  *
  * **And it stops where the rest of this engine stops.** The 協紀 hands every
  * one of these down inside its 宜忌 — this day suits, this day forbids — and a

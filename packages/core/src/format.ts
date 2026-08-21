@@ -248,7 +248,7 @@ function officer(page: Almanac, t: Translator): string {
  * inference: the two branches the officer comes from are inches above it.
  *
  * Everywhere else the layer is shown, because everywhere else the pillars
- * describe an instant rather than somebody. See `PLAN.md` § 4 phase 15 and the
+ * describe an instant rather than somebody. See `docs/history/` phase 15 and the
  * tests that keep both of these true.
  */
 export function formatMoment(

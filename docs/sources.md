@@ -52,7 +52,7 @@ The same reference checked the reading layer of the pillars — the 納音 image
 the concealed stems, the ten gods, the twelve stages, the void branches, the
 direction and start of the luck cycles — on 479 charts spread over the same
 two centuries, agreeing on every one once it is given a zone whose offset
-never moves; `PLAN.md`, Phase 2, records the check and the eleven
+never moves; `docs/history/02-four-pillars.md` records the check and the eleven
 disagreements that all fell inside China's moving clocks. These quantities are
 transmitted tables and derivations from them, not published astronomy: the
 agreement is tier 2, consistency with a runnable reference.
@@ -795,7 +795,7 @@ name two different detours and this file keeps them apart.
 
 ### Three clauses the engine recovered, and the text states
 
-`PLAN.md` § 4 phase 13 records three corrections found by asking what rule
+`docs/history/13-liuren.md` records three corrections found by asking what rule
 reproduces two independent implementations where they agree. Each is in the
 verse, and none was known to be there when it was made:
 
@@ -866,7 +866,8 @@ two of them into something other than what they looked like.
   reach the engine, for the reason the rest of this bullet gives, but it is
   what the punctuation of a modern edition is worth: an editor's reading, not
   a witness. `shehai` left a surviving tie to the order of the courses, and
-  `PLAN.md` called the disagreements that remain "a question for 《六壬大全》".
+  `docs/history/13-liuren.md` called the disagreements that remain "a question
+  for 《六壬大全》".
   The question was put. **A tie survives the palaces on 540 of the 1 380 涉害
   boards, and on none of them does the clause change the answer.** It was tried
   under all three readings of what 辰 and 日 name — the 天盤 branch over the
@@ -980,7 +981,7 @@ parallel of dunjia's `method`. Only `xieji` exists — what the 協紀 ratifies,
 to the day and the bearing — and anything else is refused with
 `OPTION_NOT_IMPLEMENTED` rather than quietly served this one. It travels in the
 URL, in the MCP schema and on the CLI from before there is a second register,
-for the reason `PLAN.md` § 3 gives: added later it would break every shared
+for the reason `docs/parameters.md` gives: added later it would break every shared
 address at once.
 
 The layer dunjia was read beside. It arrives one block at a time; **建除十二神
@@ -1302,7 +1303,7 @@ have kept it.
 From 卷五, and they share a shape rather than a key: each is a quality a day
 either has or has not, and what decides it is the month's branch, the season, or
 nothing at all. They are the first entries under the `shensha` parameter of
-`PLAN.md` § 3.
+`docs/parameters.md`.
 
 | | the source's words | keyed to |
 |---|---|---|
@@ -1880,7 +1881,7 @@ names what the tradition names, exactly as it does for the gates.
 The phase that added this board was **gated on a reading rather than scheduled
 as work**, because one quantity could have ended it: an 上元積年 is a single
 integer upstream of every placement, and getting it wrong rotates the whole
-figure with nothing in the output to complain. `PLAN.md` § 4 phase 20 put
+figure with nothing in the output to complain. `docs/history/20-taiyi.md` put
 three questions to the text and said that failing the first was a delivery and
 not a failure — the entry left out, the absence written down. All three
 answered. What follows is the reading, and it is longer than the others in
@@ -1975,7 +1976,7 @@ carries the years the ladder requires.
 上元積年 and has **not been read here**, so it is not a value: a branch nobody
 has read is worse than a branch that does not exist, and the parameter exists
 from the first release so that reading it later cannot break a shared link.
-See `PLAN.md` § 3, which says exactly this about every divergence and said it
+See `docs/parameters.md`, which says exactly this about every divergence and said it
 about this one before the reading.
 
 `yearBoundary` is a genuine divergence and stays one. The text nowhere says
@@ -2319,7 +2320,7 @@ not made rather than having a model invent a pair of parties, which would be the
 whole reading resting on nothing. A matter is not a question, and the difference
 is what lets this board be handed over at all: a question about a year puts the
 reader inside a figure they are not in. See `prompt.taiyi.hostguest`,
-`prompt.taiyi.matter` and `PLAN.md` § 4 phase 21.
+`prompt.taiyi.matter` and `docs/history/21-consultation-taiyi.md`.
 
 **三基 print their period beside their count**, and the reason is a defect this
 board produced. 卷五 gives the sovereign thirty years to a fief, the minister
