@@ -17,7 +17,7 @@ export const COLOR_SCHEMES: readonly ColorScheme[] = ['auto', 'light', 'dark'];
  * The key in `localStorage`, named in the privacy note: if it changes here it
  * changes there too.
  */
-export const COLOR_SCHEME_KEY = 'qimendunjia:color-scheme';
+export const COLOR_SCHEME_KEY = 'shipan:color-scheme';
 
 /** The attribute the stylesheet watches on `<html>`. `app.html` writes it too. */
 export const COLOR_SCHEME_ATTRIBUTE = 'data-color-scheme';

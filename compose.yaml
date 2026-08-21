@@ -1,4 +1,4 @@
-name: qimendunjia
+name: shipan
 
 # The three surfaces share one image: the command changes, the code does not.
 # The anchor saves repeating the build and the environment three times.
@@ -6,7 +6,7 @@ x-runtime: &runtime
   build:
     context: .
     target: runtime
-  image: qimendunjia:latest
+  image: shipan:latest
   environment:
     GEONAMES_DB_PATH: /data/geonames.db
 

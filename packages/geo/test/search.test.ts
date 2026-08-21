@@ -95,7 +95,7 @@ const FIXTURES: Fixture[] = [
 ];
 
 beforeAll(() => {
-  directory = mkdtempSync(join(tmpdir(), 'qimendunjia-geo-'));
+  directory = mkdtempSync(join(tmpdir(), 'shipan-geo-'));
   databasePath = join(directory, 'test.db');
 
   const database = new DatabaseSync(databasePath);
