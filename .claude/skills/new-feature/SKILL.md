@@ -1,9 +1,9 @@
 ---
 name: new-feature
-description: Use when ADDING or EXTENDING a calculation in qimendunjia that has to reach users or agents — a new computation in core, a new /api endpoint, a new MCP tool, a new section of the interface, a new CLI option, a new pattern in dunjia. Lists the surfaces to cross (core, i18n, CLI, plate, web, MCP, README, agent-prompt) and the order to work through them in. Triggers: new calculation, new endpoint, new MCP tool, new section, expose to agents, new CLI option, new pattern.
+description: Use when ADDING or EXTENDING a calculation in shipan that has to reach users or agents — a new computation in core, a new /api endpoint, a new MCP tool, a new section of the interface, a new CLI option, a new pattern in dunjia. Lists the surfaces to cross (core, i18n, CLI, plate, web, MCP, README, agent-prompt) and the order to work through them in. Triggers: new calculation, new endpoint, new MCP tool, new section, expose to agents, new CLI option, new pattern.
 ---
 
-# Adding a feature to qimendunjia
+# Adding a feature to shipan
 
 There is one engine and **six surfaces** that tell it. A feature that stops
 halfway leaves a README describing five endpoints when there are six, or an

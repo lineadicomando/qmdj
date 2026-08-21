@@ -1,7 +1,9 @@
-# qimendunjia
+# shipan 式盤
 
-Qi Men Dun Jia charts and Four Pillars: a **pure engine** and **adapters** that
-expose it on a command line, over HTTP, to AI agents, and in a browser.
+式盤 shìpán is the diviner's board itself: the round heaven turning on the
+square earth, and the ancestor the three 式 — 奇門, 六壬, 太乙 — have in common.
+Here it is a **pure engine** and **adapters** that expose it on a command
+line, over HTTP, to AI agents, and in a browser.
 
 Everything runs locally. No third-party API is called at runtime — not for the
 ephemerides, not for the places, not for anything.
@@ -91,9 +93,9 @@ So the board travels **already computed**, and the conditions travel with it:
 
 ```sh
 shipan qimen --date 2024-06-15 --time 14:00 --tz Asia/Shanghai \
-            --ask "Will the contract be signed as it stands?"
+             --ask "Will the contract be signed as it stands?"
 shipan bazi  --date 1968-03-12 --time 14:30 --tz Asia/Shanghai \
-            --gender female --prompt
+             --gender female --prompt
 shipan taiyi --year 2026 --about "the merger our two firms are negotiating"
 ```
 
@@ -175,7 +177,7 @@ shipan taiyi    --year 2026
 shipan terms    --year 2024 --tz Asia/Shanghai
 shipan calendar --date 2023-04-01
 shipan scan     --date 2026-09-01 --until 2026-09-08 --tz Europe/Rome \
-               --gate kaimen --towards se,s
+                --gate kaimen --towards se,s
 
 npm run dev -w @shipan/web    # http://localhost:5173
 npm start   -w @shipan/web    # http://localhost:3000, after build

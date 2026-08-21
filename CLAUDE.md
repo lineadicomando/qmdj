@@ -1,7 +1,8 @@
-# qimendunjia
+# shipan 式盤
 
-Qi Men Dun Jia charts and Four Pillars: a **pure engine** (`packages/core`) and
-**adapters** that expose it on different surfaces.
+`shipan` is the identifier, 式盤 is the name, shìpán is the reading — the same
+three-part shape every named thing in the engine has. A **pure engine**
+(`packages/core`) and **adapters** that expose it on different surfaces.
 
 **This file is the rules, one line each.** Where a rule has an argument behind
 it, the argument is in `docs/` and the line points there. Read the pointer
@@ -15,6 +16,7 @@ correct-looking fix from being wrong.
 | [`docs/history/`](docs/history/README.md) | **how it got here.** Never normative. Never rewritten to match the present |
 | [`ROADMAP.md`](ROADMAP.md) | what is not built yet |
 | [`README.md`](README.md) | what this is, for somebody arriving |
+| [`design/logo/`](design/logo/README.md) | the name, why it was cut, and the marks that carry it |
 
 ## Map
 

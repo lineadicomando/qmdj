@@ -1,7 +1,7 @@
 {
   "name": "@shipan/mcp",
   "version": "0.0.0",
-  "description": "MCP server: Qi Men Dun Jia charts and Four Pillars for agents",
+  "description": "MCP server: the boards, computed, for agents",
   "license": "AGPL-3.0-or-later",
   "type": "module",
   "main": "./dist/index.js",

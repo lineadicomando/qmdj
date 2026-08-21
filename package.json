@@ -2,7 +2,7 @@
   "name": "shipan",
   "version": "0.0.0",
   "private": true,
-  "description": "Qi Men Dun Jia and Four Pillars charts: calculation engine, REST API and MCP server",
+  "description": "The diviner's boards: calculation engine, command line, REST API and MCP server",
   "license": "AGPL-3.0-or-later",
   "type": "module",
   "engines": {
