@@ -19,6 +19,11 @@ import { computeBazi } from '../src/bazi/index.js';
 import { qizhengBoard, DEFAULT_QIZHENG_OPTIONS } from '../src/qizheng.js';
 import { taiyiBoard, DEFAULT_TAIYI_OPTIONS } from '../src/taiyi.js';
 import { DEFAULT_OPTIONS, type Place } from '../src/types.js';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { SPIRITS_YANG, SPIRITS_YIN } from '../src/dunjia/plates.js';
+import { GENERALS } from '../src/liuren.js';
 
 /**
  * What is asserted here is not the wording — that is a catalog and moves —
@@ -744,5 +749,55 @@ describe('the prompt for a board of 天', () => {
     expect(taiyiReadingPrompt(board(), en, { source: 'https://example.org/t' })).toContain(
       'https://example.org/t',
     );
+  });
+});
+
+
+/**
+ * How much a 奇門 chart and a 六壬 board actually share.
+ *
+ * The one-board rule rests on the overlap being large, and four texts state
+ * the size of it in words: the argument above `readingPrompt`, the MCP
+ * server's instructions, `docs/readings.md` and `docs/agent-prompt.md`. All
+ * four said **seven** of the eight spirits, and the tables say five.
+ *
+ * Seven is the count over `SPIRIT_IDS`, the ten spirits the *layer* can show —
+ * but no chart shows ten. A chart shows eight, and which eight depends on the
+ * dun: 勾陳 and 朱雀 stand in a yang chart, 白虎 and 玄武 in a yin one, and
+ * either way exactly five of them are also among the twelve generals. 值符 is
+ * not 貴人, and 九地 and 九天 are nobody's general.
+ *
+ * The error was harmless to the rule and would not have been to a reader
+ * asked to justify it, which is the case `docs/agent-prompt.md` § "How sure
+ * the numbers are" exists for. So the number is computed here and the texts
+ * are held to it, on the rule `CLAUDE.md` states for counts: do not write
+ * them by hand.
+ */
+describe('the overlap the one-board rule rests on', () => {
+  const ROOT = fileURLToPath(new URL('../../../', import.meta.url));
+  const WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'];
+
+  /** Spirits that are also generals, which is the same count under either dun. */
+  const shared = (spirits: readonly { id: string }[]): number => {
+    const generals = new Set(GENERALS.map((general) => general.id));
+    return spirits.filter((spirit) => generals.has(spirit.id)).length;
+  };
+
+  it('is the same under either dun, so one number can be stated', () => {
+    expect(shared(SPIRITS_YANG)).toBe(shared(SPIRITS_YIN));
+  });
+
+  it.each([
+    'docs/readings.md',
+    'docs/agent-prompt.md',
+    'packages/core/src/prompt.ts',
+    'packages/mcp/src/server.ts',
+  ])('is stated correctly in %s', (path) => {
+    const count = shared(SPIRITS_YANG);
+    const text = readFileSync(join(ROOT, path), 'utf8');
+    const stated = /(\w+) of the eight (?:spirits|八神)/.exec(text);
+
+    expect(stated, `${path} should say how many of the eight are shared`).not.toBeNull();
+    expect(stated?.[1]).toBe(WORDS[count]);
   });
 });

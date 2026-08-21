@@ -20,7 +20,7 @@ moment nobody asked at.
 
 The reason is not tidiness, and it does **more** work now that there are six
 boards rather than less. A Qi Men chart and a 六壬 board share the day pillar,
-the 旬, the 空亡, the 遁干 and seven of the eight 八神; the twelve 宮 of a
+the 旬, the 空亡, the 遁干 and five of the eight 八神; the twelve 宮 of a
 七政四餘 board *are* the ring a 六壬 board's 月將 is seated on; and a 八字 is the
 substrate the others are built from, so beside any of them it is the same four
 pillars a second time. **Where two boards agree it is frequently one fact

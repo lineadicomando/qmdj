@@ -45,7 +45,7 @@ import type { ZiweiBoard } from './ziwei/index.js';
  * verdict no text licenses, and — worse — will read their agreement as
  * corroboration when they overlap. And five of the six overlap everywhere:
  * the chart and the 六壬 board share the day pillar, the decade, the void
- * branches and seven of the eight spirits; the twelve palaces of a 七政四餘
+ * branches and five of the eight spirits; the twelve palaces of a 七政四餘
  * board *are* the ring the 六壬 generals are seated on, and the twelve seats
  * of a 紫微斗數 board are laid against that ring too, with their 四化 taken off
  * the year stem and their 五行局 cut by a 納音; and a 八字 is the four pillars

@@ -119,7 +119,7 @@ said as it is made. A 天 reading is descriptive and never predictive: its
 subject is a year, nobody is on the board, and 太乙's received dynastic
 readings stay out.
 
-`--ask` works on `chart` and `liuren` and is **refused** on the others rather
+`--ask` works on `qimen` and `liuren` and is **refused** on the others rather
 than quietly dropped; `--about` is 太乙's alone and refused everywhere else.
 Neither a question nor a matter ever reaches the server: over HTTP `asked=true`
 and `about=true` say one exists, and the browser appends the text.

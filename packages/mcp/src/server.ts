@@ -57,7 +57,7 @@ export function createServer(context: ToolContext = {}): McpServer {
         'call. ' +
         'READ ONE BOARD, NEVER TWO OF ONE INSTANT. Six tools is not six witnesses: a Qi Men ' +
         'chart and a Liu Ren board share the day pillar, the decade, the void branches and ' +
-        'seven of the eight spirits, the twelve 宮 of a 七政四餘 board are the ring a 六壬 ' +
+        'five of the eight spirits, the twelve 宮 of a 七政四餘 board are the ring a 六壬 ' +
         'general is seated on, and a 八字 IS the four pillars the others are built from. Where ' +
         'two of them agree it is frequently one fact printed twice, and reporting that as ' +
         'corroboration counts one datum as two. Choose the instrument before you cast, and do ' +

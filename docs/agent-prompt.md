@@ -278,7 +278,7 @@ rather than advises. Do not supply it from memory.
   and arrives done.
 - **One board goes to a model, never two of one instant.** A Qi Men chart and
   a Liu Ren board share the day pillar, the decade, the void branches and
-  seven of the eight spirits: where they agree it is frequently one fact
+  five of the eight spirits: where they agree it is frequently one fact
   printed twice, and reading that as corroboration counts one datum as two.
   Compare them yourself if you must; do not hand a person a reading that
   merges them, and do not present their agreement as evidence. No transmitted
