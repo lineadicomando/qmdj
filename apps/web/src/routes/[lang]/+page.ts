@@ -5,7 +5,7 @@ import type { PageLoad } from './$types';
 /**
  * The setup is loaded; the chart is not.
  *
- * The other two sections cast from the address, because there a chart is a
+ * Every other section casts from the address, because there a board is a
  * pure function of its parameters and the address is the thing worth sharing.
  * Here it is the opposite and deliberately so: a consultation is an act, not
  * an address. It is cast at the instant it is asked for, it holds somebody's

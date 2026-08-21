@@ -15,9 +15,9 @@
     /**
      * What the panel holds, and what reopening it offers.
      *
-     * Two sections ask for a moment and one asks for an interval, and
-     * "Change the moment" over a pair of dates names the wrong thing. A
-     * disclosure has to say what opening it gives you.
+     * Five sections ask for a moment, one asks for an interval and one for a
+     * year, and "Change the moment" over a pair of dates names the wrong
+     * thing. A disclosure has to say what opening it gives you.
      *
      * `null` where the fields already say it. On the consultation the panel
      * holds one thing the reader composes, under a label of its own, on a

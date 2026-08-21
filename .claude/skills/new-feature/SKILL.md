@@ -93,6 +93,13 @@ Opens them over HTTP and says so in the README ...
 
 ## Rules that bite harder here than elsewhere
 
+- **A board that lands makes every comment that counts boards wrong.** The
+  comments here argue, and an argument that rests on «there are five boards»
+  stops holding the day there are six — `prompt.ts` opened that way for a
+  whole phase. Nothing can test this, so it is a step: grep the source for
+  `boards`, `instruments`, `of 卜`, `of 命` and the number words beside them,
+  and fix the ones the new board moved. Same for the counts in
+  `docs/architecture.md`, which `docs.test.ts` *does* hold you to.
 - **Verify against an independent implementation, not against memory.** This
   is the lesson of phases 1 to 3, learned the hard way more than once. A
   recalled almanac value has been wrong more often than right.

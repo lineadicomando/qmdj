@@ -52,9 +52,10 @@ export const GET: RequestHandler = ({ url, request, setHeaders }) => {
       size,
       scheme,
       labels: qizhengLabels(t),
-      // The instant, and nothing else. The other two boards head themselves
-      // with a pillar because a pillar *is* the board's ground; here the
-      // ground is the sky at a moment, and the moment is the whole of it.
+      // The instant, and nothing else. 六壬 heads itself with the day pillar
+      // because a pillar *is* that board's ground; here the ground is the sky
+      // at a moment, and the moment is the whole of it. 紫微斗數 heads the same
+      // way this does, for its own reason — see that endpoint.
       heading: `${moment.input.date} ${moment.input.time} · ${moment.input.timezone}`,
       readings: t('cli.heading.readings'),
     });

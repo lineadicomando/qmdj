@@ -40,21 +40,27 @@ import type { ZiweiBoard } from './ziwei/index.js';
  * and for the same reason: the surface chooses the language, the engine holds
  * no catalog and decides nothing about who is reading.
  *
- * **There are five boards and there is one in a prompt.** Not because a reader
+ * **There are six boards and there is one in a prompt.** Not because a reader
  * could not hold two, but because a model given two will merge them into a
  * verdict no text licenses, and — worse — will read their agreement as
- * corroboration when they overlap. And four of the five overlap everywhere:
+ * corroboration when they overlap. And five of the six overlap everywhere:
  * the chart and the 六壬 board share the day pillar, the decade, the void
  * branches and seven of the eight spirits; the twelve palaces of a 七政四餘
- * board *are* the ring the 六壬 generals are seated on; and a 八字 is the four
- * pillars every one of the other three is laid from. Where two agree it is
+ * board *are* the ring the 六壬 generals are seated on, and the twelve seats
+ * of a 紫微斗數 board are laid against that ring too, with their 四化 taken off
+ * the year stem and their 五行局 cut by a 納音; and a 八字 is the four pillars
+ * every one of the other four is laid from. Where two agree it is
  * frequently one fact printed twice. So the functions below never meet: a
  * consultation takes one instrument, and comparing instruments happens where
  * nothing is being asked. The rule is `docs/readings.md`; the decisions are
  * `docs/history/` phases 14 and 18.
  *
+ * **This paragraph counts, so a board that lands makes it wrong.** It said
+ * five while there were six, having been written when there were four, and
+ * the number is what the argument rests on rather than a detail beside it.
+ *
  * **太乙 overlaps none of them, and the rule holds for it anyway.** Its subject
- * is a year and it shares not one quantity with the other four, so the
+ * is a year and it shares not one quantity with the other five, so the
  * duplicate-fact argument does not reach it — what does reach it is the first
  * half: a model handed a board of a year beside a board of a person will read
  * the year onto the person, which is the whole of what `prompt.taiyi.notPersonal`
@@ -323,7 +329,7 @@ export interface MingReadingRequest {
  * The 七政四餘 board said in full: the instant, its pillars, the eleven bodies
  * with their lodges and degrees, the 命宮 and the twelve seats.
  *
- * One rendering, as the other three have one, so that what somebody pastes is
+ * One rendering, as the other five have one, so that what somebody pastes is
  * what they were looking at. The almanac's officer is left out for the reason
  * `chartTranscript` leaves it out, and it bites harder here: this board prints
  * a lodge against every body, and the almanac's 值日宿 is a lodge of another

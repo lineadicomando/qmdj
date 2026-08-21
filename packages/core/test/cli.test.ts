@@ -389,12 +389,16 @@ describe('bazi', () => {
 });
 
 /**
- * `--prompt` on the two boards that are laid on a birth.
+ * `--prompt` on two of the three boards that are laid on a birth.
  *
- * The flag reaches all four commands now. What parts these two from the other
- * two is `--ask`, which is refused rather than dropped: nothing is asked of a
- * board of 命, and the themes a reading traverses are commissioned in the
+ * The flag reaches all six board commands. What parts the three of 命 from the
+ * two of 卜 is `--ask`, which is refused rather than dropped: nothing is asked
+ * of a board of 命, and the themes a reading traverses are commissioned in the
  * prompt itself.
+ *
+ * 紫微斗數 is the third and is exercised in its own block above, because what
+ * its prompt has to do first is forbid the sky — a rule the other two never
+ * needed and which belongs beside the board it is about.
  */
 describe('--prompt on a board of 命', () => {
   it('wraps the four pillars in what a reader has to be told', async () => {

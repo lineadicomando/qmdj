@@ -9,7 +9,7 @@ import { PALACES } from './vocabulary.js';
  * reload, and needs nothing kept in the browser.
  *
  * It does **not** share `MomentInput`, though it borrows the place from it.
- * The other two sections ask different questions of one instant and hand that
+ * Every other section asks its question of one instant, and they hand that
  * instant to one another; this one takes an interval and answers with many
  * instants. Forcing the two into one type would give a moment a `from` it
  * never uses and an interval a `time` that means nothing.

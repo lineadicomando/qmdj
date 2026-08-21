@@ -8,7 +8,7 @@ import type { PageLoad } from './$types';
  * submit — has the page show one thing while its address says another, so a
  * link is not the chart the person was looking at and a reload loses it.
  * Reading the address instead gives the link, the reload, and the moment
- * carried between the two sections, all from the same code.
+ * carried from one section to the next, all from the same code.
  *
  * An empty address is not an empty page: it is the present moment, which is
  * the chart a Qi Men reader wants most often and the one every other is

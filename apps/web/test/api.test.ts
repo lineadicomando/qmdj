@@ -338,13 +338,21 @@ describe('GET /api/qizheng', () => {
  * The moment, reachable on every board — which is what the consultation needs
  * and what it silently did not have.
  *
- * Three of the four endpoints hand the moment over beside the board; `/api/qimen`
- * keeps it inside the chart, because a chart carries its own. The consultation
+ * Four of the five hand the moment over beside the board; `/api/qimen` keeps it
+ * inside the chart, because a chart carries its own. `/api/taiyi` is the sixth
+ * and is not here at all: a 年計 board is laid on a year and has no instant to
+ * yield, which is why the consultation guards `castMoment` rather than reading
+ * it. The consultation
  * read `body.moment` alone from the day a second board arrived, so every Qi Men
  * press threw on the line after the fetch and was reported as a board that could
  * not be laid — on the section the site opens with, for a year of commits,
  * while the other instrument worked. Nothing here asserted it, which is why
  * this is asserted here and not in the page: the contract is the endpoint's.
+ *
+ * **The table below is the whole of «every».** It listed four while there were
+ * five, and the missing row was 紫微斗數 — a board endpoint that does hand its
+ * moment over, in a suite named for every one of them. A count in the sentence
+ * above is what a reader checks the table against, so it is kept true.
  */
 describe('every board endpoint yields the instant it was laid for', () => {
   const BIRTH = 'date=1968-03-12&time=14:30&timezone=Asia/Shanghai&trueSolarTime=false';
@@ -354,6 +362,7 @@ describe('every board endpoint yields the instant it was laid for', () => {
     ['liuren', liuren, MOMENT],
     ['qizheng', qizheng, BIRTH],
     ['bazi', bazi, BIRTH],
+    ['ziwei', ziwei, BIRTH],
   ])('%s', async (key, handler, query) => {
     const { body } = await call(handler as Handler, query);
     const answer = body as Record<string, { moment?: { input: { date: string } } }> & {
@@ -367,11 +376,13 @@ describe('every board endpoint yields the instant it was laid for', () => {
 });
 
 /**
- * The two boards of 命, handed over.
+ * Two of the three boards of 命, handed over. 紫微斗數 is the third and is
+ * exercised under `/api/ziwei` below, beside the rest of its endpoint.
  *
- * What is asserted is the one thing that parts them from the two boards of 卜:
- * nothing is asked of them, so there is no question machinery to leave empty —
- * and each carries the instructions its own already-printed names are read by.
+ * What is asserted is the one thing that parts the three of them from the two
+ * boards of 卜: nothing is asked of them, so there is no question machinery to
+ * leave empty — and each carries the instructions its own already-printed
+ * names are read by.
  */
 describe('the prompts for a board of 命', () => {
   const BIRTH = 'date=1968-03-12&time=14:30&timezone=Asia/Shanghai&trueSolarTime=false';

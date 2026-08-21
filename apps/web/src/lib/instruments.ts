@@ -115,11 +115,11 @@ export interface Instrument {
   /**
    * Whether the drawing has a ramp of strengths to explain beneath it.
    *
-   * Distinct from `takesBirth` although the two agree across both rows today,
-   * and they are not to be folded together: this one is about the nine
-   * palaces having a strength at all, that one about where a person stands in
-   * a board. Two reasons that happen to divide the same two boards will stop
-   * dividing them at the third.
+   * Distinct from `takesBirth` although the two still agree across every row,
+   * both being true of 奇門 alone, and they are not to be folded together:
+   * this one is about the nine palaces having a strength at all, that one
+   * about where a person stands in a board. Two reasons that happen to divide
+   * the same boards will stop dividing them at the next one.
    */
   readonly strengths: boolean;
   /**

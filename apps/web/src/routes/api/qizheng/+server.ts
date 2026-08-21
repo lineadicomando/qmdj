@@ -11,9 +11,10 @@ import type { RequestHandler } from './$types';
  * each said in both of the frames the board holds — the 宿 with its 入宿度 and
  * the 宮 with its 宮度 — plus the 命宮 and the twelve 人事宮 numbered from it.
  *
- * Unlike the other two boards this one reaches for the ephemeris, and for a
- * lot of it: the seven, the node, the apogee and twenty-eight fixed stars,
- * all at the one instant.
+ * This is the board that reaches deepest into the ephemeris. The others need
+ * it for the calendar under them — the terms, the new moons — where this one
+ * needs positions: the seven, the node, the apogee and twenty-eight fixed
+ * stars, all at the one instant.
  *
  * `private` like the chart and never `public`, for the same reason: it is a
  * pure function of its URL, and the key of a shared cache would hold

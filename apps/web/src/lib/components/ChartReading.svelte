@@ -194,10 +194,11 @@
    * It used to be the expression written out a second time, marked as a
    * mirror, on the argument that a custom property set by two pages and read
    * here would hide the coupling instead of naming it. That held while it was
-   * two pages coupled to one caption. It is now four boards and their
-   * captions at one measure, and an expression copied into six rules is not a
-   * coupling anybody can see either — it is six places to miss. The token is
-   * defined once, for the site, and says what it is for where it is defined.
+   * two pages coupled to one caption. It is now five boards and their
+   * captions at one measure, and an expression copied into nine rules is not
+   * a coupling anybody can see either — it is nine places to miss. The token
+   * is defined once, for the site, and says what it is for where it is
+   * defined.
    */
   .wide {
     inline-size: var(--board);

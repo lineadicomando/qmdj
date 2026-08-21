@@ -4,12 +4,12 @@ import type { MessageKey, MessageParams, Translator } from '@qimendunjia/i18n';
 /**
  * The moment, as it travels in the address.
  *
- * Both sections ask the same question of the same instant, and the API takes
- * that instant in one form only — a query string. So it is read and written
- * here rather than twice over, and the address of a page is exactly the
- * address of the answer.
+ * Every section that is laid on an instant asks its own question of one, and
+ * the API takes that instant in one form only — a query string. So it is read
+ * and written here rather than once per section, and the address of a page is
+ * exactly the address of the answer.
  *
- * That is what makes a chart shareable, what lets the two sections hand a
+ * That is what makes a chart shareable, what lets the sections hand a
  * moment to one another, and what survives a reload. Nothing is kept in the
  * browser to achieve it: what a person types goes in the address and nowhere
  * else, which is what the privacy note says and now what the code does.
@@ -79,8 +79,10 @@ export interface Failure {
 /**
  * The coordinates and the zone, as any address carries them.
  *
- * Three sections read a place out of a URL and one of them is not a moment,
- * so this is the piece they share rather than a fourth copy of three lines.
+ * Seven sections read a place out of a URL and one of them is not a moment —
+ * the interval of `moments` — so this is the piece they share rather than a
+ * copy of three lines apiece. 太乙 is the eighth and reads none: a 年計 board
+ * takes no place and no hour.
  */
 export function readPlaceInput(params: URLSearchParams): Omit<PlaceInput, 'place'> {
   return {
