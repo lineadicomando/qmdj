@@ -48,3 +48,37 @@ describe('the counts docs/architecture.md states about MCP', () => {
     ).toContain(`${resources.length} reference resources`);
   });
 });
+
+/**
+ * The instructions are the only thing a client always sees, and they had gone
+ * stale in the way a hand-written count goes stale: they opened on «Qi Men Dun
+ * Jia charts and the Four Pillars» while the server had been laying six boards
+ * since 紫微斗數 landed. Nothing could have noticed — the sentence was true
+ * when it was written and no test read it.
+ *
+ * So the same bargain the counts get. A board added to this server has to be
+ * named in the frame a caller reads before choosing one, because the frame is
+ * where the choice is made: an agent that never learns 太乙 is offered will
+ * cast the board it was told about instead of the board that answers.
+ */
+describe('the instructions the server always sends', () => {
+  it('names every compute tool the server offers', async () => {
+    const { tools } = await client.listTools();
+    const compute = tools.map((tool) => tool.name).filter((name) => name.startsWith('compute_'));
+    expect(compute.length).toBeGreaterThan(0);
+
+    const instructions = client.getInstructions() ?? '';
+    for (const name of compute) {
+      expect(instructions, `the instructions should name ${name}`).toContain(name);
+    }
+  });
+
+  /**
+   * The one rule whose failure happens before anything has been read: an agent
+   * handed six boards calls three and reports their agreement. `docs/readings.md`
+   * owns the argument; this asserts the line survives an edit of the frame.
+   */
+  it('says that one board is read and never two of one instant', () => {
+    expect(client.getInstructions() ?? '').toContain('NEVER TWO OF ONE INSTANT');
+  });
+});
