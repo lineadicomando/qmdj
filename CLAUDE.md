@@ -22,7 +22,7 @@ correct-looking fix from being wrong.
 |---|---|
 | `packages/i18n` | message catalogs and locale negotiation. A leaf: depends on nothing |
 | `packages/geo` | location lookup over a local GeoNames dataset (SQLite) |
-| `packages/core` | the engine and the `qimen` CLI: solar terms, lunar calendar, sexagenary cycles, 八字, 奇門, 六壬, 紫微斗數, 太乙, 曆注, scanning an interval |
+| `packages/core` | the engine and the `shipan` CLI: solar terms, lunar calendar, sexagenary cycles, 八字, 奇門, 六壬, 紫微斗數, 太乙, 曆注, scanning an interval |
 | `packages/plate` | the drawings: SVG, and PNG at a separate entry point |
 | `packages/mcp` | MCP server, stdio transport |
 | `apps/web` | SvelteKit: the interface at `/en` and `/it`, and the REST API under `/api` |
@@ -37,7 +37,7 @@ npm test                                # every workspace (vitest)
 npm run test:watch -w @shipan/geo
 npm run typecheck
 npm run build
-npm run cli -w @shipan/core -- chart   # or `qimen chart` once built
+npm run cli -w @shipan/core -- qimen   # or `shipan qimen` once built
 npm run dev -w @shipan/web             # http://localhost:5173
 npm start -w @shipan/web               # http://localhost:3000, after build
 ```

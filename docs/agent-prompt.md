@@ -423,7 +423,7 @@ arrangement.
 ## The REST equivalent
 
 Every tool but `lunar_date` has an endpoint — the lunisolar date is the CLI's
-`qimen calendar` and nothing over HTTP — and tool and endpoint read the same
+`shipan calendar` and nothing over HTTP — and tool and endpoint read the same
 query string, so a chart is a shareable address.
 
 ```

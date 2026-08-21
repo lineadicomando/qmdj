@@ -44,9 +44,9 @@ const MOMENT = [
   '--day-boundary', 'midnight',
 ];
 
-describe('chart', () => {
+describe('qimen', () => {
   it('prints the ju, the chief and the nine palaces', async () => {
-    expect(await run(['chart', ...MOMENT, '--lang', 'en'])).toBe(0);
+    expect(await run(['qimen', ...MOMENT, '--lang', 'en'])).toBe(0);
 
     expect(out).toContain('yang dun 9');
     // Nine palaces, each named in the reader's language and each still
@@ -62,7 +62,7 @@ describe('chart', () => {
   it("prints the almanac's officer beside the pillars", async () => {
     // 曆注, a line and not a section: the page dunjia was read against, with
     // its own ganzhi because it turns on 120°E and not on the chart's zone.
-    await run(['chart', ...MOMENT, '--lang', 'en']);
+    await run(['qimen', ...MOMENT, '--lang', 'en']);
 
     expect(out).toContain('Day officer');
     expect(out).toContain('定 dìng settle');
@@ -70,7 +70,7 @@ describe('chart', () => {
   });
 
   it('says which method it used', async () => {
-    await run(['chart', ...MOMENT, '--lang', 'en']);
+    await run(['qimen', ...MOMENT, '--lang', 'en']);
 
     expect(out).toContain('chaibu');
   });
@@ -78,14 +78,14 @@ describe('chart', () => {
   it('casts by the method it is asked for', async () => {
     // The same instant under the two methods: the readings differ, and the
     // zhirun chart says which term its ju was taken from.
-    await run(['chart', ...MOMENT, '--method', 'zhirun', '--lang', 'en']);
+    await run(['qimen', ...MOMENT, '--method', 'zhirun', '--lang', 'en']);
 
     expect(out).toContain('zhirun');
     expect(out).not.toContain('chaibu');
   });
 
   it('refuses a method it has never heard of', async () => {
-    const code = await run(['chart', ...MOMENT, '--method', 'zhirn', '--lang', 'en']);
+    const code = await run(['qimen', ...MOMENT, '--method', 'zhirn', '--lang', 'en']);
 
     expect(code).toBe(2);
     expect(err).toContain('zhirn');
@@ -97,17 +97,17 @@ describe('chart', () => {
     const at = ['--date', '1999-01-06', '--time', '12:00', '--tz', 'Asia/Shanghai',
                 '--no-true-solar', '--lang', 'en'];
 
-    await run(['chart', ...at]);
+    await run(['qimen', ...at]);
     expect(out).toContain('upper yuan');
 
     out = '';
-    await run(['chart', ...at, '--yuan', 'futou']);
+    await run(['qimen', ...at, '--yuan', 'futou']);
     expect(out).toContain('middle yuan');
     expect(out).toContain('futou cycle');
   });
 
   it('says nothing about the futou when it was not asked for', async () => {
-    await run(['chart', ...MOMENT, '--lang', 'en']);
+    await run(['qimen', ...MOMENT, '--lang', 'en']);
 
     expect(out).not.toContain('futou');
   });
@@ -116,14 +116,14 @@ describe('chart', () => {
     // Strict like the other two, and for a sharper reason: nothing printed
     // says which boundary was read, so a fallback would move the day pillar
     // of the 23:00 hour with nothing on the page to show for it.
-    const code = await run(['chart', ...MOMENT, '--day-boundary', 'midnght', '--lang', 'en']);
+    const code = await run(['qimen', ...MOMENT, '--day-boundary', 'midnght', '--lang', 'en']);
 
     expect(code).toBe(2);
     expect(err).toContain('midnght');
   });
 
   it('refuses a yuan it has never heard of', async () => {
-    const code = await run(['chart', ...MOMENT, '--yuan', 'futuo', '--lang', 'en']);
+    const code = await run(['qimen', ...MOMENT, '--yuan', 'futuo', '--lang', 'en']);
 
     expect(code).toBe(2);
     expect(err).toContain('futuo');
@@ -193,7 +193,7 @@ describe('taiyi', () => {
  */
 describe('--ask and --about where they do not belong', () => {
   it('refuses a matter on every command but the board of a year', async () => {
-    for (const command of ['chart', 'liuren', 'bazi', 'qizheng']) {
+    for (const command of ['qimen', 'liuren', 'bazi', 'qizheng']) {
       expect(await run([command, ...MOMENT, '--about', 'a merger', '--lang', 'en'])).toBe(2);
       expect(err).toContain('--about');
     }
@@ -203,7 +203,7 @@ describe('--ask and --about where they do not belong', () => {
   it('refuses either of them beside --json, which would print neither', async () => {
     expect(await run(['taiyi', '--year', '2026', '--about', 'a merger', '--json', '--lang', 'en'])).toBe(2);
     expect(err).toContain('--json');
-    expect(await run(['chart', ...MOMENT, '--ask', 'Will it go well?', '--json', '--lang', 'en'])).toBe(2);
+    expect(await run(['qimen', ...MOMENT, '--ask', 'Will it go well?', '--json', '--lang', 'en'])).toBe(2);
     expect(err).toContain('--json');
   });
 });
@@ -424,7 +424,7 @@ describe('--prompt on a board of 命', () => {
   });
 
   it('still takes a question on the two boards that are cast for one', async () => {
-    expect(await run(['chart', ...MOMENT, '--ask', 'Will it go well?', '--lang', 'en'])).toBe(0);
+    expect(await run(['qimen', ...MOMENT, '--ask', 'Will it go well?', '--lang', 'en'])).toBe(0);
     expect(out).toContain('Will it go well?');
   });
 });
@@ -469,7 +469,7 @@ describe('terms and calendar', () => {
 
 describe('--json', () => {
   it('emits the data untranslated', async () => {
-    expect(await run(['chart', ...MOMENT, '--json'])).toBe(0);
+    expect(await run(['qimen', ...MOMENT, '--json'])).toBe(0);
 
     const chart = JSON.parse(out);
     // Identifiers and hanzi, no glosses: the shape a program consumes.
@@ -480,7 +480,7 @@ describe('--json', () => {
   });
 
   it('carries the options that produced it', async () => {
-    await run(['chart', ...MOMENT, '--json']);
+    await run(['qimen', ...MOMENT, '--json']);
 
     expect(JSON.parse(out).options).toMatchObject({
       method: 'chaibu',
@@ -495,7 +495,7 @@ describe('--json', () => {
     // the two dates would otherwise carry a spurious hour of correction.
     for (const date of ['2024-01-15', '2024-07-15']) {
       out = '';
-      await run(['chart', '--date', date, '--time', '10:00', '--tz', 'Europe/Rome', '--json']);
+      await run(['qimen', '--date', date, '--time', '10:00', '--tz', 'Europe/Rome', '--json']);
 
       expect(JSON.parse(out).moment.solar.longitudeMinutes).toBe(0);
     }
@@ -504,10 +504,10 @@ describe('--json', () => {
 
 describe('the locale', () => {
   it('follows --lang', async () => {
-    await run(['chart', ...MOMENT, '--lang', 'it']);
+    await run(['qimen', ...MOMENT, '--lang', 'it']);
     const italian = out;
     out = '';
-    await run(['chart', ...MOMENT, '--lang', 'en']);
+    await run(['qimen', ...MOMENT, '--lang', 'en']);
 
     expect(italian).toContain('Nove palazzi');
     expect(out).toContain('Nine palaces');
@@ -517,7 +517,7 @@ describe('the locale', () => {
   });
 
   it('leads with the word and keeps the name beside it', async () => {
-    await run(['chart', ...MOMENT, '--lang', 'en']);
+    await run(['qimen', ...MOMENT, '--lang', 'en']);
 
     // The word comes first, because most readers cannot read the other; the
     // hanzi stays, because without it nothing here can be checked against a
@@ -652,12 +652,12 @@ describe('failing', () => {
   });
 
   it('reports an unknown option', async () => {
-    expect(await run(['chart', '--rising-sign'])).toBe(2);
+    expect(await run(['qimen', '--rising-sign'])).toBe(2);
     expect(err).toContain('--rising-sign');
   });
 
   it('reports a domain error in the requested locale', async () => {
-    expect(await run(['chart', '--date', '15/06/2024', '--lang', 'it'])).toBe(1);
+    expect(await run(['qimen', '--date', '15/06/2024', '--lang', 'it'])).toBe(1);
 
     expect(err).toContain('non è valida');
     expect(out).toBe('');
@@ -679,7 +679,7 @@ describe('failing', () => {
     // Thrown by `parse`, before there is anything parsed to read a locale
     // from — so the locale is taken off the raw arguments first. These three
     // were English sentences no catalog could reach.
-    expect(await run(['chart', '--rising-sign', '--lang', 'it'])).toBe(2);
+    expect(await run(['qimen', '--rising-sign', '--lang', 'it'])).toBe(2);
     expect(err).toContain('sconosciuta');
 
     err = '';
@@ -687,13 +687,13 @@ describe('failing', () => {
     expect(err).toContain('sconosciuto');
 
     err = '';
-    expect(await run(['chart', '--date', '--lang', 'it'])).toBe(2);
+    expect(await run(['qimen', '--date', '--lang', 'it'])).toBe(2);
     expect(err).toContain('richiede un valore');
   });
 
   it('prints help and stops when asked', async () => {
     expect(await run(['--help'])).toBe(0);
-    expect(out).toContain('qimen chart');
+    expect(out).toContain('shipan qimen');
   });
 
   it('prints help and fails when given nothing', async () => {

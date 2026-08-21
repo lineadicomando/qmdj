@@ -1484,7 +1484,7 @@ export const en = {
 
   'cli.heading.moment': 'Moment',
   'cli.heading.pillars': 'Four Pillars',
-  'cli.heading.chart': 'Qi Men chart',
+  'cli.heading.qimen': 'Qi Men chart',
   'cli.heading.palaces': 'Nine palaces',
   'cli.heading.standing': 'What stands in each',
   'cli.heading.weighed': 'How each of them stands',

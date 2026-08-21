@@ -181,10 +181,10 @@
   }
 </script>
 
-<svelte:head><title>{t('cli.heading.chart')}</title></svelte:head>
+<svelte:head><title>{t('cli.heading.qimen')}</title></svelte:head>
 
 <!-- Named, not shown: the nav says which section this is — see `.offscreen`. -->
-<h1 class="offscreen">{t('cli.heading.chart')}</h1>
+<h1 class="offscreen">{t('cli.heading.qimen')}</h1>
 
 <FormPanel {t} bind:this={panel} closable={chart !== undefined} onsubmit={submit}>
   {#snippet fields()}
@@ -202,7 +202,7 @@
       bind:yuan={asked.yuan}
     />
     <!-- Nothing here can be missing: a chart of no date is the chart of now. -->
-    <SubmitButton {t} label="cli.heading.chart" {busy} />
+    <SubmitButton {t} label="cli.heading.qimen" {busy} />
   {/snippet}
   {#snippet summary()}
     <!--

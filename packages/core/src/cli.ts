@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * `qimen` — the engine on the command line.
+ * `shipan` — the engine on the command line.
  *
  * The cheapest surface there is, and the first one built: it exercises every
  * calculation before an API or an interface exists to get in the way. It is
@@ -113,7 +113,7 @@ class UsageError extends Error {
 }
 
 const COMMANDS = [
-  'chart',
+  'qimen',
   'liuren',
   'qizheng',
   'taiyi',
@@ -172,18 +172,18 @@ interface Options {
   yearBoundary?: string;
 }
 
-const HELP = `qimen — Qi Men Dun Jia charts and Four Pillars
+const HELP = `shipan 式盤 — the boards, on the command line
 
 Usage
-  qimen chart     [options]     the nine palaces for a moment
-  qimen liuren    [options]     the 大六壬 board for a moment
-  qimen qizheng   [options]     the 七政四餘 board for a moment
-  qimen taiyi     [--year N]    the 太乙 board of a year — 年計
-  qimen bazi      [options]     the four pillars, read out
-  qimen ziwei     [options]     the 紫微斗數 board for a birth
-  qimen terms     [options]     the twenty-four solar terms of a year
-  qimen calendar  [options]     the lunar date of a moment
-  qimen scan      [options]     every chart between two moments
+  shipan qimen     [options]     the 奇門遁甲 nine palaces for a moment
+  shipan liuren    [options]     the 大六壬 board for a moment
+  shipan qizheng   [options]     the 七政四餘 board for a moment
+  shipan taiyi     [--year N]    the 太乙 board of a year — 年計
+  shipan bazi      [options]     the four pillars, read out
+  shipan ziwei     [options]     the 紫微斗數 board for a birth
+  shipan terms     [options]     the twenty-four solar terms of a year
+  shipan calendar  [options]     the lunar date of a moment
+  shipan scan      [options]     every 奇門 chart between two moments
 
 Options
   --date YYYY-MM-DD      default: today
@@ -196,7 +196,7 @@ Options
                          and no hour
   --gender male|female   for \`bazi\`, where the luck cycles need it, for
                          \`ziwei\`, where the limits and the two rings do, and
-                         for the 行年 of \`chart --born\`. In all three it is
+                         for the 行年 of \`qimen --born\`. In all three it is
                          read for the traditional rule and for nothing else
 
 Narrowing a scan
@@ -244,7 +244,7 @@ Handing a board to a model
   --ask "…"              the question it is to be read for; implies --prompt.
                          Without one the prompt says none was asked, which is
                          not the same as choosing a 用神 on nobody's behalf.
-                         For \`chart\` and \`liuren\` only: \`bazi\` and
+                         For \`qimen\` and \`liuren\` only: \`bazi\` and
                          \`qizheng\` are laid on a birth, \`taiyi\` on a year,
                          all three are asked nothing, and they refuse it
                          rather than dropping it
@@ -260,7 +260,7 @@ Handing a board to a model
                          birth, and no palace standing for a part of a life
 
 Placing a birth in the chart (年命)
-  --born YYYY-MM-DD      for \`chart\`: look the birth up inside the chart —
+  --born YYYY-MM-DD      for \`qimen\`: look the birth up inside the chart —
                          本命, the year pillar of the birth, and with --gender
                          also 行年, the year being lived. The chart stays the
                          chart of its own moment: this is the classical
@@ -457,7 +457,7 @@ async function execute(command: Command, options: Options, locale: Locale): Prom
     const bazi = computeBazi(moment, gender ? { gender } : {}, context);
     if (options.json) return JSON.stringify({ moment, bazi }, null, 2);
 
-    // Unlike `chart` and `liuren`, `--ask` does not imply `--prompt` here: it
+    // Unlike `qimen` and `liuren`, `--ask` does not imply `--prompt` here: it
     // was refused before anything was cast. See `refuseUncarried`.
     if (options.prompt) return baziReadingPrompt(moment, bazi, t);
 
@@ -654,7 +654,7 @@ function warningsOf(moment: Parameters<typeof formatWarnings>[0], t: Parameters<
  * **about**, and which of the two a command takes is decided by the kind of
  * board it lays: an instrument of 卜 is cast for a question, an instrument of
  * 天 is read about a matter, and an instrument of 命 is laid on a person and
- * takes neither. On `chart` and `liuren` a question implies `--prompt`, and on
+ * takes neither. On `qimen` and `liuren` a question implies `--prompt`, and on
  * `taiyi` a matter does, because one named is one meant to be carried.
  *
  * A table rather than a check inside each branch, because the failure this
@@ -665,7 +665,7 @@ function warningsOf(moment: Parameters<typeof formatWarnings>[0], t: Parameters<
  * question about the whole table, and it is answered in one place.
  */
 const CARRIES: Record<Command, readonly ('ask' | 'about')[]> = {
-  chart: ['ask'],
+  qimen: ['ask'],
   liuren: ['ask'],
   qizheng: [],
   taiyi: ['about'],
@@ -1034,7 +1034,7 @@ function parse(argv: string[]): { command?: Command; options: Options } {
 
 // Only when run as a program, never when imported by a test. Compared as
 // URLs, not sniffed by name: the installed bin is a symlink without an
-// extension, and a guard that looked for `cli.js` in the path left `qimen`
+// extension, and a guard that looked for `cli.js` in the path left `shipan`
 // a silent no-op. The realpath resolves the symlink back to this file.
 if (process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) {
   process.exitCode = await run(process.argv.slice(2));

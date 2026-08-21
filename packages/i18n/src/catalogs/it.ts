@@ -1150,7 +1150,7 @@ export const it: Record<MessageKey, string> = {
 
   'cli.heading.moment': 'Istante',
   'cli.heading.pillars': 'Quattro pilastri',
-  'cli.heading.chart': 'Carta Qi Men',
+  'cli.heading.qimen': 'Carta Qi Men',
   'cli.heading.palaces': 'Nove palazzi',
   'cli.heading.standing': 'Che cosa vi sta',
   'cli.heading.weighed': 'Come vi stanno',

@@ -14,7 +14,7 @@ TypeScript, AGPL-3.0-or-later.
 |---|---|---|
 | `packages/i18n` | nothing | message catalogs and locale negotiation. A leaf |
 | `packages/geo` | `i18n` | location lookup over a local GeoNames dataset (SQLite) |
-| `packages/core` | `i18n`, `geo` | the calculation engine and the `qimen` command |
+| `packages/core` | `i18n`, `geo` | the calculation engine and the `shipan` command |
 | `packages/plate` | nothing | the drawings: SVG, and PNG at a separate entry point |
 | `packages/mcp` | `core`, `geo`, `i18n` | MCP server, stdio transport |
 | `apps/web` | all of them | SvelteKit: the interface and the REST API |
@@ -61,7 +61,7 @@ packages/core/src/
 ├── prompt.ts           the prompt builders, one per board
 ├── labels.ts           identifier → hanzi → pinyin
 ├── types.ts            the options, and every board's input type
-└── cli.ts              the `qimen` command
+└── cli.ts              the `shipan` command
 ```
 
 `solar-terms.ts` is the pivot. The 24 terms are the instants at which the
@@ -78,7 +78,7 @@ above the boards.
 
 | | |
 |---|---|
-| CLI | `qimen`, nine commands: `chart` `liuren` `qizheng` `taiyi` `bazi` `ziwei` `terms` `calendar` `scan` |
+| CLI | `shipan`, nine commands: `qimen` `liuren` `qizheng` `taiyi` `bazi` `ziwei` `terms` `calendar` `scan` |
 | REST | 26 GET endpoints under `/api`. Six boards × (board, `plate`, `text`, `prompt`), plus `/api/locations`, `/api/terms`, `/api/moments` — and `/api/bazi` has no `plate` |
 | Web | eight sections at `/en` and `/it`: two acts, six instruments. See `apps/web/src/lib/navigation.ts` |
 | MCP | 12 tools and 4 reference resources, stdio. See `packages/mcp/src/server.ts` |

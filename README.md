@@ -7,7 +7,7 @@ Everything runs locally. No third-party API is called at runtime — not for the
 ephemerides, not for the places, not for anything.
 
 ```
-$ qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lon 116.4
+$ shipan qimen --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lon 116.4
 
 Four Pillars
   year   Yang Wood · Dragon  甲辰 jiǎchén
@@ -90,11 +90,11 @@ produce, because nothing downstream catches it.
 So the board travels **already computed**, and the conditions travel with it:
 
 ```sh
-qimen chart --date 2024-06-15 --time 14:00 --tz Asia/Shanghai \
+shipan qimen --date 2024-06-15 --time 14:00 --tz Asia/Shanghai \
             --ask "Will the contract be signed as it stands?"
-qimen bazi  --date 1968-03-12 --time 14:30 --tz Asia/Shanghai \
+shipan bazi  --date 1968-03-12 --time 14:30 --tz Asia/Shanghai \
             --gender female --prompt
-qimen taiyi --year 2026 --about "the merger our two firms are negotiating"
+shipan taiyi --year 2026 --about "the merger our two firms are negotiating"
 ```
 
 What comes out is the board set out in full inside a fence, wrapped in what
@@ -139,7 +139,7 @@ chart: 「夫用遁之法，不推本命行年，未見精妙」.
 
 What comes back is where the two pairs fell, the palace their branch moors in,
 and the 納音 image weighed against that ground. Nothing more. The same pair is
-a criterion for a scan — `qimen scan --born …` admits only the palaces that
+a criterion for a scan — `shipan scan --born …` admits only the palaces that
 person's year stands on. The doctrine mapping palaces onto parts of a life is
 refused wherever a 年命 appears; an art natively about a life gets a board of
 its own instead, which is what the three boards of 命 are.
@@ -165,16 +165,16 @@ second, which is far below anything a pillar turns on.
 ## The surfaces
 
 ```sh
-qimen chart    --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lang en
-qimen chart    --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --method zhirun
-qimen liuren   --date 2024-06-15 --time 14:00 --tz Asia/Shanghai
-qimen qizheng  --date 2024-06-15 --time 14:00 --tz Asia/Shanghai
-qimen ziwei    --date 1984-05-05 --time 14:30 --tz Asia/Shanghai --gender male
-qimen bazi     --date 1968-03-12 --time 14:30 --tz Europe/Rome  --gender male
-qimen taiyi    --year 2026
-qimen terms    --year 2024 --tz Asia/Shanghai
-qimen calendar --date 2023-04-01
-qimen scan     --date 2026-09-01 --until 2026-09-08 --tz Europe/Rome \
+shipan qimen    --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --lang en
+shipan qimen    --date 2024-06-15 --time 14:00 --tz Asia/Shanghai --method zhirun
+shipan liuren   --date 2024-06-15 --time 14:00 --tz Asia/Shanghai
+shipan qizheng  --date 2024-06-15 --time 14:00 --tz Asia/Shanghai
+shipan ziwei    --date 1984-05-05 --time 14:30 --tz Asia/Shanghai --gender male
+shipan bazi     --date 1968-03-12 --time 14:30 --tz Europe/Rome  --gender male
+shipan taiyi    --year 2026
+shipan terms    --year 2024 --tz Asia/Shanghai
+shipan calendar --date 2023-04-01
+shipan scan     --date 2026-09-01 --until 2026-09-08 --tz Europe/Rome \
                --gate kaimen --towards se,s
 
 npm run dev -w @shipan/web    # http://localhost:5173

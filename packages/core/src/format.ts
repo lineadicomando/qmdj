@@ -326,7 +326,7 @@ export function formatQimenChart(chart: QimenChart, t: Translator): string {
       : '';
 
   const lines = [
-    `${t('cli.heading.chart')}`,
+    `${t('cli.heading.qimen')}`,
     ...table(
       [
         [t('cli.field.ju'), `${dun} ${chart.ju.number} · ${yuan}${served}`],
