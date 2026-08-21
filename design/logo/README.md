@@ -8,8 +8,9 @@ earth, and the ancestor the three 式 have in common — 奇門, 六壬 and 太�
 counted as «the three 式». The seal carries 式, the first character of the
 name, as the queru seal carried 闕.
 
-**This branch is a candidate.** `queru-mark` carries 闕如 and `dunjia-mark`
-carries 遁甲.
+**This is the name.** `queru-mark` carries 闕如 and `dunjia-mark` carries
+遁甲: two rounds that were cut and not taken, kept because the argument for
+式盤 is partly what they are not.
 
 | file | what it is | use it |
 |---|---|---|
