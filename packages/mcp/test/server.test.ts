@@ -124,16 +124,16 @@ describe('what the server offers', () => {
     const { resources } = await client.listResources();
 
     expect(resources.map((resource) => resource.uri).sort()).toEqual([
-      'qimendunjia://reference/gates-stars-spirits',
-      'qimendunjia://reference/palaces',
-      'qimendunjia://reference/purposes',
-      'qimendunjia://reference/solar-terms',
+      'shipan://reference/gates-stars-spirits',
+      'shipan://reference/palaces',
+      'shipan://reference/purposes',
+      'shipan://reference/solar-terms',
     ]);
   });
 
   it('renders the reference material from the engine, not from a copy', async () => {
     const { contents } = await client.readResource({
-      uri: 'qimendunjia://reference/gates-stars-spirits',
+      uri: 'shipan://reference/gates-stars-spirits',
     });
     const text = String(contents[0]?.text ?? '');
 
@@ -515,7 +515,7 @@ describe('the errands', () => {
 
   it('name an errand and the gate it stands for, both ways round', async () => {
     const { contents } = await client.readResource({
-      uri: 'qimendunjia://reference/purposes',
+      uri: 'shipan://reference/purposes',
     });
     const text = String(contents[0]?.text ?? '');
 
@@ -527,7 +527,7 @@ describe('the errands', () => {
 
   it('keeps the gates nobody calls auspicious, with their own uses', async () => {
     const { contents } = await client.readResource({
-      uri: 'qimendunjia://reference/purposes',
+      uri: 'shipan://reference/purposes',
     });
     const text = String(contents[0]?.text ?? '');
 

@@ -25,7 +25,7 @@ import {
 } from './tools.js';
 import type { ToolContext } from './shared.js';
 
-export const SERVER_NAME = 'qimendunjia';
+export const SERVER_NAME = 'shipan';
 export const SERVER_VERSION = '0.0.0';
 
 /**
@@ -120,7 +120,7 @@ function registerReferences(server: McpServer): void {
   for (const [slug, title, description, render] of resources) {
     server.registerResource(
       slug,
-      `qimendunjia://reference/${slug}`,
+      `shipan://reference/${slug}`,
       { title, description, mimeType: 'text/markdown' },
       async (uri) => ({
         contents: [{ uri: uri.href, mimeType: 'text/markdown', text: render() }],

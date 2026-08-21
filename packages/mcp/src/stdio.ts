@@ -17,4 +17,4 @@ if (process.env['SE_EPHE_PATH']) context.ephemerisPath = process.env['SE_EPHE_PA
 
 const server = createServer(context);
 await server.connect(new StdioServerTransport());
-process.stderr.write('qimendunjia MCP listening on stdio\n');
+process.stderr.write('shipan MCP listening on stdio\n');
