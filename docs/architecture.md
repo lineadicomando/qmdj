@@ -113,6 +113,41 @@ cannot wait for a picture.
 **The consultation prints from the page and never from a route of its own**,
 because a route would have to be told the question. See `docs/readings.md`.
 
+## The one thing here that is not the work
+
+Three presses on the appearance button, quickly, and a rain of glyphs falls
+behind the page. There are three appearances, so three presses end on the one
+they started from: the gesture costs the reader nothing, which is what lets a
+button that already has a meaning carry a second one. The same three put it
+away. It is not announced, in the label or anywhere else.
+
+**It falls in the engine's own vocabulary and in nothing else.** The names are
+in `apps/web/src/lib/glyphs.ts` — the stems and branches, the twenty-four
+terms, the palaces, gates, stars and spirits, the twelve generals, the stars
+of 紫微, the sixteen gods of 太乙, the lodges and officers, the bodies and
+stations of 七政四餘 — and `apps/web/test/glyphs.test.ts` holds that list to
+the engine's registries, art by art, so a board landing with names of its own
+fails the test rather than quietly missing the rain.
+
+**Not read off `texts/`, and it could not be.** That shelf is gitignored, most
+of it was bought and cannot be redistributed under this licence, and
+`texts/README.md` states that nothing in the repository refers to it by path.
+A clone lacks it and must lack nothing. What the names below the rain have in
+common is that this project owns them outright, because it computes with them.
+
+Three things it does not do. It does not print — whatever else it is, it is
+not something to put on a sheet. It does not move for a reader who asked for
+`prefers-reduced-motion`, who gets the picture drawn once and no loop at all.
+And it is not remembered: **the privacy note says one thing is kept in the
+browser, and it stays one.** A setting is remembered because somebody chose
+it; this is not a setting, and a reload puts the page back the way it ships.
+
+It draws in `--ink` and `--edge`, read back out of the stylesheet each frame,
+so it follows the reader from light to dark without holding a colour of its
+own — and the shell takes a ground ten per cent short of opaque while it
+falls, which leaves the glyphs perceptible under the text and plainly visible
+in the margins outside it.
+
 ## `geo`, and the dataset it stands on
 
 Location search matches by **range, never with `LIKE`**: SQLite cannot use an

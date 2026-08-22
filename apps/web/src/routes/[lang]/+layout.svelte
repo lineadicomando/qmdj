@@ -1,13 +1,21 @@
 <script lang="ts">
   import ColorSchemeToggle from '$lib/components/ColorSchemeToggle.svelte';
+  import GlyphRain from '$lib/components/GlyphRain.svelte';
   import LanguageSwitch from '$lib/components/LanguageSwitch.svelte';
   import SectionsNav from '$lib/components/SectionsNav.svelte';
+  import { rain } from '$lib/rain.svelte';
 
   let { data, children } = $props();
   const t = $derived(data.t);
 </script>
 
-<div class="shell">
+<!-- Mounted only while it falls, so that the page ships with no canvas, no
+     loop and no listeners until somebody has gone looking. -->
+{#if rain.falling}
+  <GlyphRain />
+{/if}
+
+<div class="shell" class:veiled={rain.falling}>
   <header>
     <!-- The wordmark is not the page's title: each section carries its own
          `h1`, so the mark can stay the same on all of them. -->
@@ -57,6 +65,23 @@
   /* The gutter narrows with the screen: at 1.25rem a side, a phone spends a
      tenth of its width on margins. */
   .shell { max-width: 72rem; margin: 0 auto; padding: 1rem clamp(0.75rem, 4vw, 1.25rem) 3rem; }
+
+  /*
+   * What the page is read off while the rain falls behind it.
+   *
+   * Not a panel with an edge — a ground laid over the weather, ten per cent
+   * short of opaque, so the glyphs are perceptible under the text without
+   * competing with it. The measure of it is the disclaimer: the quietest
+   * thing in the shell is `--faint` on `--ground`, and a veil thin enough to
+   * put that below the contrast the rest of the stylesheet argues for would
+   * be a veil that costs somebody the one line they must be able to read.
+   *
+   * Only the shell takes it. Outside 72rem the margins are bare, which is
+   * where the rain is actually visible — and where nothing is being read.
+   */
+  .veiled {
+    background: color-mix(in srgb, var(--ground) 90%, transparent);
+  }
 
   header { margin-bottom: 2rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--rule); }
   /*

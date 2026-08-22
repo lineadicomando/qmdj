@@ -8,6 +8,7 @@
     type ColorScheme,
   } from '$lib/color-scheme';
   import { appearance, syncAppearance } from '$lib/appearance.svelte';
+  import { toggleRain } from '$lib/rain.svelte';
 
   let { t }: { t: Translator } = $props();
 
@@ -30,12 +31,38 @@
 
   const name = (value: ColorScheme): string => t(`scheme.${value}` as MessageKey);
 
+  /**
+   * The way round, quickly, and something else falls out of it.
+   *
+   * There are three appearances, so three presses land on the one they
+   * started from: the gesture spends nothing and leaves the reader exactly
+   * where they were, which is what makes it usable as a second meaning for a
+   * button that already has one. A double click could not be — two of its
+   * presses are cycles that happened, and the appearance would be two steps
+   * from where it was before anything else could fire. Nor would it reach the
+   * keyboard, and this does: three presses are three presses whether they
+   * came from a pointer or from a space bar.
+   *
+   * Nothing is announced. Something found is not a setting, and a control
+   * that offered it in its label would be offering a joke as a feature.
+   */
+  const ROUND = 3;
+  /** Long enough not to catch somebody choosing an appearance twice over. */
+  const QUICKLY = 1200;
+  let presses: number[] = [];
+
   function cycle(): void {
     scheme = nextColorScheme(scheme);
     applyColorScheme(scheme);
     // Anything that cannot read the attribute — the drawing, which is an
     // image — has to be told separately.
     appearance.current = scheme;
+
+    const now = Date.now();
+    presses = [...presses, now].filter((at) => now - at < QUICKLY);
+    if (presses.length < ROUND) return;
+    presses = [];
+    toggleRain();
   }
 </script>
 
