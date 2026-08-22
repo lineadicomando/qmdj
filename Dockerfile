@@ -51,6 +51,14 @@ COPY tsconfig.base.json ./
 COPY packages/ packages/
 COPY apps/ apps/
 
+# `docs/` is a build input and not only prose: `lib/server/register.ts` inlines
+# `docs/sources.tsv` with `?raw`, so the bundler resolves the register at build
+# time and fails outright when the file is absent. Copied whole rather than by
+# name — the register will not be the last page here derived from that
+# directory, and a build that breaks the next time one is added is a build that
+# breaks in CI and nowhere else.
+COPY docs/ docs/
+
 RUN npm run build
 
 # Not versioned, fetched at build time. The ephemerides (~2 MB) fit in the
