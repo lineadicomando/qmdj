@@ -12,7 +12,7 @@ correct-looking fix from being wrong.
 | | |
 |---|---|
 | `CLAUDE.md` | the rules that bind any change. Here |
-| [`docs/`](docs/README.md) | **the project as it is now**: architecture, parameters, sources, refusals, readings, i18n |
+| [`docs/`](docs/README.md) | **the project as it is now**: architecture, parameters, sources, refusals, readings, i18n, what is claimed |
 | [`docs/history/`](docs/history/README.md) | **how it got here.** Never normative. Never rewritten to match the present |
 | [`ROADMAP.md`](ROADMAP.md) | what is not built yet |
 | [`README.md`](README.md) | what this is, for somebody arriving |
@@ -97,7 +97,15 @@ the engine falls back to Moshier, which needs no files.
   centuries. Recalled almanac values were wrong more often than not. →
   [`docs/sources.md`](docs/sources.md)
 - **A quantity added without an entry in `docs/sources.md` is a quantity
-  nobody can weigh.** That register is not optional bookkeeping.
+  nobody can weigh, and a row in `docs/sources.tsv` is the other half of the
+  entry.** The prose argues it; the row says which rung it stands on, so that
+  a surface can weigh it against its neighbours without reading the argument.
+  That register is not optional bookkeeping. → [`docs/notes.md`](docs/notes.md)
+- **What changes when a board lands is not written, it is derived.** Wanting to
+  hand-write a paragraph about a new board is the signal that a descriptor is
+  missing a field, and the fix is upstream of the page. Where a paragraph is
+  unavoidable it carries, shown, the date it was last checked against the
+  engine. → [`docs/notes.md`](docs/notes.md)
 
 ### The surfaces
 

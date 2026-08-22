@@ -12,12 +12,13 @@ section is still being defined. That is the honest state.
 
 **The organisation is settled and the contents are not**, deliberately: a page
 written against an engine that has not stopped changing gets rewritten at
-every board, in every language it is written in. What was fixed is the set of addresses, what
-each is for, and which side of the derived/written line each falls on.
+every board, in every language it is written in. What was fixed is the set of
+addresses, what each is for, and which side of the derived/written line each
+falls on.
 
 | Page | What it answers | |
 |---|---|---|
-| `/[lang]/notes` | what this section is, and the way to the rest | written |
+| `/[lang]/notes` | what this section is, and the way to the rest | written — its source is now `docs/notes.md` |
 | `…/instruments` | what is computed, board by board: inputs, parameters, the school each value names | **derived** |
 | `…/sources` | what each quantity stands on, and how strongly | **derived** |
 | `…/refusals` | what is not computed, who asks for it, why it is not here | written — its source is now `docs/refusals.md` |
@@ -25,31 +26,25 @@ each is for, and which side of the derived/written line each falls on.
 | `…/glossary` | hanzi, pinyin and gloss in one list | *candidate,* on probation |
 
 **The derived pages depend on nothing and can be built at any time.** They
-read a registry and a register, both of which exist. Only the written pages
-kept the old rule and go last — and two of the three now have a source in
-`docs/` written against the finished engine, which is most of what made them
+read a registry and a register, and both now exist as data:
+`packages/core/src/parameters.ts` declares every school divergence with the
+values the engine computes and the ones it refuses, and `docs/sources.tsv`
+carries one row a quantity with the rung it stands on. Only the written pages
+kept the old rule and go last — and all three now have a source in `docs/`
+written against the finished engine, which is most of what made them
 expensive.
 
 The glossary is on probation because the interface must be usable **without**
 one. A glossary that becomes load-bearing is the sign that a control somewhere
 is failing, and the fix is then upstream of it.
 
-Two standing rules from that phase, which hold whether or not it is built:
+The two standing rules of that phase — derived beats written, and every
+written entry shows the date it was last checked against the engine — now bind
+from [`docs/notes.md`](docs/notes.md), which is also where the ladder of
+evidence is stated and what makes the register's `rung` column readable.
 
-- **Derived beats written.** What changes when a board lands must not be
-  written at all. When a new board makes somebody want to hand-write a
-  paragraph, that is the signal that a descriptor is missing a field.
-- **Every written entry carries, shown, the date it was last checked against
-  the engine.** Staleness made legible to the one reader equipped to discount
-  it beats a resolution to be careful.
-
-Also owed there: **the account of what 太乙 is checked against.** It is
-currently only in the transcript and in `docs/sources.md`. That is a debt and
-not an arrangement.
-
-See [`docs/history/17-notes.md`](docs/history/17-notes.md) for the full
-argument, including the ladder of evidence — the five rungs a quantity can
-stand on — which is that section's one idea and belongs nowhere else.
+What the section still owes is its **contents**: the index page, and the
+prose of the three written ones. Nothing else.
 
 ## 2. Parameters that are declared and refused
 

@@ -13,7 +13,9 @@ or an agent — must be able to tell at a glance whether a page binds them.
 | [`sources.md`](sources.md) | where every number comes from, what it was checked against, and what the checks disagreed about. The register, with licences |
 | [`refusals.md`](refusals.md) | what is deliberately not computed, who asks for it, and why it is not here |
 | [`readings.md`](readings.md) | what happens when a board reaches a model: the three kinds, the one-board rule, what a prompt commissions and forbids |
+| [`notes.md`](notes.md) | what this project claims and how the claim is kept honest: the ladder a quantity is weighed on, derived against written, and the date a written entry shows |
 | [`agent-prompt.md`](agent-prompt.md) | the contract a model calling this project has to read first — through MCP or through the REST API |
+| [`sources.tsv`](sources.tsv) | the register as a table: one row a quantity, the rung it stands on, what it was checked against, and the section of `sources.md` that argues it |
 | [`provenance.tsv`](provenance.tsv) | every file this project was read off that came from the network: URL, revision, date taken, sha256 |
 
 `CLAUDE.md` at the root holds the rules that bind any change, one line each,
@@ -53,6 +55,14 @@ bought and cannot be redistributed, so they are held locally in `texts/`,
 which `.gitignore` excludes and whose own README lists what is on the shelf.
 `sources.md` therefore cites by title, edition and chapter — never by path —
 and every claim in it has to stand for a reader who has only the citation.
+
+**`sources.tsv` is that file read the other way.** `sources.md` argues one
+quantity at a time, at whatever length the argument takes; the register is the
+same claims as a table a reader can sort, count and print, with a `section`
+column joining each row back to its argument. It states nothing `sources.md`
+does not, and `apps/web/test/docs.test.ts` holds every row's pointer to a
+heading that exists. What it adds is the rung, and what a rung means is
+[`notes.md`](notes.md).
 
 **`provenance.tsv` is the exception, and it is here because it is the one part
 of that shelf worth sharing.** It holds no source and reproduces nothing: it
