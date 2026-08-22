@@ -1174,11 +1174,13 @@ export const it: Record<MessageKey, string> = {
   'notes.ladder.quoted':
     'La tavola qui sotto è citata e non tradotta. È un registro di citazioni — le quantità come le nomina il motore, edizioni, capitoli, i programmi contro cui ciascuna è stata misurata e gli intervalli su cui sono stati eseguiti — e questo progetto lo tiene in inglese, la lingua del suo codice sorgente. Ciò che è tradotto è tutto quello da cui si decide: i rung qui sopra, che cosa significa ciascuno, e che cos’è ogni strato.',
   'notes.column.quantity': 'Quantità',
-  // `rung` stays English. The ladder is an image that reads itself in either
-  // language — a scala has pioli — but the technical term is the one a reader
-  // looks up and meets again in the register, in `docs/notes.md` and in a
-  // commit message, and «piolo» sends them looking for a word nothing else
-  // here uses. Invariant in the plural, as a loanword is.
+  // «Piolo» è la traduzione giusta di rung ed è la parola sbagliata qui. La
+  // scala è un'immagine che si legge da sé in entrambe le lingue — una scala
+  // ha pioli — ma il rung è il termine che il lettore va a cercare, e lo
+  // ritrova nella colonna del registro, in `docs/notes.md` e in un messaggio
+  // di commit, sempre in inglese. Sotto un nome italiano lo manderebbe a
+  // cercare una parola che nient'altro qui usa. Invariabile al plurale, come
+  // ogni prestito; la cornice intorno resta italiana.
   'notes.column.rung': 'Rung',
   'notes.column.standsOn': 'Si regge su',
   'notes.column.checkedAgainst': 'Verificata contro',

@@ -55,10 +55,13 @@ the engine falls back to Moshier, which needs no files.
 
 ### The engine
 
-- **English is the language of the source.** Code, comments, identifiers,
-  error codes, documentation and commit messages. A vernacular exists only as
-  a locale in the catalogs, never in the source. →
-  [`docs/i18n.md`](docs/i18n.md)
+- **English is the language of the source, and a catalog argues a wording in
+  the language of that wording.** Code, comments, identifiers, error codes,
+  documentation and commit messages are English; a vernacular exists in the
+  catalogs and nowhere else. The one exception is a comment defending the word
+  it sits above — an argument about an Italian word conducted in English
+  quotes its own subject at every mention. Anything else a catalog comment
+  says is English. → [`docs/i18n.md`](docs/i18n.md)
 - **The engine does not localise.** `core` returns identifiers, hanzi, pinyin
   and numbers; readable text is produced at the surface. A function that
   returns a translated string is a design error. → [`docs/i18n.md`](docs/i18n.md)
