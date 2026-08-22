@@ -50,7 +50,7 @@ phase.
 | 14 | [The consultation takes a second instrument](14-consultation-second-instrument.md) | done — one board to a prompt, never two |
 | 15 | [The almanac layer](15-almanac-layer.md) | done — 曆注, beside a chart and not inside one |
 | 16 | [七政四餘](16-qizheng.md) | done — the 宿 frame taken from the 距星 |
-| 17 | [The notes: the organisation now, the contents last](17-notes.md) | **open.** The organisation is settled; the pages are not built. See `ROADMAP.md` |
+| 17 | [The notes: the organisation now, the contents last](17-notes.md) | done — the organisation, and the argument for deferring the contents. Revised by phase 27 |
 | 18 | [The consultation takes every instrument](18-consultation-every-instrument.md) | done — revises phase 14 |
 | 19 | [The reading takes the person](19-reading-takes-the-person.md) | done — the 命 prompt |
 | 20 | [太乙神數, and the reading that gated it](20-taiyi.md) | done — the board shipped, the reading was withheld |
@@ -60,6 +60,7 @@ phase.
 | 24 | [The sections say the names they are](24-section-names.md) | done — `/chart` becomes `/qimen` |
 | 25 | [The project takes its name](25-the-project-takes-its-name.md) | done — the project is shipan 式盤 |
 | 26 | [The frame a caller reads first](26-the-frame-a-caller-reads.md) | done — supersedes phase 25's last section |
+| 27 | [The notes get built](27-notes-built.md) | done — revises phase 17: the registries it assumed did not exist, and the ladder moves into `docs/` |
 
 ## The rest of the record
 

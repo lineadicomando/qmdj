@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { PARAMETERS } from '@shipan/core';
 import { LOCALES } from '@shipan/i18n';
 import { INSTRUMENTS } from '../src/lib/instruments';
+import { NOTE_PAGES } from '../src/lib/notes';
 import { SECTIONS } from '../src/lib/navigation';
 
 /**
@@ -113,6 +114,13 @@ describe('the counts the documents state', () => {
 
   it('names as many boards as the consultation offers', () => {
     expectCount('README.md', INSTRUMENTS.length, 'boards');
+  });
+
+  it('names as many notes pages as the section has', () => {
+    // They are under the footer and are not sections, so the count sits
+    // beside the sections' rather than inside it — and it is asserted for the
+    // same reason theirs is.
+    expectCount('docs/architecture.md', NOTE_PAGES.length, 'notes pages');
   });
 
   it('lists the languages the project actually speaks', () => {
