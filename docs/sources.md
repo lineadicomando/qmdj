@@ -2879,3 +2879,46 @@ courtesy to a reader who wants the surrounding text, and where the source is
 Wikisource one of them is an `oldid`, which names the revision that was read
 and cannot change under it. Where a printed edition was consulted, **that** is
 the citation: an edition and a page number outlive every URL here.
+
+---
+
+## When a source arrives later
+
+The section above says what to do when two sources disagree **at the moment a
+quantity is decided**. This one says what happens when one of them turns up
+afterwards, which is now the ordinary case: the engine has stopped gaining
+boards and the open edge of this project is the shelf. A source that adds an
+element, confirms one already shipped, or contradicts it is a normal change
+here and not an emergency.
+
+**It moves four things, and they move together.**
+
+| | |
+|---|---|
+| the argument | the entry in this file: what the new source says, quoted, and what it settles or unsettles |
+| the row | `sources.tsv` — its `checked_against`, and its `rung`, which may **fall** as well as rise |
+| the code | a `implemented` flag in `packages/core/src/parameters.ts`, where the source unlocks a value that was declared and refused |
+| the date | the last-checked date a written entry shows, once the notes section carries one — see [`notes.md`](notes.md) |
+
+Any one of them moved alone leaves the project claiming two things at once,
+which is the failure the register exists to prevent and the reason the four
+are listed rather than left to judgement.
+
+**A rung falls without anything being wrong.** A quantity carried on
+over-determination that a newly read text contradicts has not become an error:
+it has become a divergence, and the section above already says what a
+divergence is — an explicit parameter with a declared default, or an absence
+written down. What must not happen is the rung staying where it was because
+the shipped answer is still the default.
+
+**And a source that only confirms is worth recording.** Two agreeing witnesses
+where there was one is the difference between rung 5 and rung 2, and it costs
+a row and a paragraph. The register is as much for what got firmer as for what
+got shakier.
+
+**Nothing here is quietly rewritten.** An entry that a later source overturns
+says so, in the entry, with what it used to stand on: the reader this file is
+for is the one who wants to know how a thing came to be believed, and an
+argument silently replaced tells them nothing. The phase that makes the change
+says it revises the earlier one — `docs/history/README.md` § "How it went" is
+the convention — and the old phase file is left alone.

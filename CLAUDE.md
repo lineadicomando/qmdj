@@ -101,6 +101,11 @@ the engine falls back to Moshier, which needs no files.
   entry.** The prose argues it; the row says which rung it stands on, so that
   a surface can weigh it against its neighbours without reading the argument.
   That register is not optional bookkeeping. → [`docs/notes.md`](docs/notes.md)
+- **A source arriving later is an ordinary change, and it moves four things at
+  once**: the argument, the row and its rung — which may fall as well as rise
+  — the `implemented` flag where it unlocks a refused value, and the date a
+  written entry shows. Confirming counts as much as contradicting, and nothing
+  is quietly rewritten. → [`docs/sources.md`](docs/sources.md)
 - **What changes when a board lands is not written, it is derived.** Wanting to
   hand-write a paragraph about a new board is the signal that a descriptor is
   missing a field, and the fix is upstream of the page. Where a paragraph is

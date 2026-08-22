@@ -41,6 +41,13 @@ argued for the *same* check, the register takes the weaker: 四德 is rung 4 for
 the 合 partner that confirms it exactly, and not rung 1 for a comparison that
 leaves an unexplained residue on 0.7 % of the days.
 
+**A rung is the reading of today's evidence and not a property of the
+quantity.** It moves when the shelf does, in either direction, and
+`docs/sources.md` § "When a source arrives later" says what moves with it: a
+source that only confirms is the difference between rung 5 and rung 2, and one
+that contradicts turns a settled answer into a divergence rather than into an
+error.
+
 **And a rung is not a verdict.** 觜宿一's place is 50.5″ from the Qing
 catalogue's, which is over-determined evidence and rung 3, and the top rung
 would not have made it righter — the frame is asked for degrees and the worst

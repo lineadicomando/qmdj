@@ -5,6 +5,17 @@ is not work at all. The record of how everything else got here is in
 [`docs/history/`](docs/history/README.md); what holds today is in
 [`docs/`](docs/README.md).
 
+**The open edge of this project is the shelf, not the code.** The boards, the
+almanac layer and the calendrical layer under them are built, checked and
+documented; what is left below is one section of the interface, a list of
+values waiting on a source, and a third language waiting on the first of those
+to be finished. None of the three is blocked on architecture. What will change
+this engine from here is a **text** — one that adds a quantity, confirms one
+already shipped, or contradicts it — and that is an ordinary change with a
+stated procedure: `docs/sources.md` § "When a source arrives later" says what
+moves and in what order. Reading the shelf is therefore the work, and writing
+code is what happens afterwards.
+
 ## 1. The notes section — the one open phase
 
 `/[lang]/notes` is a heading in the footer with a page under it that says the
