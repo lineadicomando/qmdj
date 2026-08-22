@@ -1,5 +1,5 @@
-import { ChartError } from '../errors.js';
 import type { Stem } from '../ganzhi.js';
+import { CHART_PARAMETERS, requireImplemented } from '../parameters.js';
 import type { Moment } from '../pillars.js';
 import type { ChartOptions, Element } from '../types.js';
 import { horseOf, type Horse } from './horse.js';
@@ -113,31 +113,11 @@ export function computeQimenChart(moment: Moment, options: ChartOptions): QimenC
   // The options carry every school divergence from day one, which means some
   // values exist in the type before they exist in the engine. Asking for one
   // of those is an error, exactly as it is for the method: a chart cast under
-  // a silently substituted option looks right and is not.
-  if (options.plate !== 'zhuan') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
-      option: 'plate',
-      value: options.plate,
-      implemented: 'zhuan',
-    });
-  }
-  if (options.system !== 'shijia') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
-      option: 'system',
-      value: options.system,
-      implemented: 'shijia',
-    });
-  }
-  // The lodging decides which palace the chief and the chief gate are read
-  // from, so the two values are two different charts. Refused rather than
-  // substituted, for the reason the other two are.
-  if (options.centreLodging !== 'kun') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
-      option: 'centreLodging',
-      value: options.centreLodging,
-      implemented: 'kun',
-    });
-  }
+  // a silently substituted option looks right and is not. Which values those
+  // are is `CHART_PARAMETERS`'s to say — the lodging in particular decides
+  // which palace the chief and the chief gate are read from, so its two
+  // values are two different charts and neither may stand in for the other.
+  requireImplemented(CHART_PARAMETERS, options, 'plate', 'system', 'centreLodging');
 
   const ju = determineJu(moment, options);
   const earth = earthPlate(ju.yang, ju.number);

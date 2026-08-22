@@ -293,6 +293,17 @@ checked against the text that states it and against nothing that runs.
 by name, what each was checked against, the licences, and — where two sources
 disagreed — which was followed and why. It is the document to read before
 trusting any single number, and the one to add to before shipping a new one.
+[`docs/sources.tsv`](docs/sources.tsv) is the same claims as a table, one row a
+quantity, each carrying the rung of evidence it stands on —
+[`docs/notes.md`](docs/notes.md) is what a rung means.
+
+**And none of that requires opening the repository.** `/[lang]/notes` is the
+section of the site that says the same thing to a reader who came to check
+rather than to read: what is computed layer by layer with every school
+divergence under it, what each quantity stands on and how strongly, what is
+deliberately not computed, and what happens when a board is handed to a model.
+The first two are derived from the engine and cannot fall behind it; the other
+two are written, and every entry shows the day it was last checked.
 
 Working from memory was tried and abandoned: recalled almanac values were
 wrong more often than not, and the tests only became trustworthy once every
@@ -332,7 +343,7 @@ More: [`docs/i18n.md`](docs/i18n.md).
 | | |
 |---|---|
 | [`CLAUDE.md`](CLAUDE.md) | the rules that bind any change, one line each |
-| [`docs/`](docs/README.md) | the project as it is now: architecture, parameters, sources, refusals, readings, i18n |
+| [`docs/`](docs/README.md) | the project as it is now: architecture, parameters, sources, refusals, readings, i18n, what is claimed |
 | [`docs/history/`](docs/history/README.md) | how it got here, phase by phase, including the mistakes. Never normative |
 | [`ROADMAP.md`](ROADMAP.md) | what is not built yet |
 

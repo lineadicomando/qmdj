@@ -1,4 +1,3 @@
-import { ChartError } from '../errors.js';
 import {
   BRANCHES,
   STEMS,
@@ -10,6 +9,7 @@ import {
   type Ganzhi,
   type Stem,
 } from '../ganzhi.js';
+import { ZIWEI_PARAMETERS, requireImplemented } from '../parameters.js';
 import type { Moment } from '../pillars.js';
 import type { Element } from '../types.js';
 import { nayin, type Nayin } from '../bazi/nayin.js';
@@ -186,10 +186,6 @@ const BUREAU_OF: Record<Element, Bureau['id']> = {
   huo: 'huoliuju',
 };
 
-function refuse(option: string, value: string, implemented: string): never {
-  throw new ChartError('OPTION_NOT_IMPLEMENTED', { option, value, implemented });
-}
-
 /**
  * A 紫微斗數 board, laid on a birth.
  *
@@ -206,15 +202,15 @@ function refuse(option: string, value: string, implemented: string): never {
  * stay in the book.
  */
 export function computeZiwei(moment: Moment, options: ZiweiOptions): ZiweiBoard {
-  if (options.leapMonth !== 'following') {
-    refuse('leapMonth', options.leapMonth, 'following');
-  }
-  if (options.sihua !== 'quanshu') refuse('sihua', options.sihua, 'quanshu');
-  if (options.huoling !== 'fixed') refuse('huoling', options.huoling, 'fixed');
-  if (options.daxian !== 'adjacent') refuse('daxian', options.daxian, 'adjacent');
-  if (options.yearBoundary !== 'lichun' && options.yearBoundary !== 'chunjie') {
-    refuse('yearBoundary', options.yearBoundary, 'lichun, chunjie');
-  }
+  requireImplemented(
+    ZIWEI_PARAMETERS,
+    options,
+    'leapMonth',
+    'sihua',
+    'huoling',
+    'daxian',
+    'yearBoundary',
+  );
 
   const lunar = moment.lunar;
   const yearPillar =

@@ -5,8 +5,8 @@ import {
   type EphemerisBody,
   type EphemerisContext,
 } from './ephemeris.js';
-import { ChartError } from './errors.js';
 import { BRANCHES, type Branch } from './ganzhi.js';
+import { QIZHENG_PARAMETERS, requireImplemented } from './parameters.js';
 import type { Element } from './types.js';
 
 /**
@@ -425,34 +425,7 @@ export function qizhengBoard(
   options: QizhengOptions,
   context: EphemerisContext,
 ): QizhengBoard {
-  if (options.xiudu !== 'juxing') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
-      option: 'xiudu',
-      value: options.xiudu,
-      implemented: 'juxing',
-    });
-  }
-  if (options.ziqi !== 'off') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
-      option: 'ziqi',
-      value: options.ziqi,
-      implemented: 'off',
-    });
-  }
-  if (options.minggong !== 'yuejiang') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
-      option: 'minggong',
-      value: options.minggong,
-      implemented: 'yuejiang',
-    });
-  }
-  if (options.gong !== 'zhongqi') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
-      option: 'gong',
-      value: options.gong,
-      implemented: 'zhongqi',
-    });
-  }
+  requireImplemented(QIZHENG_PARAMETERS, options, 'xiudu', 'ziqi', 'minggong', 'gong', 'luohou');
 
   const { julianDay, hour } = request;
   const boundaries = lodgeBoundaries(julianDay, context);

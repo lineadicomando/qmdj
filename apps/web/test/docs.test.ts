@@ -2,7 +2,10 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
+import { PARAMETERS } from '@shipan/core';
+import { LOCALES } from '@shipan/i18n';
 import { INSTRUMENTS } from '../src/lib/instruments';
+import { NOTE_PAGES } from '../src/lib/notes';
 import { SECTIONS } from '../src/lib/navigation';
 
 /**
@@ -112,6 +115,29 @@ describe('the counts the documents state', () => {
   it('names as many boards as the consultation offers', () => {
     expectCount('README.md', INSTRUMENTS.length, 'boards');
   });
+
+  it('names as many notes pages as the section has', () => {
+    // They are under the footer and are not sections, so the count sits
+    // beside the sections' rather than inside it — and it is asserted for the
+    // same reason theirs is.
+    expectCount('docs/architecture.md', NOTE_PAGES.length, 'notes pages');
+  });
+
+  it('lists the languages the project actually speaks', () => {
+    /**
+     * `docs/i18n.md` prints `LOCALES` in a code block, and how many there are
+     * is a state rather than a design: Spanish is on the roadmap and the page
+     * says so. A page that went on printing two after a third landed would be
+     * wrong about the one thing it is the home of — and the same page tells
+     * the reader this test holds it, so the claim has to be true.
+     */
+    const page = read('docs/i18n.md');
+    const declaration = /export const LOCALES = \[([^\]]*)\] as const;/.exec(page);
+    expect(declaration, 'docs/i18n.md should print the LOCALES declaration').not.toBeNull();
+    expect((declaration?.[1].match(/'([a-z]+)'/g) ?? []).map((tag) => tag.slice(1, -1))).toEqual([
+      ...LOCALES,
+    ]);
+  });
 });
 
 describe('the documents point where they say they point', () => {
@@ -188,5 +214,88 @@ describe('the documents point where they say they point', () => {
       intoAPhase,
       'CLAUDE.md cites a phase file. A rule stands on docs/, not on how it came about.',
     ).toBeNull();
+  });
+});
+
+/**
+ * The register of quantities, against the page that says how to read it and
+ * the page it indexes.
+ *
+ * `docs/sources.tsv` is four columns of prose and two of vocabulary, and both
+ * of the second kind can go quietly wrong: a `rung` outside the ladder means
+ * nothing, and a `section` naming an argument that has been renamed is a row
+ * a reader cannot follow. Neither is visible by eye in forty-seven rows.
+ *
+ * The allowed rungs are read out of `docs/notes.md` rather than written here,
+ * for the reason the counts above are read out of the code: that page is where
+ * the ladder is defined, and a test carrying its own copy would be a second
+ * definition free to disagree with the first.
+ */
+describe('docs/sources.tsv', () => {
+  const COLUMNS = ['board', 'quantity', 'rung', 'stands_on', 'checked_against', 'section'];
+
+  const register = (): Record<string, string>[] => {
+    const [header, ...lines] = read('docs/sources.tsv').trim().split('\n');
+    expect(header?.split('\t'), 'the register should carry the columns docs/notes.md lists').toEqual(
+      COLUMNS,
+    );
+    return lines.map((line) => {
+      const cells = line.split('\t');
+      expect(cells.length, line.slice(0, 60)).toBe(COLUMNS.length);
+      return Object.fromEntries(COLUMNS.map((column, index) => [column, cells[index] as string]));
+    });
+  };
+
+  it('fills every cell of every row', () => {
+    const rows = register();
+    expect(rows.length).toBeGreaterThan(0);
+    for (const row of rows) {
+      for (const column of COLUMNS) {
+        expect(row[column]?.trim(), `${row.quantity} · ${column}`).toBeTruthy();
+      }
+    }
+  });
+
+  it('weighs each quantity on a rung docs/notes.md declares', () => {
+    // The ladder's own table: `| **0** | **Measured…` and the dash beneath it.
+    const ladder = read('docs/notes.md');
+    const declared = new Set(
+      [...ladder.matchAll(/^\| \*\*([0-9])\*\* \|/gm)].map((match) => match[1] as string),
+    );
+    expect(declared.size, 'docs/notes.md should declare the rungs in a table').toBeGreaterThan(1);
+    // The row that is not a number: a quantity the engine carries with nothing
+    // registered behind it. It is a claim like any other and has to be one of
+    // the values, or a blank cell would pass for it.
+    declared.add('-');
+    expect(ladder).toContain('**Nothing registered.**');
+
+    for (const row of register()) {
+      expect(declared.has(row.rung as string), `${row.quantity} is on rung ${row.rung}`).toBe(true);
+    }
+  });
+
+  it('points at arguments docs/sources.md actually makes', () => {
+    const headings = new Set(
+      [...read('docs/sources.md').matchAll(/^#{2,4} (.+)$/gm)].map((match) =>
+        (match[1] as string).trim(),
+      ),
+    );
+    for (const row of register()) {
+      expect(
+        headings.has(row.section as string),
+        `docs/sources.tsv sends "${row.quantity}" to a section docs/sources.md does not have: ` +
+          `"${row.section}".`,
+      ).toBe(true);
+    }
+  });
+
+  it('weighs something on every layer the engine declares a parameter for', () => {
+    // A board that has a school divergence and no quantity in the register is
+    // a board somebody can configure and nobody can weigh — which is the state
+    // `CLAUDE.md` says the register exists to prevent.
+    const weighed = new Set(register().map((row) => row.board));
+    for (const board of new Set(PARAMETERS.map((parameter) => parameter.board))) {
+      expect(weighed.has(board), `nothing in docs/sources.tsv stands for ${board}`).toBe(true);
+    }
   });
 });

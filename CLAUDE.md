@@ -12,7 +12,7 @@ correct-looking fix from being wrong.
 | | |
 |---|---|
 | `CLAUDE.md` | the rules that bind any change. Here |
-| [`docs/`](docs/README.md) | **the project as it is now**: architecture, parameters, sources, refusals, readings, i18n |
+| [`docs/`](docs/README.md) | **the project as it is now**: architecture, parameters, sources, refusals, readings, i18n, what is claimed |
 | [`docs/history/`](docs/history/README.md) | **how it got here.** Never normative. Never rewritten to match the present |
 | [`ROADMAP.md`](ROADMAP.md) | what is not built yet |
 | [`README.md`](README.md) | what this is, for somebody arriving |
@@ -55,9 +55,13 @@ the engine falls back to Moshier, which needs no files.
 
 ### The engine
 
-- **English is the language of the source.** Code, comments, identifiers,
-  error codes, documentation and commit messages. Italian exists only as a
-  locale in the catalogs. → [`docs/i18n.md`](docs/i18n.md)
+- **English is the language of the source, and a catalog argues a wording in
+  the language of that wording.** Code, comments, identifiers, error codes,
+  documentation and commit messages are English; a vernacular exists in the
+  catalogs and nowhere else. The one exception is a comment defending the word
+  it sits above — an argument about an Italian word conducted in English
+  quotes its own subject at every mention. Anything else a catalog comment
+  says is English. → [`docs/i18n.md`](docs/i18n.md)
 - **The engine does not localise.** `core` returns identifiers, hanzi, pinyin
   and numbers; readable text is produced at the surface. A function that
   returns a translated string is a design error. → [`docs/i18n.md`](docs/i18n.md)
@@ -96,15 +100,34 @@ the engine falls back to Moshier, which needs no files.
   centuries. Recalled almanac values were wrong more often than not. →
   [`docs/sources.md`](docs/sources.md)
 - **A quantity added without an entry in `docs/sources.md` is a quantity
-  nobody can weigh.** That register is not optional bookkeeping.
+  nobody can weigh, and a row in `docs/sources.tsv` is the other half of the
+  entry.** The prose argues it; the row says which rung it stands on, so that
+  a surface can weigh it against its neighbours without reading the argument.
+  That register is not optional bookkeeping. → [`docs/notes.md`](docs/notes.md)
+- **A source arriving later is an ordinary change, and it moves four things at
+  once**: the argument, the row and its rung — which may fall as well as rise
+  — the `implemented` flag where it unlocks a refused value, and the date a
+  written entry shows. Confirming counts as much as contradicting, and nothing
+  is quietly rewritten. → [`docs/sources.md`](docs/sources.md)
+- **What changes when a board lands is not written, it is derived.** Wanting to
+  hand-write a paragraph about a new board is the signal that a descriptor is
+  missing a field, and the fix is upstream of the page. Where a paragraph is
+  unavoidable it carries, shown, the date it was last checked against the
+  engine. → [`docs/notes.md`](docs/notes.md)
 
 ### The surfaces
 
-- **The interface is read by someone who does not read Chinese**, and must be
-  usable without a glossary. Hanzi accompany the output, always beside a
-  gloss; everything the reader *operates* or *decides from* leads in their own
-  language. A `title` attribute does not rescue a control whose face is a
-  glyph. → [`docs/i18n.md`](docs/i18n.md)
+- **The interface is read by someone who does not read Chinese, in a
+  vernacular of their own**, and must be usable without a glossary. Hanzi
+  accompany the output, always beside a gloss and always beside the reading;
+  everything the reader *operates* or *decides from* leads in their language.
+  A `title` attribute does not rescue a control whose face is a glyph. →
+  [`docs/i18n.md`](docs/i18n.md)
+- **How many vernaculars there are is a state and not a design.** English and
+  Italian today, Spanish when the engine has stopped moving; nothing may be
+  written as though the set were closed at two, and what a third would cost is
+  the measure of anything added to the catalogs. →
+  [`docs/i18n.md`](docs/i18n.md)
 - **A place is an identifier, or coordinates, or an identifier refined by
   coordinates — and never a name.** Half a pair is refused rather than
   half-read, and the answer says both halves. In the forms, what travels is
@@ -169,11 +192,19 @@ rather than what was done. No conventional prefixes. Examples:
 «Finds the twenty-four solar terms», «Exposes the chart over HTTP»,
 «Determines the dun and the ju number».
 
-**One commit a session is enough, however many surfaces it crossed.** What a
-session produces now is a change to an interface that already works, and
-splitting it three ways buys a history nobody reads at the cost of commits
-that do not stand up alone. The subject says what the change does; what used
-to be three subjects becomes the body, one paragraph a movement.
+**On `main`, one commit a session is enough, however many surfaces it
+crossed** — unless the session says otherwise. What a session produces there
+is a change to an interface that already works, and splitting it three ways
+buys a history nobody reads at the cost of commits that do not stand up alone.
+The subject says what the change does; what used to be three subjects becomes
+the body, one paragraph a movement.
+
+**On any other branch, one commit a step** — unless the session says
+otherwise. A branch is where work is staged, and a step there is a thing that
+was decided, done and checked before the next one began: keeping them apart is
+what lets one be read, questioned or dropped without the others. The same
+subject rule holds, so each still stands alone. What becomes of the series
+when the branch lands is the branch's business and not the step's.
 
 Domain identifiers are toneless pinyin where the domain is Chinese (`ganzhi`,
 `jieqi`, `zhifu`, `xiumen`); everything else is English.

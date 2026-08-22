@@ -80,7 +80,7 @@ above the boards.
 |---|---|
 | CLI | `shipan`, nine commands: `qimen` `liuren` `qizheng` `taiyi` `bazi` `ziwei` `terms` `calendar` `scan` |
 | REST | 26 GET endpoints under `/api`. Six boards × (board, `plate`, `text`, `prompt`), plus `/api/locations`, `/api/terms`, `/api/moments` — and `/api/bazi` has no `plate` |
-| Web | eight sections at `/en` and `/it`: two acts, six instruments. See `apps/web/src/lib/navigation.ts` |
+| Web | eight sections at `/en` and `/it`: two acts, six instruments. See `apps/web/src/lib/navigation.ts`. Under the footer, five notes pages and a privacy page, which are not sections and are not addressed by an art |
 | MCP | 12 tools and 4 reference resources, stdio. See `packages/mcp/src/server.ts` |
 
 Those four counts are asserted against the code by

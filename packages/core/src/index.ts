@@ -406,3 +406,24 @@ export {
   type Element,
   type Place,
 } from './types.js';
+
+// Every school divergence as data: what each parameter's values are, which of
+// them the engine computes, and what it assumes when nobody says. The
+// refusals inside the engine read it, and a surface that prints what is
+// computed reads the same table rather than a copy of it.
+export {
+  CHART_PARAMETERS,
+  LIUREN_PARAMETERS,
+  NIANMING_PARAMETERS,
+  PARAMETERS,
+  QIZHENG_PARAMETERS,
+  TAIYI_PARAMETERS,
+  ZIWEI_PARAMETERS,
+  implementedValues,
+  requireImplemented,
+  type Parameter,
+  type ParameterBoard,
+  type ParameterEntry,
+  type ParameterSet,
+  type ParameterValue,
+} from './parameters.js';

@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
+import { CHART_PARAMETERS, implementedValues } from '@shipan/core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { createServer } from '../src/server.js';
 
@@ -81,4 +82,49 @@ describe('the instructions the server always sends', () => {
   it('says that one board is read and never two of one instant', () => {
     expect(client.getInstructions() ?? '').toContain('NEVER TWO OF ONE INSTANT');
   });
+});
+
+/**
+ * What an agent is offered for a school divergence, against what the engine
+ * computes.
+ *
+ * The tool schema names the *implemented* values and not the declared ones,
+ * which is the same choice the web form makes and for the same reason: an
+ * option that can only ever come back as an error is not a choice, and a
+ * model handed 茅山 in an enum will eventually pass it. What that costs is a
+ * copy of the implemented list, sitting where nothing but this test can see
+ * that it has fallen behind — and the day 飛盤 or a second 神煞 register
+ * lands, an agent would go on being told the old set.
+ *
+ * Asked of a real client, like the counts above: what a caller is offered is
+ * the claim, and a schema built and never listed would be a different bug.
+ */
+describe('the values the tool schema offers', () => {
+  const enumOf = async (tool: string, property: string): Promise<unknown> => {
+    const { tools } = await client.listTools();
+    const found = tools.find((candidate) => candidate.name === tool);
+    expect(found, `the server offers no ${tool}`).toBeDefined();
+    const properties = (found?.inputSchema as { properties: Record<string, { enum?: unknown }> })
+      .properties;
+    return properties[property]?.enum;
+  };
+
+  // The chart's options, by the name an agent passes them under. `shensha`
+  // rides on the chart tools because the almanac line comes back with the
+  // chart, and it is the almanac's parameter wherever it is written.
+  const offered: Array<[string, keyof typeof CHART_PARAMETERS]> = [
+    ['method', 'method'],
+    ['yuan', 'yuan'],
+    ['day_boundary', 'dayBoundary'],
+    ['year_boundary', 'yearBoundary'],
+    ['shensha', 'shensha'],
+  ];
+
+  for (const [property, parameter] of offered) {
+    it(`offers for ${property} exactly what the engine computes`, async () => {
+      expect(await enumOf('compute_qimen_chart', property)).toEqual(
+        implementedValues(CHART_PARAMETERS[parameter]),
+      );
+    });
+  }
 });

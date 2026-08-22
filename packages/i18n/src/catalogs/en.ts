@@ -1151,13 +1151,253 @@ export const en = {
   'footer.privacy': 'Privacy',
   'footer.notes': 'Notes',
 
-  // The section is empty on purpose, and what it is for is as open as what it
-  // says: a note written against an engine that is still gaining boards falls
-  // behind it, and misinforms exactly the reader who came here to check rather
-  // than to read. Both are settled at the end of the project, in one writing,
-  // rather than anticipated now and realigned at every change.
-  // See `docs/history/` phase 17.
-  'notes.title': 'Section still being defined',
+  // The section a reader arrives at having come to check rather than to read.
+  // It is several pages about one subject, which is why it has a nav of its
+  // own, and the two halves of it are kept apart on purpose: what is derived
+  // from the engine costs a language nothing and what is written here doubles
+  // with every one of them. See `docs/notes.md`.
+  'notes.title': 'Notes',
+  'notes.lead':
+    'What this engine computes, what each number stands on, and how strongly. Nothing in this section is a reading: it is an account of the instrument.',
+  'notes.claim':
+    'Every quantity here was checked against something outside itself, and not everything was checked against something equally good. Which is which is the whole of what this section says — a solar term and a transmitted table are not the same kind of fact, and a reader who cannot tell them apart has been misled by the presentation rather than by the data.',
+  // The one page the section does not have, and its absence is a decision:
+  // the interface has to be usable without a glossary, and one that became
+  // the answer to «where do I look this up» would be the sign that a control
+  // somewhere is failing. The fix would then be upstream of it.
+  'notes.building':
+    'There is no glossary here, and that is deliberate: this interface has to be usable without one. Every name is said where it is used — the glyph, the reading and the word — and a glossary that became the place to look things up would be the sign that something else on this site had stopped explaining itself.',
+  // Not decoration: it is the line the whole section is arranged by. A derived
+  // page cannot fall behind the engine; a written one can, and will carry the
+  // date it was last checked for that reason.
+  'notes.kind.derived': 'derived',
+  'notes.kind.written': 'written',
+  'notes.answers.instruments':
+    'What is computed, layer by layer: what each is laid on, and every point where the schools diverge.',
+  'notes.answers.sources':
+    'What each quantity stands on, what it was checked against, and how strongly it is held.',
+
+  // The layers. Six of the nine are instruments and are named in
+  // `lib/instruments.ts`; two are named arts that are not instruments and are
+  // named in `lib/notes.ts`. The calendrical layer is the one that is
+  // described rather than named, so its heading is a message and theirs are not.
+  'notes.layer.pillars': 'The calendrical layer',
+  'notes.takes': 'Computed from',
+  'notes.takes.pillars':
+    'an instant and a place, with the two boundaries that say how an instant is read.',
+  'notes.takes.qimen': 'an instant and a place.',
+  'notes.takes.liuren': 'an instant and a place.',
+  'notes.takes.taiyi': 'a year, and nothing else: no place, no hour, nobody.',
+  'notes.takes.qizheng': 'a birth — an instant and a place.',
+  'notes.takes.ziwei':
+    'a birth, counted on the lunar calendar, and a sex where a ring is walked in a direction.',
+  'notes.takes.bazi': 'a birth, and a sex where the luck cycles need one.',
+  'notes.takes.almanac': 'a civil date, reckoned on 120°E as the lunar calendar is.',
+  'notes.takes.nianming': 'a birth, placed inside a chart already cast for a moment.',
+  'notes.does.pillars':
+    'The solar terms, the lunar date and the four pillars — what every board below is built from, and the layer the two boundaries belong to.',
+  'notes.does.qimen':
+    'Nine palaces: an earth plate fixed by the ju, a heaven plate turned onto the hour, and the stars, gates and spirits standing over them.',
+  'notes.does.liuren':
+    'Twelve branches turned by the general of the month, four lessons read off the turn, and three transmissions drawn out of the four by nine named rules.',
+  'notes.does.taiyi':
+    'The board of a year: sixteen gods in nine palaces, and the counts of host and guest. Nobody is on it.',
+  'notes.does.qizheng':
+    'The seven governors and three of the four remainders, placed against the twenty-eight lodges and the twelve palaces.',
+  'notes.does.ziwei':
+    'Twelve seats counted from the lunar month and the hour, the stars the book places in them, and the grade it gives each.',
+  'notes.does.bazi':
+    'The four pillars read out: the concealed stems, the ten gods, the twelve stages, the images of 納音 nàyīn, the luck cycles, and a count of the five elements.',
+  'notes.does.almanac':
+    'The page an almanac prints for a date: the officer of the day, the lodge holding it, the twelve gods, the bearings the year fixes, and the shensha a day carries or does not.',
+  'notes.does.nianming':
+    'Where a person stands inside a chart of a moment — the pillar of their birth year, and the pillar of the year they are living.',
+
+  'notes.instruments.title': 'What is computed',
+  'notes.instruments.lead':
+    'Layer by layer, and under each the points where the schools diverge. Every one of them is a parameter with a declared default: the value this engine takes is marked, the values it declares and will not compute are marked too, and nothing is chosen silently.',
+  'notes.instruments.wider':
+    'This list is longer than the one in the header, and the difference is worth a sentence: what a consultation can be laid on is a narrower question than what is computed here. The almanac is a page of a published book rather than a board, the calendrical layer stands under all of them, and a 年命 niánmìng is a birth placed inside a chart cast for a moment.',
+  'notes.column.parameter': 'Parameter',
+  'notes.column.values': 'Values',
+  'notes.default': 'default',
+  // A value the type carries and the engine will not compute. Asking for it is
+  // an error rather than a chart cast by the nearest rule the engine does have.
+  'notes.refused': 'refused',
+  'notes.noParameters':
+    'No divergence of its own: it stands on the calendrical layer entire, and the parameters above are the ones that move it.',
+  'notes.parameter.method': 'How the ju is established.',
+  'notes.parameter.yuan': 'Where the third of the term is counted from, under 拆補 chāibǔ.',
+  'notes.parameter.plate': 'How the heaven plate is derived.',
+  'notes.parameter.centreLodging':
+    'Where the centre lodges, having no direction, no gate and no spirit of its own.',
+  'notes.parameter.system':
+    'Which family of chart: the hour’s, the day’s, the month’s or the year’s.',
+  'notes.parameter.trueSolarTime': 'Whether clock time is corrected to the Sun at the place.',
+  'notes.parameter.yearBoundary': 'Where the counted year begins.',
+  'notes.parameter.dayBoundary': 'Where the day turns over.',
+  'notes.parameter.shensha': 'Which register of shensha the almanac’s page carries.',
+  'notes.parameter.yuejiang':
+    'When the Sun changes palace, which is what seats the general of the month.',
+  'notes.parameter.guiren': 'Which transmission of the verse seats the noble.',
+  'notes.parameter.zhouye': 'Where the day is cut, for the noble’s day and night seats.',
+  'notes.parameter.xiudu': 'Where the twenty-eight lodges begin.',
+  'notes.parameter.ziqi': 'Whether 紫氣 zǐqì enters, and by which transmission.',
+  'notes.parameter.luohou':
+    'Which node bears the name 羅睺 luóhóu, the other taking 計都 jìdū.',
+  'notes.parameter.minggong': 'How the palace of the self is found.',
+  'notes.parameter.gong': 'Where the twelve palaces are cut.',
+  'notes.parameter.epoch': 'Which 上元積年 shàngyuánjīnián the count runs from.',
+  'notes.parameter.ji': 'Which register the board is laid in.',
+  'notes.parameter.leapMonth': 'What a birth in an intercalary month counts as.',
+  'notes.parameter.sihua': 'Which table of the four transformations.',
+  'notes.parameter.huoling': 'How 火星 huǒxīng and 鈴星 língxīng are placed.',
+  'notes.parameter.daxian': 'Where the first decade of the great limits opens.',
+  'notes.parameter.count': 'How the years lived are counted.',
+
+  'notes.answers.refusals':
+    'What is deliberately not computed, who asks for it, and why it is not here.',
+  'notes.answers.readings':
+    'What a prompt commissions and what it forbids, and what never leaves your browser.',
+  'notes.askedBy': 'Asked by',
+  // The one thing a written entry must always show. See `docs/notes.md`.
+  'notes.checked': 'Last checked against the engine on {date}.',
+
+  'notes.refusals.title': 'What is not computed',
+  'notes.refusals.lead':
+    'The engine answers no question, which is not the same as saying nothing. What follows is one entry each: what is refused, who asks for it, and why it is not here.',
+  'notes.refusals.carries':
+    'What it does carry is an attribute the sources hand down concordantly, where that attribute belongs to the configuration rather than to somebody’s situation — and it travels as an identifier and a glyph, never as prose. A verdict arriving inside a translated gloss is a verdict nothing can test.',
+  'notes.refusals.yongshen.title': 'The 用神 yòngshén',
+  'notes.refusals.yongshen.asks': 'everyone who casts a chart for a question.',
+  'notes.refusals.yongshen.body':
+    'Which palace bears on what is being asked is the reader’s choice, made for that question. Without one the board is a map with no pin — and choosing it is the first act of interpretation, not a lookup. A prompt commissions the choice and requires it declared; the engine never makes it.',
+  'notes.refusals.geju.title': 'Configurations ranked, and any best palace',
+  'notes.refusals.geju.asks': 'anyone wanting to know which palace is the good one.',
+  'notes.refusals.geju.body':
+    'The configurations themselves travel, with the fortune the sources hand down beside them: 門迫 ménpò is oppression in the text that names it, and an engine dropping that would be editing its sources. An order over them does not travel. A chart holding four inauspicious configurations is not a bad time to do anything — bad is a word about an undertaking, and no undertaking is known here.',
+  'notes.refusals.ordering.title': 'Ordering two hours, and dating an outcome',
+  'notes.refusals.ordering.asks': 'anyone choosing a time, and anyone who wants to know when.',
+  'notes.refusals.ordering.body':
+    'Choosing a time walks an interval and reports where in it a thing stands, against criteria you state. It does not rank what it finds, and its answers carry a direction as well as an hour — the direction is half of the answer and is never reported alone. Dating an outcome is refused outright: it is the prediction this project does not make.',
+  'notes.refusals.advice.title': 'Advice',
+  'notes.refusals.advice.asks': 'almost everybody, eventually.',
+  'notes.refusals.advice.body':
+    'No reading here gives medical, psychiatric, legal or financial counsel, lucky numbers, gambling picks, a partner judged or a compatibility settled. Where a reading of a life is commissioned the verbs stay conditional — «tends to», never «you will» — and the power over a person’s choices and their path stays theirs.',
+  'notes.refusals.purposes.title': 'Which palace stands for which part of a life',
+  'notes.refusals.purposes.asks':
+    'readers of modern 年命 niánmìng material, and models, very confidently.',
+  'notes.refusals.purposes.body':
+    'Refused wherever a 年命 appears, and stated at every surface rather than once, because this is where a model invents most freely. What is carried is the pillar of the birth year and the pillar of the year being lived, the palaces the two fall in, and what the ground under them is made of. Then it stops: the text’s own verdicts on that ground need a question to have been asked.',
+  'notes.refusals.natalQimen.title': 'A chart of dunjia cast on a birth',
+  'notes.refusals.natalQimen.asks': 'the modern natal-Qi-Men literature.',
+  'notes.refusals.natalQimen.body':
+    'A birth enters a chart, never the other way about: the classical text puts the person’s year inside the chart of the moment, and the chart does not move for the birth. The error recurs because the Western natal chart is one instance of a class this tradition already fills several ways — so an art that is natively about a life gets a board of its own, 八字 bāzì, 七政四餘 qīzhèngsìyú, 紫微斗數 zǐwēidǒushù, and never dunjia’s.',
+  'notes.refusals.taiyiReadings.title': 'The received readings of 太乙 tàiyǐ',
+  'notes.refusals.taiyiReadings.asks': 'anyone who opens the text.',
+  'notes.refusals.taiyiReadings.body':
+    'The transmitted doctrine of this board is dynastic — which state falls, which year an army breaks — dated, falsifiable by nobody, and it stays out. The per-palace readings of the same chapter are declined entirely, because there is no layer behind them that is not dynastic. What travels is what the text says a shape is; where it says nothing, the silence travels with it.',
+  'notes.refusals.hostGuest.title': 'Who is 主 zhǔ and who is 客 kè',
+  'notes.refusals.hostGuest.asks': 'every reader of a 太乙 board, immediately.',
+  'notes.refusals.hostGuest.body':
+    'The engine names two counts and stops. Assigning host and guest is the first interpretive act that system asks for, and it is the reader’s exactly as the 用神 is. A prompt commissions it and requires it signed.',
+  'notes.refusals.dayMaster.title': 'A strong or weak day master, and what compensates',
+  'notes.refusals.dayMaster.asks': 'every reader of the four pillars.',
+  'notes.refusals.dayMaster.body':
+    'The five elements arrive counted over the eight characters, zeroes included, because an absence weighs as much as an abundance — and the count is printed so that nobody recounts it. Declaring the day master strong or weak, and choosing what compensates an absence, are steps of a method: the schools divide on how it is done, so the choice is made aloud in the reading with the method named.',
+  'notes.refusals.ziqi.title': '紫氣 zǐqì, the fourth remainder',
+  'notes.refusals.ziqi.asks': 'readers expecting four 餘 yú on a 七政四餘 board.',
+  'notes.refusals.ziqi.body':
+    'Three of the four are placed by ephemeris. The fourth is absent for want of a check rather than for want of a rule: the transmission exists, an epoch that can be cited does not, and nothing weighs its constant because weighing it would mean having something in the sky to check it against. The parameter is declared and set off, so the absence is visible rather than tacit.',
+  'notes.refusals.feixing.title': 'The 十八飛星 shíbāfēixīng placements',
+  'notes.refusals.feixing.asks': 'anyone holding both books of 紫微斗數.',
+  'notes.refusals.feixing.body':
+    'That art names two boards and this engine computes one of them. The other transmission counts eighteen stars off the year branch, has no bureau of the five phases, no 天府 tiānfǔ, and not one of the fourteen main stars on it. A placement carried across is a graft and not a gap being filled — the same error as a natal chart of dunjia, made smaller and between two books that share a title.',
+  'notes.refusals.maoshan.title': '茅山 máoshān',
+  'notes.refusals.maoshan.asks': 'the parameter that lists it.',
+  'notes.refusals.maoshan.body':
+    'No reference exists, runnable or transmitted, against which a 茅山 chart could be falsified. It is refused by name rather than substituted, because a chart cast by the wrong method looks right and is not. It stands on the list of what is declared and unimplemented, and it is not expected to leave it.',
+  'notes.refusals.placeFromName.title': 'A place from a name',
+  'notes.refusals.placeFromName.asks': 'every convenience API.',
+  'notes.refusals.placeFromName.body':
+    'Nothing here turns a name into a place. There are dozens of towns called Rome, and picking the most populous for somebody produces a chart that looks right and is wrong. What the surfaces take is an identifier chosen from a search, or coordinates with a zone, or an identifier refined by coordinates — and half a pair is refused rather than half-read.',
+  'notes.refusals.latitude.title': 'The latitude, in any calculation',
+  'notes.refusals.latitude.asks': 'anyone who assumes a chart uses both coordinates.',
+  'notes.refusals.latitude.body':
+    'The longitude is what moves a board. The latitude is carried and printed and enters no calculation. The one method that would read it — cutting the twelve palaces of 七政四餘 by houses — is a declared parameter with that value refused. The bound is stated here and not in the form: a control somebody opens on purpose to type a longitude into is opened by somebody who knows what one is.',
+  'notes.refusals.twoBoards.title': 'Two boards of one instant, in one prompt',
+  'notes.refusals.twoBoards.asks': 'the obvious feature request.',
+  'notes.refusals.twoBoards.body':
+    'A consultation takes one instrument, chosen before the press and at no point after it. Where two boards agree it is frequently one fact printed twice — a chart of dunjia and a 六壬 board share the day pillar, the decade, the void branches and five of the eight spirits — and a model reading that as corroboration counts one datum as two with complete confidence.',
+
+  'notes.readings.title': 'Handing a board to a model',
+  'notes.readings.lead':
+    'What a prompt commissions, what it forbids, and what never leaves your browser.',
+  'notes.readings.computed':
+    'A board travels computed and never as a date. A model handed a date and a place casts the chart from memory and gets it wrong, and a wrong chart read well is the worst thing this project can produce: nothing downstream catches it, because it looks exactly like a right one.',
+  'notes.readings.oneBoard.title': 'One board, never two of one instant',
+  'notes.readings.oneBoard.body':
+    'A consultation takes one instrument, chosen before the press and at no point after it. The boards overlap: a chart of dunjia and a 六壬 liùrén board share the day pillar, the decade, the void branches and five of the eight spirits; the twelve palaces of 七政四餘 are the ring a 六壬 general is seated on; the four pillars are the substrate the others are built from. No transmitted rule combines the three 式 shì. 太乙 overlaps none of them and the rule holds for it anyway, because a model handed a board of a year beside a board of a person reads the year onto the person.',
+  'notes.readings.threeKinds.title': 'Three kinds, and the kind decides what you are asked for',
+  'notes.readings.threeKinds.body':
+    '卜 bǔ — 奇門 and 六壬 — takes a question, and the board is cast at the instant of the press: the question comes before the casting, or it is a caption on a board that was already there. 命 mìng — 八字, 七政四餘, 紫微斗數 — takes a birth and asks nothing of you. 天 tiān, which is 太乙 alone, takes a year and a matter: no question, no person, no place and no hour.',
+  'notes.readings.questionStays.title': 'The question never reaches the server',
+  'notes.readings.questionStays.body':
+    'A prompt endpoint is told that a question exists and never what it is: the prompt ends on the line that introduces one, and your browser appends the text before the whole thing goes to your clipboard. A matter travels the same way. This project talks to no model, holds no key, and sends nothing anywhere.',
+  'notes.readings.consultationOnly.title': 'A prompt is built in one place only',
+  'notes.readings.consultationOnly.body':
+    'The consultation is where a board is handed over, and it is the only surface that builds a prompt — a prompt is an asking, and it belongs where the asking is. The sections addressed by an art show boards and their transcripts, and asking there is navigating. The consultation prints from the page and never from a route of its own, for the same reason: a route would have to be told the question.',
+  'notes.readings.bu.title': 'What a 卜 bǔ prompt commissions',
+  'notes.readings.bu.body':
+    'A chart withholds the 用神 and says so: which palace bears on the question is the reader’s choice, and the prompt requires it declared. A 六壬 board hands its three transmissions over already drawn, by procedure, and the prompt says not to re-derive them — while which of the four courses to read from is still the reader’s.',
+  'notes.readings.ming.title': 'What a 命 mìng prompt commissions',
+  'notes.readings.ming.body':
+    'The subject is the person the board was laid on and not the board. The reply is laid out in six movements: the disclaimer, the birth situated in the model’s own words, the board read whole from a centre, the themes of a life in short sections titled for a theme and never for a factor, the per-board inspection list those sections draw on, and an ending that opens. Every choice travels signed — which seat or god carries a theme is said as it is made, a school’s method arrives named as that school’s, and the element that compensates stays uncomputed and is chosen aloud.',
+  'notes.readings.tian.title': 'What a 天 tiān prompt commissions',
+  'notes.readings.tian.body':
+    'A reading is for a matter, and a matter is not a question: it names what is being looked at — a field of view with two sides in it, which is what the two counts are counts of. Without one the prompt reads the figure and says the assignment was never made, rather than sending a model to invent a pair of parties. The register is descriptive and never predictive, and every surface printing this board says that its nine palaces are numbered one seat off the 洛書 luòshū.',
+  'notes.readings.staysOut.title': 'What stays out of a prompt',
+  'notes.readings.staysOut.body':
+    'How sure each number is stays in the documentation an agent can look up. Pasted into a prompt it became a paragraph the model recited unasked, beside a disclaimer that already says this is entertainment. The exception is a bound on a quantity the prompt is already telling a model how to read: a caution arriving with the instruction that governs it is part of the instruction. The test is whether removing the line would leave an instruction a model could follow confidently and wrongly.',
+  'notes.readings.disclaimer.title': 'The disclaimer travels',
+  'notes.readings.disclaimer.body':
+    'The prompt carries the disclaimer this site’s footer carries, as an instruction to say it: this is food for thought and entertainment, it is no substitute for professional advice on anything, and the power over a person’s choices and their path stays theirs. A prompt travels, and a disclaimer left behind on the page it was copied from was written for somebody who is no longer there.',
+
+  'notes.sources.title': 'Where the numbers come from',
+  'notes.sources.lead':
+    'One row a quantity: what the engine derives it from, what it was measured against, and which rung of the ladder below that puts it on.',
+  'notes.ladder.title': 'The ladder of evidence',
+  'notes.ladder.lead':
+    'Not everything was checked against something equally good, and knowing what a quantity stands on is not yet being able to weigh it against its neighbour. These are the rungs, strongest first, with the number of quantities held at each.',
+  'notes.held': '{count} in the register',
+  'notes.rung.0': 'Measured',
+  'notes.rung.0.means':
+    'An ephemeris answer: the sky is asked and the answer is read off. Not a rule handed down at all, which is why it stands above the rungs below rather than on them.',
+  'notes.rung.1': 'A runnable reference',
+  'notes.rung.1.means':
+    'Another program computes it, independently of this one, and was run over the whole domain rather than sampled. Where the subject is a contested tradition this means consistent with a common implementation, never verified.',
+  'notes.rung.2': 'Two texts agreeing',
+  'notes.rung.2.means':
+    'Two transmitted sources, independent of each other, naming the same thing the same way. This is the standard for anything that cannot be derived.',
+  'notes.rung.3': 'Over-determination',
+  'notes.rung.3.means':
+    'A structure with more constraints than it has freedom, so a wrong answer breaks many things at once and the right one breaks none.',
+  'notes.rung.4': 'One text, checking itself',
+  'notes.rung.4.means':
+    'A single witness, exhaustive or redundant about the thing in question, so that it can be held to its own account.',
+  'notes.rung.5': 'One text, unchecked',
+  'notes.rung.5.means': 'A single source, with nothing available to check it against.',
+  'notes.rung.none': 'Nothing registered',
+  'notes.rung.none.means':
+    'The engine carries the quantity and no source stands behind it. Where that happens the drawing says so too — those names are left uncoloured until one does.',
+  'notes.ladder.notAVerdict':
+    'A rung is not a verdict. It says what could go wrong unnoticed, which is a different thing from how wrong anything is: the frame of the twenty-eight lodges is carried on over-determination and is right to a seventieth of the narrowest question it is ever asked. Nor is a rung a property of the quantity — it moves when the shelf does, in either direction, and a source that only confirms moves it as surely as one that contradicts.',
+  'notes.ladder.quoted':
+    'The table below is quoted rather than translated. It is a register of citations — the quantities as the engine names them, editions, chapters, the programs each was measured against and the spans they were run over — and this project keeps it in English, the language of its source. What is translated is everything you decide from: the rungs above, what each of them means, and what each layer is.',
+  'notes.column.quantity': 'Quantity',
+  'notes.column.rung': 'Rung',
+  'notes.column.standsOn': 'Stands on',
+  'notes.column.checkedAgainst': 'Checked against',
 
   'privacy.title': 'Privacy',
   'privacy.nothing':
