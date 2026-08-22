@@ -740,295 +740,324 @@
   >
     {#snippet fields()}
       <!--
-        Which board this is, and it stands first because everything above it
-        used to move.
+        The column the fields are read down, inside a panel that is still the
+        width of the page.
 
-        The question and the matter are not the same field: one appears where
-        the other does not, they carry different labels and different
-        placeholders, and under an instrument of 命 neither is there at all.
-        Put over the choice, that made the first thing on the page the thing
-        that jumps — a reader comparing two instruments watched the box they
-        had just started reading appear, vanish and change name under their
-        hand, and everything below it slide by two lines. **What turns stands
-        under what turns it.** The order the section is built on is untouched
-        by the move: what has to come before the casting is the question, and
-        the casting is the button at the foot of the panel.
+        The fields stop at 46rem — the cards, the question, the row of
+        `MomentForm` — and under 卜 what stands open is a search box a third of
+        that. Left where they fell, in a box of 72rem, they spent a quarter of
+        the page on tint nobody reads, all of it down one side, under a right
+        edge so ragged the page read as carelessly laid out rather than as
+        fields that have a measure.
 
-        Not behind the disclosure either, because it is not a refinement of the
-        instant: it decides what is laid on it, and the boards answer
-        different shapes of question. The options say what they are **for**
-        and not what they are called — somebody arriving with a question
-        recognises the shape of their own, where `Qi Men` and `Liu Ren` are
-        two words they have no way to weigh.
+        Centred rather than the box narrowed, and that is the whole of the
+        argument: this panel is the same object as the one on every other
+        section, and two of those genuinely want the width — the bank of
+        criteria on `/moments`, the steppers on a bar of `/qimen`. A panel that
+        was narrow here and wide there would make the move between two sections
+        a change of page rather than a change of subject. So the edge of the
+        box stays where the reader last saw it and the room left over is
+        divided in two, which is the difference between air and neglect.
+
+        Its own gap, because it is one item of the panel's grid and the spacing
+        between the fields is now this column's to keep.
       -->
-      <!--
-        Six of them, and no longer a `select` nor a column of lines.
-
-        A `select` gave one line to an option and showed one at a time, which
-        held while there were two and stopped holding at five: a reader who
-        knows none of these arts is choosing between descriptions, and
-        descriptions have to be read side by side to be weighed. Radios in a
-        column showed all six at once and only half solved it — six sentences
-        stacked one under the other are still read *down*, and each of them had
-        to carry the errand and the name of the art on the same line, behind an
-        em dash, wrapping wherever the width happened to fall.
-
-        A card holds two lines, so the two things stop competing for one: the
-        name at the head of it — 奇門遁甲 Qí Mén Dùn Jiǎ, which is not a locale
-        and now lives in `instruments.ts` rather than twice in the catalogs —
-        and the errand under it.
-
-        **The name is first in the order and second in the weight, and that is
-        what keeps it inside the rule it looks like it breaks.** CLAUDE.md holds
-        that what a reader operates leads in their own language, and an option
-        whose face is a glyph is one nobody can choose on purpose. What that
-        rule is written against is a card that says 太乙神數 and stops. Here the
-        name is set where a kicker goes and in the quiet register, and the line
-        in ink — the one the eye lands on and the one somebody is actually
-        deciding between — is «come sta un anno, per tutti quelli che ci stanno
-        dentro». Reading order says which thing this is; ink says which thing to
-        read. A reader with no Chinese still chooses on the errand, and one who
-        knows the six arts finds them where a list of six names is scanned,
-        which is down the left edge and at the top of each card.
-
-        **They are cards and not buttons, and the radio stays drawn on them.**
-        This page has exactly one press and it is the one that casts the board;
-        the instrument is chosen *before* it and never after. Six things with
-        the air of the pressable, sitting above the one control that actually
-        does something, would be six ways to wonder which of the seven casts.
-        A visible radio says «one of these, then press» in the one vocabulary
-        every reader already has — and it costs nothing, since the ring the
-        keyboard leaves is then the browser's own on a control that is really
-        there, rather than something reconstructed on a box that hides it.
-      -->
-      <fieldset class="instrument">
-        <legend>{t('form.instrument')}</legend>
-        <div class="choices">
-          {#each INSTRUMENTS as choice (choice.id)}
-            <label class="choice" class:chosen={instrumentId === choice.id}>
-              <input type="radio" name="instrument" value={choice.id} bind:group={instrumentId} />
-              <span class="glyph named">{choice.name.hanzi} {choice.name.pinyin}</span>
-              <span class="errand">{t(choice.option)}</span>
-            </label>
-          {/each}
-        </div>
-      </fieldset>
-
-      <!-- Above the moment and above the button, because that is the order:
-           the chart is cast for the instant the question is put. -->
-      <!--
-        What is being asked, under no heading at all.
-
-        A name over this and the choice above it would have to say «the
-        question, and which board» — over a field labelled «Your question» and
-        a group labelled «What kind of reading is it». Three ways of saying one
-        thing, which is what the panel's own heading was taken off for. The
-        lead line above the panel already says what the page is for, and these
-        are the fields that do it; what takes a name below is the circumstance,
-        which is a different kind of thing and reads as the step it is.
-      -->
-      <!--
-        Absent under a board of 命, rather than disabled or ignored.
-
-        Nothing is asked of those three, and a box standing empty over them
-        would be the page inviting exactly the thing the prompt refuses. Under
-        命 a topic names one of the seats the board prints — «my career» *is*
-        官祿宮 — and a reading that started from it would have reached a seat
-        without ever choosing one.
-      -->
-      <!--
-        The matter, under 天 and where the question stands under 卜.
-
-        It is **not** the question field relabelled, and the two are kept apart
-        in the state for the same reason they are kept apart here: a question
-        asks what will happen and puts the person asking inside a figure they
-        are not in, which is the one thing this board refuses outright. A matter
-        names what is being *looked at* — and naming two sides of it is what
-        lets the board's two counts be counts of anything at all.
-
-        Required, unlike the year beneath it. That looks like this page
-        contradicting itself and is the same rule one field over: what may be
-        empty is what has an honest default, and the year has one — the year
-        being lived. What the figure is read *for* has none, and a board of 天
-        laid on nothing produces a precise description of a figure that never
-        says «and so?». Which is what it produced before this field existed.
-
-        A label and a placeholder and nothing else. There was a note under it
-        saying the same three things a third time — not a question, not about
-        you, name two sides — and the placeholder already carries the shape
-        where the reader is looking when they start typing. Three ways of
-        saying one thing is what the panel's own heading was taken off for.
-      -->
-      <!-- `instrument.asks` in the guard rather than a non-null assertion under
-           it: the key rides on the descriptor beside the kind, so an instrument
-           that puts a field up is the same fact as one that says what to write
-           in it, and the narrowing is where `shown.plate` does it below. -->
-      {#if laidOnAYear && instrument.asks}
-        <label class="question">
-          {t('form.matter')}
-          <textarea bind:value={matter} rows="3" placeholder={t(instrument.asks)}></textarea>
-        </label>
-      {/if}
-
-      {#if asking && instrument.asks}
-        <label class="question">
-          {t('form.question')}
-          <!-- Five lines rather than two. What is typed here is the one thing
-               on the page the reader composes rather than picks, and a box the
-               size of a caption says to keep it to a caption — when what makes
-               a question readable is the circumstance around it. -->
-          <!--
-            The placeholder is the instrument's and not the field's, which is
-            why it is read off the descriptor rather than off a key written
-            here. Both boards of 卜 take a question and they take different
-            ones: 奇門 is asked about a thing to be done and the hour to do it
-            in, 六壬 about a situation already under way and the people in it.
-            A single «What are you asking?» over both was the field naming
-            itself a second time, and it left a reader who had just chosen
-            between two errands with nothing telling them what changed. The
-            card above says what the art is for; this says what to write.
-          -->
-          <textarea bind:value={question} rows="5" placeholder={t(instrument.asks)}></textarea>
-        </label>
-      {/if}
-
-      <!--
-        The moment, and where it stands depends on what it is.
-
-        Under a board of 卜 what a consultation needs is a question and
-        somewhere to stand: the hour pillar turns on the place, and there is no
-        default for it that would not be somebody else's city. The date and the
-        time go in the options and empty, because empty is the instant of the
-        press and that is the whole use of this section — a field filled in for
-        nine readers out of ten belongs where the tenth can find it.
-
-        Under a board of 命 that reverses, and `when` is the lever the component
-        already had for it. The moment *is* the input, so it stands in the open
-        with the place; and empty stops being the press, because a birth left
-        empty would be today's.
-
-        The pair binds through `moment`, which is the slot the kind names —
-        a birth and an instant-of-asking are different quantities, and a date
-        typed as one must never resurface meaning the other.
-
-        Under a board of 天 the whole component is **absent**, which is the one
-        thing `when` could not express. There is no instant here to put in the
-        open or under a disclosure, and no place either: a 年計 board is a
-        function of a year, and a field asking where you are standing would be
-        the page collecting a datum the board cannot use and the reader would
-        assume it had. What stands in its place is the one number below.
-      -->
-      {#if laidOnAYear}
+      <div class="column">
         <!--
-          The whole of the form under 天, and it is one field.
+          Which board this is, and it stands first because everything above it
+          used to move.
 
-          The section at `/[lang]/taiyi` says why a disclosure in front of a
-          single field is a door in front of a doorway; here the disclosure is
-          already the panel around everything, so what is left is the field, in
-          the open beside the instrument that asked for it. Empty is allowed and
-          means the year being lived — the note under it says so, because an
-          empty field that quietly means *now* is only obvious to whoever wrote
-          it.
+          The question and the matter are not the same field: one appears where
+          the other does not, they carry different labels and different
+          placeholders, and under an instrument of 命 neither is there at all.
+          Put over the choice, that made the first thing on the page the thing
+          that jumps — a reader comparing two instruments watched the box they
+          had just started reading appear, vanish and change name under their
+          hand, and everything below it slide by two lines. **What turns stands
+          under what turns it.** The order the section is built on is untouched
+          by the move: what has to come before the casting is the question, and
+          the casting is the button at the foot of the panel.
+
+          Not behind the disclosure either, because it is not a refinement of the
+          instant: it decides what is laid on it, and the boards answer
+          different shapes of question. The options say what they are **for**
+          and not what they are called — somebody arriving with a question
+          recognises the shape of their own, where `Qi Men` and `Liu Ren` are
+          two words they have no way to weigh.
         -->
-        <label class="birthField date">
-          {t('consult.year')}
-          <input type="number" inputmode="numeric" min="1" max="9999" bind:value={year} />
-        </label>
-        <p class="note">{t('consult.yearNote')}</p>
-      {:else}
-      <MomentForm
-        {t}
-        when={laidOnABirth ? 'fields' : 'options'}
-        openLegend={laidOnABirth ? 'form.group.birth' : 'form.group.standing'}
-        bind:date={moment.date}
-        bind:time={moment.time}
-        bind:place={asked.place}
-        bind:latitude={asked.latitude}
-        bind:longitude={asked.longitude}
-        bind:timezone={asked.timezone}
-        bind:trueSolarTime={asked.trueSolarTime}
-        bind:dayBoundary={asked.dayBoundary}
-        bind:method={asked.method}
-        bind:yuan={asked.yuan}
-        extraLegend={instrument.takesBirth ? 'consult.birth' : undefined}
-        extraSet={instrument.takesBirth && born ? 1 : 0}
-      >
-        <!-- The birth, under the same disclosure as the options and above the
-             way the moment is read: it is an addition to a consultation and
-             never a requirement, and the form read to the button has one thing
-             in it, which is the question. -->
-        {#snippet extra()}
-          <!--
-            The birth, offered under one instrument and not the other.
+        <!--
+          Six of them, and no longer a `select` nor a column of lines.
 
-            Under Qi Men it places a 年命 — a person is not in that chart at
-            all until they are put in it. Under Liu Ren it is not offered, and
-            structurally rather than cautiously: the querent is already there,
-            standing on the day stem, and a 本命 beside it would be a second
-            name for one person. Two names for one person is how a reading
-            acquires a relation that was never there.
-          -->
-          {#if instrument.takesBirth}
-          <label class="birthField date">
-            {t('consult.birthDate')}
-            <!-- What the browser knows to fill in, if it is this reader's own
-                 birth and they have told it once. -->
-            <input type="date" autocomplete="bday" bind:value={born} />
+          A `select` gave one line to an option and showed one at a time, which
+          held while there were two and stopped holding at five: a reader who
+          knows none of these arts is choosing between descriptions, and
+          descriptions have to be read side by side to be weighed. Radios in a
+          column showed all six at once and only half solved it — six sentences
+          stacked one under the other are still read *down*, and each of them had
+          to carry the errand and the name of the art on the same line, behind an
+          em dash, wrapping wherever the width happened to fall.
+
+          A card holds two lines, so the two things stop competing for one: the
+          name at the head of it — 奇門遁甲 Qí Mén Dùn Jiǎ, which is not a locale
+          and now lives in `instruments.ts` rather than twice in the catalogs —
+          and the errand under it.
+
+          **The name is first in the order and second in the weight, and that is
+          what keeps it inside the rule it looks like it breaks.** CLAUDE.md holds
+          that what a reader operates leads in their own language, and an option
+          whose face is a glyph is one nobody can choose on purpose. What that
+          rule is written against is a card that says 太乙神數 and stops. Here the
+          name is set where a kicker goes and in the quiet register, and the line
+          in ink — the one the eye lands on and the one somebody is actually
+          deciding between — is «come sta un anno, per tutti quelli che ci stanno
+          dentro». Reading order says which thing this is; ink says which thing to
+          read. A reader with no Chinese still chooses on the errand, and one who
+          knows the six arts finds them where a list of six names is scanned,
+          which is down the left edge and at the top of each card.
+
+          **They are cards and not buttons, and the radio stays drawn on them.**
+          This page has exactly one press and it is the one that casts the board;
+          the instrument is chosen *before* it and never after. Six things with
+          the air of the pressable, sitting above the one control that actually
+          does something, would be six ways to wonder which of the seven casts.
+          A visible radio says «one of these, then press» in the one vocabulary
+          every reader already has — and it costs nothing, since the ring the
+          keyboard leaves is then the browser's own on a control that is really
+          there, rather than something reconstructed on a box that hides it.
+        -->
+        <fieldset class="instrument">
+          <legend>{t('form.instrument')}</legend>
+          <div class="choices">
+            {#each INSTRUMENTS as choice (choice.id)}
+              <label class="choice" class:chosen={instrumentId === choice.id}>
+                <input type="radio" name="instrument" value={choice.id} bind:group={instrumentId} />
+                <span class="glyph named">{choice.name.hanzi} {choice.name.pinyin}</span>
+                <span class="errand">{t(choice.option)}</span>
+              </label>
+            {/each}
+          </div>
+        </fieldset>
+
+        <!-- Above the moment and above the button, because that is the order:
+             the chart is cast for the instant the question is put. -->
+        <!--
+          What is being asked, under no heading at all.
+
+          A name over this and the choice above it would have to say «the
+          question, and which board» — over a field labelled «Your question» and
+          a group labelled «What kind of reading is it». Three ways of saying one
+          thing, which is what the panel's own heading was taken off for. The
+          lead line above the panel already says what the page is for, and these
+          are the fields that do it; what takes a name below is the circumstance,
+          which is a different kind of thing and reads as the step it is.
+        -->
+        <!--
+          Absent under a board of 命, rather than disabled or ignored.
+
+          Nothing is asked of those three, and a box standing empty over them
+          would be the page inviting exactly the thing the prompt refuses. Under
+          命 a topic names one of the seats the board prints — «my career» *is*
+          官祿宮 — and a reading that started from it would have reached a seat
+          without ever choosing one.
+        -->
+        <!--
+          The matter, under 天 and where the question stands under 卜.
+
+          It is **not** the question field relabelled, and the two are kept apart
+          in the state for the same reason they are kept apart here: a question
+          asks what will happen and puts the person asking inside a figure they
+          are not in, which is the one thing this board refuses outright. A matter
+          names what is being *looked at* — and naming two sides of it is what
+          lets the board's two counts be counts of anything at all.
+
+          Required, unlike the year beneath it. That looks like this page
+          contradicting itself and is the same rule one field over: what may be
+          empty is what has an honest default, and the year has one — the year
+          being lived. What the figure is read *for* has none, and a board of 天
+          laid on nothing produces a precise description of a figure that never
+          says «and so?». Which is what it produced before this field existed.
+
+          A label and a placeholder and nothing else. There was a note under it
+          saying the same three things a third time — not a question, not about
+          you, name two sides — and the placeholder already carries the shape
+          where the reader is looking when they start typing. Three ways of
+          saying one thing is what the panel's own heading was taken off for.
+        -->
+        <!-- `instrument.asks` in the guard rather than a non-null assertion under
+             it: the key rides on the descriptor beside the kind, so an instrument
+             that puts a field up is the same fact as one that says what to write
+             in it, and the narrowing is where `shown.plate` does it below. -->
+        {#if laidOnAYear && instrument.asks}
+          <label class="question">
+            {t('form.matter')}
+            <textarea bind:value={matter} rows="3" placeholder={t(instrument.asks)}></textarea>
           </label>
+        {/if}
+
+        {#if asking && instrument.asks}
+          <label class="question">
+            {t('form.question')}
+            <!-- Five lines rather than two. What is typed here is the one thing
+                 on the page the reader composes rather than picks, and a box the
+                 size of a caption says to keep it to a caption — when what makes
+                 a question readable is the circumstance around it. -->
+            <!--
+              The placeholder is the instrument's and not the field's, which is
+              why it is read off the descriptor rather than off a key written
+              here. Both boards of 卜 take a question and they take different
+              ones: 奇門 is asked about a thing to be done and the hour to do it
+              in, 六壬 about a situation already under way and the people in it.
+              A single «What are you asking?» over both was the field naming
+              itself a second time, and it left a reader who had just chosen
+              between two errands with nothing telling them what changed. The
+              card above says what the art is for; this says what to write.
+            -->
+            <textarea bind:value={question} rows="5" placeholder={t(instrument.asks)}></textarea>
+          </label>
+        {/if}
+
+        <!--
+          The moment, and where it stands depends on what it is.
+
+          Under a board of 卜 what a consultation needs is a question and
+          somewhere to stand: the hour pillar turns on the place, and there is no
+          default for it that would not be somebody else's city. The date and the
+          time go in the options and empty, because empty is the instant of the
+          press and that is the whole use of this section — a field filled in for
+          nine readers out of ten belongs where the tenth can find it.
+
+          Under a board of 命 that reverses, and `when` is the lever the component
+          already had for it. The moment *is* the input, so it stands in the open
+          with the place; and empty stops being the press, because a birth left
+          empty would be today's.
+
+          The pair binds through `moment`, which is the slot the kind names —
+          a birth and an instant-of-asking are different quantities, and a date
+          typed as one must never resurface meaning the other.
+
+          Under a board of 天 the whole component is **absent**, which is the one
+          thing `when` could not express. There is no instant here to put in the
+          open or under a disclosure, and no place either: a 年計 board is a
+          function of a year, and a field asking where you are standing would be
+          the page collecting a datum the board cannot use and the reader would
+          assume it had. What stands in its place is the one number below.
+        -->
+        {#if laidOnAYear}
+          <!--
+            The whole of the form under 天, and it is one field.
+
+            The section at `/[lang]/taiyi` says why a disclosure in front of a
+            single field is a door in front of a doorway; here the disclosure is
+            already the panel around everything, so what is left is the field, in
+            the open beside the instrument that asked for it. Empty is allowed and
+            means the year being lived — the note under it says so, because an
+            empty field that quietly means *now* is only obvious to whoever wrote
+            it.
+          -->
+          <div class="captioned">
+            <label class="birthField date">
+              {t('consult.year')}
+              <input type="number" inputmode="numeric" min="1" max="9999" bind:value={year} />
+            </label>
+            <p class="note">{t('consult.yearNote')}</p>
+          </div>
+        {:else}
+        <MomentForm
+          {t}
+          when={laidOnABirth ? 'fields' : 'options'}
+          openLegend={laidOnABirth ? 'form.group.birth' : 'form.group.standing'}
+          bind:date={moment.date}
+          bind:time={moment.time}
+          bind:place={asked.place}
+          bind:latitude={asked.latitude}
+          bind:longitude={asked.longitude}
+          bind:timezone={asked.timezone}
+          bind:trueSolarTime={asked.trueSolarTime}
+          bind:dayBoundary={asked.dayBoundary}
+          bind:method={asked.method}
+          bind:yuan={asked.yuan}
+          extraLegend={instrument.takesBirth ? 'consult.birth' : undefined}
+          extraSet={instrument.takesBirth && born ? 1 : 0}
+        >
+          <!-- The birth, under the same disclosure as the options and above the
+               way the moment is read: it is an addition to a consultation and
+               never a requirement, and the form read to the button has one thing
+               in it, which is the question. -->
+          {#snippet extra()}
+            <!--
+              The birth, offered under one instrument and not the other.
+
+              Under Qi Men it places a 年命 — a person is not in that chart at
+              all until they are put in it. Under Liu Ren it is not offered, and
+              structurally rather than cautiously: the querent is already there,
+              standing on the day stem, and a 本命 beside it would be a second
+              name for one person. Two names for one person is how a reading
+              acquires a relation that was never there.
+            -->
+            {#if instrument.takesBirth}
+            <label class="birthField date">
+              {t('consult.birthDate')}
+              <!-- What the browser knows to fill in, if it is this reader's own
+                   birth and they have told it once. -->
+              <input type="date" autocomplete="bday" bind:value={born} />
+            </label>
+            <label class="birthField">
+              {t('consult.birthGender')}
+              <select bind:value={gender} disabled={!born}>
+                <option value="">{t('form.gender.unset')}</option>
+                <option value="male">{t('form.gender.male')}</option>
+                <option value="female">{t('form.gender.female')}</option>
+              </select>
+            </label>
+            <p class="note">{t('consult.birthNote')}</p>
+            {/if}
+          {/snippet}
+        </MomentForm>
+        {/if}
+
+        <!--
+          The sex, in the open beside the birth and under one instrument only.
+
+          A third rule, agreeing with neither of the two above it: here it is not
+          an addition to a board cast for a question but a direction the board's
+          own cycles run in, and without it the 大運 are simply absent. So it
+          stands with the birth rather than under the options, where the same
+          field sits when dunjia reads it for a 行年. See `sentGender`.
+        -->
+        {#if laidOnABirth && instrument.takesGender}
           <label class="birthField">
-            {t('consult.birthGender')}
-            <select bind:value={gender} disabled={!born}>
+            {t('form.gender')}
+            <select bind:value={gender}>
               <option value="">{t('form.gender.unset')}</option>
               <option value="male">{t('form.gender.male')}</option>
               <option value="female">{t('form.gender.female')}</option>
             </select>
           </label>
-          <p class="note">{t('consult.birthNote')}</p>
-          {/if}
-        {/snippet}
-      </MomentForm>
-      {/if}
+        {/if}
 
-      <!--
-        The sex, in the open beside the birth and under one instrument only.
+        <!--
+          One thing to do at a time, and the box says which.
 
-        A third rule, agreeing with neither of the two above it: here it is not
-        an addition to a board cast for a question but a direction the board's
-        own cycles run in, and without it the 大運 are simply absent. So it
-        stands with the birth rather than under the options, where the same
-        field sits when dunjia reads it for a 行年. See `sentGender`.
-      -->
-      {#if laidOnABirth && instrument.takesGender}
-        <label class="birthField">
-          {t('form.gender')}
-          <select bind:value={gender}>
-            <option value="">{t('form.gender.unset')}</option>
-            <option value="male">{t('form.gender.male')}</option>
-            <option value="female">{t('form.gender.female')}</option>
-          </select>
-        </label>
-      {/if}
-
-      <!--
-        One thing to do at a time, and the box says which.
-
-        Nothing cast, or a field moved since: the only thing to press is the
-        casting. Cast and standing — which is what a panel reopened over an
-        answer holds — the two ways out stand beside it, and the casting stays
-        quiet, still the way to put the same question again at a later
-        instant. Which is a second consultation, rather than the same one seen
-        twice.
-      -->
-      <div class="actions">
-        <SubmitButton
-          {t}
-          label={asking ? 'consult.cast' : 'consult.lay'}
-          {busy}
-          needed={needed ?? undefined}
-          quiet={chart !== undefined && !spent}
-        />
+          Nothing cast, or a field moved since: the only thing to press is the
+          casting. Cast and standing — which is what a panel reopened over an
+          answer holds — the two ways out stand beside it, and the casting stays
+          quiet, still the way to put the same question again at a later
+          instant. Which is a second consultation, rather than the same one seen
+          twice.
+        -->
+        <div class="captioned">
+          <div class="actions">
+            <SubmitButton
+              {t}
+              label={asking ? 'consult.cast' : 'consult.lay'}
+              {busy}
+              needed={needed ?? undefined}
+              quiet={chart !== undefined && !spent}
+            />
+          </div>
+          <p class="note wide">{t('form.promptPrivacy')}</p>
+        </div>
       </div>
-      <p class="note wide">{t('form.promptPrivacy')}</p>
     {/snippet}
 
     <!-- With the fields shut, the bar says which instant answered and where
@@ -1172,26 +1201,51 @@
   /* One sentence, so it takes the width it is given: the measure that keeps a
      paragraph readable is about coming back from one line to the next, and
      there is no next one here. */
+  /* The measure the asking is read at, and the answer's header with it: one
+     number, because the two boxes have to land on the same two edges. It is
+     where every field in here already stops, so the column is drawn on a line
+     that is really there rather than near it. */
+  article { --ask: 46rem; --step: 1.5rem; }
+  /* Sized and placed, never an auto margin: this is an item of the panel's own
+     grid, and an auto margin there turns stretch off and leaves the box as
+     wide as its content — which for a grid of `auto-fit` cards is one card. */
+  .column {
+    display: grid;
+    /* A step wider than the panel's own, because what is stacked here are the
+       three things asked and not three fields: which board, what is being
+       asked, and where it is asked from. Proximity is what says which lines
+       belong together, and at one step for everything the reader was given
+       nothing to group them by. What has to stay tight stays tight inside its
+       own box — see `.captioned`. */
+    gap: var(--step);
+    inline-size: min(100%, var(--ask));
+    justify-self: center;
+  }
+  /* A field and the line that says what leaving it empty means; a button and
+     the line that says what pressing it sends. Neither line is a step of the
+     form, and at the column's own gap both read as one. */
+  .captioned { display: grid; gap: 0.4rem; }
   .lead { margin: 0 0 1rem; color: var(--faint); font-size: 0.9rem; line-height: 1.55; }
   .note { margin: 0; color: var(--faint); font-size: 0.8rem; line-height: 1.55; max-width: 62ch; }
   /*
    * The measure for prose, lifted for the one line that is not prose.
    *
-   * 62ch is what a paragraph wants, and inside a box as wide as the page it
-   * broke this sentence in a place nothing on screen accounts for — narrower
-   * than the field above it, at a width the reader can neither see nor guess
-   * at. It is a caption under the buttons and is read at a glance rather than
-   * through, so it takes the box: one line where there is room for one, and a
-   * break at the edge of something visible where there is not.
+   * 62ch is what a paragraph wants, and it breaks this sentence well short of
+   * the column — narrower than the button above it, at a width the reader can
+   * neither see nor guess at. It is a caption and is read at a glance rather
+   * than through, so it takes the column instead: one line where there is
+   * room for one, and a break at an edge that is really there where there is
+   * not.
    */
   .wide { max-width: none; }
 
-  .question { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); max-width: 46rem; }
-  /* Six descriptions, read side by side rather than one at a time. Wider than
-     the column of lines it replaces, because two columns of half the measure
-     are still two sentences the eye holds — where six sentences down a single
-     column are a list, and a list is read in order rather than compared. */
-  .instrument { display: grid; gap: 0.4rem; border: 0; padding: 0; margin: 0; max-width: 46rem; }
+  .question { display: grid; gap: 0.2rem; font-size: 0.9em; color: var(--faint); }
+  /* Six descriptions, read side by side rather than one at a time: two columns
+     of half the measure are still two sentences the eye holds, where six
+     sentences down a single column are a list, and a list is read in order
+     rather than compared. No measure of its own — the column has it, and a
+     second copy of one number is the one that goes stale. */
+  .instrument { display: grid; gap: 0.4rem; border: 0; padding: 0; margin: 0; }
   .instrument legend { padding: 0; font-size: 0.9em; color: var(--faint); }
   /* `auto-fit` and not a media query: what decides how many columns fit is the
      panel, which is narrower than the window by its own padding and narrower
@@ -1271,12 +1325,20 @@
    * does the smaller job of saying which question the answer belongs to, now
    * that the field it was typed into has folded away.
    */
-  .posed { margin: 0; }
+  /* On the axis the fields were filled in on, and centred for the same reason
+     the board under it is. Left at the far margin it was the one thing on the
+     page off that axis — and it is the question, which is the last thing that
+     should look like it belongs to something else.
+
+     Sized and placed rather than given an auto margin: a grid item with one of
+     those turns stretch off and comes out as wide as its own content, which
+     for a question of four words is four words centred like a caption. The
+     words inside stay left-aligned; it is the box that moves. */
+  .posed { margin: 0; inline-size: min(100%, var(--ask)); justify-self: center; }
   .asked {
     margin: 0 0 0.3rem;
     font-size: 1.15rem;
     line-height: 1.4;
-    max-width: 46rem;
     /* Typed by hand and set as typed: a question written over several lines
        keeps them, and a run of spaces is not collapsed into one. */
     white-space: pre-wrap;

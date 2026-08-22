@@ -302,9 +302,18 @@
   </details>
 
 <style>
-  /* Named like the groups under the disclosure, so a panel that has both
-     reads as one form rather than as a box beside some loose fields. */
-  fieldset.open { margin: 0 0 0.9rem; }
+  /*
+   * Named like the groups under the disclosure, so a panel that has both reads
+   * as one form rather than as a box beside some loose fields.
+   *
+   * No margin under it, and the reason is that this component has no single
+   * root: the group in the open and the fold below it are two items of
+   * whichever grid the page stacks them in, and that grid's gap is already
+   * between them. A margin here was that gap counted twice — which is nothing
+   * much where three fields stand over a fold, and a hole where the open group
+   * holds one search box and the fold is one small line.
+   */
+  fieldset.open { margin: 0; }
   /*
    * As many columns as there is room for, and no breakpoint anywhere.
    *
