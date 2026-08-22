@@ -1,7 +1,7 @@
 import { CONTROLS } from './bazi/relations.js';
 import { horseBranch } from './dunjia/horse.js';
-import { ChartError } from './errors.js';
 import { BRANCHES, STEMS, decade, type Branch, type Ganzhi, type Stem } from './ganzhi.js';
+import { LIUREN_PARAMETERS, requireImplemented } from './parameters.js';
 import { SOLAR_TERMS, type SolarTermDefinition, type SolarTermId } from './solar-terms.js';
 import type { Element } from './types.js';
 
@@ -127,13 +127,7 @@ const YUEJIANG: Record<string, { id: YuejiangId; hanzi: string; pinyin: string; 
  * in force already answers this.
  */
 export function yuejiangOf(term: SolarTermDefinition, options: LiurenOptions): Yuejiang {
-  if (options.yuejiang !== 'zhongqi') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
-      option: 'yuejiang',
-      value: options.yuejiang,
-      implemented: 'zhongqi',
-    });
-  }
+  requireImplemented(LIUREN_PARAMETERS, options, 'yuejiang');
   const qi =
     term.kind === 'qi'
       ? term
@@ -343,13 +337,11 @@ export function liurenBoard(
   request: { term: SolarTermDefinition; day: Ganzhi; hour: Branch },
   options: LiurenOptions,
 ): LiurenBoard {
-  if (options.zhouye !== 'branch') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
-      option: 'zhouye',
-      value: options.zhouye,
-      implemented: 'branch',
-    });
-  }
+  // The noble as well as the day's cut, though both of the noble's verses are
+  // computed: `GUIREN` is indexed by the value, so one nobody declared came
+  // out as a missing row and a TypeError further down rather than as the
+  // refusal it is.
+  requireImplemented(LIUREN_PARAMETERS, options, 'zhouye', 'guiren');
 
   const yuejiang = yuejiangOf(request.term, options);
   const { day, hour } = request;

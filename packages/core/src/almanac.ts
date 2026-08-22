@@ -1,4 +1,3 @@
-import { ChartError } from './errors.js';
 import { sunCrossing, type EphemerisContext } from './ephemeris.js';
 import { nayin } from './bazi/nayin.js';
 import {
@@ -12,6 +11,7 @@ import {
   type Stem,
 } from './ganzhi.js';
 import { PALACES, type Palace } from './dunjia/palaces.js';
+import { CHART_PARAMETERS, requireImplemented } from './parameters.js';
 import { VALENCE, type Valence, type ValenceId } from './dunjia/patterns.js';
 import { calendarDayNumber, CALENDAR_ZONE } from './lunar.js';
 import { fromJulianDay } from './time.js';
@@ -878,13 +878,7 @@ export function almanacAt(
   options: Pick<ChartOptions, 'shensha'>,
   context: EphemerisContext,
 ): Almanac {
-  if (options.shensha !== 'xieji') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
-      option: 'shensha',
-      value: options.shensha,
-      implemented: 'xieji',
-    });
-  }
+  requireImplemented(CHART_PARAMETERS, options, 'shensha');
 
   const dayNumber = calendarDayNumber(julianDayUT);
   const jie = monthOpeningOn(julianDayUT, dayNumber, context);

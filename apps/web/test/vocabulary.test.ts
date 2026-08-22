@@ -1,4 +1,5 @@
 import {
+  CHART_PARAMETERS,
   GATES,
   PALACES as ENGINE_PALACES,
   PATTERN_IDS,
@@ -7,6 +8,7 @@ import {
   SPIRITS_YIN,
   SPIRIT_IDS as ENGINE_SPIRIT_IDS,
   STARS,
+  implementedValues,
   strengthOf,
 } from '@shipan/core';
 import { STRENGTH_MARKS } from '@shipan/plate';
@@ -24,6 +26,7 @@ import {
   STAR_IDS,
   STRENGTHS,
   STRENGTH_KEY,
+  YUAN_READINGS,
 } from '../src/lib/vocabulary';
 
 /**
@@ -145,8 +148,22 @@ describe('the identifiers a form offers', () => {
     // exclusion — maoshan is in the type and deliberately not offered,
     // because the engine refuses it and an option that can only come back
     // as an error is not a choice. The API still accepts it and answers 501.
+    //
+    // Asked of the registry rather than of a list written here. This test
+    // used to say `['chaibu', 'zhirun']`, which is the same sentence the
+    // engine's refusal and `docs/parameters.md` were each saying separately:
+    // three copies, and the day one of them changed, two would have gone on
+    // agreeing with each other. The day 飛盤 or 茅山 is implemented, the form
+    // gains it here and this line does not move.
     const offered: ChartOptions['method'][] = [...METHODS];
-    expect(offered).toEqual(['chaibu', 'zhirun']);
+    expect(offered).toEqual(implementedValues(CHART_PARAMETERS.method));
     expect(offered).not.toContain('maoshan');
+  });
+
+  it('offer both readings of the yuan, which the engine computes both of', () => {
+    // A form that dropped one would make a divergence the sources are split
+    // over unaskable, and it moves the ju on most days.
+    const offered: ChartOptions['yuan'][] = [...YUAN_READINGS];
+    expect(offered).toEqual(implementedValues(CHART_PARAMETERS.yuan));
   });
 });

@@ -1,9 +1,9 @@
 import { GATES, type Gate } from './dunjia/plates.js';
 import { PALACES, type Direction, type Palace, type PalaceId } from './dunjia/palaces.js';
 import { VALENCE, type Valence } from './dunjia/patterns.js';
-import { ChartError } from './errors.js';
 import type { EphemerisContext } from './ephemeris.js';
 import { BRANCHES, ganzhiOf, yearGanzhi, type Branch, type Ganzhi } from './ganzhi.js';
+import { TAIYI_PARAMETERS, requireImplemented } from './parameters.js';
 import { lastCrossingBefore } from './pillars.js';
 import { fromJulianDay } from './time.js';
 import type { Element } from './types.js';
@@ -505,31 +505,11 @@ const GATE_ORDER: readonly Gate[] = (
  * 2026.
  */
 export function taiyiBoard(request: { year: number }, options: TaiyiOptions): TaiyiBoard {
-  if (options.epoch !== 'jinjing') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
-      option: 'epoch',
-      value: options.epoch,
-      implemented: 'jinjing',
-    });
-  }
-  if (options.ji !== 'nianji') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
-      option: 'ji',
-      value: options.ji,
-      implemented: 'nianji',
-    });
-  }
-  // Refused here as well as in `taiyiYearOf`, though the year arrives already
-  // decided and this function never cuts one: a board carries the options that
-  // produced it, and one that recorded a boundary nothing here can compute
-  // would be a board saying it was cut somewhere it was not.
-  if (options.yearBoundary !== 'lichun') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
-      option: 'yearBoundary',
-      value: options.yearBoundary,
-      implemented: 'lichun',
-    });
-  }
+  // The boundary is refused here as well as in `taiyiYearOf`, though the year
+  // arrives already decided and this function never cuts one: a board carries
+  // the options that produced it, and one that recorded a boundary nothing
+  // here can compute would be a board saying it was cut somewhere it was not.
+  requireImplemented(TAIYI_PARAMETERS, options, 'epoch', 'ji', 'yearBoundary');
 
   const { year } = request;
   const elapsed = year - ANCHOR_YEAR;
@@ -1063,13 +1043,7 @@ export function taiyiYearOf(
   moment: { civilYear: number; sui: Ganzhi },
   options: TaiyiOptions,
 ): number {
-  if (options.yearBoundary !== 'lichun') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
-      option: 'yearBoundary',
-      value: options.yearBoundary,
-      implemented: 'lichun',
-    });
-  }
+  requireImplemented(TAIYI_PARAMETERS, options, 'yearBoundary');
   const { civilYear, sui } = moment;
   return sui.index === yearGanzhi(civilYear).index ? civilYear : civilYear - 1;
 }
@@ -1100,12 +1074,6 @@ export function taiyiYearAt(
   options: TaiyiOptions,
   context: EphemerisContext,
 ): number {
-  if (options.yearBoundary !== 'lichun') {
-    throw new ChartError('OPTION_NOT_IMPLEMENTED', {
-      option: 'yearBoundary',
-      value: options.yearBoundary,
-      implemented: 'lichun',
-    });
-  }
+  requireImplemented(TAIYI_PARAMETERS, options, 'yearBoundary');
   return fromJulianDay(lastCrossingBefore(315, julianDayUT, context), 'UTC').year;
 }

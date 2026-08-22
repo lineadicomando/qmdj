@@ -1,4 +1,4 @@
-import { ChartError } from '../errors.js';
+import { CHART_PARAMETERS, requireImplemented } from '../parameters.js';
 import type { Moment } from '../pillars.js';
 import { SOLAR_TERMS, type SolarTermId } from '../solar-terms.js';
 import type { ChartOptions } from '../types.js';
@@ -117,6 +117,14 @@ const FUTOU_CYCLE = 15;
  * looks right and is not.
  */
 export function determineJu(moment: Moment, options: ChartOptions): Ju {
+  // Before either branch, and for the yuan as well as for the method: both
+  // are read below by asking whether the value is the one this engine has a
+  // branch for, and a value it has never heard of would otherwise take the
+  // other branch rather than an error — which is how `yuan` came to answer an
+  // unrecognised reading with the term's, silently. The method keeps its own
+  // error code, which `CHART_PARAMETERS` records and this call honours.
+  requireImplemented(CHART_PARAMETERS, options, 'method', 'yuan');
+
   const daysIntoTerm = moment.julianDayUT - moment.solarTerm.julianDayUT;
 
   if (options.method === 'zhirun') {
@@ -135,10 +143,6 @@ export function determineJu(moment: Moment, options: ChartOptions): Ju {
       },
       leap: assignment.leap,
     };
-  }
-
-  if (options.method !== 'chaibu') {
-    throw new ChartError('METHOD_NOT_IMPLEMENTED', { method: options.method });
   }
 
   // Two readings, and the term is the same under both: only where the yuan
