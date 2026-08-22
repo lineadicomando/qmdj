@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import {
+  BRANCHES,
   CHART_PARAMETERS,
   DEFAULT_LIUREN_OPTIONS,
   DEFAULT_NIANMING_OPTIONS,
@@ -14,7 +15,9 @@ import {
   NIANMING_PARAMETERS,
   PARAMETERS,
   QIZHENG_PARAMETERS,
+  SOLAR_TERMS,
   TAIYI_PARAMETERS,
+  ZIWEI_HOUSES,
   ZIWEI_PARAMETERS,
   implementedValues,
   requireImplemented,
@@ -231,17 +234,52 @@ describe('docs/parameters.md', () => {
 
   it('carries the name each value bears in Chinese, where it bears one', () => {
     // The hanzi are on the page and in the registry, and the page is where a
-    // reader meets them. A value renamed in one and not the other is the
-    // drift this pair of files exists to prevent.
+    // reader of the repository meets them. A value renamed in one and not the
+    // other is the drift this pair of files exists to prevent. The *reading*
+    // is not asked of the page: `docs/` cites Chinese by its glyphs
+    // throughout, and the pair that must never come apart is the one the
+    // engine hands out — which `pinyin.test.ts` holds.
     for (const parameter of PARAMETERS) {
       for (const value of parameter.values) {
-        if (!value.hanzi) continue;
+        if (!value.name) continue;
         expect(
-          PAGE.includes(value.hanzi),
-          `docs/parameters.md never writes ${value.hanzi}, which \`${String(value.id)}\` names.`,
+          PAGE.includes(value.name.hanzi),
+          `docs/parameters.md never writes ${value.name.hanzi}, ` +
+            `which \`${String(value.id)}\` names.`,
         ).toBe(true);
       }
     }
+  });
+});
+
+describe('the readings the values carry', () => {
+  it('agrees with the engine wherever the same name is named twice', () => {
+    // A reading is data written by hand, and the reader it exists for cannot
+    // catch it. Four of these names are already in the engine's own tables —
+    // two solar terms, two branches and a palace of 紫微斗數 — so those four
+    // are not an opinion here: they are the same fact, and it must be the
+    // same word. `pinyin.test.ts` covers the shape of all of them; this
+    // covers the ones that can be checked against something.
+    const elsewhere = new Map<string, string>([
+      ...SOLAR_TERMS.map((term) => [term.hanzi, term.pinyin] as [string, string]),
+      ...BRANCHES.map((branch) => [branch.hanzi, branch.pinyin] as [string, string]),
+      ...ZIWEI_HOUSES.map((house) => [house.hanzi, house.pinyin] as [string, string]),
+    ]);
+
+    const checked: string[] = [];
+    for (const parameter of PARAMETERS) {
+      for (const value of parameter.values) {
+        const known = value.name && elsewhere.get(value.name.hanzi);
+        if (!known || !value.name) continue;
+        expect(value.name.pinyin, value.name.hanzi).toBe(known);
+        checked.push(value.name.hanzi);
+      }
+    }
+
+    // 立春 and 冬至 as boundaries, 丑 and 未 as the noble's seats, 命宮 as
+    // where a decade may open. An empty run would mean the values had lost
+    // their names and this test had stopped saying anything.
+    expect([...new Set(checked)].sort()).toEqual(['丑', '冬至', '命宮', '未', '立春']);
   });
 });
 

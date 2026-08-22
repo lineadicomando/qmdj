@@ -71,19 +71,24 @@ export type ParameterBoard =
 /**
  * One value a parameter can take.
  *
- * `hanzi` is present where the value **names** something — a method, a
+ * `name` is present where the value **names** something — a method, a
  * register, a book, a boundary — and absent where the identifier is already
- * an English word for a rule (`midnight`, `ascendant`, `off`). It carries no
- * reading beside it, which is the one place this engine's names do not: an
- * option value is named by its identifier, and that identifier already *is*
- * the toneless reading — `chaibu` is 拆補, `futou` is 符頭, `zhongqi` is 中氣.
- * A `pinyin` field here would be the same word a third time, tone marks
- * apart, and for the values whose identifier is a cut of the name — `zhuan`
- * for 轉盤 — it would print a reading the identifier does not match.
+ * an English word for a rule (`midnight`, `ascendant`, `off`).
+ *
+ * **It is a pair and never a glyph alone.** The identifier is not the
+ * reading, however often it looks like one: `xieji` is 協紀辨方書 and says
+ * two of its five syllables, `quanshu` is 紫微斗數全書 and says two of six,
+ * `zhuan` is 轉盤 and says one of two. A reader who does not read Chinese
+ * meets a shape they cannot pronounce, look up, or ask anybody about —
+ * which is precisely the reader every surface here is built for. So the
+ * reading travels with the glyph as it does for every other named thing in
+ * this engine, and `pinyin.test.ts` holds these to the same structural check
+ * as the gates and the stars: one toned syllable per character, one word,
+ * lower case.
  */
 export interface ParameterValue<V> {
   readonly id: V;
-  readonly hanzi?: string;
+  readonly name?: { readonly hanzi: string; readonly pinyin: string };
   /**
    * Whether the engine computes it.
    *
@@ -130,9 +135,9 @@ export const CHART_PARAMETERS: ParameterSet<ChartOptions> = {
   method: {
     board: 'qimen',
     values: [
-      { id: 'chaibu', hanzi: '拆補', implemented: true },
-      { id: 'zhirun', hanzi: '置閏', implemented: true },
-      { id: 'maoshan', hanzi: '茅山', implemented: false },
+      { id: 'chaibu', name: { hanzi: '拆補', pinyin: 'chāibǔ' }, implemented: true },
+      { id: 'zhirun', name: { hanzi: '置閏', pinyin: 'zhìrùn' }, implemented: true },
+      { id: 'maoshan', name: { hanzi: '茅山', pinyin: 'máoshān' }, implemented: false },
     ],
     default: 'chaibu',
     refusal: 'METHOD_NOT_IMPLEMENTED',
@@ -141,15 +146,15 @@ export const CHART_PARAMETERS: ParameterSet<ChartOptions> = {
     board: 'qimen',
     values: [
       { id: 'term', implemented: true },
-      { id: 'futou', hanzi: '符頭', implemented: true },
+      { id: 'futou', name: { hanzi: '符頭', pinyin: 'fútóu' }, implemented: true },
     ],
     default: 'term',
   },
   plate: {
     board: 'qimen',
     values: [
-      { id: 'zhuan', hanzi: '轉盤', implemented: true },
-      { id: 'fei', hanzi: '飛盤', implemented: false },
+      { id: 'zhuan', name: { hanzi: '轉盤', pinyin: 'zhuànpán' }, implemented: true },
+      { id: 'fei', name: { hanzi: '飛盤', pinyin: 'fēipán' }, implemented: false },
     ],
     default: 'zhuan',
   },
@@ -164,18 +169,18 @@ export const CHART_PARAMETERS: ParameterSet<ChartOptions> = {
   system: {
     board: 'qimen',
     values: [
-      { id: 'shijia', hanzi: '時家', implemented: true },
-      { id: 'rijia', hanzi: '日家', implemented: false },
-      { id: 'yuejia', hanzi: '月家', implemented: false },
-      { id: 'nianjia', hanzi: '年家', implemented: false },
+      { id: 'shijia', name: { hanzi: '時家', pinyin: 'shíjiā' }, implemented: true },
+      { id: 'rijia', name: { hanzi: '日家', pinyin: 'rìjiā' }, implemented: false },
+      { id: 'yuejia', name: { hanzi: '月家', pinyin: 'yuèjiā' }, implemented: false },
+      { id: 'nianjia', name: { hanzi: '年家', pinyin: 'niánjiā' }, implemented: false },
     ],
     default: 'shijia',
   },
   trueSolarTime: {
     board: 'pillars',
-    // The one parameter here whose values are not identifiers, and the
-    // absence of `hanzi` on them is not an omission: a correction applied or
-    // not applied names no school.
+    // The one parameter here whose values are not identifiers, and their
+    // having no name is not an omission: a correction applied or not applied
+    // names no school.
     values: [
       { id: true, implemented: true },
       { id: false, implemented: true },
@@ -185,22 +190,24 @@ export const CHART_PARAMETERS: ParameterSet<ChartOptions> = {
   yearBoundary: {
     board: 'pillars',
     values: [
-      { id: 'lichun', hanzi: '立春', implemented: true },
-      { id: 'chunjie', hanzi: '正月初一', implemented: true },
+      { id: 'lichun', name: { hanzi: '立春', pinyin: 'lìchūn' }, implemented: true },
+      { id: 'chunjie', name: { hanzi: '正月初一', pinyin: 'zhēngyuèchūyī' }, implemented: true },
     ],
     default: 'lichun',
   },
   dayBoundary: {
     board: 'pillars',
     values: [
-      { id: 'zishi', hanzi: '子時', implemented: true },
+      { id: 'zishi', name: { hanzi: '子時', pinyin: 'zǐshí' }, implemented: true },
       { id: 'midnight', implemented: true },
     ],
     default: 'zishi',
   },
   shensha: {
     board: 'almanac',
-    values: [{ id: 'xieji', hanzi: '協紀辨方書', implemented: true }],
+    values: [
+      { id: 'xieji', name: { hanzi: '協紀辨方書', pinyin: 'xiéjìbiànfāngshū' }, implemented: true },
+    ],
     default: 'xieji',
   },
 };
@@ -209,17 +216,17 @@ export const LIUREN_PARAMETERS: ParameterSet<LiurenOptions> = {
   yuejiang: {
     board: 'liuren',
     values: [
-      { id: 'zhongqi', hanzi: '中氣', implemented: true },
-      { id: 'jieqi', hanzi: '節氣', implemented: false },
-      { id: 'true', hanzi: '太陽實躔', implemented: false },
+      { id: 'zhongqi', name: { hanzi: '中氣', pinyin: 'zhōngqì' }, implemented: true },
+      { id: 'jieqi', name: { hanzi: '節氣', pinyin: 'jiéqì' }, implemented: false },
+      { id: 'true', name: { hanzi: '太陽實躔', pinyin: 'tàiyángshíchán' }, implemented: false },
     ],
     default: 'zhongqi',
   },
   guiren: {
     board: 'liuren',
     values: [
-      { id: 'chou', hanzi: '丑', implemented: true },
-      { id: 'wei', hanzi: '未', implemented: true },
+      { id: 'chou', name: { hanzi: '丑', pinyin: 'chǒu' }, implemented: true },
+      { id: 'wei', name: { hanzi: '未', pinyin: 'wèi' }, implemented: true },
     ],
     default: 'chou',
   },
@@ -237,9 +244,9 @@ export const QIZHENG_PARAMETERS: ParameterSet<QizhengOptions> = {
   xiudu: {
     board: 'qizheng',
     values: [
-      { id: 'juxing', hanzi: '距星', implemented: true },
-      { id: 'shixian', hanzi: '時憲曆', implemented: false },
-      { id: 'shoushi', hanzi: '授時曆', implemented: false },
+      { id: 'juxing', name: { hanzi: '距星', pinyin: 'jùxīng' }, implemented: true },
+      { id: 'shixian', name: { hanzi: '時憲曆', pinyin: 'shíxiànlì' }, implemented: false },
+      { id: 'shoushi', name: { hanzi: '授時曆', pinyin: 'shòushílì' }, implemented: false },
     ],
     default: 'juxing',
   },
@@ -247,7 +254,7 @@ export const QIZHENG_PARAMETERS: ParameterSet<QizhengOptions> = {
     board: 'qizheng',
     values: [
       { id: 'off', implemented: true },
-      { id: 'yinianyisu', hanzi: '一年一宿', implemented: false },
+      { id: 'yinianyisu', name: { hanzi: '一年一宿', pinyin: 'yīniányīxiù' }, implemented: false },
     ],
     default: 'off',
   },
@@ -262,7 +269,7 @@ export const QIZHENG_PARAMETERS: ParameterSet<QizhengOptions> = {
   minggong: {
     board: 'qizheng',
     values: [
-      { id: 'yuejiang', hanzi: '月將', implemented: true },
+      { id: 'yuejiang', name: { hanzi: '月將', pinyin: 'yuèjiàng' }, implemented: true },
       { id: 'ascendant', implemented: false },
     ],
     default: 'yuejiang',
@@ -270,8 +277,8 @@ export const QIZHENG_PARAMETERS: ParameterSet<QizhengOptions> = {
   gong: {
     board: 'qizheng',
     values: [
-      { id: 'zhongqi', hanzi: '中氣', implemented: true },
-      { id: 'ci', hanzi: '次', implemented: false },
+      { id: 'zhongqi', name: { hanzi: '中氣', pinyin: 'zhōngqì' }, implemented: true },
+      { id: 'ci', name: { hanzi: '次', pinyin: 'cì' }, implemented: false },
     ],
     default: 'zhongqi',
   },
@@ -280,7 +287,13 @@ export const QIZHENG_PARAMETERS: ParameterSet<QizhengOptions> = {
 export const TAIYI_PARAMETERS: ParameterSet<TaiyiOptions> = {
   epoch: {
     board: 'taiyi',
-    values: [{ id: 'jinjing', hanzi: '太乙金鏡式經', implemented: true }],
+    values: [
+      {
+        id: 'jinjing',
+        name: { hanzi: '太乙金鏡式經', pinyin: 'tàiyǐjīnjìngshìjīng' },
+        implemented: true,
+      },
+    ],
     default: 'jinjing',
   },
   // 月計, 日計 and 時計 are the registers this one is the first of, and they
@@ -290,15 +303,15 @@ export const TAIYI_PARAMETERS: ParameterSet<TaiyiOptions> = {
   // reckoning of it. See `docs/parameters.md`.
   ji: {
     board: 'taiyi',
-    values: [{ id: 'nianji', hanzi: '年計', implemented: true }],
+    values: [{ id: 'nianji', name: { hanzi: '年計', pinyin: 'niánjì' }, implemented: true }],
     default: 'nianji',
   },
   yearBoundary: {
     board: 'taiyi',
     values: [
-      { id: 'lichun', hanzi: '立春', implemented: true },
-      { id: 'dongzhi', hanzi: '冬至', implemented: false },
-      { id: 'chunjie', hanzi: '正月初一', implemented: false },
+      { id: 'lichun', name: { hanzi: '立春', pinyin: 'lìchūn' }, implemented: true },
+      { id: 'dongzhi', name: { hanzi: '冬至', pinyin: 'dōngzhì' }, implemented: false },
+      { id: 'chunjie', name: { hanzi: '正月初一', pinyin: 'zhēngyuèchūyī' }, implemented: false },
     ],
     default: 'lichun',
   },
@@ -326,7 +339,9 @@ export const ZIWEI_PARAMETERS: ParameterSet<Omit<ZiweiOptions, 'gender'>> = {
   },
   sihua: {
     board: 'ziwei',
-    values: [{ id: 'quanshu', hanzi: '紫微斗數全書', implemented: true }],
+    values: [
+      { id: 'quanshu', name: { hanzi: '紫微斗數全書', pinyin: 'zǐwēidǒushùquánshū' }, implemented: true },
+    ],
     default: 'quanshu',
   },
   huoling: {
@@ -341,7 +356,7 @@ export const ZIWEI_PARAMETERS: ParameterSet<Omit<ZiweiOptions, 'gender'>> = {
     board: 'ziwei',
     values: [
       { id: 'adjacent', implemented: true },
-      { id: 'ming', hanzi: '命宮', implemented: false },
+      { id: 'ming', name: { hanzi: '命宮', pinyin: 'mìnggōng' }, implemented: false },
     ],
     default: 'adjacent',
   },
@@ -352,8 +367,8 @@ export const ZIWEI_PARAMETERS: ParameterSet<Omit<ZiweiOptions, 'gender'>> = {
     // for a birth in the weeks between them, so neither could be chosen on
     // its behalf.
     values: [
-      { id: 'lichun', hanzi: '立春', implemented: true },
-      { id: 'chunjie', hanzi: '正月初一', implemented: true },
+      { id: 'lichun', name: { hanzi: '立春', pinyin: 'lìchūn' }, implemented: true },
+      { id: 'chunjie', name: { hanzi: '正月初一', pinyin: 'zhēngyuèchūyī' }, implemented: true },
     ],
     default: 'chunjie',
   },
@@ -363,7 +378,7 @@ export const NIANMING_PARAMETERS: ParameterSet<NianmingOptions> = {
   count: {
     board: 'nianming',
     values: [
-      { id: 'sui', hanzi: '虛歲', implemented: true },
+      { id: 'sui', name: { hanzi: '虛歲', pinyin: 'xūsuì' }, implemented: true },
       { id: 'turns', implemented: true },
     ],
     default: 'sui',

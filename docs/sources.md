@@ -281,7 +281,9 @@ Every named thing in the engine carries a `pinyin` beside its `hanzi`: the
 stems and branches, the sixty pairs, the twenty-four terms, the nine palaces,
 the nine stars, the eight gates, the ten spirits, the configurations and their
 fortunes, the five relations, the five states of the season, the three yuan,
-the thirty images of 納音, the twelve stages and the ten gods.
+the thirty images of 納音, the twelve stages, the ten gods, and the values a
+school parameter can take where the value names something — 拆補 chāibǔ, the
+book a register was copied out of, the boundary a year is cut at.
 
 **This is not a quantity and nothing is computed from it.** It is here because
 it is data that was written by hand and can therefore be wrong, and a reader
@@ -304,6 +306,9 @@ is written next to the entry rather than left to be noticed:
 | 乾 (the trigram) | qián | gān, dry |
 | 相 (of 旺相) | xiàng | xiāng, mutual |
 | 長生 | chángshēng | zhǎng, to grow |
+| 正月 (of 正月初一) | zhēng | zhèng, upright |
+| 宿 (of 一年一宿) | xiù | sù, to stay the night |
+| 將 (of 月將) | jiàng | jiāng, about to |
 
 A sexagenary pair is **not** in any table: `ganzhiOf` joins its stem's reading
 to its branch's, because neither is read differently for standing next to the

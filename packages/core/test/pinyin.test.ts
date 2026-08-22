@@ -9,6 +9,7 @@ import { GATES, SPIRITS_YANG, SPIRITS_YIN, STARS } from '../src/dunjia/plates.js
 import { RELATION_IDS, relationOf } from '../src/dunjia/relation.js';
 import { strengthOf } from '../src/dunjia/strength.js';
 import { BRANCHES, STEMS, ganzhiOf } from '../src/ganzhi.js';
+import { PARAMETERS } from '../src/parameters.js';
 import { CI, HOUSES, MOTIONS, QIZHENG_BODIES } from '../src/qizheng.js';
 import {
   BOSHI_GODS,
@@ -76,6 +77,15 @@ function everything(): { hanzi: string; pinyin: string }[] {
     ...BRIGHTNESSES,
     ...TRANSFORMS,
     ...BOSHI_GODS,
+    // The values a school parameter can take, where the value names
+    // something: 拆補 and 置閏, the books a register was copied out of, the
+    // boundaries a year is cut at. They are named things the engine hands
+    // out like any other, and the surface that prints what is computed
+    // prints these — so a reader who cannot read the glyph meets the same
+    // pair here as in a palace.
+    ...PARAMETERS.flatMap((parameter) =>
+      parameter.values.map((value) => value.name).filter((name) => name !== undefined),
+    ),
   ];
 
   for (const yuan of ['shang', 'zhong', 'xia'] as Yuan[]) {
