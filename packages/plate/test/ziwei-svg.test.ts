@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { renderZiweiSvg } from '../src/ziwei-svg.js';
+import { DEFAULT_ZIWEI_SIZE, renderZiweiSvg } from '../src/ziwei-svg.js';
 import type { PlateZiwei, PlateZiweiPalace, PlateZiweiSeat } from '../src/types.js';
 
 /**
@@ -280,6 +280,32 @@ describe('renderZiweiSvg', () => {
     // wants one place to look, not two lists each starting at one.
     expect(Math.min(...inBand)).toBe(1);
     expect(inBand.size).toBe(Math.max(...inBand));
+  });
+
+  it('draws the key at one small size, and never at the size of what it keys', () => {
+    const svg = renderZiweiSvg(board(), {
+      readings: 'Said aloud',
+      labels: { star: { 天府: 'the celestial treasury' }, house: { ming: 'the life' } },
+    });
+    // Every ring on the sheet, grid and band together, taken from the radius
+    // the drawer sets at 0.56 of the size it was asked for.
+    const rings = [...svg.matchAll(/<circle [^>]*r="([\d.]+)" class="ring"\/>/g)].map(
+      (one) => Number(one[1]) / 0.56,
+    );
+    expect(rings.length).toBeGreaterThan(0);
+
+    // Nothing above the band's own, which at this size is what the key is:
+    // a numeral drawn at the height of a star name is a mark a reader takes
+    // for content, and one that changes size from seat to seat is a mark they
+    // take for a different thing in each. Below it only where a seat's lines
+    // are closer together than a ring of that size is wide, which is the one
+    // reason a key may be smaller than a key.
+    const band = DEFAULT_ZIWEI_SIZE * 0.017;
+    // To a pixel, because the radius is written to the sheet rounded.
+    expect(Math.max(...rings)).toBeCloseTo(band, 1);
+    // Most of the sheet is at that one size rather than under it, so the
+    // exception stays an exception.
+    expect(rings.filter((one) => one > band - 0.1).length).toBeGreaterThan(rings.length / 2);
   });
 
   it('carries the word in the band for every name, not only the leading ones', () => {

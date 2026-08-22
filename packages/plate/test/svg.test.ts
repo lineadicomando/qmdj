@@ -635,6 +635,24 @@ describe('the band of readings', () => {
     expect(holding('xiūmén')[0]).not.toContain('zhífú');
   });
 
+  it('sets the band in four columns, and keys nothing to it', () => {
+    const band = bandOf(renderChartSvg(CHART, ALOUD));
+    // An entry is a glyph with its reading in the word's ink after it, and
+    // the entries of a column share a left edge. Four edges is the band.
+    const edges = new Set(
+      [...band.matchAll(/<text x="([\d.]+)"[^>]*>[^<]*<tspan class="word">/g)].map(
+        (one) => one[1] as string,
+      ),
+    );
+    expect(edges.size).toBe(4);
+
+    // And no ringed numeral anywhere on the sheet. The boards that carry one
+    // do it because a glyph stands in a cell with nothing beside it; every
+    // register of a palace here has its word under it already, so a key would
+    // be an index into a list nobody has to search.
+    expect(renderChartSvg(CHART, ALOUD)).not.toContain('class="ring"');
+  });
+
   it('says each name once, however many palaces it stands in', () => {
     const band = bandOf(renderChartSvg(CHART, ALOUD));
 

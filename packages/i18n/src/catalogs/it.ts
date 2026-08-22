@@ -550,6 +550,11 @@ export const it: Record<MessageKey, string> = {
   // la tavola esiste. **Quale parte sia quale non viene mai detto qui**: è il
   // primo atto del lettore, per la ragione per cui lo è lo 用神.
   'label.taiyi.taiyi': 'Tai Yi',
+  // La parola per il nome, dove il nome non basta: si veda il catalogo
+  // inglese. «il grande uno» perché 乙 vale qui 一 — i testi antichi scrivono
+  // 太一 — e non il secondo tronco celeste; è la resa che 月將 太乙 porta già
+  // più su.
+  'label.taiyi.taiyiWord': 'il grande uno',
   'label.taiyi.wenchang': 'l\'occhio inferiore, chi riceve',
   'label.taiyi.shiji': 'l\'occhio superiore, chi arriva',
   'label.taiyi.jishen': 'il computista',
@@ -755,15 +760,16 @@ export const it: Record<MessageKey, string> = {
   'nav.ziwei': 'Zi Wei',
   'nav.taiyi': 'Tai Yi',
   // La forma lunga di un nome, portata dalla sezione che si sta leggendo e da
-  // nessun'altra. Quattro dei sei nomi stanno accorciati nella barra, come si
+  // nessun'altra. Cinque dei sei nomi stanno accorciati nella barra, come si
   // accorciano parlando; la sezione corrente dice invece il proprio nome per
-  // intero, che è dove un nome vale la sua lunghezza. 八字 non si accorcia e
-  // 太乙 non si allunga: si veda il catalogo inglese per la ragione della
-  // seconda.
+  // intero, che è dove un nome vale la sua lunghezza. 八字 non si allunga
+  // perché non si era accorciato: si veda il catalogo inglese per la ragione
+  // di quello, e per quella della forma lunga di 太乙.
   'nav.qimen.full': 'Qi Men Dun Jia',
   'nav.liuren.full': 'Da Liu Ren',
   'nav.qizheng.full': 'Qi Zheng Si Yu',
   'nav.ziwei.full': 'Zi Wei Dou Shu',
+  'nav.taiyi.full': 'Tai Yi Shen Shu',
   'nav.moments': 'Scegliere il momento',
   'nav.consult': 'Consultazione',
   'nav.sections': 'Sezioni',

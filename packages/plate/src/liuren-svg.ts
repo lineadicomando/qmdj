@@ -1,6 +1,6 @@
 import { broken, escape, fitted, round } from './fit.js';
 import { FONT_STACK, styleSheet } from './palette.js';
-import { drawReadings, said, wrapped, type Said } from './readings.js';
+import { drawReadingColumns, readingDepth, said, type Said } from './readings.js';
 import type {
   PlateCourse,
   PlateLiuren,
@@ -36,6 +36,25 @@ import type {
 
 /** The five phases, as classes the sheet turns into ink colours. */
 const PHASES = ['mu', 'huo', 'tu', 'jin', 'shui'] as const;
+
+/**
+ * How many columns the band is set in.
+ *
+ * **The columns are the whole of what this band borrowed, and the numerals
+ * are not.** 紫微斗數 and 七政四餘 key their cells to the list because a glyph
+ * stands in them with nothing beside it; here every register on the ring
+ * already carries its word, and the band is a pronunciation guide rather than
+ * a lookup — a numeral in each palace would be an index into a list nobody has
+ * to search. What the columns buy is the same either way: a group of twelve
+ * read down a column is found by eye, where the same twelve run end to end
+ * behind interpuncts are a paragraph.
+ *
+ * Four, as the chart's is, and for the chart's reason: an entry that is a name
+ * and a reading and no word is half the width of one that carries a word, so
+ * three columns of them leave a third of the band empty. The boards that gloss
+ * in the band keep three.
+ */
+const COLUMNS = 4;
 
 /** Side of the square, in pixels, unless told otherwise. */
 export const DEFAULT_LIUREN_SIZE = 900;
@@ -75,16 +94,19 @@ export function renderLiurenSvg(board: PlateLiuren, options: PlateLiurenOptions 
   const cell = ring / 4;
   const foot = board.unverified && labels.unverified ? size * 0.05 : 0;
 
-  // The names said aloud, under the ring. The wrap needs a width and the paper
-  // needs the wrap, and here the width is settled before either — the ring is
-  // the side less two margins, and no band moves it.
+  // The names said aloud, under the ring. The layout needs a width and the
+  // paper needs the layout, and here the width is settled before either — the
+  // ring is the side less two margins, and no band moves it.
   const reading = size * 0.017;
   const readingStep = size * 0.023;
-  const aloud = options.readings ? wrapped(saidOnBoard(board), ring / reading) : [];
+  const aloud = options.readings ? saidOnBoard(board) : [];
+  const bandLines = aloud.length
+    ? readingDepth(aloud, { size: reading, maxWidth: ring, columns: COLUMNS })
+    : 0;
   // The air over the heading is the ring's own rule doubled: the cells are
   // drawn edge to edge and a line set close under them reads as a thirteenth
   // palace rather than as something said about the twelve.
-  const band = aloud.length ? size * 0.05 + readingStep * aloud.length + size * 0.012 : 0;
+  const band = bandLines ? size * 0.05 + readingStep * bandLines + size * 0.012 : 0;
 
   const height = margin + headingRoom + upper + ring + band + margin + foot;
 
@@ -118,9 +140,10 @@ export function renderLiurenSvg(board: PlateLiuren, options: PlateLiurenOptions 
   parts.push(...ringOf(board, labels, { left: margin, top: ringTop, cell }));
   parts.push(...middle(board, labels, { left: margin, top: ringTop, cell }));
 
-  if (aloud.length > 0) {
+  if (bandLines > 0) {
     parts.push(
-      ...drawReadings(aloud, options.readings as string, {
+      ...drawReadingColumns(aloud, options.readings as string, {
+        columns: COLUMNS,
         x: margin,
         heading: ringTop + ring + size * 0.05,
         first: ringTop + ring + size * 0.05 + readingStep * 0.8,

@@ -74,6 +74,13 @@ describe('the 太乙 drawing', () => {
     labels: {
       god: { taijiong: 'the great blaze', taiyang: 'the great yang' },
       pattern: { po: 'pressing' },
+      standing: {
+        taiyi: 'the great one',
+        hostGeneral: 'the host’s great general',
+        hostAssistant: 'the host’s adjutant',
+        guestGeneral: 'the guest’s great general',
+        guestAssistant: 'the guest’s adjutant',
+      },
       wenchang: 'the lower eye',
       shiji: 'the upper eye',
       hostCount: 'the host’s count',
@@ -106,8 +113,15 @@ describe('the 太乙 drawing', () => {
   it('writes this board’s numbers and lays nothing out by them', () => {
     // 一 in the north-west and 九 in the south-east, which is where 卷二 puts
     // them and the reverse of where a Luoshu grid would.
-    const cells = [...svg.matchAll(/<text x="([\d.]+)" y="([\d.]+)"[^>]*>([1-9])<\/text>/g)];
-    const at = new Map(cells.map((one) => [one[3] as string, [Number(one[1]), Number(one[2])]]));
+    //
+    // Taken at the palace number's own size and not at any digit's: the band's
+    // keys are digits too, and one of them sits in the corner of every cell on
+    // the border. A test that matched on the shape would be reading sixteen
+    // indices as though they were palaces.
+    const cells = [
+      ...svg.matchAll(/<text x="([\d.]+)" y="([\d.]+)" font-size="([\d.]+)"[^>]*>([1-9])<\/text>/g),
+    ].filter((one) => Number(one[3]) > 20);
+    const at = new Map(cells.map((one) => [one[4] as string, [Number(one[1]), Number(one[2])]]));
 
     const one = at.get('1') as number[];
     const nine = at.get('9') as number[];
@@ -134,6 +148,35 @@ describe('the 太乙 drawing', () => {
     expect(svg).toContain('Said aloud');
     expect(svg).toContain('tàijiǒng');
     expect(svg).toContain('lǚshēn');
+  });
+
+  it('glosses what stands in a palace, which used to be bare glyphs', () => {
+    // 太乙 and the four generals are the part of this figure that moves from
+    // year to year, and they were the one part a reader without Chinese could
+    // not read at all.
+    expect(svg).toContain('>the great one<');
+    // Broken over two lines where it will not go on one, which in a palace is
+    // the ordinary case rather than the exception: a square crossed by its own
+    // number holds «il gran generale di chi riceve» only in halves.
+    expect(svg).toContain('>the host’s<');
+    expect(svg).toContain('>great general<');
+    expect(svg).toContain('>adjutant<');
+  });
+
+  it('keys the border to the band, and sets the band in three columns', () => {
+    const rings = [...svg.matchAll(/<circle cx="([\d.]+)" cy="([\d.]+)"[^>]*class="ring"\/>/g)].map(
+      (one) => ({ x: Number(one[1]), y: Number(one[2]) }),
+    );
+    // Sixteen in the grid and sixteen in the band: the same numeral at both
+    // ends of one lookup, and nothing keyed that is not in the list.
+    expect(rings).toHaveLength(32);
+
+    // The band is under the grid, so the sixteen deepest are its own. They
+    // stand at three left edges, which is what a columned band is.
+    const ordered = [...rings].sort((a, b) => a.y - b.y);
+    expect(new Set(ordered.slice(16).map((one) => one.x)).size).toBe(3);
+    // The border's sixteen stand at five, one to each column of the grid.
+    expect(new Set(ordered.slice(0, 16).map((one) => one.x)).size).toBe(5);
   });
 
   it('tints every cell by its phase and leaves the middle the colour of the paper', () => {

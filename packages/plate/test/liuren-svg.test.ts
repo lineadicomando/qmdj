@@ -206,6 +206,23 @@ describe('the band of readings', () => {
   const ALOUD = { readings: 'Said aloud' };
   const bandOf = (svg: string): string => svg.slice(svg.indexOf('>Said aloud<'));
 
+
+  it('sets the band in four columns, and keys nothing to it', () => {
+    const band = bandOf(renderLiurenSvg(BOARD, ALOUD));
+    // An entry is a glyph with its reading after it, and the entries of a
+    // column share a left edge. Four edges is the band.
+    const edges = new Set(
+      [...band.matchAll(/<text x="([\d.]+)"[^>]*>[^<]*<tspan class="word">/g)].map(
+        (one) => one[1] as string,
+      ),
+    );
+    expect(edges.size).toBe(4);
+
+    // No ringed numeral: every branch, general and stem on this ring is
+    // already glossed where it stands, so the band says how to pronounce what
+    // the reader can already read and is not a lookup to be keyed.
+    expect(renderLiurenSvg(BOARD, ALOUD)).not.toContain('class="ring"');
+  });
   it('is drawn only when it is given a heading', () => {
     expect(renderLiurenSvg(BOARD)).not.toContain('guìrén');
     expect(renderLiurenSvg(BOARD, ALOUD)).toContain('guìrén');

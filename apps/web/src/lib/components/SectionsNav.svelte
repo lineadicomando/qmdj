@@ -105,9 +105,9 @@
                second mark on the current section and the underline is the
                first: one says which board this is, the other where it stands
                in the row, and a reader coming to the bar from the page below
-               reads the name before they look for a rule under it. Four of the
-               six have a long form; `full` is absent on the other two and the
-               label answers for both cases. -->
+               reads the name before they look for a rule under it. Five of the
+               six have a long form; `full` is absent on 八字, which is two
+               characters, and the label answers for that case too. -->
           {t(current && section.full ? section.full : section.label)}
         </a>
       </li>
@@ -194,13 +194,18 @@
    * label of all, and the six instrument names are the same string in both.
    *
    * The eight labels run to 43.2rem laid end to end with every name cut, and
-   * to 47rem at the widest — the 紫微斗數 section, where the longest of the
-   * long forms is worn — against 49.4rem when all six stood at full length.
-   * So the list holds one row from a window of about 59rem up in the widest
-   * case and 55 in the narrowest, where before the cut it wanted 61. Two rows
-   * is what this header was always willing to spend: the note this replaced
-   * said as much, and said it when there were three sections rather than
-   * eight.
+   * to 47.3rem at the widest — the 太乙 section, where the longest of the long
+   * forms is worn — against 49.4rem when all six stood at full length. So the
+   * list holds one row from a window of about 59rem up in the widest case and
+   * 55 in the narrowest, where before the cut it wanted 61. Two rows is what
+   * this header was always willing to spend: the note this replaced said as
+   * much, and said it when there were three sections rather than eight.
+   *
+   * The widest case moved when 太乙 was given a long form of its own, and it
+   * moved by a quarter of a rem: `Tai Yi Shen Shu` is one letter longer than
+   * `Zi Wei Dou Shu`, which had been the longest. Five sections wear a long
+   * form now where four did, and that changes nothing here — one is worn at a
+   * time, so the count of them was never what this width was measured against.
    *
    * **No state of the list is wider than the row that stood here before**,
    * because a long form is worn by one section at a time: where 七政四餘 and

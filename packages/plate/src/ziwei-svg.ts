@@ -265,7 +265,9 @@ export function renderZiweiSvg(board: PlateZiwei, options: PlateZiweiOptions = {
     parts.push(text(size / 2, margin + headingRoom * 0.62, options.heading, size * 0.028, 'faint'));
   }
 
-  parts.push(...seats(board, labels.star ?? {}, key, { left: margin, top: gridTop, cell }));
+  parts.push(
+    ...seats(board, labels.star ?? {}, key, { left: margin, top: gridTop, cell, key: reading }),
+  );
   parts.push(...middle(board, labels, { left: margin, top: gridTop, cell }));
 
   if (aloud.length > 0) {
@@ -298,7 +300,7 @@ function seats(
   board: PlateZiwei,
   glosses: Record<string, string>,
   key: ReadonlyMap<string, number>,
-  at: { left: number; top: number; cell: number },
+  at: { left: number; top: number; cell: number; key: number },
 ): string[] {
   const parts: string[] = [];
 
@@ -316,7 +318,7 @@ function seats(
       `<rect x="${round(x)}" y="${round(y)}" width="${round(at.cell)}" ` +
         `height="${round(at.cell)}" class="cell${tint}${palace.body ? ' body' : ''}"/>`,
     );
-    parts.push(...inside(palace, glosses, key, { x, y, cell: at.cell }));
+    parts.push(...inside(palace, glosses, key, { x, y, cell: at.cell, key: at.key }));
   }
 
   return parts;
@@ -338,7 +340,7 @@ function inside(
   palace: PlateZiweiPalace,
   glosses: Record<string, string>,
   key: ReadonlyMap<string, number>,
-  at: { x: number; y: number; cell: number },
+  at: { x: number; y: number; cell: number; key: number },
 ): string[] {
   const parts: string[] = [];
   const pad = at.cell * 0.07;
@@ -412,11 +414,24 @@ function inside(
     // the key is the whole of what a reader has. Dropping it there would be
     // taking the ladder away at the top.
     const keyed = starSize >= at.cell * 0.04;
-    const indent = keyed ? ringRoom(starSize) : 0;
+    // **The band's size, not the star's.** A key drawn at the height of the
+    // name it points at is a numeral that changes size twelve times over one
+    // grid — large in the seat holding two stars, small in the seat holding
+    // ten — and a mark that big is read as content rather than as an index.
+    // One size at both ends of the lookup says it is one mark. The star's
+    // size is still the ceiling, because in a crowded seat the lines are
+    // closer together than a ring of the band's size is wide, and rings that
+    // touch are worse than rings that are small.
+    const keySize = Math.min(at.key, starSize);
+    const indent = keyed ? ringRoom(keySize) : 0;
 
     let line_ = at.y + at.cell * 0.29;
     for (const line of lines) {
-      if (keyed && line.index) parts.push(ringed(line.index, at.x + pad, line_, starSize));
+      // Centred on the glyph it keys and drawn at its own size — `over` is
+      // what parts those two.
+      if (keyed && line.index) {
+        parts.push(ringed(line.index, at.x + pad, line_, keySize, starSize));
+      }
       parts.push(text(at.x + pad + indent, line_, line.content, starSize, line.ink, 'start'));
       line_ += step;
       if (line.gloss && readable) {
@@ -457,11 +472,13 @@ function inside(
     text(at.x + at.cell - pad, at.y + at.cell - pad, houseText, houseSize, 'word', 'end'),
   );
   if (houseKey) {
+    const houseRing = Math.min(at.key, houseSize);
     parts.push(
       ringed(
         houseKey,
-        at.x + at.cell - pad - measured(houseText, houseSize) - ringRoom(houseSize),
+        at.x + at.cell - pad - measured(houseText, houseSize) - ringRoom(houseRing),
         at.y + at.cell - pad,
+        houseRing,
         houseSize,
       ),
     );

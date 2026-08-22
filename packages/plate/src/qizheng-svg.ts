@@ -1,6 +1,13 @@
 import { escape, fitted, round } from './fit.js';
 import { FONT_STACK, styleSheet } from './palette.js';
-import { drawReadings, said, wrapped, type Said } from './readings.js';
+import {
+  drawReadingColumns,
+  readingDepth,
+  ringRoom,
+  ringed,
+  said,
+  type Said,
+} from './readings.js';
 import type {
   PlatePlacement,
   PlateQizheng,
@@ -33,12 +40,40 @@ import type {
  * The middle of the ring holds the 命宮, which is the one thing on the board
  * that is neither a body nor a palace but an answer about one.
  *
+ * **What the sheet cannot gloss, it keys.** Two registers here carry no word
+ * and cannot be given one where they stand: a 宿 sits in the rows above beside
+ * its 入宿度, in a slot the width of a number, and a 次 heads a palace beside
+ * the branch that names it. Both take a ringed numeral instead, and the band
+ * under the ring says the name, the reading and the word against that numeral
+ * — the same lookup 紫微斗數 keys its seats with, at the same size, so a reader
+ * carrying the habit from one board finds it works on the other. The 人事宮 in
+ * the foot of a palace is keyed for the opposite reason: there the word is all
+ * that is printed, and the key is how a reader gets from it back to 兄弟宮.
+ *
+ * **The eleven are keyed in the ring and not in the rows.** A key earns its
+ * room where a glyph stands with no word beside it, and in the rows the word
+ * is already there — while the room it would take there comes straight out of
+ * that word, which is the one thing on a row that shrinks to what it is
+ * given. «la testa dell'eclissi» set at two thirds of the gloss beside it
+ * would be the drawing paying for a shortcut with the thing the shortcut
+ * leads to. In a palace there is room and no word, so that is where it goes.
+ *
  * Like the other two it holds no catalog and knows no language. Words arrive
  * already chosen.
  */
 
 /** The five phases, as classes the sheet turns into ink colours. */
 const PHASES = ['mu', 'huo', 'tu', 'jin', 'shui'] as const;
+
+/**
+ * How many columns the band is set in.
+ *
+ * Three, as the other two columned bands are. This one carries four groups
+ * where 紫微斗數 carries two, so the gain is larger: forty-six entries run as
+ * lines end to end are a paragraph to be searched, and in columns they are
+ * four blocks a reader lands in by shape.
+ */
+const COLUMNS = 3;
 
 /** Side of the square, in pixels, unless told otherwise. */
 export const DEFAULT_QIZHENG_SIZE = 900;
@@ -86,8 +121,19 @@ export function renderQizhengSvg(board: PlateQizheng, options: PlateQizhengOptio
 
   const reading = size * 0.017;
   const readingStep = size * 0.023;
-  const aloud = options.readings ? wrapped(saidOnBoard(board), ring / reading) : [];
-  const band = aloud.length ? size * 0.05 + readingStep * aloud.length + size * 0.012 : 0;
+  // Numbered only where the band is drawn: numerals in the rows and the
+  // palaces with no list under them to meet would key nothing.
+  const aloud = options.readings ? numbered(saidOnBoard(board, labels)) : [];
+  const key = new Map<string, number>(
+    aloud.flat().map((one) => [one.hanzi, one.index as number] as const),
+  );
+  // Laid out once and measured, because the depth is not the number of names:
+  // an entry too wide for its column takes two lines, and the columns are
+  // filled to an even number of lines rather than of entries.
+  const bandLines = aloud.length
+    ? readingDepth(aloud, { size: reading, maxWidth: ring, columns: COLUMNS })
+    : 0;
+  const band = bandLines ? size * 0.05 + readingStep * bandLines + size * 0.012 : 0;
 
   const ringTop = margin + headingRoom + upper;
   const height = ringTop + ring + band + margin + foot;
@@ -104,6 +150,7 @@ export function renderQizhengSvg(board: PlateQizheng, options: PlateQizhengOptio
       .qmdj .rule { stroke: var(--qmdj-rule); fill: none; }
       .qmdj .cell { stroke: var(--qmdj-rule); }
       .qmdj .ground { fill: var(--qmdj-ground); }
+      .qmdj .ring { fill: none; stroke: var(--qmdj-faint); stroke-width: 0.7; }
     </style>`,
     '<g class="qmdj">',
     `<rect x="0" y="0" width="${size}" height="${round(height)}" class="ground"/>`,
@@ -113,13 +160,22 @@ export function renderQizhengSvg(board: PlateQizheng, options: PlateQizhengOptio
     parts.push(text(size / 2, margin + headingRoom * 0.62, options.heading, size * 0.028, 'faint'));
   }
 
-  parts.push(...listing(board, labels, { size, margin, top: margin + headingRoom, height: upper }));
-  parts.push(...ringOf(board, labels, { left: margin, top: ringTop, cell }));
+  parts.push(
+    ...listing(board, labels, key, {
+      size,
+      margin,
+      top: margin + headingRoom,
+      height: upper,
+      key: reading,
+    }),
+  );
+  parts.push(...ringOf(board, labels, key, { left: margin, top: ringTop, cell, key: reading }));
   parts.push(...middle(board, labels, { left: margin, top: ringTop, cell }));
 
   if (aloud.length > 0) {
     parts.push(
-      ...drawReadings(aloud, options.readings as string, {
+      ...drawReadingColumns(aloud, options.readings as string, {
+        columns: COLUMNS,
         x: margin,
         heading: ringTop + ring + size * 0.05,
         first: ringTop + ring + size * 0.05 + readingStep * 0.8,
@@ -156,14 +212,26 @@ export function renderQizhengSvg(board: PlateQizheng, options: PlateQizhengOptio
  * a reader is least able to say, since a lodge name is a single character
  * that turns up nowhere else in daily reading.
  */
-function saidOnBoard(board: PlateQizheng): Said[][] {
+function saidOnBoard(board: PlateQizheng, labels: PlateQizhengLabels): Said[][] {
   const placed = [...board.governors, ...board.remainders];
   return [
-    said(placed.map((one) => one.body)),
-    said(placed.map((one) => one.lodge)),
-    said(board.houses.map((seat) => seat.ci)),
-    said(board.houses.map((seat) => seat.house)),
+    said(placed.map((one) => one.body), labels.body ?? {}),
+    said(placed.map((one) => one.lodge), labels.lodge ?? {}),
+    said(board.houses.map((seat) => seat.ci), labels.ci ?? {}),
+    said(board.houses.map((seat) => seat.house), labels.house ?? {}),
   ].filter((group) => group.length > 0);
+}
+
+/**
+ * The band's entries counted from one, across the groups and not within them.
+ *
+ * One run of numbers over four registers: a reader holding 31 wants one place
+ * to look, and four lists each starting at one would send them to the wrong
+ * quarter three times out of four.
+ */
+function numbered(groups: Said[][]): Said[][] {
+  let count = 0;
+  return groups.map((group) => group.map((one) => ({ ...one, index: (count += 1) })));
 }
 
 /**
@@ -185,7 +253,8 @@ function saidOnBoard(board: PlateQizheng): Said[][] {
 function listing(
   board: PlateQizheng,
   labels: PlateQizhengLabels,
-  box: { size: number; margin: number; top: number; height: number },
+  key: ReadonlyMap<string, number>,
+  box: { size: number; margin: number; top: number; height: number; key: number },
 ): string[] {
   const parts: string[] = [];
   const { size, margin, top, height } = box;
@@ -194,32 +263,47 @@ function listing(
   const step = height / (rows + 0.6);
   const glyph = size * 0.026;
   const small = size * 0.0185;
+  const indent = ringRoom(box.key);
+
+  // Where a row's four slots start, as fractions of the column.
+  //
+  // **The room the two keys take comes out of the gloss and out of nothing
+  // else.** The 入宿度 is a number that must not be cut, and 順 and 逆 share
+  // one slot cut for the longer of them — set `retrograde` smaller than
+  // `direct` beside it and the drawing has made which way a planet runs into
+  // a quieter fact than it is. A gloss is the one thing on the row that
+  // already shrinks to what it is given, so it is the one thing that can give.
+  const GLOSS = 0.14;
+  const LODGE = 0.545;
+  const MOTION = 0.775;
 
   const column = (placed: readonly PlatePlacement[], left: number): void => {
     placed.forEach((one, index) => {
       const y = top + step * (index + 0.9);
+
       parts.push(text(left, y, one.body.hanzi, glyph, one.body.element, 'start'));
 
       const gloss = labels.body?.[one.body.id];
       if (gloss) {
+        // Stopping short of the numeral that opens the next slot, rather than
+        // running under it.
+        const room = columnWidth * (LODGE - GLOSS) - small * 0.4;
         parts.push(
-          text(
-            left + columnWidth * 0.14,
-            y,
-            gloss,
-            fitted(gloss, small, columnWidth * 0.4),
-            'word',
-            'start',
-          ),
+          text(left + columnWidth * GLOSS, y, gloss, fitted(gloss, small, room), 'word', 'start'),
         );
       }
 
       // The 宿 and the 入宿度 together, because neither says anything alone:
       // a degree with no lodge is a number and a lodge with no degree is a
-      // twelfth of the sky.
+      // twelfth of the sky. The word for the lodge is in the band, against
+      // the numeral in front of it: there is no room for it here, and this is
+      // the register on this board a reader is least able to say.
+      const lodgeKey = key.get(one.lodge.hanzi);
+      const lodgeAt = left + columnWidth * LODGE;
+      if (lodgeKey !== undefined) parts.push(ringed(lodgeKey, lodgeAt, y, box.key, small));
       parts.push(
         text(
-          left + columnWidth * 0.56,
+          lodgeAt + indent,
           y,
           `${one.lodge.hanzi} ${one.lodgeDegree.toFixed(2)}°`,
           small,
@@ -235,10 +319,10 @@ function listing(
       if (motion) {
         parts.push(
           text(
-            left + columnWidth * 0.78,
+            left + columnWidth * MOTION,
             y,
             motion,
-            fitted(motion, small, columnWidth * 0.22),
+            fitted(motion, small, columnWidth * (1 - MOTION)),
             'word',
             'start',
           ),
@@ -269,7 +353,8 @@ function listing(
 function ringOf(
   board: PlateQizheng,
   labels: PlateQizhengLabels,
-  box: { left: number; top: number; cell: number },
+  key: ReadonlyMap<string, number>,
+  box: { left: number; top: number; cell: number; key: number },
 ): string[] {
   const parts: string[] = [];
   const { left, top, cell } = box;
@@ -299,9 +384,23 @@ function ringOf(
       );
     }
 
+    // The head: the 次 with the branch that names it, and the numeral that
+    // takes the reader to the word for the 次. Keyed rather than glossed, and
+    // the whole reason this board has keys at all — a cell holding four
+    // bodies has no line to spare, and a cell holding none would then be the
+    // only one that could afford a word.
     const ci = board.houses.find((seat) => seat.palace.index === branch)?.ci;
+    const head = `${ci?.hanzi ?? ''} ${HANZI[branch] as string}`;
+    const headSize = cell * 0.1;
+    const ciKey = ci ? key.get(ci.hanzi) : undefined;
     parts.push(
-      text(middleX, y + cell * 0.145, `${ci?.hanzi ?? ''} ${HANZI[branch] as string}`, cell * 0.1, 'faint'),
+      ...keyed(head, headSize, 'faint', {
+        middle: middleX,
+        y: y + cell * 0.145,
+        index: ciKey,
+        key: box.key,
+        room: cell * 0.94,
+      }),
     );
 
     // The bodies, stacked from a fixed first baseline rather than centred on
@@ -310,16 +409,83 @@ function ringOf(
     const here = placed.filter((one) => one.palace.index === branch);
     here.forEach((one, index) => {
       parts.push(
-        text(middleX, y + cell * (0.36 + index * 0.15), one.body.hanzi, cell * 0.125, one.body.element),
+        ...keyed(one.body.hanzi, cell * 0.125, one.body.element, {
+          middle: middleX,
+          y: y + cell * (0.36 + index * 0.15),
+          index: key.get(one.body.hanzi),
+          key: box.key,
+          room,
+        }),
       );
     });
 
+    // The foot: the 人事宮 that fell here, in the reader's language alone. The
+    // numeral runs the other way from every other on this sheet — from a word
+    // somebody can read to the glyph and the reading they cannot see, which is
+    // the only place 兄弟宮 is said on the whole board.
     const house = board.houses.find((seat) => seat.palace.index === branch)?.house;
     const word = house ? labels.house?.[house.id] : undefined;
-    if (word) parts.push(text(middleX, y + cell * 0.94, word, fitted(word, cell * 0.085, room), 'word'));
+    if (word) {
+      parts.push(
+        ...keyed(word, cell * 0.085, 'word', {
+          middle: middleX,
+          y: y + cell * 0.94,
+          index: house ? key.get(house.hanzi) : undefined,
+          key: box.key,
+          room,
+        }),
+      );
+    }
   }
 
   return parts;
+}
+
+/**
+ * A centred line with its key in front of it, the pair centred as one.
+ *
+ * The numeral is not part of the line and is not set at its size — it is the
+ * small mark it is in the band, sitting level with the glyphs it precedes —
+ * but it *is* part of what the cell has to hold, so the line is fitted to
+ * what is left rather than to the whole width.
+ *
+ * **The line hangs off the ring, and not the other way about.** Where the
+ * pair goes is estimated, because this package has no text engine and a Latin
+ * word's width is a guess here; what the estimate must never cost is the gap
+ * between the two, so the text is anchored a fixed step to the right of the
+ * ring rather than centred on a guessed middle with the ring hung off its
+ * left edge. Under that arrangement `countenance` — eleven letters the guess
+ * reads as nine — pulled the ring onto its own first stroke. Now a wrong
+ * guess moves the pair a few pixels off centre in a cell two hundred wide,
+ * which is a thing nobody can see.
+ */
+function keyed(
+  content: string,
+  size: number,
+  className: string | undefined,
+  at: { middle: number; y: number; index: number | undefined; key: number; room: number },
+): string[] {
+  if (at.index === undefined) {
+    return [text(at.middle, at.y, content, fitted(content, size, at.room), className)];
+  }
+  // `ringRoom` is the ring plus the hair that keeps it off a glyph set at its
+  // own size. Here it precedes a line set larger — a body glyph is eight times
+  // the ring's stroke — and the same hair reads as a collision, so a quarter
+  // of the ring is added to it.
+  const indent = ringRoom(at.key) + at.key * 0.25;
+  const set = fitted(content, size, at.room - indent);
+  const left = at.middle - (measured(content, set) + indent) / 2;
+  return [
+    ringed(at.index, left, at.y, at.key, set),
+    text(left + indent, at.y, content, set, className, 'start'),
+  ];
+}
+
+/** How wide a string is at a size, for placing something before it. */
+function measured(value: string, size: number): number {
+  let ems = 0;
+  for (const character of value) ems += /[⺀-鿿＀-｠]/.test(character) ? 1 : 0.52;
+  return ems * size;
 }
 
 /**

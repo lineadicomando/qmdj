@@ -11,7 +11,7 @@ import {
   type Register,
 } from './geometry.js';
 import { FONT_STACK, styleSheet } from './palette.js';
-import { drawReadings, said, wrapped, type Said } from './readings.js';
+import { drawReadingColumns, readingDepth, said, type Said } from './readings.js';
 import type {
   Named,
   PlateChart,
@@ -66,6 +66,26 @@ export const DEFAULT_SIZE = 900;
 const PHASES = ['mu', 'huo', 'tu', 'jin', 'shui'] as const;
 
 /**
+ * How many columns the readings band is set in.
+ *
+ * **The columns without the numerals.** The boards that key their cells to
+ * this list do it because a glyph stands in them alone; a palace of this chart
+ * carries five registers and a word under every one of them, so the band is a
+ * pronunciation guide and not a lookup — nobody arrives at it holding a shape
+ * they cannot place. Six groups of eight to twelve read down a column are
+ * found by eye where the same names run end to end behind interpuncts are a
+ * paragraph, and that is the whole of what the columns are for here.
+ *
+ * **Four and not the three the other boards take.** An entry here is a name
+ * and its reading and nothing else — 天沖 tiānchōng is seven ems where an
+ * entry carrying a word is sixteen — so a third of the band is the width
+ * three columns leave standing empty. Four fills it and takes three lines off
+ * the paper. The boards that gloss in the band keep three, because there the
+ * width is spent.
+ */
+const COLUMNS = 4;
+
+/**
  * Draws a chart as SVG.
  *
  * What goes in the palaces is the caller's choice. Hand it `labels` and it
@@ -87,14 +107,19 @@ export function renderChartSvg(chart: PlateChart, options: PlateOptions = {}): s
     configurations: listed.length,
   };
   // Two passes, because each half of the readings band needs the other: the
-  // wrap needs the width and the height of the paper needs the wrap. `margin`
-  // and `cell` depend on neither band, so a provisional layout yields the true
-  // width to wrap against and the final one is called with the line count.
+  // columns need the width and the height of the paper needs the columns.
+  // `margin` and `cell` depend on neither band, so a provisional layout yields
+  // the true width to set against and the final one is called with the depth.
   const provisional = layout(size, around);
-  const aloud = captions?.readings
-    ? wrapped(saidOnBoard(chart, compass), (provisional.cell * 3) / provisional.font.reading)
-    : [];
-  const geometry = layout(size, { ...around, readings: aloud.length });
+  const aloud = captions?.readings ? saidOnBoard(chart, compass) : [];
+  const bandLines = aloud.length
+    ? readingDepth(aloud, {
+        size: provisional.font.reading,
+        maxWidth: provisional.cell * 3,
+        columns: COLUMNS,
+      })
+    : 0;
+  const geometry = layout(size, { ...around, readings: bandLines });
   const byNumber = new Map(chart.palaces.map((palace) => [palace.palace.number, palace]));
   const marked = markedPalaces(chart);
 
@@ -134,13 +159,14 @@ export function renderChartSvg(chart: PlateChart, options: PlateOptions = {}): s
       drawConfigurations(listed, captions?.configurations as string, geometry, labels, byNumber),
     );
   }
-  if (aloud.length > 0) {
+  if (bandLines > 0) {
     // Under the configurations and above the captions, which is where it
     // belongs in reading order too: what this chart turned out to be, then how
     // to say any of it, then what the drawing is and is not.
     const top = geometry.margin + geometry.cell * 3 + geometry.compass.band + geometry.foot.band;
     parts.push(
-      ...drawReadings(aloud, captions?.readings as string, {
+      ...drawReadingColumns(aloud, captions?.readings as string, {
+        columns: COLUMNS,
         x: geometry.margin,
         heading: top + geometry.aloud.heading,
         first: top + geometry.aloud.first,

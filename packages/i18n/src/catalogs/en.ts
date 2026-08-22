@@ -569,6 +569,13 @@ export const en = {
   // party is which is never said here** — that is the reader's first act, for
   // the reason the 用神 is.
   'label.taiyi.taiyi': 'Tai Yi',
+  // The word for the name, where the name itself will not serve. The line
+  // above is what a caption calls this board — `Tai Yi 乾1宮` — and a palace
+  // on the drawing holding the glyph 太乙 over the words `Tai Yi` would be
+  // the picture spelling a shape it has not translated. 乙 reads as 一 in this
+  // name — the early texts write 太一 — so the word is `the great one`, and it
+  // is not the second stem.
+  'label.taiyi.taiyiWord': 'the great one',
   'label.taiyi.wenchang': 'the lower eye, the host',
   'label.taiyi.shiji': 'the upper eye, the guest',
   'label.taiyi.jishen': 'the reckoner',
@@ -797,16 +804,24 @@ export const en = {
   // to read a title. It is also the only mark this list carries besides the
   // underline, and the two say the same thing in two registers.
   //
-  // Two sections have no entry here and it is not an omission. 八字 is two
-  // characters and cutting it would leave nothing; 太乙 would extend to
-  // `Tai Yi Shen Shu`, and 神數 names the later transmission around
-  // 《太乙統宗寶鑑》 — a book with a different 上元積年 which `docs/sources.md`
-  // records as unread and which `epoch` declines. A nav label that named it
-  // would name the branch this section does not compute.
+  // One section has no entry here and it is not an omission: 八字 is two
+  // characters and cutting it would leave nothing to cut.
+  //
+  // 太乙 has one, and it is `Tai Yi Shen Shu`. 神數 names the transmission
+  // this art is met under, which is the name the consultation already sets at
+  // the head of its card — `instruments.ts` carries 太乙神數 Tài Yǐ Shén
+  // Shù — and a bar that stopped at `Tai Yi` was the one surface here calling
+  // the section something no reader would have gone looking for it under. That
+  // 神數 also names a later branch around 《太乙統宗寶鑑》, a book with a
+  // different 上元積年 which `docs/sources.md` records as unread and which
+  // `epoch` declines, is a fact about a 上元積年 and not about a name. It is
+  // said where a reader can act on it — in the notes, and in what `epoch`
+  // refuses — rather than by withholding the name from a label.
   'nav.qimen.full': 'Qi Men Dun Jia',
   'nav.liuren.full': 'Da Liu Ren',
   'nav.qizheng.full': 'Qi Zheng Si Yu',
   'nav.ziwei.full': 'Zi Wei Dou Shu',
+  'nav.taiyi.full': 'Tai Yi Shen Shu',
   'nav.moments': 'Choosing a time',
   // Named by the act, which is the one this section is built around: a
   // question put at an instant, and the chart cast for that instant. It was

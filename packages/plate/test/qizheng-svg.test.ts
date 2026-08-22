@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { renderQizhengSvg } from '../src/qizheng-svg.js';
+import { DEFAULT_QIZHENG_SIZE, renderQizhengSvg } from '../src/qizheng-svg.js';
 import type { PlatePlacement, PlateQizheng } from '../src/types.js';
 
 /**
@@ -84,6 +84,13 @@ const LABELS = {
     jie: 'illness and hardship', qianyi: 'removal', guanlu: 'office and salary',
     fude: 'fortune and virtue', xiangmao: 'countenance',
   },
+  ci: {
+    dahuo: 'the great fire', ximu: 'the split wood', xingji: 'the star record',
+    xuanxiao: 'the dark emptiness', juzi: 'the gathering', jianglou: 'the descending bond',
+    daliang: 'the great beam', shichen: 'the deep truth', chunshou: 'the quail head',
+    chunhuo: 'the quail fire', chunwei: 'the quail tail', shouxing: 'the star of long life',
+  },
+  lodge: { liu: 'the willow', wei3: 'the tail', gui: 'the ghost', yi: 'the wings' },
   motion: { shun: 'direct', ni: 'retrograde' },
   minggong: 'palace of the life',
   remainders: 'three, not four: 紫氣 is a rule without an epoch',
@@ -193,6 +200,48 @@ describe('the band of readings', () => {
 
     expect(drawn.match(/guǐ/g)).toHaveLength(1);
     expect(drawn.match(/yì/g)).toHaveLength(1);
+  });
+
+  it('carries the word beside the reading, for the two registers that have none', () => {
+    // A 宿 stands in the rows above beside a number and a 次 heads a palace
+    // beside a branch: neither has room for a word where it stands, and this
+    // is the only place on the sheet either of them is said.
+    const drawn = svg({ readings: 'Said aloud' });
+
+    expect(drawn).toContain('the willow');
+    expect(drawn).toContain('the quail head');
+    // And for the two that do, because a band of half-said names is worse
+    // than either kind alone.
+    expect(drawn).toContain('the lunar apogee');
+    expect(drawn).toContain('wealth');
+  });
+
+  it('keys the sheet to the band with one run of numerals at one size', () => {
+    const drawn = svg({ readings: 'Said aloud' });
+    const rings = [...drawn.matchAll(/<circle [^>]*r="([\d.]+)" class="ring"\/>/g)].map(
+      (one) => Number(one[1]) / 0.56,
+    );
+    // One size everywhere, the band's own: a numeral drawn at the height of
+    // the 次 it precedes would be twice the one beside a house word.
+    expect(new Set(rings.map((one) => Math.round(one * 10))).size).toBe(1);
+    expect(rings[0]).toBeCloseTo(DEFAULT_QIZHENG_SIZE * 0.017, 1);
+
+    // Counted from one, in one run across the four registers.
+    const numerals = [...drawn.matchAll(/class="faint">(\d+)<\/text>/g)].map((one) =>
+      Number(one[1]),
+    );
+    const band = new Set(numerals);
+    expect(Math.min(...band)).toBe(1);
+  });
+
+  it('sets the band in three columns rather than in lines run end to end', () => {
+    const drawn = svg({ readings: 'Said aloud' });
+    const after = drawn.slice(drawn.indexOf('Said aloud'));
+    // A column's entries share a left edge, and there are three of them.
+    const edges = [...after.matchAll(/<circle cx="([\d.]+)"[^>]*class="ring"\/>/g)].map((one) =>
+      Number(one[1]),
+    );
+    expect(new Set(edges).size).toBe(3);
   });
 });
 

@@ -164,12 +164,12 @@ export interface Around {
   /**
    * How many lines of readings go under that.
    *
-   * Lines and not names, because the wrap has to have happened already: the
-   * width to wrap against comes out of a layout, and the height of the paper
-   * comes out of the wrap. So a caller lays the drawing out twice — a
-   * provisional layout for the width, the true one with the count — and
-   * `margin` and `cell` depend on neither band, which is what makes the two
-   * passes agree. `test/svg.test.ts` pins that invariant.
+   * Lines and not names, because the band has to have been measured already:
+   * the width its columns are filled against comes out of a layout, and the
+   * height of the paper comes out of the columns. So a caller lays the drawing
+   * out twice — a provisional layout for the width, the true one with the
+   * count — and `margin` and `cell` depend on neither band, which is what makes
+   * the two passes agree. `test/svg.test.ts` pins that invariant.
    */
   readings?: number;
 }

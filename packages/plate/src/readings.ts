@@ -15,9 +15,18 @@ import { escape, fitted, round } from './fit.js';
  * sound — unsayable, unsearchable, unaskable — and the picture is the half of
  * this that travels furthest from the page that made it.
  *
- * Shared by both boards rather than written twice. The grid of nine and the
- * ring of twelve have different geometries and the same problem, and a band
- * that drifted between them would teach a reader two habits for one lookup.
+ * Shared by every board rather than written five times. The grid of nine, the
+ * ring of twelve and the five-by-five have different geometries and the same
+ * problem, and a band that drifted between them would teach a reader as many
+ * habits as there are drawings for one lookup.
+ *
+ * **Columned on all five.** The band began as lines run end to end behind
+ * interpuncts, filled to the width; that is a paragraph to be searched where a
+ * column is a list to be scanned, and the run-on form went when the last board
+ * left it. How many columns is each drawing's own — the boards that carry the
+ * word beside the reading take three, and the two whose entries are a name and
+ * a reading and nothing else take four, because a third of the width would
+ * otherwise stand empty.
  */
 
 /** A name, the sound of it, and — where a caller has one — the word for it. */
@@ -54,11 +63,21 @@ export interface Said {
  *
  * Faint and smaller than the name it keys: it is an index, not a reading, and
  * a reader who is not looking one up has to be able to look past it.
+ *
+ * **`over` is the size of the line it keys, and it is not the size of the
+ * ring.** A key drawn at the height of what it points at grows with it, and a
+ * board that sets a name at twice the band's size then carries a numeral at
+ * twice the band's — which reads as a second register of content rather than
+ * as an index, and reads as a *different* index at every seat of one grid.
+ * The ring stays the small mark it is at both ends of the lookup; what it
+ * borrows from the line is only where to sit, so it centres on the glyph
+ * instead of hanging under it. Callers whose line and ring are one size pass
+ * nothing.
  */
-export function ringed(index: number, x: number, y: number, size: number): string {
+export function ringed(index: number, x: number, y: number, size: number, over = size): string {
   const r = size * 0.56;
   const cx = x + r;
-  const cy = y - size * 0.28;
+  const cy = y - over * 0.28;
   return (
     `<circle cx="${round(cx)}" cy="${round(cy)}" r="${round(r)}" class="ring"/>` +
     `<text x="${round(cx)}" y="${round(cy + size * 0.28)}" font-size="${round(size * 0.76)}" ` +
@@ -86,9 +105,6 @@ export function ringRoom(size: number): number {
  */
 const BREATH = ' ';
 
-/** Between two entries of a line, as in the band above this one. */
-const WITHIN = ' · ';
-
 /**
  * One register's worth of names, each said once, in the order they arrived.
  *
@@ -113,51 +129,6 @@ export function said(
     gathered.set(name.hanzi, { hanzi: name.hanzi, pinyin: name.pinyin, ...(word ? { word } : {}) });
   }
   return [...gathered.values()];
-}
-
-/**
- * The groups laid into lines, and a group never sharing one with another.
- *
- * The groups are not named, because the shapes rhyme: a line of 門 is
- * self-evidently the gates, and a reader who learned that the gate is the
- * bottom-right register lands in the right neighbourhood by shape alone. A
- * heading over each would cost five lines to say what five lines already say.
- *
- * `ems` is the width of the band in ems of the line's own size, which is how
- * the width of a drawing reaches a wrap that has no text engine behind it.
- */
-export function wrapped(groups: readonly (readonly Said[])[], ems: number): Said[][] {
-  const lines: Said[][] = [];
-
-  for (const group of groups) {
-    // Filled to an even share of the width rather than to the width itself.
-    // A group takes the lines it takes either way — the count is the same —
-    // and filling each to the brim leaves the last of them holding one name,
-    // which reads as a mistake in a list whose whole job is to be scanned.
-    const whole = group.reduce((ems_, one) => ems_ + measure(WITHIN) + measure(one), -measure(WITHIN));
-    const share = whole / Math.max(1, Math.ceil(whole / ems));
-
-    let line: Said[] = [];
-    let width = 0;
-
-    for (const one of group) {
-      const separated = line.length > 0 ? measure(WITHIN) + measure(one) : measure(one);
-      // Never past the width, and past the share only where stopping short
-      // would cost a line that the width itself would not have.
-      if (line.length > 0 && (width + separated > ems || width >= share)) {
-        lines.push(line);
-        line = [];
-        width = measure(one);
-      } else {
-        width += separated;
-      }
-      line.push(one);
-    }
-
-    if (line.length > 0) lines.push(line);
-  }
-
-  return lines;
 }
 
 /** Where a band goes, in the units the drawing that asked for it measures in. */
@@ -203,6 +174,82 @@ const KEEP = 0.92;
  */
 const GROUP_GAP = 0.6;
 
+/** How wide one column is, given the width of the band and how many there are. */
+function columnRoom(at: { size: number; maxWidth: number; columns: number }): number {
+  const gutter = at.size * 1.2;
+  return (at.maxWidth + gutter) / at.columns - gutter;
+}
+
+/** One entry, with what it costs: one line, or two where it has to break. */
+interface Measured {
+  one: Said;
+  head: string;
+  whole: string;
+  broken: boolean;
+  lines: number;
+}
+
+/**
+ * What an entry costs, decided once and read by both the depth and the drawing.
+ *
+ * The two used to work it out apiece from the same rule, which held only for
+ * as long as nobody edited one of them.
+ */
+function measured(one: Said, room: number, size: number): Measured {
+  const head = `${one.hanzi}${BREATH}${one.pinyin}`;
+  const whole = one.word ? `${head}${BREATH}${one.word}` : head;
+  const scale = (room - (one.index ? ringRoom(size) : 0)) / (measure(whole) * size);
+  const broken = Boolean(one.word) && scale < KEEP;
+  return { one, head, whole, broken, lines: broken ? 2 : 1 };
+}
+
+/**
+ * A group shared out into columns, filled to an even number of *lines*.
+ *
+ * Lines and not entries, so a column holding two broken entries takes two
+ * fewer names than the one beside it and both end level.
+ *
+ * **Every column gets a quota before the first entry is placed, and the
+ * quotas differ by at most a line.** Filling each column to `ceil(total /
+ * columns)` in turn is the same depth and not the same picture: nine names in
+ * four columns come out three, three, three and an empty fourth, which reads
+ * as a column that failed to fill rather than as a list. Three, two, two, two
+ * is the same three lines deep and uses the width it was given.
+ *
+ * The last column takes whatever is left over whether or not that is its
+ * quota — an entry has to go somewhere — which is why the depth is measured
+ * from the columns this returns rather than predicted from the count.
+ */
+function shareOut(entries: readonly Measured[], columns: number): Measured[][] {
+  const total = entries.reduce((n, entry) => n + entry.lines, 0);
+  const base = Math.floor(total / columns);
+  const spare = total % columns;
+
+  const out: Measured[][] = [];
+  let here: Measured[] = [];
+  let used = 0;
+  for (const entry of entries) {
+    const quota = base + (out.length < spare ? 1 : 0);
+    if (here.length > 0 && used + entry.lines > quota && out.length < columns - 1) {
+      out.push(here);
+      here = [];
+      used = 0;
+    }
+    here.push(entry);
+    used += entry.lines;
+  }
+  if (here.length > 0) out.push(here);
+  return out;
+}
+
+/** How deep a group comes out, which is the deepest of its columns. */
+function depthOf(columns: readonly (readonly Measured[])[]): number {
+  return Math.max(
+    0,
+    ...columns.map((column) => column.reduce((n, entry) => n + entry.lines, 0)),
+  );
+}
+
 /**
  * How many lines the columned band will take.
  *
@@ -210,25 +257,24 @@ const GROUP_GAP = 0.6;
  * names: some break onto a second line and the columns are filled to an even
  * number of lines. The caller has to know the depth to give the band room, and
  * guessing it short runs the band off the paper.
+ *
+ * **Measured from the same share-out the drawing performs, not predicted from
+ * the count.** `ceil(total / columns)` is what the columns come to when every
+ * entry is one line and is a line short when a broken entry closes a column
+ * early and the leftovers pile into the last one — a band that runs off the
+ * paper in exactly the case the breaking was introduced for.
  */
 export function readingDepth(
   groups: readonly (readonly Said[])[],
   at: { size: number; maxWidth: number; columns: number },
 ): number {
-  const gutter = at.size * 1.2;
-  const room = (at.maxWidth + gutter) / at.columns - gutter;
+  const room = columnRoom(at);
 
   let deep = 0;
   for (const group of groups) {
     if (group.length === 0) continue;
-    const lines = group.map((one) => {
-      if (!one.word) return 1;
-      const whole = `${one.hanzi}${BREATH}${one.pinyin}${BREATH}${one.word}`;
-      const usable = room - (one.index ? ringRoom(at.size) : 0);
-      return usable / (measure(whole) * at.size) < KEEP ? 2 : 1;
-    });
     if (deep > 0) deep += GROUP_GAP;
-    deep += Math.ceil(lines.reduce((n, count) => n + count, 0) / at.columns);
+    deep += depthOf(shareOut(group.map((one) => measured(one, room, at.size)), at.columns));
   }
   return deep;
 }
@@ -242,10 +288,11 @@ export function readingDepth(
  * other; given its own cursor, a column simply grows a line longer than its
  * neighbours, which is what a column of a printed list does.
  *
- * The columns are filled to an even number of *lines* rather than of entries,
- * so a column holding two broken entries takes two fewer names than the one
- * beside it and both end level. A group never shares its columns with another:
- * the seats begin under the tallest column of the stars.
+ * How a group is shared out is `shareOut`'s, and it is the same call
+ * `readingDepth` makes: the height of the paper was settled by that answer
+ * before this ran, so working it out a second way here would be two rules for
+ * one band. A group never shares its columns with another: the seats begin
+ * under the tallest column of the stars.
  */
 export function drawReadingColumns(
   groups: readonly (readonly Said[])[],
@@ -257,38 +304,16 @@ export function drawReadingColumns(
 
   const gutter = at.size * 1.2;
   const column = (at.maxWidth + gutter) / at.columns;
-  const room = column - gutter;
+  const room = columnRoom(at);
 
   const parts = [line(at.x, at.heading, [{ text: heading, className: 'word' }], at)];
   let top = at.first;
 
   for (const group of filled) {
-    // What each entry costs: one line, or two where keeping it on one would
-    // set it below what a reader can take in.
-    const measured = group.map((one) => {
-      const head = `${one.hanzi}${BREATH}${one.pinyin}`;
-      const whole = one.word ? `${head}${BREATH}${one.word}` : head;
-      const scale = (room - (one.index ? ringRoom(at.size) : 0)) / (measure(whole) * at.size);
-      const broken = Boolean(one.word) && scale < KEEP;
-      return { one, head, whole, broken, lines: broken ? 2 : 1 };
-    });
-
-    // Filled to an even share of the lines, never past it unless the column
-    // is still empty — one entry has to go somewhere.
-    const total = measured.reduce((n, entry) => n + entry.lines, 0);
-    const share = Math.ceil(total / at.columns);
-    const columns: (typeof measured)[] = [[]];
-    let used = 0;
-    for (const entry of measured) {
-      const here = columns[columns.length - 1] as typeof measured;
-      if (here.length > 0 && used + entry.lines > share && columns.length < at.columns) {
-        columns.push([entry]);
-        used = entry.lines;
-      } else {
-        here.push(entry);
-        used += entry.lines;
-      }
-    }
+    const columns = shareOut(
+      group.map((one) => measured(one, room, at.size)),
+      at.columns,
+    );
 
     let deepest = 0;
     columns.forEach((entries, place) => {
@@ -333,32 +358,6 @@ export function drawReadingColumns(
 
     top = deepest + at.step * GROUP_GAP;
   }
-
-  return parts.filter(Boolean);
-}
-
-export function drawReadings(lines: readonly (readonly Said[])[], heading: string, at: Placed): string[] {
-  if (lines.length === 0) return [];
-
-  const parts = [line(at.x, at.heading, [{ text: heading, className: 'word' }], at)];
-
-  lines.forEach((entries, index) => {
-    const runs: Run[] = [];
-    for (const one of entries) {
-      if (runs.length > 0) runs.push({ text: WITHIN, className: 'faint' });
-      // The glyph in full ink and the reading beside it in the word's, which
-      // is the register the words under the palaces are set in: the reading is
-      // what a reader without Chinese takes away, and it is held there rather
-      // than whispered at the faintness of a gloss on something already legible.
-      runs.push({ text: one.hanzi }, { text: `${BREATH}${one.pinyin}`, className: 'word' });
-      // The word after the reading and fainter than it, because the order is
-      // the order of use: a reader meets the glyph on the board, needs the
-      // sound to ask about it, and the meaning last. Fainter, because unlike
-      // the reading it is a gloss on something the line has already said.
-      if (one.word) runs.push({ text: `${BREATH}${one.word}`, className: 'faint' });
-    }
-    parts.push(line(at.x, at.first + at.step * index, runs, at));
-  });
 
   return parts.filter(Boolean);
 }

@@ -372,6 +372,8 @@ export interface PlateQizhengLabels {
   house?: Record<string, string>;
   /** The twelve 次. In the band of readings only: the ring has no room for a word. */
   ci?: Record<string, string>;
+  /** The twenty-eight 宿, in the band only: the rows over the ring hold a degree there. */
+  lodge?: Record<string, string>;
   /** 順 and 逆. */
   motion?: Record<string, string>;
   /** A word for what the middle of the ring holds, e.g. «palace of the life». */
@@ -559,6 +561,22 @@ export interface PlateTaiyiSide {
 export interface PlateTaiyiLabels {
   /** The sixteen, glossed in the cell each of them sits in. */
   god?: Record<string, string>;
+  /**
+   * The five that stand *in* the palaces, glossed under the glyph.
+   *
+   * Keyed by the part each of them plays rather than by its glyph, because
+   * that is what the caller has a word for: 主將 is the host's great general
+   * and the listing over the grid already calls it that. The drawing holds no
+   * catalog, so the glyphs are its own and the words are the caller's, as they
+   * are for the sixteen.
+   */
+  standing?: {
+    taiyi?: string;
+    hostGeneral?: string;
+    hostAssistant?: string;
+    guestGeneral?: string;
+    guestAssistant?: string;
+  };
   /** The conditions, under the grid. */
   pattern?: Record<string, string>;
   /** Words for the parts: the two eyes, the two counts, the generals. */

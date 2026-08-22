@@ -1,6 +1,13 @@
 import { broken, escape, fitted, folded, round } from './fit.js';
 import { FONT_STACK, styleSheet } from './palette.js';
-import { drawReadings, said, wrapped, type Said } from './readings.js';
+import {
+  drawReadingColumns,
+  readingDepth,
+  ringRoom,
+  ringed,
+  said,
+  type Said,
+} from './readings.js';
 import type {
   PlateTaiyi,
   PlateTaiyiGod,
@@ -44,6 +51,22 @@ import type {
  * grande adunata» tells them what it is. The readings are said all together in
  * the band under the grid, which is the one lookup that stays a lookup.
  *
+ * **The five that stand in the palaces are glossed too, and they were the
+ * hole in that rule.** Sixteen names on the border carried their word and
+ * 太乙 itself, with the four generals, stood in the squares as bare glyphs —
+ * so the one part of this figure that *moves* from year to year was the one
+ * part a reader without Chinese could not read. The palaces have less room
+ * than the border does, being crossed by a number as well, so a stack that
+ * cannot hold its words at a legible size keeps the names and drops them.
+ *
+ * **The band is columned and keyed, on 紫微斗數's precedent.** Sixteen names
+ * run as three long lines of `名 reading · 名 reading` were a paragraph to be
+ * searched rather than a list to be scanned; in three columns they are found
+ * by eye. The ringed numeral in the corner of a border cell is the way back:
+ * a reader meeting 呂申 on the board has the glyph and nothing else, and
+ * without the key the only road from the glyph to the band runs through the
+ * reading, which is what they came to look up.
+ *
  * The tint is the seat's own element, which 卷六 states for the ring and which
  * the eight palaces inherit from the seat each of them stands on: nothing here
  * is a phase this board's own text does not hand down. The middle is left the
@@ -56,6 +79,16 @@ import type {
 
 /** The five phases, as classes the sheet turns into ink colours. */
 const PHASES = ['mu', 'huo', 'tu', 'jin', 'shui'] as const;
+
+/**
+ * How many columns the band is set in.
+ *
+ * Three, as 紫微斗數's is. Sixteen entries make six lines of three, which is a
+ * block the eye takes in whole; in two it is a column of eight that has to be
+ * read down, and in four the entries — a name, a reading and a word — start
+ * breaking for want of width.
+ */
+const COLUMNS = 3;
 
 /** Side of the square, in pixels, unless told otherwise. */
 export const DEFAULT_TAIYI_SIZE = 900;
@@ -124,8 +157,20 @@ export function renderTaiyiSvg(board: PlateTaiyi, options: PlateTaiyiOptions = {
 
   const reading = size * 0.017;
   const readingStep = size * 0.023;
-  const aloud = options.readings ? wrapped(saidOnBoard(board), grid / reading) : [];
-  const band = aloud.length ? size * 0.05 + readingStep * aloud.length + size * 0.012 : 0;
+  // Numbered only where the band is drawn at all: sixteen numerals in the
+  // cells with no list under the grid to meet them would be a key to a door
+  // that is not there.
+  const aloud = options.readings ? numbered(saidOnBoard(board, labels.god ?? {})) : [];
+  const key = new Map<string, number>(
+    aloud.flat().map((one) => [one.hanzi, one.index as number] as const),
+  );
+  // Laid out once and measured rather than counted: an entry whose word will
+  // not fit beside its reading takes two lines, and the columns are filled to
+  // an even number of lines rather than of names.
+  const bandLines = aloud.length
+    ? readingDepth(aloud, { size: reading, maxWidth: grid, columns: COLUMNS })
+    : 0;
+  const band = bandLines ? size * 0.05 + readingStep * bandLines + size * 0.012 : 0;
 
   const gridTop = margin + headingRoom + upper;
   const height = gridTop + grid + conditions + band + margin + foot;
@@ -145,6 +190,7 @@ export function renderTaiyiSvg(board: PlateTaiyi, options: PlateTaiyiOptions = {
          attribute that says which phase the cell is. */
       .qmdj .cell { stroke: var(--qmdj-rule); }
       .qmdj .ground { fill: var(--qmdj-ground); }
+      .qmdj .ring { fill: none; stroke: var(--qmdj-faint); stroke-width: 0.7; }
     </style>`,
     '<g class="qmdj">',
     `<rect x="0" y="0" width="${size}" height="${round(height)}" class="ground"/>`,
@@ -155,8 +201,8 @@ export function renderTaiyiSvg(board: PlateTaiyi, options: PlateTaiyiOptions = {
   }
 
   parts.push(...listing(board, labels, { size, margin, top: margin + headingRoom, height: upper }));
-  parts.push(...palaces(board, { left: margin, top: gridTop, cell }));
-  parts.push(...ring(board, labels, { left: margin, top: gridTop, cell }));
+  parts.push(...palaces(board, labels, { left: margin, top: gridTop, cell }));
+  parts.push(...ring(board, labels, key, { left: margin, top: gridTop, cell }));
 
   if (board.patterns.length > 0) {
     parts.push(...conditionsOf(board, labels, { size, margin, top: gridTop + grid }));
@@ -165,7 +211,8 @@ export function renderTaiyiSvg(board: PlateTaiyi, options: PlateTaiyiOptions = {
   if (aloud.length > 0) {
     const top = gridTop + grid + conditions + size * 0.05;
     parts.push(
-      ...drawReadings(aloud, options.readings as string, {
+      ...drawReadingColumns(aloud, options.readings as string, {
+        columns: COLUMNS,
         x: margin,
         heading: top,
         first: top + readingStep * 0.8,
@@ -241,9 +288,10 @@ function listing(
  * The eight palaces, and the empty middle.
  *
  * Each carries its trigram and this board's number for it, and under them
- * whatever the year put there — 太乙 itself, the four generals, the 大遊. A
- * palace with nothing in it is drawn all the same, because the eight are the
- * board whether or not anything landed on them.
+ * whatever the year put there — 太乙 itself, the four generals, the 大遊 —
+ * each with the word for it under the glyph, as on the border. A palace with
+ * nothing in it is drawn all the same, because the eight are the board whether
+ * or not anything landed on them.
  *
  * The tint is the phase of the seat the palace stands on, taken from the god
  * seated there rather than declared again here: 卷六 states the element of the
@@ -254,6 +302,7 @@ function listing(
  */
 function palaces(
   board: PlateTaiyi,
+  labels: PlateTaiyiLabels,
   box: { left: number; top: number; cell: number },
 ): string[] {
   const parts: string[] = [];
@@ -272,16 +321,21 @@ function palaces(
     phaseAt.set(direction, god.element);
   });
 
-  const standing = new Map<number, string[]>();
-  const put = (palace: number | undefined, glyph: string) => {
+  // The glyph is the drawing's and the word beside it is the caller's, which
+  // is the same division the border cells work under. Keyed by the part each
+  // plays rather than by its glyph: the caller has a word for the host's great
+  // general, not for the two characters that write it.
+  const words = labels.standing ?? {};
+  const standing = new Map<number, Standing[]>();
+  const put = (palace: number | undefined, glyph: string, word: string | undefined) => {
     if (palace === undefined) return;
-    standing.set(palace, [...(standing.get(palace) ?? []), glyph]);
+    standing.set(palace, [...(standing.get(palace) ?? []), { glyph, word }]);
   };
-  put(board.taiyi.palace.number, '太乙');
-  put(board.host.general.number, '主將');
-  put(board.host.assistant?.number, '主參');
-  put(board.guest.general.number, '客將');
-  put(board.guest.assistant?.number, '客參');
+  put(board.taiyi.palace.number, '太乙', words.taiyi);
+  put(board.host.general.number, '主將', words.hostGeneral);
+  put(board.host.assistant?.number, '主參', words.hostAssistant);
+  put(board.guest.general.number, '客將', words.guestGeneral);
+  put(board.guest.assistant?.number, '客參', words.guestAssistant);
 
   for (const [direction, seat] of Object.entries(PALACE_SEAT)) {
     const [row, column] = seat;
@@ -302,18 +356,16 @@ function palaces(
     if (number === undefined) continue;
     parts.push(text(middle, y + cell * 0.3, String(number), cell * 0.24, 'faint'));
 
-    (standing.get(number) ?? []).forEach((glyph, index) => {
-      const isTaiyi = glyph === '太乙';
-      parts.push(
-        text(
-          middle,
-          y + cell * (0.55 + index * 0.16),
-          glyph,
-          cell * (isTaiyi ? 0.19 : 0.14),
-          isTaiyi ? undefined : 'word',
-        ),
-      );
-    });
+    // Under the number, and never over it: the number is how a palace is
+    // named and the stack is what happens to be standing in it this year.
+    parts.push(
+      ...stacked(standing.get(number) ?? [], {
+        middle,
+        top: y + cell * 0.34,
+        room: cell * 0.63,
+        cell,
+      }),
+    );
   }
 
   // The middle. 太乙不入中宮 — it walks eight and never nine — so the cell is
@@ -332,12 +384,84 @@ function palaces(
       `height="${round(cell)}" fill="var(--qmdj-ground)" class="cell"/>`,
     text(centre + cell / 2, top + cell * 2.42, '中', cell * 0.2, 'faint'),
   );
-  (standing.get(5) ?? []).forEach((glyph, index) => {
-    parts.push(
-      text(centre + cell / 2, top + cell * (2.66 + index * 0.16), glyph, cell * 0.14, 'word'),
-    );
-  });
+  parts.push(
+    ...stacked(standing.get(5) ?? [], {
+      middle: centre + cell / 2,
+      top: top + cell * 2.5,
+      room: cell * 0.46,
+      cell,
+    }),
+  );
 
+  return parts;
+}
+
+/** One thing standing in a palace: the glyph the drawing writes, and its word. */
+interface Standing {
+  glyph: string;
+  word?: string | undefined;
+}
+
+/**
+ * A palace's occupants, set as names with their words under them.
+ *
+ * **Shrunk to fit, and the words dropped before the names are.** A palace is
+ * crossed by its own number and holds whatever the year put in it — usually
+ * one thing, sometimes two, and there is no year in which a rule of this
+ * drawing can promise otherwise. Scaling the whole stack answers the ordinary
+ * case; where even scaled it would set a word at a size nobody reads, the
+ * words go and the names stay, because a name with no word is a lookup and a
+ * word too small to read is a smudge over one.
+ *
+ * 太乙 is set larger than what stands beside it. It is the one occupant that
+ * is not a party's piece — the board is named for it, and where it stands is
+ * the first thing anybody reads off this figure.
+ */
+function stacked(
+  entries: readonly Standing[],
+  at: { middle: number; top: number; room: number; cell: number },
+): string[] {
+  if (entries.length === 0) return [];
+  const { middle, top, room, cell } = at;
+  const width = cell * 0.88;
+
+  const measure = (worded: boolean) =>
+    entries.map((one) => {
+      const size = cell * (one.glyph === '太乙' ? 0.19 : 0.145);
+      // The border's own word size, so a palace and the cell beside it set
+      // the reader's language at one measure wherever the stack is not
+      // crowded enough to be scaled.
+      const wordSize = cell * 0.085;
+      const lines = worded && one.word ? broken(one.word, wordSize, width) : [];
+      return { one, size, wordSize, lines, height: size * 1.2 + lines.length * wordSize * 1.2 };
+    });
+
+  const depth = (stack: ReturnType<typeof measure>) =>
+    stack.reduce((height, entry) => height + entry.height, 0);
+
+  // Below this the word is a grey smear that costs the name its room and gives
+  // nothing back, so the stack is measured again without the words.
+  const KEEP = 0.72;
+  let stack = measure(true);
+  let scale = depth(stack) > room ? room / depth(stack) : 1;
+  if (scale < KEEP) {
+    stack = measure(false);
+    scale = depth(stack) > room ? room / depth(stack) : 1;
+  }
+
+  const parts: string[] = [];
+  let y = top;
+  for (const entry of stack) {
+    const size = entry.size * scale;
+    const wordSize = entry.wordSize * scale;
+    y += size;
+    parts.push(text(middle, y, entry.one.glyph, size));
+    for (const line of entry.lines) {
+      y += wordSize * 1.2;
+      parts.push(text(middle, y, line, fitted(line, wordSize, width), 'word'));
+    }
+    y += size * 0.2;
+  }
   return parts;
 }
 
@@ -355,10 +479,15 @@ function palaces(
  * two eyes are ruled rather than tinted: they are the only two of the sixteen
  * the year singles out, and a tint would have to compete with the phase
  * already there.
+ *
+ * The numeral in the corner keys the cell to the band, and it sits in the
+ * corner because everything else here is centred: a key is not read with the
+ * name, it is read when somebody has gone looking for one.
  */
 function ring(
   board: PlateTaiyi,
   labels: PlateTaiyiLabels,
+  key: ReadonlyMap<string, number>,
   box: { left: number; top: number; cell: number },
 ): string[] {
   const parts: string[] = [];
@@ -389,6 +518,11 @@ function ring(
     // `the great gathering` are the ordinary case in every language this is
     // written in, not the exception, and a line that ran on would run into
     // the cell below.
+    const numeral = key.get(god.hanzi);
+    if (numeral !== undefined) {
+      parts.push(ringed(numeral, x + cell * 0.06, y + cell * 0.18, cell * 0.085));
+    }
+
     parts.push(
       text(middle, y + cell * 0.28, SEAT_GLYPH[index] as string, cell * 0.17, 'faint'),
       text(middle, y + cell * 0.6, god.hanzi, cell * 0.17, god.element),
@@ -452,8 +586,21 @@ function worded(x: number, y: number, word: string | undefined, size: number, ro
   );
 }
 
-function saidOnBoard(board: PlateTaiyi): Said[][] {
-  return [said(board.gods)].filter((group) => group.length > 0);
+/**
+ * The band's entries counted from one.
+ *
+ * One run of numbers over one group, which is all this board has: the sixteen
+ * are named in the order they are seated, from 子, so the list and the border
+ * are walked the same way round and a reader who has found 8 knows which way
+ * 9 lies.
+ */
+function numbered(groups: Said[][]): Said[][] {
+  let count = 0;
+  return groups.map((group) => group.map((one) => ({ ...one, index: (count += 1) })));
+}
+
+function saidOnBoard(board: PlateTaiyi, words: Record<string, string>): Said[][] {
+  return [said(board.gods, words)].filter((group) => group.length > 0);
 }
 
 function ariaLabel(board: PlateTaiyi): string {

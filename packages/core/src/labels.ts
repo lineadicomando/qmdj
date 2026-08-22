@@ -1,6 +1,7 @@
 import type { MessageKey, Translator } from '@shipan/i18n';
 import { BRANCHES, STEMS, type Ganzhi } from './ganzhi.js';
 import { GENERALS, KETI, LIUREN_RULES } from './liuren.js';
+import { LODGES } from './almanac.js';
 import { CI, HOUSES, MOTIONS, QIZHENG_BODIES } from './qizheng.js';
 import { ZIWEI_HOUSES, ZIWEI_STARS } from './ziwei/stars.js';
 import { TAIYI_GODS, TAIYI_PATTERN_IDS } from './taiyi.js';
@@ -177,6 +178,16 @@ export interface QizhengLabels {
   house: Record<string, string>;
   /** The twelve 次, for the band of readings. */
   ci: Record<string, string>;
+  /**
+   * The twenty-eight 宿, for the band under the ring.
+   *
+   * Not for the rows over it: a lodge stands there beside its 入宿度 in a slot
+   * the width of a number, and «il colmo del tetto» does not go in it. The
+   * name is keyed to the band instead, which is the one group on this board a
+   * reader is least able to say — a lodge is a single character that turns up
+   * nowhere else in daily reading.
+   */
+  lodge: Record<string, string>;
   motion: Record<string, string>;
   minggong: string;
   remainders: string;
@@ -192,6 +203,9 @@ export function qizhengLabels(t: Translator): QizhengLabels {
       HOUSES.map((house) => [house.id, t(`label.house.${house.id}` as MessageKey)]),
     ),
     ci: Object.fromEntries(CI.map((ci) => [ci.id, t(`label.ci.${ci.id}` as MessageKey)])),
+    lodge: Object.fromEntries(
+      LODGES.map((lodge) => [lodge.id, t(`label.lodge.${lodge.id}` as MessageKey)]),
+    ),
     motion: Object.fromEntries(
       Object.keys(MOTIONS).map((id) => [id, t(`label.motion.${id}` as MessageKey)]),
     ),
@@ -220,6 +234,21 @@ export function qizhengLabels(t: Translator): QizhengLabels {
 export interface TaiyiLabels {
   /** The sixteen, glossed under the grid. */
   god: Record<string, string>;
+  /**
+   * The five that stand in the palaces, glossed under the glyph they stand as.
+   *
+   * The same words the listing over the grid uses for the two sides, said
+   * again where the reader meets 主將 in a square: a palace holding a glyph
+   * nobody has a word for is the one place on this sheet where the drawing
+   * asked for Chinese.
+   */
+  standing: {
+    taiyi: string;
+    hostGeneral: string;
+    hostAssistant: string;
+    guestGeneral: string;
+    guestAssistant: string;
+  };
   /** The conditions 卷三 names, listed under it. */
   pattern: Record<string, string>;
   wenchang: string;
@@ -239,6 +268,13 @@ export function taiyiLabels(t: Translator): TaiyiLabels {
     pattern: Object.fromEntries(
       TAIYI_PATTERN_IDS.map((id) => [id, t(`label.taiyipattern.${id}` as MessageKey)]),
     ),
+    standing: {
+      taiyi: t('label.taiyi.taiyiWord'),
+      hostGeneral: t('label.taiyi.hostGeneral'),
+      hostAssistant: t('label.taiyi.hostAssistant'),
+      guestGeneral: t('label.taiyi.guestGeneral'),
+      guestAssistant: t('label.taiyi.guestAssistant'),
+    },
     wenchang: t('label.taiyi.wenchang'),
     shiji: t('label.taiyi.shiji'),
     hostCount: t('label.taiyi.hostCount'),

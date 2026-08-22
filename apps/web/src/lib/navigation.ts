@@ -80,7 +80,7 @@ export const SECTIONS: readonly {
   { slug: 'moments', label: 'nav.moments', group: 'act' },
   { slug: 'qimen', label: 'nav.qimen', full: 'nav.qimen.full', group: 'instrument' },
   { slug: 'liuren', label: 'nav.liuren', full: 'nav.liuren.full', group: 'instrument' },
-  { slug: 'taiyi', label: 'nav.taiyi', group: 'instrument' },
+  { slug: 'taiyi', label: 'nav.taiyi', full: 'nav.taiyi.full', group: 'instrument' },
   { slug: 'qizheng', label: 'nav.qizheng', full: 'nav.qizheng.full', group: 'instrument' },
   { slug: 'ziwei', label: 'nav.ziwei', full: 'nav.ziwei.full', group: 'instrument' },
   { slug: 'bazi', label: 'nav.bazi', group: 'instrument' },
