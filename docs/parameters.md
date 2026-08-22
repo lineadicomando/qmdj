@@ -18,11 +18,11 @@ dunjia's.**
 
 | Parameter | Values | Default |
 |---|---|---|
-| `method` | `chaibu` (拆補), `zhirun` (置閏), `maoshan` (茅山) | `chaibu` |
-| `yuan` | `term`, `futou` (符頭) — inside 拆補 | `term` |
-| `plate` | `zhuan` (轉盤), `fei` (飛盤) | `zhuan` |
+| `method` | `chaibu` (拆補 chāibǔ), `zhirun` (置閏 zhìrùn), `maoshan` (茅山 máoshān) | `chaibu` |
+| `yuan` | `term`, `futou` (符頭 fútóu) — inside 拆補 | `term` |
+| `plate` | `zhuan` (轉盤 zhuànpán), `fei` (飛盤 fēipán) | `zhuan` |
 | `centreLodging` | `kun` (寄坤二), `dun` (陽遁寄二 · 陰遁寄八) | `kun` |
-| `system` | `shijia` (時家), later `rijia` (日家), `yuejia` (月家), `nianjia` (年家) | `shijia` |
+| `system` | `shijia` (時家 shíjiā), later `rijia` (日家 rìjiā), `yuejia` (月家 yuèjiā), `nianjia` (年家 niánjiā) | `shijia` |
 
 `method` and `yuan` are the two most divisive and neither is optional. 茅山 has
 no reference at all and is refused.
@@ -40,8 +40,8 @@ calendars in one output.
 | Parameter | Values | Default |
 |---|---|---|
 | `trueSolarTime` | `true`, `false` — the one boolean here | `true` |
-| `yearBoundary` | `lichun` (立春), `chunjie` (正月初一) | `lichun` |
-| `dayBoundary` | `zishi` (子時, 23:00 → next day), `midnight` | `zishi` |
+| `yearBoundary` | `lichun` (立春 lìchūn), `chunjie` (正月初一 zhēngyuèchūyī) | `lichun` |
+| `dayBoundary` | `zishi` (子時 zǐshí, 23:00 → next day), `midnight` | `zishi` |
 
 太乙 and 紫微斗數 cut the counted year by a boundary of their own, and the
 almanac takes none of these at all. Both are below.
@@ -50,24 +50,24 @@ almanac takes none of these at all. Both are below.
 
 | Board | Parameter | Values | Default |
 |---|---|---|---|
-| 六壬 | `yuejiang` | `zhongqi` (太陽過宮 at the 中氣), `jieqi` (節氣, half a term earlier), `true` (太陽實躔) | `zhongqi` |
-| 六壬 | `guiren` | `chou` (甲 shares 丑未 with 戊庚), `wei` (甲 stands alone at 未丑) | `chou` |
+| 六壬 | `yuejiang` | `zhongqi` (太陽過宮 at the 中氣 zhōngqì), `jieqi` (節氣 jiéqì, half a term earlier), `true` (太陽實躔 tàiyángshíchán) | `zhongqi` |
+| 六壬 | `guiren` | `chou` (丑 chǒu and 未, which 甲 shares with 戊庚), `wei` (未 wèi and 丑, with 甲 standing alone) | `chou` |
 | 六壬 | `zhouye` | `branch` (晝 from 卯 to 申), `solar` (actual sunrise and sunset) | `branch` |
-| 曆注 | `shensha` | `xieji` (only those 《協紀辨方書》 ratifies, cut to the day and the direction), later a named lineage | `xieji` |
-| 七政四餘 | `xiudu` | where the 宿 begin: `juxing` (at the 距星, placed at the instant), or a 曆's table — `shixian` (時憲曆), `shoushi` (授時曆) | `juxing` |
-| 七政四餘 | `ziqi` | `off`, or `yinianyisu` (一年一宿), once an epoch can be cited | `off` |
+| 曆注 | `shensha` | `xieji` (only those 《協紀辨方書》 xiéjìbiànfāngshū ratifies, cut to the day and the direction), later a named lineage | `xieji` |
+| 七政四餘 | `xiudu` | where the 宿 begin: `juxing` (at the 距星 jùxīng, placed at the instant), or a 曆's table — `shixian` (時憲曆 shíxiànlì), `shoushi` (授時曆 shòushílì) | `juxing` |
+| 七政四餘 | `ziqi` | `off`, or `yinianyisu` (一年一宿 yīniányīxiù), once an epoch can be cited | `off` |
 | 七政四餘 | `luohou` | which node is 羅睺: `descending` (the 星命 law), `ascending` (湯若望 and the 時憲曆) | `descending` |
-| 七政四餘 | `minggong` | `yuejiang` (立命 by 加時, the hour laid on the 月將's palace), `ascendant` (the true rising degree) | `yuejiang` |
-| 七政四餘 | `gong` | where the twelve 宮 are cut: `zhongqi` (太陽過宮 at the 中氣), `ci` (the 次 as stretches of 宿度) | `zhongqi` |
-| 太乙 | `epoch` | which 上元積年 the count runs from: `jinjing` (《太乙金鏡式經》) | `jinjing` |
-| 太乙 | `ji` | which register: `nianji` (年計), later `yueji` · `riji` · `shiji` | `nianji` |
-| 太乙 | `yearBoundary` | where the counted year begins: `lichun` (立春), `dongzhi` (冬至), `chunjie` (正月初一) | `lichun` |
+| 七政四餘 | `minggong` | `yuejiang` (立命 by 加時, the hour laid on the palace of the 月將 yuèjiàng), `ascendant` (the true rising degree) | `yuejiang` |
+| 七政四餘 | `gong` | where the twelve 宮 are cut: `zhongqi` (太陽過宮 at the 中氣 zhōngqì), `ci` (the 次 cì as stretches of 宿度) | `zhongqi` |
+| 太乙 | `epoch` | which 上元積年 the count runs from: `jinjing` (《太乙金鏡式經》 tàiyǐjīnjìngshìjīng) | `jinjing` |
+| 太乙 | `ji` | which register: `nianji` (年計 niánjì), later `yueji` · `riji` · `shiji` | `nianji` |
+| 太乙 | `yearBoundary` | where the counted year begins: `lichun` (立春 lìchūn), `dongzhi` (冬至 dōngzhì), `chunjie` (正月初一 zhēngyuèchūyī) | `lichun` |
 | 紫微斗數 | `leapMonth` | what a birth in an intercalary month counts as: `following` (the month after it, which is the book's), `current`, `split` | `following` |
-| 紫微斗數 | `sihua` | which table of the 四化: `quanshu` (《紫微斗數全書》's own), later a lineage that has been read | `quanshu` |
+| 紫微斗數 | `sihua` | which table of the 四化: `quanshu` (《紫微斗數全書》 zǐwēidǒushùquánshū's own), later a lineage that has been read | `quanshu` |
 | 紫微斗數 | `huoling` | how 火星 and 鈴星 are placed: `fixed` (a seat apiece from the year's triplicity, which is all 卷二 states), `hour` | `fixed` |
-| 紫微斗數 | `daxian` | where the first decade opens: `adjacent` (the palace beside the 命宮), `ming` (命宮 itself) | `adjacent` |
-| 紫微斗數 | `yearBoundary` | which reckoning gives the year its stem and branch: `lichun` (立春), `chunjie` (正月初一) | `chunjie` |
-| 年命 | `count` | how the years lived are counted: `sui` (虛歲), `turns` (the turns of the year pillar alone) | `sui` |
+| 紫微斗數 | `daxian` | where the first decade opens: `adjacent` (the palace beside the 命宮), `ming` (命宮 mìnggōng itself) | `adjacent` |
+| 紫微斗數 | `yearBoundary` | which reckoning gives the year its stem and branch: `lichun` (立春 lìchūn), `chunjie` (正月初一 zhēngyuèchūyī) | `chunjie` |
+| 年命 | `count` | how the years lived are counted: `sui` (虛歲 xūsuì), `turns` (the turns of the year pillar alone) | `sui` |
 
 **The 曆注 are not a board**, and take nothing from the layer above: the
 almanac is a page of a published book, a pure function of the civil date

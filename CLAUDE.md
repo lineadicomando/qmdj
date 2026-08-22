@@ -56,8 +56,9 @@ the engine falls back to Moshier, which needs no files.
 ### The engine
 
 - **English is the language of the source.** Code, comments, identifiers,
-  error codes, documentation and commit messages. Italian exists only as a
-  locale in the catalogs. → [`docs/i18n.md`](docs/i18n.md)
+  error codes, documentation and commit messages. A vernacular exists only as
+  a locale in the catalogs, never in the source. →
+  [`docs/i18n.md`](docs/i18n.md)
 - **The engine does not localise.** `core` returns identifiers, hanzi, pinyin
   and numbers; readable text is produced at the surface. A function that
   returns a translated string is a design error. → [`docs/i18n.md`](docs/i18n.md)
@@ -100,11 +101,17 @@ the engine falls back to Moshier, which needs no files.
 
 ### The surfaces
 
-- **The interface is read by someone who does not read Chinese**, and must be
-  usable without a glossary. Hanzi accompany the output, always beside a
-  gloss; everything the reader *operates* or *decides from* leads in their own
-  language. A `title` attribute does not rescue a control whose face is a
-  glyph. → [`docs/i18n.md`](docs/i18n.md)
+- **The interface is read by someone who does not read Chinese, in a
+  vernacular of their own**, and must be usable without a glossary. Hanzi
+  accompany the output, always beside a gloss and always beside the reading;
+  everything the reader *operates* or *decides from* leads in their language.
+  A `title` attribute does not rescue a control whose face is a glyph. →
+  [`docs/i18n.md`](docs/i18n.md)
+- **How many vernaculars there are is a state and not a design.** English and
+  Italian today, Spanish when the engine has stopped moving; nothing may be
+  written as though the set were closed at two, and what a third would cost is
+  the measure of anything added to the catalogs. →
+  [`docs/i18n.md`](docs/i18n.md)
 - **A place is an identifier, or coordinates, or an identifier refined by
   coordinates — and never a name.** Half a pair is refused rather than
   half-read, and the answer says both halves. In the forms, what travels is
@@ -169,11 +176,19 @@ rather than what was done. No conventional prefixes. Examples:
 «Finds the twenty-four solar terms», «Exposes the chart over HTTP»,
 «Determines the dun and the ju number».
 
-**One commit a session is enough, however many surfaces it crossed.** What a
-session produces now is a change to an interface that already works, and
-splitting it three ways buys a history nobody reads at the cost of commits
-that do not stand up alone. The subject says what the change does; what used
-to be three subjects becomes the body, one paragraph a movement.
+**On `main`, one commit a session is enough, however many surfaces it
+crossed** — unless the session says otherwise. What a session produces there
+is a change to an interface that already works, and splitting it three ways
+buys a history nobody reads at the cost of commits that do not stand up alone.
+The subject says what the change does; what used to be three subjects becomes
+the body, one paragraph a movement.
+
+**On any other branch, one commit a step** — unless the session says
+otherwise. A branch is where work is staged, and a step there is a thing that
+was decided, done and checked before the next one began: keeping them apart is
+what lets one be read, questioned or dropped without the others. The same
+subject rule holds, so each still stands alone. What becomes of the series
+when the branch lands is the branch's business and not the step's.
 
 Domain identifiers are toneless pinyin where the domain is Chinese (`ganzhi`,
 `jieqi`, `zhifu`, `xiumen`); everything else is English.

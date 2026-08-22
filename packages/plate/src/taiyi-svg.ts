@@ -386,8 +386,9 @@ function ring(
 
     // The seat, the name, and the word for it. The room for a second line of
     // word is reserved rather than hoped for: «la virtù della concordia» and
-    // `the great gathering` are the ordinary case in both languages, not the
-    // exception, and a line that ran on would run into the cell below.
+    // `the great gathering` are the ordinary case in every language this is
+    // written in, not the exception, and a line that ran on would run into
+    // the cell below.
     parts.push(
       text(middle, y + cell * 0.28, SEAT_GLYPH[index] as string, cell * 0.17, 'faint'),
       text(middle, y + cell * 0.6, god.hanzi, cell * 0.17, god.element),

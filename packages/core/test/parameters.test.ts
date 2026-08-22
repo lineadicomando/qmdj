@@ -232,20 +232,23 @@ describe('docs/parameters.md', () => {
     }
   });
 
-  it('carries the name each value bears in Chinese, where it bears one', () => {
-    // The hanzi are on the page and in the registry, and the page is where a
-    // reader of the repository meets them. A value renamed in one and not the
-    // other is the drift this pair of files exists to prevent. The *reading*
-    // is not asked of the page: `docs/` cites Chinese by its glyphs
-    // throughout, and the pair that must never come apart is the one the
-    // engine hands out — which `pinyin.test.ts` holds.
+  it('names each value in Chinese and says it, where it bears a name', () => {
+    // The glyph **and** the reading, on this page as in the engine's output:
+    // the reader here is the same reader, and a name whose sound is only in
+    // the source is a name they cannot ask anybody about. A value renamed in
+    // one and not the other is the drift this pair of files exists to
+    // prevent.
+    //
+    // The two may be parted by a closing 》, because a book keeps its
+    // brackets — 《協紀辨方書》 xiéjìbiànfāngshū — and by nothing else.
     for (const parameter of PARAMETERS) {
       for (const value of parameter.values) {
         if (!value.name) continue;
+        const said = new RegExp(`${value.name.hanzi}[》」』]? ${value.name.pinyin}`);
         expect(
-          PAGE.includes(value.name.hanzi),
-          `docs/parameters.md never writes ${value.name.hanzi}, ` +
-            `which \`${String(value.id)}\` names.`,
+          said.test(PAGE),
+          `docs/parameters.md does not write "${value.name.hanzi} ${value.name.pinyin}", ` +
+            `which is what \`${String(value.id)}\` is called and how it is said.`,
         ).toBe(true);
       }
     }

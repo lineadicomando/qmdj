@@ -2,6 +2,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
+import { LOCALES } from '@shipan/i18n';
 import { INSTRUMENTS } from '../src/lib/instruments';
 import { SECTIONS } from '../src/lib/navigation';
 
@@ -111,6 +112,22 @@ describe('the counts the documents state', () => {
 
   it('names as many boards as the consultation offers', () => {
     expectCount('README.md', INSTRUMENTS.length, 'boards');
+  });
+
+  it('lists the languages the project actually speaks', () => {
+    /**
+     * `docs/i18n.md` prints `LOCALES` in a code block, and how many there are
+     * is a state rather than a design: Spanish is on the roadmap and the page
+     * says so. A page that went on printing two after a third landed would be
+     * wrong about the one thing it is the home of — and the same page tells
+     * the reader this test holds it, so the claim has to be true.
+     */
+    const page = read('docs/i18n.md');
+    const declaration = /export const LOCALES = \[([^\]]*)\] as const;/.exec(page);
+    expect(declaration, 'docs/i18n.md should print the LOCALES declaration').not.toBeNull();
+    expect((declaration?.[1].match(/'([a-z]+)'/g) ?? []).map((tag) => tag.slice(1, -1))).toEqual([
+      ...LOCALES,
+    ]);
   });
 });
 

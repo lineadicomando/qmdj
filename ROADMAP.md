@@ -1,8 +1,9 @@
 # What is not built yet
 
-Three kinds of open work, and they are open for different reasons. The record
-of how everything else got here is in [`docs/history/`](docs/history/README.md);
-what holds today is in [`docs/`](docs/README.md).
+Three kinds of open work, open for different reasons, and a fourth list that
+is not work at all. The record of how everything else got here is in
+[`docs/history/`](docs/history/README.md); what holds today is in
+[`docs/`](docs/README.md).
 
 ## 1. The notes section — the one open phase
 
@@ -11,7 +12,7 @@ section is still being defined. That is the honest state.
 
 **The organisation is settled and the contents are not**, deliberately: a page
 written against an engine that has not stopped changing gets rewritten at
-every board, in two languages. What was fixed is the set of addresses, what
+every board, in every language it is written in. What was fixed is the set of addresses, what
 each is for, and which side of the derived/written line each falls on.
 
 | Page | What it answers | |
@@ -80,7 +81,30 @@ and nothing here depends on it: what a source establishes is in
 `docs/sources.md`, cited by title and never by path. See `docs/README.md`
 § "The sources themselves are not here".
 
-## 3. What is refused and stays refused
+## 3. Spanish, once the engine has stopped moving
+
+The interface is read in a vernacular and there are two of them, which is a
+state and not a design — `docs/i18n.md` § "Who is reading" is where that is
+argued. **Spanish is the third**, and it is deliberately not third *yet*: the
+catalogs still gain a family of messages with every board, and a language
+added now would be a language re-translated at each of them, by somebody who
+has to follow the argument rather than look a word up.
+
+So the condition is the engine's and not the catalogs': when the boards have
+stopped arriving and the section of notes is written, the whole message set is
+translated once. Nothing has to be prepared for it — `LOCALES` is a list,
+`Record<MessageKey, string>` makes a missing key a compile error, and the
+locale is negotiated the same way on all four surfaces. What has to be
+*watched* is the ratio the notes section is built around: what is derived from
+the engine costs a third language nothing, and what is written costs it a
+paragraph. A page that grows written prose is a page that grows the price of
+this.
+
+The one thing that would change the design rather than the catalogs is a
+language needing plural rules, gender agreement or message syntax — see
+`docs/i18n.md` § "The catalog". Spanish needs none of the three.
+
+## 4. What is refused and stays refused
 
 Not roadmap, and listed here only so nobody mistakes silence for an omission:
 the 用神, 格局, ranking, dating, advice, the 年命 purposes doctrine, a natal
