@@ -1151,13 +1151,141 @@ export const en = {
   'footer.privacy': 'Privacy',
   'footer.notes': 'Notes',
 
-  // The section is empty on purpose, and what it is for is as open as what it
-  // says: a note written against an engine that is still gaining boards falls
-  // behind it, and misinforms exactly the reader who came here to check rather
-  // than to read. Both are settled at the end of the project, in one writing,
-  // rather than anticipated now and realigned at every change.
-  // See `docs/history/` phase 17.
-  'notes.title': 'Section still being defined',
+  // The section a reader arrives at having come to check rather than to read.
+  // It is several pages about one subject, which is why it has a nav of its
+  // own, and the two halves of it are kept apart on purpose: what is derived
+  // from the engine costs a language nothing and what is written here doubles
+  // with every one of them. See `docs/notes.md`.
+  'notes.title': 'Notes',
+  'notes.lead':
+    'What this engine computes, what each number stands on, and how strongly. Nothing in this section is a reading: it is an account of the instrument.',
+  'notes.claim':
+    'Every quantity here was checked against something outside itself, and not everything was checked against something equally good. Which is which is the whole of what this section says — a solar term and a transmitted table are not the same kind of fact, and a reader who cannot tell them apart has been misled by the presentation rather than by the data.',
+  'notes.building':
+    'The section is still being written. What is here is complete and read off the engine; what is missing is the account of what is deliberately not computed, and of what happens when a board is handed to a model.',
+  // Not decoration: it is the line the whole section is arranged by. A derived
+  // page cannot fall behind the engine; a written one can, and will carry the
+  // date it was last checked for that reason.
+  'notes.kind.derived': 'derived',
+  'notes.kind.written': 'written',
+  'notes.answers.instruments':
+    'What is computed, layer by layer: what each is laid on, and every point where the schools diverge.',
+  'notes.answers.sources':
+    'What each quantity stands on, what it was checked against, and how strongly it is held.',
+
+  // The layers. Six of the nine are instruments and are named in
+  // `lib/instruments.ts`; two are named arts that are not instruments and are
+  // named in `lib/notes.ts`. The calendrical layer is the one that is
+  // described rather than named, so its heading is a message and theirs are not.
+  'notes.layer.pillars': 'The calendrical layer',
+  'notes.takes': 'Computed from',
+  'notes.takes.pillars':
+    'an instant and a place, with the two boundaries that say how an instant is read.',
+  'notes.takes.qimen': 'an instant and a place.',
+  'notes.takes.liuren': 'an instant and a place.',
+  'notes.takes.taiyi': 'a year, and nothing else: no place, no hour, nobody.',
+  'notes.takes.qizheng': 'a birth — an instant and a place.',
+  'notes.takes.ziwei':
+    'a birth, counted on the lunar calendar, and a sex where a ring is walked in a direction.',
+  'notes.takes.bazi': 'a birth, and a sex where the luck cycles need one.',
+  'notes.takes.almanac': 'a civil date, reckoned on 120°E as the lunar calendar is.',
+  'notes.takes.nianming': 'a birth, placed inside a chart already cast for a moment.',
+  'notes.does.pillars':
+    'The solar terms, the lunar date and the four pillars — what every board below is built from, and the layer the two boundaries belong to.',
+  'notes.does.qimen':
+    'Nine palaces: an earth plate fixed by the ju, a heaven plate turned onto the hour, and the stars, gates and spirits standing over them.',
+  'notes.does.liuren':
+    'Twelve branches turned by the general of the month, four lessons read off the turn, and three transmissions drawn out of the four by nine named rules.',
+  'notes.does.taiyi':
+    'The board of a year: sixteen gods in nine palaces, and the counts of host and guest. Nobody is on it.',
+  'notes.does.qizheng':
+    'The seven governors and three of the four remainders, placed against the twenty-eight lodges and the twelve palaces.',
+  'notes.does.ziwei':
+    'Twelve seats counted from the lunar month and the hour, the stars the book places in them, and the grade it gives each.',
+  'notes.does.bazi':
+    'The four pillars read out: the concealed stems, the ten gods, the twelve stages, the images of 納音 nàyīn, the luck cycles, and a count of the five elements.',
+  'notes.does.almanac':
+    'The page an almanac prints for a date: the officer of the day, the lodge holding it, the twelve gods, the bearings the year fixes, and the shensha a day carries or does not.',
+  'notes.does.nianming':
+    'Where a person stands inside a chart of a moment — the pillar of their birth year, and the pillar of the year they are living.',
+
+  'notes.instruments.title': 'What is computed',
+  'notes.instruments.lead':
+    'Layer by layer, and under each the points where the schools diverge. Every one of them is a parameter with a declared default: the value this engine takes is marked, the values it declares and will not compute are marked too, and nothing is chosen silently.',
+  'notes.instruments.wider':
+    'This list is longer than the one in the header, and the difference is worth a sentence: what a consultation can be laid on is a narrower question than what is computed here. The almanac is a page of a published book rather than a board, the calendrical layer stands under all of them, and a 年命 niánmìng is a birth placed inside a chart cast for a moment.',
+  'notes.column.parameter': 'Parameter',
+  'notes.column.values': 'Values',
+  'notes.default': 'default',
+  // A value the type carries and the engine will not compute. Asking for it is
+  // an error rather than a chart cast by the nearest rule the engine does have.
+  'notes.refused': 'refused',
+  'notes.noParameters':
+    'No divergence of its own: it stands on the calendrical layer entire, and the parameters above are the ones that move it.',
+  'notes.parameter.method': 'How the ju is established.',
+  'notes.parameter.yuan': 'Where the third of the term is counted from, under 拆補 chāibǔ.',
+  'notes.parameter.plate': 'How the heaven plate is derived.',
+  'notes.parameter.centreLodging':
+    'Where the centre lodges, having no direction, no gate and no spirit of its own.',
+  'notes.parameter.system':
+    'Which family of chart: the hour’s, the day’s, the month’s or the year’s.',
+  'notes.parameter.trueSolarTime': 'Whether clock time is corrected to the Sun at the place.',
+  'notes.parameter.yearBoundary': 'Where the counted year begins.',
+  'notes.parameter.dayBoundary': 'Where the day turns over.',
+  'notes.parameter.shensha': 'Which register of shensha the almanac’s page carries.',
+  'notes.parameter.yuejiang':
+    'When the Sun changes palace, which is what seats the general of the month.',
+  'notes.parameter.guiren': 'Which transmission of the verse seats the noble.',
+  'notes.parameter.zhouye': 'Where the day is cut, for the noble’s day and night seats.',
+  'notes.parameter.xiudu': 'Where the twenty-eight lodges begin.',
+  'notes.parameter.ziqi': 'Whether 紫氣 zǐqì enters, and by which transmission.',
+  'notes.parameter.luohou':
+    'Which node bears the name 羅睺 luóhóu, the other taking 計都 jìdū.',
+  'notes.parameter.minggong': 'How the palace of the self is found.',
+  'notes.parameter.gong': 'Where the twelve palaces are cut.',
+  'notes.parameter.epoch': 'Which 上元積年 shàngyuánjīnián the count runs from.',
+  'notes.parameter.ji': 'Which register the board is laid in.',
+  'notes.parameter.leapMonth': 'What a birth in an intercalary month counts as.',
+  'notes.parameter.sihua': 'Which table of the four transformations.',
+  'notes.parameter.huoling': 'How 火星 huǒxīng and 鈴星 língxīng are placed.',
+  'notes.parameter.daxian': 'Where the first decade of the great limits opens.',
+  'notes.parameter.count': 'How the years lived are counted.',
+
+  'notes.sources.title': 'Where the numbers come from',
+  'notes.sources.lead':
+    'One row a quantity: what the engine derives it from, what it was measured against, and which rung of the ladder below that puts it on.',
+  'notes.ladder.title': 'The ladder of evidence',
+  'notes.ladder.lead':
+    'Not everything was checked against something equally good, and knowing what a quantity stands on is not yet being able to weigh it against its neighbour. These are the rungs, strongest first, with the number of quantities held at each.',
+  'notes.held': '{count} in the register',
+  'notes.rung.0': 'Measured',
+  'notes.rung.0.means':
+    'An ephemeris answer: the sky is asked and the answer is read off. Not a rule handed down at all, which is why it stands above the rungs below rather than on them.',
+  'notes.rung.1': 'A runnable reference',
+  'notes.rung.1.means':
+    'Another program computes it, independently of this one, and was run over the whole domain rather than sampled. Where the subject is a contested tradition this means consistent with a common implementation, never verified.',
+  'notes.rung.2': 'Two texts agreeing',
+  'notes.rung.2.means':
+    'Two transmitted sources, independent of each other, naming the same thing the same way. This is the standard for anything that cannot be derived.',
+  'notes.rung.3': 'Over-determination',
+  'notes.rung.3.means':
+    'A structure with more constraints than it has freedom, so a wrong answer breaks many things at once and the right one breaks none.',
+  'notes.rung.4': 'One text, checking itself',
+  'notes.rung.4.means':
+    'A single witness, exhaustive or redundant about the thing in question, so that it can be held to its own account.',
+  'notes.rung.5': 'One text, unchecked',
+  'notes.rung.5.means': 'A single source, with nothing available to check it against.',
+  'notes.rung.none': 'Nothing registered',
+  'notes.rung.none.means':
+    'The engine carries the quantity and no source stands behind it. Where that happens the drawing says so too — those names are left uncoloured until one does.',
+  'notes.ladder.notAVerdict':
+    'A rung is not a verdict. It says what could go wrong unnoticed, which is a different thing from how wrong anything is: the frame of the twenty-eight lodges is carried on over-determination and is right to a seventieth of the narrowest question it is ever asked. Nor is a rung a property of the quantity — it moves when the shelf does, in either direction, and a source that only confirms moves it as surely as one that contradicts.',
+  'notes.ladder.quoted':
+    'The table below is quoted rather than translated. It is a register of citations — the quantities as the engine names them, editions, chapters, the programs each was measured against and the spans they were run over — and this project keeps it in English, the language of its source. What is translated is everything you decide from: the rungs above, what each of them means, and what each layer is.',
+  'notes.column.quantity': 'Quantity',
+  'notes.column.rung': 'Rung',
+  'notes.column.standsOn': 'Stands on',
+  'notes.column.checkedAgainst': 'Checked against',
 
   'privacy.title': 'Privacy',
   'privacy.nothing':

@@ -949,7 +949,127 @@ export const it: Record<MessageKey, string> = {
   'footer.privacy': 'Privacy',
   'footer.notes': 'Note',
 
-  'notes.title': 'Sezione in corso di definizione',
+  'notes.title': 'Note',
+  'notes.lead':
+    'Che cosa calcola questo motore, su che cosa si regge ogni numero, e con quanta forza. Niente in questa sezione è una lettura: è il resoconto dello strumento.',
+  'notes.claim':
+    'Ogni quantità qui dentro è stata verificata contro qualcosa di esterno a sé, e non tutte contro qualcosa di ugualmente solido. Dire quale sia quale è tutto ciò che questa sezione fa — un termine solare e una tavola tramandata non sono lo stesso genere di fatto, e un lettore che non possa distinguerli è stato fuorviato dalla presentazione più che dai dati.',
+  'notes.building':
+    'La sezione è ancora in scrittura. Quel che c’è è completo e letto dal motore; quel che manca è il resoconto di ciò che deliberatamente non viene calcolato, e di ciò che accade quando una tavola viene consegnata a un modello.',
+  'notes.kind.derived': 'derivata',
+  'notes.kind.written': 'scritta',
+  'notes.answers.instruments':
+    'Che cosa viene calcolato, strato per strato: su che cosa si posa ciascuno, e ogni punto in cui le scuole divergono.',
+  'notes.answers.sources':
+    'Su che cosa si regge ogni quantità, contro che cosa è stata verificata, e quanto saldamente è tenuta.',
+
+  'notes.layer.pillars': 'Lo strato calendariale',
+  'notes.takes': 'Si calcola da',
+  'notes.takes.pillars':
+    'un istante e un luogo, con i due confini che dicono come si legge un istante.',
+  'notes.takes.qimen': 'un istante e un luogo.',
+  'notes.takes.liuren': 'un istante e un luogo.',
+  'notes.takes.taiyi': 'un anno, e nient’altro: nessun luogo, nessuna ora, nessuno.',
+  'notes.takes.qizheng': 'una nascita — un istante e un luogo.',
+  'notes.takes.ziwei':
+    'una nascita, contata sul calendario lunare, e un sesso dove un anello si percorre in una direzione.',
+  'notes.takes.bazi': 'una nascita, e un sesso dove i cicli di fortuna ne hanno bisogno.',
+  'notes.takes.almanac': 'una data civile, calcolata su 120°E come lo è il calendario lunare.',
+  'notes.takes.nianming': 'una nascita, collocata dentro una carta già tratta per un momento.',
+  'notes.does.pillars':
+    'I termini solari, la data lunare e i quattro pilastri — ciò su cui è costruita ogni tavola qui sotto, e lo strato a cui appartengono i due confini.',
+  'notes.does.qimen':
+    'Nove palazzi: una tavola di terra fissata dal ju, una tavola di cielo ruotata sull’ora, e le stelle, le porte e gli spiriti che vi stanno sopra.',
+  'notes.does.liuren':
+    'Dodici rami ruotati dal generale del mese, quattro lezioni lette dalla rotazione, e tre trasmissioni tratte dalle quattro secondo nove regole con un nome.',
+  'notes.does.taiyi':
+    'La tavola di un anno: sedici divinità in nove palazzi, e i conti dell’ospite e dell’ospitante. Non c’è nessuno sopra.',
+  'notes.does.qizheng':
+    'I sette governatori e tre dei quattro residui, collocati contro le ventotto dimore e i dodici palazzi.',
+  'notes.does.ziwei':
+    'Dodici seggi contati dal mese lunare e dall’ora, le stelle che il libro vi colloca, e il grado che dà a ciascuna.',
+  'notes.does.bazi':
+    'I quattro pilastri letti per esteso: gli steli nascosti, le dieci divinità, i dodici stadi, le immagini del 納音 nàyīn, i cicli di fortuna e un conteggio dei cinque elementi.',
+  'notes.does.almanac':
+    'La pagina che un almanacco stampa per una data: l’ufficiale del giorno, la dimora che lo tiene, le dodici divinità, gli orientamenti che l’anno fissa, e gli shensha che un giorno porta o non porta.',
+  'notes.does.nianming':
+    'Dove una persona sta dentro una carta del momento — il pilastro del suo anno di nascita, e il pilastro dell’anno che sta vivendo.',
+
+  'notes.instruments.title': 'Che cosa viene calcolato',
+  'notes.instruments.lead':
+    'Strato per strato, e sotto ciascuno i punti in cui le scuole divergono. Ognuno di essi è un parametro con un valore predefinito dichiarato: il valore che questo motore prende è segnato, quelli che dichiara e non calcolerà sono segnati anch’essi, e niente viene scelto in silenzio.',
+  'notes.instruments.wider':
+    'Questo elenco è più lungo di quello in testa alla pagina, e la differenza merita una frase: su che cosa si possa posare una consultazione è una domanda più stretta di che cosa venga calcolato qui. L’almanacco è la pagina di un libro pubblicato e non una tavola, lo strato calendariale sta sotto tutte, e un 年命 niánmìng è una nascita collocata dentro una carta tratta per un momento.',
+  'notes.column.parameter': 'Parametro',
+  'notes.column.values': 'Valori',
+  'notes.default': 'predefinito',
+  'notes.refused': 'rifiutato',
+  'notes.noParameters':
+    'Nessuna divergenza propria: si regge interamente sullo strato calendariale, e sono i parametri qui sopra a spostarlo.',
+  'notes.parameter.method': 'Come si stabilisce il ju.',
+  'notes.parameter.yuan': 'Da dove si conta il terzo del termine, sotto 拆補 chāibǔ.',
+  'notes.parameter.plate': 'Come si ricava la tavola di cielo.',
+  'notes.parameter.centreLodging':
+    'Dove alloggia il centro, che non ha direzione, né porta, né spirito propri.',
+  'notes.parameter.system': 'Quale famiglia di carta: dell’ora, del giorno, del mese o dell’anno.',
+  'notes.parameter.trueSolarTime':
+    'Se l’ora dell’orologio venga corretta sul Sole del luogo.',
+  'notes.parameter.yearBoundary': 'Dove comincia l’anno contato.',
+  'notes.parameter.dayBoundary': 'Dove il giorno cambia.',
+  'notes.parameter.shensha': 'Quale registro di shensha porta la pagina dell’almanacco.',
+  'notes.parameter.yuejiang':
+    'Quando il Sole cambia palazzo, che è ciò che insedia il generale del mese.',
+  'notes.parameter.guiren': 'Quale trasmissione del verso insedia il nobile.',
+  'notes.parameter.zhouye': 'Dove si taglia il giorno, per i seggi diurno e notturno del nobile.',
+  'notes.parameter.xiudu': 'Dove cominciano le ventotto dimore.',
+  'notes.parameter.ziqi': 'Se 紫氣 zǐqì entri, e per quale trasmissione.',
+  'notes.parameter.luohou':
+    'Quale nodo porta il nome 羅睺 luóhóu, e all’altro tocca 計都 jìdū.',
+  'notes.parameter.minggong': 'Come si trova il palazzo del sé.',
+  'notes.parameter.gong': 'Dove si tagliano i dodici palazzi.',
+  'notes.parameter.epoch': 'Da quale 上元積年 shàngyuánjīnián corre il conto.',
+  'notes.parameter.ji': 'In quale registro si posa la tavola.',
+  'notes.parameter.leapMonth': 'Che cosa conta una nascita in un mese intercalare.',
+  'notes.parameter.sihua': 'Quale tavola delle quattro trasformazioni.',
+  'notes.parameter.huoling': 'Come si collocano 火星 huǒxīng e 鈴星 língxīng.',
+  'notes.parameter.daxian': 'Dove si apre il primo decennio dei grandi limiti.',
+  'notes.parameter.count': 'Come si contano gli anni vissuti.',
+
+  'notes.sources.title': 'Da dove vengono i numeri',
+  'notes.sources.lead':
+    'Una riga per quantità: da che cosa il motore la ricava, contro che cosa è stata misurata, e su quale piolo della scala qui sotto questo la colloca.',
+  'notes.ladder.title': 'La scala dell’evidenza',
+  'notes.ladder.lead':
+    'Non tutto è stato verificato contro qualcosa di ugualmente solido, e sapere su che cosa si regge una quantità non è ancora poterla soppesare accanto alla sua vicina. Questi sono i pioli, dal più forte, con il numero di quantità tenute a ciascuno.',
+  'notes.held': '{count} nel registro',
+  'notes.rung.0': 'Misurata',
+  'notes.rung.0.means':
+    'Una risposta delle effemeridi: si interroga il cielo e la risposta si legge. Non è affatto una regola tramandata, ed è per questo che sta sopra i pioli sottostanti e non su di essi.',
+  'notes.rung.1': 'Un riferimento eseguibile',
+  'notes.rung.1.means':
+    'Un altro programma la calcola, indipendentemente da questo, ed è stato eseguito sull’intero dominio anziché per campione. Dove la materia è una tradizione controversa questo significa coerente con un’implementazione diffusa, mai verificata.',
+  'notes.rung.2': 'Due testi che concordano',
+  'notes.rung.2.means':
+    'Due fonti tramandate, indipendenti l’una dall’altra, che nominano la stessa cosa allo stesso modo. È lo standard per tutto ciò che non si può derivare.',
+  'notes.rung.3': 'Sovradeterminazione',
+  'notes.rung.3.means':
+    'Una struttura con più vincoli che libertà, per cui una risposta sbagliata rompe molte cose insieme e quella giusta non ne rompe nessuna.',
+  'notes.rung.4': 'Un testo che verifica sé stesso',
+  'notes.rung.4.means':
+    'Un testimone solo, esaustivo o ridondante su ciò che è in questione, così da poter essere tenuto al proprio stesso resoconto.',
+  'notes.rung.5': 'Un testo, non verificato',
+  'notes.rung.5.means': 'Una fonte sola, senza nulla di disponibile contro cui verificarla.',
+  'notes.rung.none': 'Nulla registrato',
+  'notes.rung.none.means':
+    'Il motore porta la quantità e nessuna fonte la sostiene. Dove accade lo dice anche il disegno — quei nomi restano senza colore finché una non arriva.',
+  'notes.ladder.notAVerdict':
+    'Un piolo non è un verdetto. Dice che cosa potrebbe andare storto senza che nessuno se ne accorga, che è cosa diversa da quanto storto sia qualcosa: il telaio delle ventotto dimore è retto da sovradeterminazione ed è esatto a un settantesimo della domanda più stretta che gli si ponga mai. E un piolo non è nemmeno una proprietà della quantità — si sposta quando si sposta lo scaffale, in entrambe le direzioni, e una fonte che si limita a confermare lo sposta quanto una che contraddice.',
+  'notes.ladder.quoted':
+    'La tavola qui sotto è citata e non tradotta. È un registro di citazioni — le quantità come le nomina il motore, edizioni, capitoli, i programmi contro cui ciascuna è stata misurata e gli intervalli su cui sono stati eseguiti — e questo progetto lo tiene in inglese, la lingua del suo codice sorgente. Ciò che è tradotto è tutto quello da cui si decide: i pioli qui sopra, che cosa significa ciascuno, e che cos’è ogni strato.',
+  'notes.column.quantity': 'Quantità',
+  'notes.column.rung': 'Piolo',
+  'notes.column.standsOn': 'Si regge su',
+  'notes.column.checkedAgainst': 'Verificata contro',
 
   'privacy.title': 'Privacy',
   'privacy.nothing':
