@@ -1144,14 +1144,14 @@ export const it: Record<MessageKey, string> = {
 
   'notes.sources.title': 'Da dove vengono i numeri',
   'notes.sources.lead':
-    'Una riga per quantità: da che cosa il motore la ricava, contro che cosa è stata misurata, e su quale piolo della scala qui sotto questo la colloca.',
+    'Una riga per quantità: da che cosa il motore la ricava, contro che cosa è stata misurata, e su quale rung della scala qui sotto questo la colloca.',
   'notes.ladder.title': 'La scala dell’evidenza',
   'notes.ladder.lead':
-    'Non tutto è stato verificato contro qualcosa di ugualmente solido, e sapere su che cosa si regge una quantità non è ancora poterla soppesare accanto alla sua vicina. Questi sono i pioli, dal più forte, con il numero di quantità tenute a ciascuno.',
+    'Non tutto è stato verificato contro qualcosa di ugualmente solido, e sapere su che cosa si regge una quantità non è ancora poterla soppesare accanto alla sua vicina. Questi sono i rung, dal più forte, con il numero di quantità tenute a ciascuno.',
   'notes.held': '{count} nel registro',
   'notes.rung.0': 'Misurata',
   'notes.rung.0.means':
-    'Una risposta delle effemeridi: si interroga il cielo e la risposta si legge. Non è affatto una regola tramandata, ed è per questo che sta sopra i pioli sottostanti e non su di essi.',
+    'Una risposta delle effemeridi: si interroga il cielo e la risposta si legge. Non è affatto una regola tramandata, ed è per questo che sta sopra i rung sottostanti e non su di essi.',
   'notes.rung.1': 'Un riferimento eseguibile',
   'notes.rung.1.means':
     'Un altro programma la calcola, indipendentemente da questo, ed è stato eseguito sull’intero dominio anziché per campione. Dove la materia è una tradizione controversa questo significa coerente con un’implementazione diffusa, mai verificata.',
@@ -1170,11 +1170,16 @@ export const it: Record<MessageKey, string> = {
   'notes.rung.none.means':
     'Il motore porta la quantità e nessuna fonte la sostiene. Dove accade lo dice anche il disegno — quei nomi restano senza colore finché una non arriva.',
   'notes.ladder.notAVerdict':
-    'Un piolo non è un verdetto. Dice che cosa potrebbe andare storto senza che nessuno se ne accorga, che è cosa diversa da quanto storto sia qualcosa: il telaio delle ventotto dimore è retto da sovradeterminazione ed è esatto a un settantesimo della domanda più stretta che gli si ponga mai. E un piolo non è nemmeno una proprietà della quantità — si sposta quando si sposta lo scaffale, in entrambe le direzioni, e una fonte che si limita a confermare lo sposta quanto una che contraddice.',
+    'Un rung non è un verdetto. Dice che cosa potrebbe andare storto senza che nessuno se ne accorga, che è cosa diversa da quanto storto sia qualcosa: il telaio delle ventotto dimore è retto da sovradeterminazione ed è esatto a un settantesimo della domanda più stretta che gli si ponga mai. E un rung non è nemmeno una proprietà della quantità — si sposta quando si sposta lo scaffale, in entrambe le direzioni, e una fonte che si limita a confermare lo sposta quanto una che contraddice.',
   'notes.ladder.quoted':
-    'La tavola qui sotto è citata e non tradotta. È un registro di citazioni — le quantità come le nomina il motore, edizioni, capitoli, i programmi contro cui ciascuna è stata misurata e gli intervalli su cui sono stati eseguiti — e questo progetto lo tiene in inglese, la lingua del suo codice sorgente. Ciò che è tradotto è tutto quello da cui si decide: i pioli qui sopra, che cosa significa ciascuno, e che cos’è ogni strato.',
+    'La tavola qui sotto è citata e non tradotta. È un registro di citazioni — le quantità come le nomina il motore, edizioni, capitoli, i programmi contro cui ciascuna è stata misurata e gli intervalli su cui sono stati eseguiti — e questo progetto lo tiene in inglese, la lingua del suo codice sorgente. Ciò che è tradotto è tutto quello da cui si decide: i rung qui sopra, che cosa significa ciascuno, e che cos’è ogni strato.',
   'notes.column.quantity': 'Quantità',
-  'notes.column.rung': 'Piolo',
+  // `rung` stays English. The ladder is an image that reads itself in either
+  // language — a scala has pioli — but the technical term is the one a reader
+  // looks up and meets again in the register, in `docs/notes.md` and in a
+  // commit message, and «piolo» sends them looking for a word nothing else
+  // here uses. Invariant in the plural, as a loanword is.
+  'notes.column.rung': 'Rung',
   'notes.column.standsOn': 'Si regge su',
   'notes.column.checkedAgainst': 'Verificata contro',
 
