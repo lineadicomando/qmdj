@@ -132,4 +132,119 @@ export const NOTE_PAGES: readonly NotePage[] = [
     answers: 'notes.answers.sources',
     kind: 'derived',
   },
+  {
+    slug: 'refusals',
+    title: 'notes.refusals.title',
+    answers: 'notes.answers.refusals',
+    kind: 'written',
+  },
+  {
+    slug: 'readings',
+    title: 'notes.readings.title',
+    answers: 'notes.answers.readings',
+    kind: 'written',
+  },
+];
+
+/**
+ * An entry of a written page, and the day it was last held against the engine.
+ *
+ * **The date is shown and not filed in a comment.** A note lags because
+ * somebody has to remember to change it, and the reader who opens this section
+ * is the one person here who came to check rather than to read — which is
+ * exactly the reader a stale paragraph misinforms. That is not answered by a
+ * resolution to be careful; it is answered by making the staleness legible to
+ * the one reader equipped to discount it. A date beside a paragraph makes the
+ * paragraph a weaker claim, and weaker is what it should be. See
+ * `docs/notes.md`.
+ *
+ * **It lives here and not in the catalogs**, because it is not a string that
+ * differs between languages: the two renderings of an entry are checked
+ * together or the check means nothing. ISO, and formatted where it is printed.
+ *
+ * The two lists are the only registries in this section whose rows a phase has
+ * to *write* rather than derive. That is the whole cost of a written page, and
+ * it is the reason there are two of them and not five: what is refused and how
+ * a prompt is bounded do not move when a board lands, so they can be written
+ * once and stay true.
+ */
+export interface WrittenEntry {
+  readonly id: string;
+  /** ISO, the day the entry was last read against what the engine does. */
+  readonly checked: string;
+  readonly title: MessageKey;
+  readonly body: MessageKey;
+  /**
+   * Who asks for it — on a refusal only.
+   *
+   * A refusal is worth stating together with whoever wants the thing, because
+   * a reader who came looking for what is missing should meet themselves in
+   * the entry. A rule about handing a board to a model is nobody's request.
+   */
+  readonly asks?: MessageKey;
+}
+
+/**
+ * The three keys of a refusal, built where the prefix can be seen.
+ *
+ * Written as a template here rather than inside the component that prints
+ * them, and that is not a style choice: `catalog-keys.test.ts` finds a
+ * templated key live by the literal *prefix* in front of the interpolation,
+ * so a component building `` `${family}.${id}.title` `` from a prop hides
+ * seventy-two messages from the one test that notices when a message has gone
+ * dead. The prefix belongs where it can be read.
+ */
+const refusal = (id: string, checked: string): WrittenEntry => ({
+  id,
+  checked,
+  title: `notes.refusals.${id}.title` as MessageKey,
+  asks: `notes.refusals.${id}.asks` as MessageKey,
+  body: `notes.refusals.${id}.body` as MessageKey,
+});
+
+const reading = (id: string, checked: string): WrittenEntry => ({
+  id,
+  checked,
+  title: `notes.readings.${id}.title` as MessageKey,
+  body: `notes.readings.${id}.body` as MessageKey,
+});
+
+/**
+ * What is deliberately not computed, one entry each.
+ *
+ * The order is `docs/refusals.md`'s: what a reader of a board meets first —
+ * the 用神 and the ranking they expect — then the doctrines grafted onto a
+ * board that has no room for them, then the two that are about a place and a
+ * coordinate, and the prompt discipline last, which is where the argument
+ * hands over to the page beside this one.
+ */
+export const REFUSALS: readonly WrittenEntry[] = [
+  refusal('yongshen', '2026-08-22'),
+  refusal('geju', '2026-08-22'),
+  refusal('ordering', '2026-08-22'),
+  refusal('advice', '2026-08-22'),
+  refusal('purposes', '2026-08-22'),
+  refusal('natalQimen', '2026-08-22'),
+  refusal('taiyiReadings', '2026-08-22'),
+  refusal('hostGuest', '2026-08-22'),
+  refusal('dayMaster', '2026-08-22'),
+  refusal('ziqi', '2026-08-22'),
+  refusal('feixing', '2026-08-22'),
+  refusal('maoshan', '2026-08-22'),
+  refusal('placeFromName', '2026-08-22'),
+  refusal('latitude', '2026-08-22'),
+  refusal('twoBoards', '2026-08-22'),
+];
+
+/** What happens when a board is handed to a model, in `docs/readings.md`'s order. */
+export const READINGS: readonly WrittenEntry[] = [
+  reading('oneBoard', '2026-08-22'),
+  reading('threeKinds', '2026-08-22'),
+  reading('questionStays', '2026-08-22'),
+  reading('consultationOnly', '2026-08-22'),
+  reading('bu', '2026-08-22'),
+  reading('ming', '2026-08-22'),
+  reading('tian', '2026-08-22'),
+  reading('staysOut', '2026-08-22'),
+  reading('disclaimer', '2026-08-22'),
 ];

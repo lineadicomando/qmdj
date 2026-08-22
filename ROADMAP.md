@@ -7,55 +7,45 @@ is not work at all. The record of how everything else got here is in
 
 **The open edge of this project is the shelf, not the code.** The boards, the
 almanac layer and the calendrical layer under them are built, checked and
-documented; what is left below is one section of the interface, a list of
-values waiting on a source, and a third language waiting on the first of those
-to be finished. None of the three is blocked on architecture. What will change
-this engine from here is a **text** — one that adds a quantity, confirms one
+documented, and the section of notes that accounts for them is written. What
+is left below is a page that may never be needed, a list of values waiting on
+a source, and a third language waiting for the engine to stop moving. None of
+the three is blocked on architecture. What will change this engine from here
+is a **text** — one that adds a quantity, confirms one
 already shipped, or contradicts it — and that is an ordinary change with a
 stated procedure: `docs/sources.md` § "When a source arrives later" says what
 moves and in what order. Reading the shelf is therefore the work, and writing
 code is what happens afterwards.
 
-## 1. The notes section — the one open phase
+## 1. The glossary, which is on probation
 
-`/[lang]/notes` is a heading in the footer with a page under it that says the
-section is still being defined. That is the honest state.
+The notes section is built. `/[lang]/notes` is an index and four pages: what
+is computed layer by layer, what each quantity stands on and how strongly,
+what is deliberately not computed, and what happens when a board is handed to
+a model. The first two are **derived** — they read
+`packages/core/src/parameters.ts` and `docs/sources.tsv`, so a board that
+lands or a value that stops being refused changes them by changing the engine.
+The last two are **written**, and each entry shows the day it was last checked
+against the engine. [`docs/notes.md`](docs/notes.md) is where that arrangement
+binds from.
 
-**The organisation is settled and the contents are not**, deliberately: a page
-written against an engine that has not stopped changing gets rewritten at
-every board, in every language it is written in. What was fixed is the set of
-addresses, what each is for, and which side of the derived/written line each
-falls on.
+**What is left of that phase is one page that may never be written.** A
+glossary — hanzi, reading and gloss in one list — was named a candidate and
+put on probation, because `CLAUDE.md` requires the interface to be usable
+**without** one. A glossary that becomes the answer to «where do I look this
+up» is the sign that a control somewhere has stopped explaining itself, and
+the fix is then upstream of it rather than in a list.
 
-| Page | What it answers | |
-|---|---|---|
-| `/[lang]/notes` | what this section is, and the way to the rest | written — its source is now `docs/notes.md` |
-| `…/instruments` | what is computed, board by board: inputs, parameters, the school each value names | **derived** |
-| `…/sources` | what each quantity stands on, and how strongly | **derived** |
-| `…/refusals` | what is not computed, who asks for it, why it is not here | written — its source is now `docs/refusals.md` |
-| `…/readings` | what a prompt commissions and forbids, and what never leaves the browser | written — its source is now `docs/readings.md` |
-| `…/glossary` | hanzi, pinyin and gloss in one list | *candidate,* on probation |
-
-**The derived pages depend on nothing and can be built at any time.** They
-read a registry and a register, and both now exist as data:
-`packages/core/src/parameters.ts` declares every school divergence with the
-values the engine computes and the ones it refuses, and `docs/sources.tsv`
-carries one row a quantity with the rung it stands on. Only the written pages
-kept the old rule and go last — and all three now have a source in `docs/`
-written against the finished engine, which is most of what made them
-expensive.
-
-The glossary is on probation because the interface must be usable **without**
-one. A glossary that becomes load-bearing is the sign that a control somewhere
-is failing, and the fix is then upstream of it.
-
-The two standing rules of that phase — derived beats written, and every
-written entry shows the date it was last checked against the engine — now bind
-from [`docs/notes.md`](docs/notes.md), which is also where the ladder of
-evidence is stated and what makes the register's `rung` column readable.
-
-What the section still owes is its **contents**: the index page, and the
-prose of the three written ones. Nothing else.
+Two conditions, and the first is the real one. **A terminology pass comes
+first**: every string a person reads is checked for a glyph travelling without
+its reading, which is a rule this project already states and nothing yet
+enforces. Of the catalog messages that carry hanzi, about a third do not say
+them, and most of those are prompts, where the reader is a model and the
+omission is deliberate. If terms remain after that pass with nowhere
+to be defined, *those* are the argument for a glossary. **And if it is ever
+built it is derived**, off the named things the engine already carries with
+their hanzi, reading and gloss — written by hand it would be a page maintained
+in every language and growing with every board.
 
 ## 2. Parameters that are declared and refused
 

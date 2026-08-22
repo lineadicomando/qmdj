@@ -955,7 +955,7 @@ export const it: Record<MessageKey, string> = {
   'notes.claim':
     'Ogni quantità qui dentro è stata verificata contro qualcosa di esterno a sé, e non tutte contro qualcosa di ugualmente solido. Dire quale sia quale è tutto ciò che questa sezione fa — un termine solare e una tavola tramandata non sono lo stesso genere di fatto, e un lettore che non possa distinguerli è stato fuorviato dalla presentazione più che dai dati.',
   'notes.building':
-    'La sezione è ancora in scrittura. Quel che c’è è completo e letto dal motore; quel che manca è il resoconto di ciò che deliberatamente non viene calcolato, e di ciò che accade quando una tavola viene consegnata a un modello.',
+    'Qui non c’è un glossario, ed è deliberato: questa interfaccia deve essere utilizzabile senza. Ogni nome è detto dove viene usato — il glifo, la lettura e la parola — e un glossario che diventasse il posto dove andare a cercare sarebbe il segno che qualcos’altro su questo sito ha smesso di spiegarsi.',
   'notes.kind.derived': 'derivata',
   'notes.kind.written': 'scritta',
   'notes.answers.instruments':
@@ -1034,6 +1034,113 @@ export const it: Record<MessageKey, string> = {
   'notes.parameter.huoling': 'Come si collocano 火星 huǒxīng e 鈴星 língxīng.',
   'notes.parameter.daxian': 'Dove si apre il primo decennio dei grandi limiti.',
   'notes.parameter.count': 'Come si contano gli anni vissuti.',
+
+  'notes.answers.refusals':
+    'Che cosa deliberatamente non viene calcolato, chi lo chiede, e perché non è qui.',
+  'notes.answers.readings':
+    'Che cosa un prompt commissiona e che cosa vieta, e che cosa non esce mai dal tuo browser.',
+  'notes.askedBy': 'Lo chiede',
+  'notes.checked': 'Ultima verifica contro il motore il {date}.',
+
+  'notes.refusals.title': 'Che cosa non viene calcolato',
+  'notes.refusals.lead':
+    'Il motore non risponde a nessuna domanda, che non è come dire che non dica nulla. Quel che segue è una voce per ciascuno: che cosa viene rifiutato, chi lo chiede, e perché non è qui.',
+  'notes.refusals.carries':
+    'Ciò che invece porta è un attributo che le fonti tramandano concordi, dove quell’attributo appartiene alla configurazione e non alla situazione di qualcuno — e viaggia come identificatore e glifo, mai come prosa. Un verdetto che arriva dentro una glossa tradotta è un verdetto che niente può mettere alla prova.',
+  'notes.refusals.yongshen.title': 'Lo 用神 yòngshén',
+  'notes.refusals.yongshen.asks': 'chiunque tragga una carta per una domanda.',
+  'notes.refusals.yongshen.body':
+    'Quale palazzo riguardi ciò che si sta chiedendo è una scelta del lettore, fatta per quella domanda. Senza, la tavola è una mappa senza spillo — e sceglierlo è il primo atto interpretativo, non una consultazione. Un prompt commissiona la scelta e ne esige la dichiarazione; il motore non la compie mai.',
+  'notes.refusals.geju.title': 'Le configurazioni messe in ordine, e il palazzo migliore',
+  'notes.refusals.geju.asks': 'chiunque voglia sapere qual è il palazzo buono.',
+  'notes.refusals.geju.body':
+    'Le configurazioni viaggiano, con la sorte che le fonti tramandano accanto a loro: 門迫 ménpò è oppressione nel testo che la nomina, e un motore che la lasciasse cadere starebbe redigendo le proprie fonti. Un ordine su di esse non viaggia. Una carta con quattro configurazioni infauste non è un cattivo momento per fare qualcosa — cattivo è una parola su un’impresa, e qui nessuna impresa è nota.',
+  'notes.refusals.ordering.title': 'Mettere in ordine due ore, e datare un esito',
+  'notes.refusals.ordering.asks': 'chi sceglie un momento, e chiunque voglia sapere quando.',
+  'notes.refusals.ordering.body':
+    'Scegliere il momento percorre un intervallo e riferisce dove al suo interno una cosa si trovi, contro criteri che sei tu a dichiarare. Non mette in classifica ciò che trova, e le sue risposte portano una direzione oltre a un’ora — la direzione è metà della risposta e non va mai riferita da sola. Datare un esito è rifiutato del tutto: è la previsione che questo progetto non fa.',
+  'notes.refusals.advice.title': 'Consigli',
+  'notes.refusals.advice.asks': 'quasi tutti, prima o poi.',
+  'notes.refusals.advice.body':
+    'Nessuna lettura qui dà pareri medici, psichiatrici, legali o finanziari, numeri fortunati, pronostici di gioco, un partner giudicato o una compatibilità stabilita. Dove si commissiona la lettura di una vita i verbi restano condizionali — «tende a», mai «accadrà» — e il potere sulle scelte di una persona e sul suo cammino resta suo.',
+  'notes.refusals.purposes.title': 'Quale palazzo sta per quale parte di una vita',
+  'notes.refusals.purposes.asks':
+    'i lettori del materiale moderno sul 年命 niánmìng, e i modelli, con molta sicurezza.',
+  'notes.refusals.purposes.body':
+    'Rifiutato ovunque compaia un 年命, e detto su ogni superficie anziché una volta sola, perché è qui che un modello inventa più liberamente. Ciò che viene portato è il pilastro dell’anno di nascita e il pilastro dell’anno che si sta vivendo, i palazzi in cui i due cadono, e di che cosa è fatto il terreno sotto di loro. Poi si ferma: i verdetti che il testo dà su quel terreno hanno bisogno che una domanda sia stata posta.',
+  'notes.refusals.natalQimen.title': 'Una carta di dunjia tratta su una nascita',
+  'notes.refusals.natalQimen.asks': 'la letteratura moderna sul Qi Men natale.',
+  'notes.refusals.natalQimen.body':
+    'Una nascita entra in una carta, mai il contrario: il testo classico mette l’anno della persona dentro la carta del momento, e la carta non si sposta per la nascita. L’errore ricorre perché la carta natale occidentale è un caso di una classe che questa tradizione riempie già in più modi — perciò un’arte che nasce sulla vita ha una tavola propria, 八字 bāzì, 七政四餘 qīzhèngsìyú, 紫微斗數 zǐwēidǒushù, e mai quella del dunjia.',
+  'notes.refusals.taiyiReadings.title': 'Le letture ricevute del 太乙 tàiyǐ',
+  'notes.refusals.taiyiReadings.asks': 'chiunque apra il testo.',
+  'notes.refusals.taiyiReadings.body':
+    'La dottrina tramandata di questa tavola è dinastica — quale stato cade, in quale anno un esercito si spezza — datata, falsificabile da nessuno, e resta fuori. Le letture palazzo per palazzo dello stesso capitolo sono declinate per intero, perché dietro di esse non c’è alcuno strato che non sia dinastico. Ciò che viaggia è quel che il testo dice che una figura è; dove non dice nulla, viaggia il silenzio.',
+  'notes.refusals.hostGuest.title': 'Chi è 主 zhǔ e chi è 客 kè',
+  'notes.refusals.hostGuest.asks': 'ogni lettore di una tavola di 太乙, subito.',
+  'notes.refusals.hostGuest.body':
+    'Il motore nomina due conti e si ferma. Assegnare ospitante e ospite è il primo atto interpretativo che quel sistema richiede, ed è del lettore esattamente come lo 用神. Un prompt lo commissiona e ne esige la firma.',
+  'notes.refusals.dayMaster.title': 'Un signore del giorno forte o debole, e ciò che compensa',
+  'notes.refusals.dayMaster.asks': 'ogni lettore dei quattro pilastri.',
+  'notes.refusals.dayMaster.body':
+    'I cinque elementi arrivano contati sugli otto caratteri, zeri compresi, perché un’assenza pesa quanto un’abbondanza — e il conteggio è stampato perché nessuno lo rifaccia. Dichiarare il signore del giorno forte o debole, e scegliere che cosa compensi un’assenza, sono passi di un metodo: le scuole divergono su come si faccia, perciò la scelta si compie ad alta voce nella lettura, con il metodo nominato.',
+  'notes.refusals.ziqi.title': '紫氣 zǐqì, il quarto residuo',
+  'notes.refusals.ziqi.asks': 'chi si aspetta quattro 餘 yú su una tavola di 七政四餘.',
+  'notes.refusals.ziqi.body':
+    'Tre dei quattro sono collocati dalle effemeridi. Il quarto manca per mancanza di una verifica e non di una regola: la trasmissione esiste, un’epoca citabile no, e nulla soppesa la sua costante perché soppesarla vorrebbe dire avere qualcosa in cielo contro cui verificarla. Il parametro è dichiarato e spento, così l’assenza è visibile invece che tacita.',
+  'notes.refusals.feixing.title': 'Le collocazioni delle 十八飛星 shíbāfēixīng',
+  'notes.refusals.feixing.asks': 'chi ha in mano entrambi i libri del 紫微斗數.',
+  'notes.refusals.feixing.body':
+    'Quell’arte nomina due tavole e questo motore ne calcola una. L’altra trasmissione conta diciotto stelle a partire dal ramo dell’anno, non ha ufficio dei cinque elementi, non ha 天府 tiānfǔ, e non porta nessuna delle quattordici stelle principali. Una collocazione portata da una all’altra è un innesto e non una lacuna colmata — lo stesso errore della carta natale di dunjia, più piccolo e fra due libri che condividono il titolo.',
+  'notes.refusals.maoshan.title': '茅山 máoshān',
+  'notes.refusals.maoshan.asks': 'il parametro che lo elenca.',
+  'notes.refusals.maoshan.body':
+    'Non esiste alcun riferimento, eseguibile o tramandato, contro cui una carta 茅山 possa essere falsificata. È rifiutato per nome anziché sostituito, perché una carta tratta con il metodo sbagliato sembra giusta e non lo è. Sta nell’elenco di ciò che è dichiarato e non implementato, e non ci si aspetta che ne esca.',
+  'notes.refusals.placeFromName.title': 'Un luogo da un nome',
+  'notes.refusals.placeFromName.asks': 'ogni API di comodo.',
+  'notes.refusals.placeFromName.body':
+    'Qui niente trasforma un nome in un luogo. Ci sono decine di paesi che si chiamano Roma, e scegliere il più popoloso per qualcuno produce una carta che sembra giusta ed è sbagliata. Ciò che le superfici accettano è un identificatore scelto da una ricerca, o coordinate con un fuso, o un identificatore raffinato da coordinate — e mezza coppia viene rifiutata anziché letta a metà.',
+  'notes.refusals.latitude.title': 'La latitudine, in qualunque calcolo',
+  'notes.refusals.latitude.asks': 'chi dà per scontato che una carta usi entrambe le coordinate.',
+  'notes.refusals.latitude.body':
+    'È la longitudine a spostare una tavola. La latitudine viene portata e stampata e non entra in alcun calcolo. L’unico metodo che la leggerebbe — tagliare i dodici palazzi del 七政四餘 per case — è un parametro dichiarato con quel valore rifiutato. Il limite è detto qui e non nel modulo: un controllo che si apre apposta per digitarci una longitudine lo apre chi sa che cosa sia.',
+  'notes.refusals.twoBoards.title': 'Due tavole di uno stesso istante, in un solo prompt',
+  'notes.refusals.twoBoards.asks': 'la richiesta di funzionalità più ovvia.',
+  'notes.refusals.twoBoards.body':
+    'Una consultazione prende un solo strumento, scelto prima della pressione e in nessun momento dopo. Dove due tavole concordano è spesso un fatto solo stampato due volte — una carta di dunjia e una tavola di 六壬 condividono il pilastro del giorno, la decade, i rami vuoti e cinque degli otto spiriti — e un modello che lo legga come conferma conta un dato per due con assoluta sicurezza.',
+
+  'notes.readings.title': 'Consegnare una tavola a un modello',
+  'notes.readings.lead':
+    'Che cosa un prompt commissiona, che cosa vieta, e che cosa non esce mai dal tuo browser.',
+  'notes.readings.computed':
+    'Una tavola viaggia calcolata e mai come data. Un modello a cui si consegnino una data e un luogo trae la carta a memoria e la sbaglia, e una carta sbagliata letta bene è la cosa peggiore che questo progetto possa produrre: niente a valle la intercetta, perché è identica a una giusta.',
+  'notes.readings.oneBoard.title': 'Una tavola sola, mai due dello stesso istante',
+  'notes.readings.oneBoard.body':
+    'Una consultazione prende un solo strumento, scelto prima della pressione e in nessun momento dopo. Le tavole si sovrappongono: una carta di dunjia e una tavola di 六壬 liùrén condividono il pilastro del giorno, la decade, i rami vuoti e cinque degli otto spiriti; i dodici palazzi del 七政四餘 sono l’anello su cui siede un generale di 六壬; i quattro pilastri sono il substrato da cui le altre sono costruite. Nessuna regola tramandata combina i tre 式 shì. Il 太乙 non si sovrappone a nessuna e la regola vale lo stesso, perché un modello a cui si dia una tavola di un anno accanto a una di una persona legge l’anno sulla persona.',
+  'notes.readings.threeKinds.title': 'Tre generi, e il genere decide che cosa ti viene chiesto',
+  'notes.readings.threeKinds.body':
+    '卜 bǔ — 奇門 e 六壬 — prende una domanda, e la tavola è tratta nell’istante della pressione: la domanda viene prima della trazione, o è una didascalia su una tavola che c’era già. 命 mìng — 八字, 七政四餘, 紫微斗數 — prende una nascita e non ti chiede nulla. 天 tiān, che è il solo 太乙, prende un anno e una materia: nessuna domanda, nessuna persona, nessun luogo e nessuna ora.',
+  'notes.readings.questionStays.title': 'La domanda non raggiunge mai il server',
+  'notes.readings.questionStays.body':
+    'A un endpoint di prompt viene detto che una domanda esiste e mai quale sia: il prompt finisce sulla riga che la introduce, e il tuo browser aggiunge il testo prima che il tutto finisca negli appunti. Una materia viaggia allo stesso modo. Questo progetto non parla con nessun modello, non tiene alcuna chiave e non manda niente da nessuna parte.',
+  'notes.readings.consultationOnly.title': 'Un prompt si costruisce in un solo posto',
+  'notes.readings.consultationOnly.body':
+    'La consultazione è dove una tavola viene consegnata, ed è l’unica superficie che costruisca un prompt — un prompt è un chiedere, e sta dove si chiede. Le sezioni intitolate a un’arte mostrano tavole e le loro trascrizioni, e chiedere lì è navigare. La consultazione stampa dalla pagina e mai da un indirizzo proprio, per la stessa ragione: a un indirizzo bisognerebbe dire qual è la domanda.',
+  'notes.readings.bu.title': 'Che cosa commissiona un prompt di 卜 bǔ',
+  'notes.readings.bu.body':
+    'Una carta trattiene lo 用神 e lo dichiara: quale palazzo riguardi la domanda è scelta del lettore, e il prompt ne esige la dichiarazione. Una tavola di 六壬 consegna le sue tre trasmissioni già tratte, per procedura, e il prompt dice di non riderivarle — mentre da quale delle quattro lezioni leggere resta del lettore.',
+  'notes.readings.ming.title': 'Che cosa commissiona un prompt di 命 mìng',
+  'notes.readings.ming.body':
+    'Il soggetto è la persona su cui la tavola è stata posata, non la tavola. La risposta è disposta in sei movimenti: l’avvertenza, la nascita situata con parole del modello, la tavola letta intera a partire da un centro, i temi di una vita in sezioni brevi intitolate a un tema e mai a un fattore, l’elenco di ispezione da cui quelle sezioni attingono, e una chiusura che apre. Ogni scelta viaggia firmata — quale seggio o divinità porti un tema si dice nel momento in cui lo si sceglie, il metodo di una scuola arriva nominato come di quella scuola, e l’elemento che compensa resta non calcolato e viene scelto ad alta voce.',
+  'notes.readings.tian.title': 'Che cosa commissiona un prompt di 天 tiān',
+  'notes.readings.tian.body':
+    'Una lettura è per una materia, e una materia non è una domanda: nomina ciò che si sta guardando — un campo visivo con due parti dentro, che è ciò di cui i due conti sono conti. Senza, il prompt legge la figura e dichiara che l’assegnazione non è mai stata fatta, invece di mandare un modello a inventarsi due parti. Il registro è descrittivo e mai predittivo, e ogni superficie che stampi questa tavola dice che i suoi nove palazzi sono numerati con uno scarto di un seggio rispetto al 洛書 luòshū.',
+  'notes.readings.staysOut.title': 'Che cosa resta fuori da un prompt',
+  'notes.readings.staysOut.body':
+    'Quanto sia sicuro ogni numero resta nella documentazione che un agente può consultare. Incollato dentro un prompt diventava un paragrafo che il modello recitava senza che glielo si chiedesse, accanto a un’avvertenza che già dice che questo è intrattenimento. L’eccezione è un limite su una quantità che il prompt sta già dicendo a un modello come leggere: una cautela che arriva insieme all’istruzione che la governa è parte dell’istruzione. La prova è se togliendo quella riga resti un’istruzione che un modello possa seguire con sicurezza e sbagliando.',
+  'notes.readings.disclaimer.title': 'L’avvertenza viaggia',
+  'notes.readings.disclaimer.body':
+    'Il prompt porta con sé l’avvertenza che porta il piede di pagina di questo sito, come istruzione a pronunciarla: questo è spunto di riflessione e intrattenimento, non sostituisce il parere di un professionista su nulla, e il potere sulle scelte di una persona e sul suo cammino resta suo. Un prompt viaggia, e un’avvertenza lasciata sulla pagina da cui è stato copiato era scritta per qualcuno che lì non c’è più.',
 
   'notes.sources.title': 'Da dove vengono i numeri',
   'notes.sources.lead':

@@ -2,7 +2,7 @@ import { PARAMETERS } from '@shipan/core';
 import { catalogs, LOCALES, type MessageKey } from '@shipan/i18n';
 import { describe, expect, it } from 'vitest';
 import { INSTRUMENTS } from '../src/lib/instruments';
-import { LAYERS, NOTE_PAGES } from '../src/lib/notes';
+import { LAYERS, NOTE_PAGES, READINGS, REFUSALS } from '../src/lib/notes';
 import { REGISTER } from '../src/lib/server/register';
 import { load as instruments } from '../src/routes/[lang]/notes/instruments/+page.server';
 import { load as sources } from '../src/routes/[lang]/notes/sources/+page.server';
@@ -20,6 +20,10 @@ import { load as sources } from '../src/routes/[lang]/notes/sources/+page.server
  * repository can notice when a parameter arrives without a gloss.
  */
 const asked = { setHeaders: () => undefined } as never;
+
+/** The keys a catalog does not carry, which for a templated key is the only check there is. */
+const missing = (locale: (typeof LOCALES)[number], keys: string[]): string[] =>
+  keys.filter((key) => !(key in catalogs[locale]));
 
 describe('the layers the section lays out', () => {
   it('covers every board the engine declares a parameter for', () => {
@@ -63,9 +67,6 @@ describe('the layers the section lays out', () => {
 });
 
 describe('the messages the pages build from an identifier', () => {
-  const missing = (locale: (typeof LOCALES)[number], keys: string[]): string[] =>
-    keys.filter((key) => !(key in catalogs[locale]));
-
   it('glosses every parameter, in every language', () => {
     const keys = [...new Set(PARAMETERS.map((parameter) => parameter.id))].map(
       (id) => `notes.parameter.${id}`,
@@ -123,10 +124,43 @@ describe('what the two derived pages are handed', () => {
     expect(data.tally.reduce((total, entry) => total + entry.count, 0)).toBe(REGISTER.length);
   });
 
+  it('writes both faces of every written entry, and dates it', () => {
+    // A written page is the half that can fall behind, so what is asserted is
+    // that it exists in both languages and that the date it shows is a date.
+    // The two renderings are checked together or the check means nothing,
+    // which is why the date is one field beside one identifier.
+    const families: [string, readonly { id: string; checked: string }[]][] = [
+      ['notes.refusals', REFUSALS],
+      ['notes.readings', READINGS],
+    ];
+
+    for (const [family, entries] of families) {
+      expect(entries.length).toBeGreaterThan(0);
+      for (const entry of entries) {
+        expect(entry.checked, entry.id).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+        expect(Number.isNaN(Date.parse(entry.checked)), entry.id).toBe(false);
+
+        const keys = [`${family}.${entry.id}.title`, `${family}.${entry.id}.body`];
+        // Only a refusal names who asks for it: a rule about handing a board
+        // to a model is nobody's request.
+        if (family === 'notes.refusals') keys.push(`${family}.${entry.id}.asks`);
+        for (const locale of LOCALES) {
+          expect(missing(locale, keys), `${locale} · ${entry.id}`).toEqual([]);
+        }
+      }
+    }
+  });
+
   it('leads to every page of the section but the one being read', () => {
     // The index lists the rest; the nav lists them all. A page added to the
     // section and not to this list is a page nothing links to.
-    expect(NOTE_PAGES.map((note) => note.slug)).toEqual(['', 'instruments', 'sources']);
+    expect(NOTE_PAGES.map((note) => note.slug)).toEqual([
+      '',
+      'instruments',
+      'sources',
+      'refusals',
+      'readings',
+    ]);
     expect(NOTE_PAGES.filter((note) => note.answers).length).toBe(NOTE_PAGES.length - 1);
   });
 });
